@@ -1,0 +1,10 @@
+<config>
+  <!-- rabbitmq connection info -->
+  <rabbit>
+    <host>127.0.0.1</host>
+    <port>5672</port>
+    <raw-queue>netsage_anonymizer_raw</raw-queue>
+    <tagged-queue>netsage_anonymizer_tagged</tagged-queue>
+    <anonymized-queue>netsage_anonymizer_anonymized</anonymized-queue>
+  </rabbit>
+</config>
