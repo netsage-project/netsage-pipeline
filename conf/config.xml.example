@@ -2,7 +2,10 @@
   <!-- rabbitmq connection info -->
   <rabbit>
     <host>127.0.0.1</host>
-    <port>5672</port>
+    <port>5671</port>
+    <ssl>1</ssl>
+    <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
+    <vhost>netsage</vhost>
     <raw-queue>netsage_anonymizer_raw</raw-queue>
     <tagged-queue>netsage_anonymizer_tagged</tagged-queue>
     <anonymized-queue>netsage_anonymizer_anonymized</anonymized-queue>

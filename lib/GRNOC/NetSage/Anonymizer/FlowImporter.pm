@@ -160,6 +160,11 @@ sub _rabbit_connect {
 
     my $rabbit_host = $self->config->get( '/config/rabbit/host' );
     my $rabbit_port = $self->config->get( '/config/rabbit/port' );
+    my $rabbit_username = $self->config->get( '/config/rabbit/username' );
+    my $rabbit_password = $self->config->get( '/config/rabbit/password' );
+    my $rabbit_vhost = $self->config->get( '/config/rabbit/vhost' );
+    my $rabbit_ssl = $self->config->get( '/config/rabbit/ssl' ) || 0;
+    my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
     my $raw_data_queue = $self->config->get( '/config/rabbit/raw-queue' );
 
     while ( 1 ) {
@@ -172,7 +177,21 @@ sub _rabbit_connect {
 
             my $rabbit = Net::AMQP::RabbitMQ->new();
 
-            $rabbit->connect( $rabbit_host, {'port' => $rabbit_port} );
+            my $params = {};
+            $params->{'port'} = $rabbit_port;
+            $params->{'user'} = $rabbit_username;
+            $params->{'password'} = $rabbit_password;
+            if ( $rabbit_ssl ) {
+                $params->{'ssl'} = $rabbit_ssl;
+                $params->{'ssl_verify_host'} = 0;
+                $params->{'ssl_cacert'} = $rabbit_ca_cert;
+            }
+            if ( $rabbit_vhost ) {
+                $params->{'vhost'} = $rabbit_vhost;
+            }
+
+            $rabbit->connect( $rabbit_host, $params  );
+
 
 	    # open channel to the pending queue we'll read from
             $rabbit->channel_open( RAW_FLOWS_QUEUE_CHANNEL );
