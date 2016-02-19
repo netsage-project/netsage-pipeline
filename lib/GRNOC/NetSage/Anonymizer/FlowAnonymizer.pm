@@ -10,6 +10,7 @@ use JSON::XS;
 use Math::Round qw( nlowmult nhimult );
 use List::MoreUtils qw( natatime );
 use Try::Tiny;
+use Data::Validate::IP;
 
 use Data::Dumper;
 
@@ -361,9 +362,8 @@ sub _anonymize_messages {
     my $finished_messages = $messages;
 
     foreach my $message ( @$messages ) {
-        $message->{'src_ip'} = '';
-        $message->{'dest_ip'} = '';
-
+        $message->{'src_ip'} = $self->_anonymize_ip( $message->{'src_ip'} );
+        $message->{'dest_ip'} = $self->_anonymize_ip( $message->{'dest_ip'} );
     }
     my $num = @$finished_messages;
 
@@ -376,6 +376,29 @@ sub _anonymize_messages {
 
 	$self->rabbit->publish( ANONYMIZED_FLOWS_QUEUE_CHANNEL, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
     }
+}
+
+sub _anonymize_ip {
+    my ( $self, $ip ) = @_;
+    my $cleaned;
+
+    if ( is_ipv4($ip) ) {
+        my @bytes = split(/\./, $ip);
+        $cleaned = join('.', $bytes[0], $bytes[1], 'xxx', 'yyy' );
+
+    } elsif ( is_ipv6($ip) ) {
+        #TODO anonymize ipv6
+        my @bytes = split(/:/, $ip);
+        $self->logger->info('ipv6 bytes ' . Dumper @bytes);
+
+    } else {
+        $self->logger->warn('ip address is neither ipv4 or ipv6 ' + $ip);
+    }
+
+    
+
+    return $cleaned;
+
 }
 
 sub _publish_data {
