@@ -59,6 +59,8 @@ has output_queue => ( is => 'rwp' );
 
 has output_channel => ( is => 'rwp' );
 
+has batch_size => ( is => 'rwp' );
+
 has json => ( is => 'rwp' );
 
 
@@ -361,8 +363,9 @@ sub _publish_data {
         return;
     }
 
-    # send a max of 100 messages at a time to rabbit
-    my $it = natatime( 100, @$messages );
+    # send a max of $self->batch_size messages at a time to rabbit
+    my $it = natatime( $self->batch_size, @$messages );
+    $self->logger->debug("Publishing up to " . $self->batch_size . " messages per batch");
 
     my $queue = $self->output_queue;
 
@@ -383,7 +386,6 @@ sub _process_messages {
 
     # TODO: make the function call
     my $handler = $self->handler;
-    warn "handler: $handler";
     $flows_to_process = $self->handler->( $self, $flows_to_process );
 
     return $flows_to_process;
@@ -401,6 +403,8 @@ sub _rabbit_connect {
     my $rabbit_vhost = $self->config->get( '/config/rabbit/vhost' );
     my $rabbit_ssl = $self->config->get( '/config/rabbit/ssl' ) || 0;
     my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
+    my $batch_size = $self->config->get('/config/rabbit/batch_size') || 100;
+    $self->_set_batch_size( $batch_size );
 
     my $rabbit_conf = $self->config->get( '/config/rabbit' );
     my $input_name = $self->input_queue_name;
