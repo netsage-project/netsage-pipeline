@@ -5,9 +5,11 @@
     <port>5671</port>
     <ssl>1</ssl>
     <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
+    <batch_size>100</batch_size>
     <vhost>netsage</vhost>
-    <raw-queue>netsage_anonymizer_raw</raw-queue>
-    <tagged-queue>netsage_anonymizer_tagged</tagged-queue>
-    <anonymized-queue>netsage_anonymizer_anonymized</anonymized-queue>
+    <queue name="tstat" rabbit_name="netsage_tstat" channel="1" />
+    <queue name="raw" rabbit_name="netsage_anonymizer_raw_dummy" channel="2" />
+    <queue name="tagged" rabbit_name="netsage_anonymizer_tagged" channel="3" />
+    <queue name="anonymized" rabbit_name="netsage_anonymizer_anonymized" channel="4" />
   </rabbit>
 </config>

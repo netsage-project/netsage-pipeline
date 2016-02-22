@@ -143,7 +143,9 @@ sub _publish_data {
     # send a max of 100 messages at a time to rabbit
     my $it = natatime( 100, @$data );
 
-    my $queue = $self->config->get( '/config/rabbit/raw-queue' );
+    #my $queue = $self->config->get( '/config/rabbit/raw-queue' );
+    my $rabbit_conf = $self->config->get( '/config/rabbit' );
+    my $queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
 
     while ( my @finished_messages = $it->() ) {
 
@@ -165,8 +167,9 @@ sub _rabbit_connect {
     my $rabbit_vhost = $self->config->get( '/config/rabbit/vhost' );
     my $rabbit_ssl = $self->config->get( '/config/rabbit/ssl' ) || 0;
     my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
-    my $raw_data_queue = $self->config->get( '/config/rabbit/raw-queue' );
-
+    my $rabbit_conf = $self->config->get( '/config/rabbit' );
+    my $raw_data_queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
+    
     while ( 1 ) {
 
         $self->logger->info( "Connecting to RabbitMQ $rabbit_host:$rabbit_port." );
