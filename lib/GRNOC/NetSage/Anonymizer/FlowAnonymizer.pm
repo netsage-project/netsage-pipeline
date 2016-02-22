@@ -69,31 +69,6 @@ sub BUILD {
 
 ### public methods ###
 
-sub run {
-
-    my ( $self ) = @_;
-
-    $self->logger->debug( "Running." );
-
-    # change our process name
-    $0 = "netsage raw json importer";
-
-    # create JSON object
-    my $json = JSON::XS->new();
-
-    $self->_set_json( $json );
-
-    # connect to rabbit queues
-    $self->_rabbit_connect();
-
-    # continually consume messages from rabbit queue, making sure we have to acknowledge them
-    $self->logger->debug( 'Starting RabbitMQ consume loop.' );
-
-    return $self->_consume_loop();
-
-
-}
-
 sub start {
 
     my ( $self ) = @_;
