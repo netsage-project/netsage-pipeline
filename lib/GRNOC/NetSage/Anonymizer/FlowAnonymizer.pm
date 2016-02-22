@@ -11,6 +11,7 @@ use Math::Round qw( nlowmult nhimult );
 use List::MoreUtils qw( natatime );
 use Try::Tiny;
 use Data::Validate::IP;
+use Net::IP;
 
 use Data::Dumper;
 
@@ -90,12 +91,6 @@ sub run {
 
     return $self->_consume_loop();
 
-    #if ( !$success ) {
-    #    $self->logger->debug('Error retrieving data');
-    #    return;
-    #}
-    #$self->logger->debug('Data retrieved; sending to rabbit');
-    #return $self->_publish_data();
 
 }
 
@@ -387,12 +382,19 @@ sub _anonymize_ip {
         $cleaned = join('.', $bytes[0], $bytes[1], 'xxx', 'yyy' );
 
     } elsif ( is_ipv6($ip) ) {
-        #TODO anonymize ipv6
-        my @bytes = split(/:/, $ip);
-        $self->logger->info('ipv6 bytes ' . Dumper @bytes);
+        my $ip_obj = Net::IP->new( $ip );
+        my $long = $ip_obj->ip();
+        my @bytes = split(/:/, $long);
+        # drop have the bytes
+        my $num_to_remove = @bytes / 2; 
+        my @new_bytes = splice @bytes, 0, $num_to_remove;
+        for( my $i=0; $i<$num_to_remove; $i++ ) {
+            push @new_bytes, 'x';
+        }
+        $cleaned = join(':', @new_bytes);
 
     } else {
-        $self->logger->warn('ip address is neither ipv4 or ipv6 ' + $ip);
+        $self->logger->warn('ip address is neither ipv4 or ipv6 ' . $ip);
     }
 
     
@@ -400,28 +402,6 @@ sub _anonymize_ip {
     return $cleaned;
 
 }
-
-sub _publish_data {
-    my ( $self ) = @_;
-    if ( !$self->json_data ) {
-        $self->logger->info("No data found to publish");
-        return;
-    }
-    my $data = $self->json_data;
-    
-    # send a max of 100 messages at a time to rabbit
-    my $it = natatime( 100, @$data );
-
-    my $queue = $self->config->get( '/config/rabbit/anonymized-queue' );
-
-    while ( my @finished_messages = $it->() ) {
-
-        $self->rabbit->publish( ANONYMIZED_FLOWS_QUEUE_CHANNEL, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
-
-    }
-
-}
-
 
 sub _rabbit_connect {
 

@@ -46,7 +46,29 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
         push @data, \%row2;
     }
 
+    # Manually add a few ipv6 addresses in different forms
+    # These 3 are actually all the same address:
+    my @srcs = ( '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+                 '2001:db8:85a3:0:0:8a2e:370:7334',
+                 '2001:db8:85a3::8a2e:370:7334',
+                 '2001:0db8:85a3:0000:0000:8a2e:0370:7335', # incremented by 1
+             );
+    my @dests = (
+    # perfsonar-dev
+    '2001:18e8:3:10:8000::1',
+    'fe80::5652:ff:fe2d:7a0a',
+    # mac
+    'fe80::6a5b:35ff:fe9f:d783',
+    '2001:18e8:2:1009:f000::1e0',
+    );
 
+    for(my $i=0; $i<@srcs; $i++) {
+        %row = ();
+        $row{'src_ip'} = $srcs[$i];
+        $row{'dest_ip'} = $dests[$i];
+        my %row2 = %row;
+        push @data, \%row2;
+    }
 }
 
 #warn Dumper @data;
