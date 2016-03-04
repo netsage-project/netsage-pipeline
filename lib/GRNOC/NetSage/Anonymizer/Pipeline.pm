@@ -29,6 +29,9 @@ has config_file => ( is => 'ro',
 has logging_file => ( is => 'ro',
                       required => 1 );
 
+has process_name => ( is => 'ro',
+                      required => 1 );
+
 # input queue, identified by name
 has input_queue_name => ( is => 'ro',
                      required => 1 );
@@ -97,7 +100,7 @@ sub start {
     $self->_set_is_running( 1 );
 
     # change our process name
-    $0 = "netsage_flow_anonymizer [worker]";
+    $0 = $self->process_name . " [worker]";
 
     # setup signal handlers
     $SIG{'TERM'} = sub {
