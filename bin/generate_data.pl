@@ -18,7 +18,8 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
     my %row = ();
 
     my $src_ip_seed = '192.168.0.';
-    my $dest_ip_seed = '24.' . ip_byte() . '.' . ip_byte() . '.';
+    #my $dest_ip_seed = '24.' . ip_byte() . '.' . ip_byte() . '.';
+    my $dest_ip_seed = '140.182.' . ip_byte() . '.';
     $src_ip = $src_ip_seed . ( $i + 1 );
 
     for(my $j=0; $j<3; $j++) {
@@ -45,6 +46,17 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
 
         push @data, \%row2;
     }
+
+    # real ipv4 addresses
+    my %real_ip = ();
+    $real_ip{'src_ip'} = '129.79.9.75';
+    $real_ip{'dest_ip'} = '140.182.44.196';
+    push @data, \%real_ip;
+
+    %real_ip = ();
+    $real_ip{'src_ip'} = '216.58.216.206'; # google
+    $real_ip{'dest_ip'} = '198.128.153.23'; # esnet
+    push @data, \%real_ip;
 
     # Manually add a few ipv6 addresses in different forms
     # These 3 are actually all the same address:

@@ -1,5 +1,8 @@
 package GRNOC::NetSage::Anonymizer::Pipeline;
 
+use strict;
+use warnings;
+
 use Moo;
 
 use GRNOC::Log;

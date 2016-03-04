@@ -1,5 +1,8 @@
 package GRNOC::NetSage::Anonymizer::FlowAnonymizer;
 
+use strict;
+use warnings;
+
 
 use Moo;
 
