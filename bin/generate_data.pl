@@ -51,11 +51,19 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
     my %real_ip = ();
     $real_ip{'src_ip'} = '129.79.9.75';
     $real_ip{'dest_ip'} = '140.182.44.196';
+    $end_time = time() - random_in_range(0, 600);
+    $start_time = $end_time - random_in_range(0, 86400);
+    $real_ip{'start_time'} = $start_time;
+    $real_ip{'end_time'} = $end_time;
     push @data, \%real_ip;
 
     %real_ip = ();
     $real_ip{'src_ip'} = '216.58.216.206'; # google
     $real_ip{'dest_ip'} = '198.128.153.23'; # esnet
+    $end_time = time() - random_in_range(0, 600);
+    $start_time = $end_time - random_in_range(0, 86400);
+    $real_ip{'start_time'} = $start_time;
+    $real_ip{'end_time'} = $end_time;
     push @data, \%real_ip;
 
     # Manually add a few ipv6 addresses in different forms
@@ -79,6 +87,10 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
         $row{'src_ip'} = $srcs[$i];
         $row{'dest_ip'} = $dests[$i];
         my %row2 = %row;
+        $end_time = time() - random_in_range(0, 600);
+        $start_time = $end_time - random_in_range(0, 86400);
+        $row2{'start_time'} = $start_time;
+        $row2{'end_time'} = $end_time;
         push @data, \%row2;
     }
 }

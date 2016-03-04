@@ -315,6 +315,8 @@ sub _consume_messages {
         my $dest_asn = $message->{'dest_asn'};
         my $start_time = $message->{'start_time'};
         my $end_time = $message->{'end_time'};
+        my $metadata_src = $message->{'metadata_src'};
+        my $metadata_dest = $message->{'metadata_dest'};
 
 
 	my $message = {
@@ -326,6 +328,8 @@ sub _consume_messages {
         dest_asn => $dest_asn,
         start_time => $start_time,
         end_time => $end_time,
+        metadata_src => $metadata_src,
+        metadata_dest => $metadata_dest,
     };
 
     # TODO: Add some sanity checks on the message
