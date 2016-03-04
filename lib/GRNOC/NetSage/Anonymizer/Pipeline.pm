@@ -55,6 +55,13 @@ has config => ( is => 'rwp' );
 has is_running => ( is => 'rwp',
                     default => 0 );
 
+# ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
+# if you disable this, we don't ack the rabbit messages and they go back in the queue. 
+# usually this is only desired for testing purposes. Don't touch this unless you
+# know what you're doing.
+has ack_messages => ( is => 'rwp',
+                      default => 1 );    
+
 has rabbit => ( is => 'rwp' );
 
 has input_queue => ( is => 'rwp' );
@@ -272,6 +279,7 @@ sub _consume_loop {
 
         # successfully consumed message, acknowledge it to rabbit
         else {
+            if ( $self->ack_messages ) {
 
             $self->logger->debug( "Acknowledging successful message." );
 
@@ -287,6 +295,9 @@ sub _consume_loop {
                 # reconnect to rabbit since we had a failure
                 $self->_rabbit_connect();
             };
+            } else {
+                # do nothing
+            }
         }
     }
 }

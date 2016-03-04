@@ -125,8 +125,8 @@ sub start {
 
 ### private methods ###
 
-# expects an array of data for it to anonymize
-# returns the anonymized array
+# expects an array of data for it to tag
+# returns the tagged array
 sub _tag_messages {
     # TODO: the actual tagging
     my ( $self, $caller, $messages ) = @_;
