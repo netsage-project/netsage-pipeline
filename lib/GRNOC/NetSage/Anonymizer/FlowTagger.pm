@@ -175,15 +175,11 @@ sub _tag_messages {
 
                 }
                 
-                warn "$field: $ip; record:";
+                #warn "$field: $ip; record:";
                 #warn Dumper $record;
                 if ( $country_code ) {
                     warn "\ncountry code: $country_code\n";
                     warn "country name: $country_name";
-                }
-                if ( $asn_org ) {
-                    warn "asn_org ipv4: '$asn_org'";
-
                 }
             } elsif ( is_ipv6( $ip ) )  {
                 # TODO: extend to ipv6
@@ -194,9 +190,6 @@ sub _tag_messages {
                 warn "country_code IPV6 " . $geoip_country_ipv6->country_code_by_addr_v6( $ip );
 
                 $asn_org =  $geoip_asn_ipv6->name_by_addr_v6 ( $ip );
-                if ( $asn_org ) {
-                    warn "\n\nASN V6: $asn_org\n\n";
-                }
 
                 if ( $record ) {
                     # NOTE: some of these don't seem to work for ipv6:
@@ -226,7 +219,6 @@ sub _tag_messages {
 
             }
                 if ( $asn_org =~ /^AS(\d+)\s+(.+)$/ ) {
-                    warn "ASN: $1; ORG: '$2'";
                     my $asn = $1;
                     my $organization = $2;
                     $metadata{'asn'} = $asn;

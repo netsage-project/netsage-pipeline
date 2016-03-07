@@ -82,8 +82,10 @@ sub _anonymize_messages {
     my $finished_messages = $messages;
 
     foreach my $message ( @$messages ) {
-        $message->{'src_ip'} = $self->_anonymize_ip( $message->{'src_ip'} );
-        $message->{'dest_ip'} = $self->_anonymize_ip( $message->{'dest_ip'} );
+        my $src_ip = $message->{'meta'}->{'src_ip'};
+        my $dst_ip = $message->{'meta'}->{'dst_ip'};
+        $message->{'meta'}->{'src_ip'} = $self->_anonymize_ip( $src_ip );
+        $message->{'meta'}->{'dst_ip'} = $self->_anonymize_ip( $dst_ip );
     }
 
     return $finished_messages;
@@ -109,6 +111,7 @@ sub _anonymize_ip {
             push @new_bytes, 'x';
         }
         $cleaned = join(':', @new_bytes);
+        warn "cleaned ipv6: $ip; new ip: $cleaned";
 
     } else {
         $self->logger->warn('ip address is neither ipv4 or ipv6 ' . $ip);
