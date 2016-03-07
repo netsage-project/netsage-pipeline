@@ -4,7 +4,7 @@ use Data::Dumper;
 use Template;
 use strict;
 use warnings;
-use constant NUM_ENTRIES => 200;
+use constant NUM_ENTRIES => 13000;
 use JSON::XS;
 
 my $tt = Template->new();
@@ -20,7 +20,7 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
     my $src_ip_seed = '192.168.0.';
     #my $dest_ip_seed = '24.' . ip_byte() . '.' . ip_byte() . '.';
     my $dest_ip_seed = '140.182.' . ip_byte() . '.';
-    $src_ip = $src_ip_seed . ( $i + 1 );
+    $src_ip = $src_ip_seed . ip_byte();
 
     for(my $j=0; $j<3; $j++) {
         %row = ();

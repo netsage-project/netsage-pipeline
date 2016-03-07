@@ -21,6 +21,7 @@ use Data::Dumper;
 ### constants ###
 
 use constant QUEUE_PREFETCH_COUNT => 20;
+use constant QUEUE_PREFETCH_COUNT_NOACK => 0;
 use constant QUEUE_FETCH_TIMEOUT => 10 * 1000;
 use constant RECONNECT_TIMEOUT => 10;
 
@@ -37,7 +38,7 @@ has process_name => ( is => 'ro',
 
 # input queue, identified by name
 has input_queue_name => ( is => 'ro',
-                     required => 1 );
+                     required => 1 );                 
 
 # output queue, identified by name
 has output_queue_name => ( is => 'ro',
@@ -281,22 +282,23 @@ sub _consume_loop {
         else {
             if ( $self->ack_messages ) {
 
-            $self->logger->debug( "Acknowledging successful message." );
+                $self->logger->debug( "Acknowledging successful message." );
 
-            try {
+                try {
 
-                $self->rabbit->ack( $input_channel, $rabbit_message->{'delivery_tag'} );
-            }
+                    $self->rabbit->ack( $input_channel, $rabbit_message->{'delivery_tag'} );
+                }
 
-            catch {
+                catch {
 
-                $self->logger->error( "Unable to acknowledge rabbit message: $_" );
+                    $self->logger->error( "Unable to acknowledge rabbit message: $_" );
 
-                # reconnect to rabbit since we had a failure
-                $self->_rabbit_connect();
-            };
+                    # reconnect to rabbit since we had a failure
+                    $self->_rabbit_connect();
+                };
             } else {
                 # do nothing
+                $self->logger->warn("Not acking message");
             }
         }
     }
@@ -318,35 +320,10 @@ sub _consume_messages {
             $self->logger->error( "Messages must be an object/hash of data, skipping." );
             next;
         }
-        my $src_ip = $message->{'src_ip'};
-        my $dest_ip = $message->{'dest_ip'};
-        my $src_port = $message->{'src_port'};
-        my $dest_port = $message->{'dest_port'};
-        my $src_asn = $message->{'src_asn'};
-        my $dest_asn = $message->{'dest_asn'};
-        my $start_time = $message->{'start_time'};
-        my $end_time = $message->{'end_time'};
-        my $metadata_src = $message->{'metadata_src'};
-        my $metadata_dest = $message->{'metadata_dest'};
 
+        # include this to our list of messages to process if it was valid
+        push( @$flows_to_process, $message ) if $message;
 
-	my $message = {
-        src_ip => $src_ip,
-        dest_ip => $dest_ip,
-        src_port => $src_port,
-        dest_port => $dest_port,
-        src_asn => $src_asn,
-        dest_asn => $dest_asn,
-        start_time => $start_time,
-        end_time => $end_time,
-        metadata_src => $metadata_src,
-        metadata_dest => $metadata_dest,
-    };
-
-    # TODO: Add some sanity checks on the message
-
-	# include this to our list of messages to process if it was valid
-	push( @$flows_to_process, $message ) if $message;
     }
 
     # anonymize all of the data across all messages
@@ -359,7 +336,7 @@ sub _consume_messages {
 
     catch {
 
-        $self->logger->error( "Error anonymizing messages: $_" );
+        $self->logger->error( "Error processing messages: $_" );
         $success = 0;
     };
 
@@ -471,12 +448,19 @@ sub _rabbit_connect {
 	    # open channel to the pending queue we'll read from
             $rabbit->channel_open( $input_channel );
             $rabbit->queue_declare( $input_channel, $input_queue, {'auto_delete' => 0} );
-            $rabbit->basic_qos( $input_channel, { prefetch_count => QUEUE_PREFETCH_COUNT } );
+            if ( $self->ack_messages ) {
+                $rabbit->basic_qos( $input_channel, { prefetch_count => QUEUE_PREFETCH_COUNT } );
+            } else {
+                #$rabbit->basic_qos( $input_channel );
+                $rabbit->basic_qos( $input_channel, { prefetch_count => QUEUE_PREFETCH_COUNT_NOACK } );
+            }
+
             $rabbit->consume( $input_channel, $input_queue, {'no_ack' => 0} );
 
 	    # open channel to the finished queue we'll send to
             $rabbit->channel_open( $output_channel );
             $rabbit->queue_declare( $output_channel, $output_queue, {'auto_delete' => 0} );
+
 
 
             $self->_set_rabbit( $rabbit );

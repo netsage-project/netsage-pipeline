@@ -18,13 +18,13 @@ use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/anonymizer/logging.conf
 my $config = DEFAULT_CONFIG_FILE;
 my $logging = DEFAULT_LOGGING_FILE;
 my $nofork;
-my $jsonfile;
+my @jsonfile;
 my $help;
 
 GetOptions( 'config=s' => \$config,
             'logging=s' => \$logging,
             'nofork' => \$nofork,
-            'jsonfile=s' => \$jsonfile,
+            'jsonfile=s{1,}' => \@jsonfile,
             'help|h|?' => \$help );
 
 # did they ask for help?
@@ -34,7 +34,7 @@ usage() if $help;
 my $flow_importer = GRNOC::NetSage::Anonymizer::FlowImporter->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
-                                                          jsonfile => $jsonfile );
+                                                          jsonfile => \@jsonfile );
 
 $flow_importer->run();
 

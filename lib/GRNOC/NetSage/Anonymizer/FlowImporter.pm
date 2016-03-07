@@ -103,26 +103,35 @@ sub run {
 
 sub _get_json_data {
     my ( $self ) = @_;
-    my $file = $self->jsonfile;
-    my $json_data;
-    {
-        local $/; #Enable 'slurp' mode
-        open my $fh, "<", $file || die ('error loading json file');
-        $json_data = <$fh>;
-        close $fh;
+    
+   
+    my @all_data = ();
+
+    my $files = $self->jsonfile;
+    foreach my $file ( @$files ) {
+        warn "file: $file";
+        my $json_data;
+        {
+            local $/; #Enable 'slurp' mode
+            open my $fh, "<", $file || die ('error loading json file');
+            $json_data = <$fh>;
+            close $fh;
+        }
+
+        my $data;
+        try {
+            $data = $self->json->decode( $json_data );
+            warn "data: " . @$data;
+            push @all_data, @$data;
+        }
+        catch {
+            $self->logger->warn( "Unable to JSON decode message: $_" );
+        };
     }
+    warn "all_data " .  @all_data;
+    $self->_set_json_data( \@all_data );
 
-    my $data;
-    try {
-        $data = $self->json->decode( $json_data );
-    }
-    catch {
-        $self->logger->warn( "Unable to JSON decode message: $_" );
-    };
-
-    $self->_set_json_data( $data );
-
-    if (!$data) {
+    if (!@all_data) {
         return;
     } else {
         return 1;

@@ -140,24 +140,23 @@ sub _tag_messages {
     my $finished_messages = $messages;
 
     foreach my $message ( @$messages ) {
-        my @fields = ( 'src_ip', 'dest_ip');
+        my @fields = ( 'src_ip', 'dst_ip');
         foreach my $field ( @fields ) {
             my $field_direction = $field;
             $field_direction =~ s/_ip//g;
-            my $ip = $message->{ $field };
+            my $ip = $message->{'meta'}->{ $field };
             my %metadata = ();
+            my $asn_org;
 
             if ( is_ipv4( $ip ) ) {
                 #my $record = $geoip->record_by_addr( $ip );
                 my $record;
-                my $asn;
                 my ( $country_code, $country_name, $city, $latitude, $longitude );
                 #my $country_code = $geoip_country->country_code_by_addr( $ip );
                 #my $country_name = $geoip_country->country_name_by_addr( $ip );
 
-                $asn = $geoip_asn->org_by_addr( $ip );
+                $asn_org = $geoip_asn->org_by_addr( $ip );
 
-                $metadata{'asn'} = $asn;
 
                 $record = $geoip_city->record_by_addr( $ip );
 
@@ -172,18 +171,18 @@ sub _tag_messages {
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
 
-                    warn "metadata: " . Dumper %metadata;
+                    #warn "metadata: " . Dumper %metadata;
 
                 }
                 
                 warn "$field: $ip; record:";
-                warn Dumper $record;
+                #warn Dumper $record;
                 if ( $country_code ) {
                     warn "\ncountry code: $country_code\n";
                     warn "country name: $country_name";
                 }
-                if ( $asn ) {
-                    warn "asn: '$asn'";
+                if ( $asn_org ) {
+                    warn "asn_org ipv4: '$asn_org'";
 
                 }
             } elsif ( is_ipv6( $ip ) )  {
@@ -194,11 +193,10 @@ sub _tag_messages {
                 warn "country_name IPV6 " . $geoip_country_ipv6->country_name_by_addr_v6( $ip );
                 warn "country_code IPV6 " . $geoip_country_ipv6->country_code_by_addr_v6( $ip );
 
-                my $asn =  $geoip_asn_ipv6->name_by_addr_v6 ( $ip );
-                if ( $asn ) {
-                    warn "\n\nASN V6: $asn\n\n";
+                $asn_org =  $geoip_asn_ipv6->name_by_addr_v6 ( $ip );
+                if ( $asn_org ) {
+                    warn "\n\nASN V6: $asn_org\n\n";
                 }
-                $metadata{'asn'} = $asn;
 
                 if ( $record ) {
                     # NOTE: some of these don't seem to work for ipv6:
@@ -213,9 +211,10 @@ sub _tag_messages {
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
 
-                    warn "metadata IPV6: " . Dumper \%metadata;
+                    #warn "metadata IPV6: " . Dumper \%metadata;
 
                 }
+
 
 
 
@@ -223,8 +222,19 @@ sub _tag_messages {
                 # not detected as ipv4 nor ipv6
                 warn "\n\nNOTICE: address not detected as ipv4 or ipv6: $ip\n\n";
                 $self->logger->warn( "NOTICE: address not detected as ipv4 or ipv6: $ip"  );
+                # TODO: handle failure better
 
             }
+                if ( $asn_org =~ /^AS(\d+)\s+(.+)$/ ) {
+                    warn "ASN: $1; ORG: '$2'";
+                    my $asn = $1;
+                    my $organization = $2;
+                    $metadata{'asn'} = $asn;
+                    $metadata{'organization'} = $organization;
+
+                } else {
+                    warn "\n\nASN/ORG don't match regex\n\n";
+                }
 
             # for now, we're going to tag these:
             # ASN
@@ -233,9 +243,9 @@ sub _tag_messages {
             # Latitude
             # Longitude
             my @meta_names = ( 'asn', 'city', 'country_code', 'country_name', 
-                'latitude', 'longitude');
+                'latitude', 'longitude', 'organization');
             foreach my $name ( @meta_names ) {
-                $message->{'metadata_' . $field_direction}->{ $name } = $metadata{ $name } if $metadata{ $name };
+                $message->{'values'}->{ $field_direction ."_" . $name } = $metadata{ $name } if $metadata{ $name };
             }
 
         }

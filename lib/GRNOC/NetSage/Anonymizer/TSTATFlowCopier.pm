@@ -60,10 +60,10 @@ sub BUILD {
         config_file => $self->config_file,
         logging_file => $self->logging_file,
         input_queue_name => 'raw',
-        output_queue_name => 'tagged',
+        output_queue_name => 'tstat_clone',
         handler => sub { $self->_tag_messages(@_) },
         process_name => 'netsage_tstat_flow_copier',
-        ack_messages => 0, # set to 0 to prevent acking messages (they get requeued)
+        #ack_messages => 0, # set to 0 to prevent acking messages (they get requeued)
     );
     $self->_set_pipeline( $pipeline );
     warn "config: " . Dumper $config->get('/config');
