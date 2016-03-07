@@ -111,7 +111,6 @@ sub _anonymize_ip {
             push @new_bytes, 'x';
         }
         $cleaned = join(':', @new_bytes);
-        warn "cleaned ipv6: $ip; new ip: $cleaned";
 
     } else {
         $self->logger->warn('ip address is neither ipv4 or ipv6 ' . $ip);

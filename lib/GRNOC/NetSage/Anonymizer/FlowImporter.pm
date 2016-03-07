@@ -109,7 +109,6 @@ sub _get_json_data {
 
     my $files = $self->jsonfile;
     foreach my $file ( @$files ) {
-        warn "file: $file";
         my $json_data;
         {
             local $/; #Enable 'slurp' mode
@@ -121,14 +120,12 @@ sub _get_json_data {
         my $data;
         try {
             $data = $self->json->decode( $json_data );
-            warn "data: " . @$data;
             push @all_data, @$data;
         }
         catch {
             $self->logger->warn( "Unable to JSON decode message: $_" );
         };
     }
-    warn "all_data " .  @all_data;
     $self->_set_json_data( \@all_data );
 
     if (!@all_data) {

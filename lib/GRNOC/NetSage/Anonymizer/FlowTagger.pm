@@ -178,16 +178,16 @@ sub _tag_messages {
                 #warn "$field: $ip; record:";
                 #warn Dumper $record;
                 if ( $country_code ) {
-                    warn "\ncountry code: $country_code\n";
-                    warn "country name: $country_name";
+                    #warn "\ncountry code: $country_code\n";
+                    #warn "country name: $country_name";
                 }
             } elsif ( is_ipv6( $ip ) )  {
                 # TODO: extend to ipv6
 
                 my $record;
                 $record = $geoip_city_ipv6->record_by_addr_v6( $ip );
-                warn "country_name IPV6 " . $geoip_country_ipv6->country_name_by_addr_v6( $ip );
-                warn "country_code IPV6 " . $geoip_country_ipv6->country_code_by_addr_v6( $ip );
+                #warn "country_name IPV6 " . $geoip_country_ipv6->country_name_by_addr_v6( $ip );
+                #warn "country_code IPV6 " . $geoip_country_ipv6->country_code_by_addr_v6( $ip );
 
                 $asn_org =  $geoip_asn_ipv6->name_by_addr_v6 ( $ip );
 
@@ -218,14 +218,18 @@ sub _tag_messages {
                 # TODO: handle failure better
 
             }
-                if ( $asn_org =~ /^AS(\d+)\s+(.+)$/ ) {
-                    my $asn = $1;
-                    my $organization = $2;
-                    $metadata{'asn'} = $asn;
-                    $metadata{'organization'} = $organization;
+                if ( $asn_org ) {
+                    if ( $asn_org =~ /^AS(\d+)\s+(.+)$/ ) {
+                        my $asn = $1;
+                        my $organization = $2;
+                        $metadata{'asn'} = $asn;
+                        $metadata{'organization'} = $organization;
 
+                    } else {
+                        #warn "\n\nASN/ORG don't match regex\n\n";
+                    }
                 } else {
-                    warn "\n\nASN/ORG don't match regex\n\n";
+                    #warn "ASN NOT DEFINED";
                 }
 
             # for now, we're going to tag these:
