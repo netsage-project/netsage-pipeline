@@ -51,6 +51,19 @@ for(my $i=0; $i<NUM_ENTRIES; $i++) {
 
     # real ipv4 addresses
     my %real_ip = ();
+    $real_ip{'meta'}{'src_ip'} = 'asdf'; # Invalid
+    #$real_ip{'meta'}{'src_ip'} = '129.79.9.75:80'; # Invalid
+    $real_ip{'meta'}{'dst_ip'} = '140.182.44.196';
+    $end_time = time() - random_in_range(0, 600);
+    $start_time = $end_time - random_in_range(0, 86400);
+    $real_ip{'start_time'} = $start_time;
+    $real_ip{'end_time'} = $end_time;
+    my %real_ip2 = %real_ip;
+    #warn "row: " . Dumper %real_ip2;
+
+    push @data, \%real_ip2;
+
+    %real_ip = ();
     $real_ip{'meta'}{'src_ip'} = '129.79.9.75';
     $real_ip{'meta'}{'dst_ip'} = '140.182.44.196';
     $end_time = time() - random_in_range(0, 600);

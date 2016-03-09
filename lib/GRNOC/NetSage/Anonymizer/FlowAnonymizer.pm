@@ -12,6 +12,7 @@ use GRNOC::Config;
 
 use Data::Validate::IP;
 use Net::IP;
+use Digest::SHA;
 
 use Data::Dumper;
 
@@ -84,11 +85,40 @@ sub _anonymize_messages {
     foreach my $message ( @$messages ) {
         my $src_ip = $message->{'meta'}->{'src_ip'};
         my $dst_ip = $message->{'meta'}->{'dst_ip'};
+        my $id = $self->_generate_id( $message );
+        $message->{'meta'}->{'id'} = $id;
         $message->{'meta'}->{'src_ip'} = $self->_anonymize_ip( $src_ip );
         $message->{'meta'}->{'dst_ip'} = $self->_anonymize_ip( $dst_ip );
     }
 
     return $finished_messages;
+}
+
+# generates a unique id based on required fields
+sub _generate_id {
+    my ( $self, $message ) = @_;
+    my @fields = ( 'src_ip', 'dst_ip', 'src_port', 'dst_port', 'protocol' );
+    @fields = sort @fields;
+    my @required = ();
+    my $hash = Digest::SHA->new( 256 );
+    my $id_string = '';
+    foreach my $field (@fields ) {
+        #push @required, $message->{'meta'}->{$field};
+        warn "required field not found: $field " if not defined $message->{'meta'}->{$field};
+        my $value = $message->{'meta'}->{$field};
+        $id_string .= $value;
+        $hash->add( $value );
+
+    }
+    return $hash->hexdigest();
+
+    #my $src_ip = $message->{'meta'}->{'src_ip'};
+    #my $dst_ip = $message->{'meta'}->{'dst_ip'};
+    #my $src_port = $message->{'meta'}->{'src_port'};
+    #my $dst_port = $message->{'meta'}->{'dst_port'};
+    #my $protocol = $message->{'meta'}->{'protocol'};
+
+
 }
 
 # anonymizes an individual ip
@@ -114,6 +144,12 @@ sub _anonymize_ip {
 
     } else {
         $self->logger->warn('ip address is neither ipv4 or ipv6 ' . $ip);
+
+    }
+
+    if ( not defined $cleaned ) {
+        warn "IP was NOT CLEANED. setting blank";
+        $cleaned = '';
     }
 
     
