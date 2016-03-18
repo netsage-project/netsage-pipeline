@@ -248,7 +248,7 @@ sub _consume_loop {
         }
 
         my $num_messages = @$messages;
-        $self->logger->debug( "Processing message containing $num_messages anonymizations to perform." );
+        $self->logger->debug( "Processing message containing $num_messages to process." );
 
         my $t1 = time();
 
@@ -326,7 +326,7 @@ sub _consume_messages {
 
     }
 
-    # anonymize all of the data across all messages
+    # process all of the data across all messages
     my $success = 1;
 
     try {
