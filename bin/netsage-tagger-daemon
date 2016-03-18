@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
+# do we need both of these?
 use GRNOC::NetSage::Anonymizer::FlowTagger;
+use GRNOC::NetSage::Anonymizer::WorkerManager;
 
 use Getopt::Long;
 use Data::Dumper;
@@ -29,9 +31,13 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $tagger = GRNOC::NetSage::Anonymizer::FlowTagger->new( config_file => $config,
+#my $tagger = GRNOC::NetSage::Anonymizer::FlowTagger->new( config_file => $config,
+#                                                          logging_file => $logging,
+#                                                          daemonize => !$nofork );
+my $tagger = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork );
+
 
 $tagger->start();
 
