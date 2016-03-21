@@ -473,8 +473,8 @@ sub _rabbit_connect {
             my $rabbit = Net::AMQP::RabbitMQ->new();
             my $params = {};
             $params->{'port'} = $rabbit_port;
-            $params->{'user'} = $rabbit_username;
-            $params->{'password'} = $rabbit_password;
+            $params->{'user'} = $rabbit_username if $rabbit_username;
+            $params->{'password'} = $rabbit_password if $rabbit_password;
             if ( $rabbit_ssl ) {
                 $params->{'ssl'} = $rabbit_ssl;
                 $params->{'ssl_verify_host'} = 0;
@@ -510,7 +510,7 @@ sub _rabbit_connect {
 
             my $setter = "_set_rabbit_$direction";
             warn "setting rabbit; setter: '$setter'";
-            warn "vhost: $rabbit_vhost";
+            #warn "vhost: $rabbit_vhost";
             warn "queue: $rabbit_queue";
             warn "channel: $rabbit_channel";
             $self->$setter( $rabbit );

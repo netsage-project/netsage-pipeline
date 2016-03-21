@@ -239,7 +239,7 @@ sub _tag_messages {
             my @meta_names = ( 'asn', 'city', 'country_code', 'country_name', 
                 'latitude', 'longitude', 'organization');
             foreach my $name ( @meta_names ) {
-                $message->{'values'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };
+                $message->{'meta'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };
             }
 
         }
