@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use GRNOC::NetSage::Anonymizer::FlowAnonymizer;
+use GRNOC::NetSage::Anonymizer::WorkerManager;
 
 use Getopt::Long;
 use Data::Dumper;
@@ -31,9 +32,17 @@ usage() if $help;
 # start/daemonize writer
 my $anonymizer = GRNOC::NetSage::Anonymizer::FlowAnonymizer->new( config_file => $config,
                                                           logging_file => $logging,
+                                                          process_name => 'netsage_flowanonymizer',
                                                           daemonize => !$nofork );
 
-$anonymizer->start();
+my $worker = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
+                                                          logging_file => $logging,
+                                                          process_name => 'netsage_flowanonymizer',
+                                                          daemonize => !$nofork,
+                                                          worker => $anonymizer );
+
+$worker->start();
+#$anonymizer->start();
 
 ### helpers ###
 

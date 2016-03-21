@@ -6,7 +6,8 @@ use warnings;
 
 use Moo;
 
-use GRNOC::NetSage::Anonymizer::Pipeline;
+extends 'GRNOC::NetSage::Anonymizer::Pipeline';
+
 use GRNOC::Log;
 use GRNOC::Config;
 
@@ -17,20 +18,8 @@ use Digest::SHA;
 use Data::Dumper;
 
 
-### required attributes ###
-
-has config_file => ( is => 'ro',
-                required => 1 );
-
-has logging_file => ( is => 'ro',
-                      required => 1 );
-
 ### internal attributes ###
             
-has logger => ( is => 'rwp' );
-
-has config => ( is => 'rwp' );
-
 has pipeline => ( is => 'rwp' );
 
 has handler => ( is => 'rwp');
@@ -43,34 +32,38 @@ sub BUILD {
     my ( $self ) = @_;
 
     # create and store logger object
-    my $grnoc_log = GRNOC::Log->new( config => $self->logging_file );
-    my $logger = GRNOC::Log->get_logger();
+    #my $grnoc_log = GRNOC::Log->new( config => $self->logging_file );
+    #my $logger = GRNOC::Log->get_logger();
 
-    $self->_set_logger( $logger );
+    #$self->_set_logger( $logger );
 
     # create the Pipeline object, which handles the Rabbit queues
 
-    my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
-        config_file => $self->config_file,
-        logging_file => $self->logging_file,
-        input_queue_name => 'tagged',
-        output_queue_name => 'anonymized',
-        handler => sub { $self->_anonymize_messages(@_) },
-        process_name => 'netsage_anonymizer',
-    );
-    $self->_set_pipeline( $pipeline );
+    my $config = $self->config;
+    warn "config: " . Dumper $config->get('/config');
+    $self->_set_handler( sub { $self->_anonymize_messages(@_) } );
+
+    #my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
+    #    config_file => $self->config_file,
+    #    logging_file => $self->logging_file,
+    #    input_queue_name => 'tagged',
+    #    output_queue_name => 'anonymized',
+    #    handler => sub { $self->_anonymize_messages(@_) },
+    #    process_name => 'netsage_anonymizer',
+    #);
+    #$self->_set_pipeline( $pipeline );
 
     return $self;
 }
 
 ### public methods ###
 
-sub start {
-
-    my ( $self ) = @_;
-    return $self->pipeline->start();
-
-}
+#sub start {
+#
+#    my ( $self ) = @_;
+#    return $self->pipeline->start();
+#
+#}
 
 ### private methods ###
 

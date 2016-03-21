@@ -37,12 +37,12 @@ has process_name => ( is => 'ro',
                       required => 1 );
 
 # input queue, identified by name
-has input_queue_name => ( is => 'ro',
-                     required => 1 );                 
+#has input_queue_name => ( is => 'ro',
+#                     required => 1 );                 
 
 # output queue, identified by name
-has output_queue_name => ( is => 'ro',
-                     required => 1 );
+#has output_queue_name => ( is => 'ro',
+#                     required => 1 );
 
 has handler => ( is => 'rwp');
 #                 required => 1 );
@@ -97,7 +97,8 @@ sub BUILD {
     # create and store config object
     my $config = GRNOC::Config->new( config_file => $self->config_file,
                                      force_array => 0 );
-
+    
+    warn "pipeline config " . Dumper $config;
     $self->_set_config( $config );
 
     return $self;

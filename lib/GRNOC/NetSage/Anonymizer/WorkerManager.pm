@@ -26,6 +26,12 @@ has logging_file => ( is => 'ro',
                       isa => Str,
                       required => 1 );
 
+has worker => ( is => 'ro',
+                required => 1 );
+
+has process_name => ( is => 'ro',
+                      required => 1 );
+
 ### optional attributes ###
 
 has daemonize => ( is => 'ro',
@@ -166,10 +172,11 @@ sub _create_workers {
         $forker->start() and next;
 
         # create worker in this process
-        my $worker = GRNOC::NetSage::Anonymizer::FlowTagger->new( config => $self->config,
-								      logger => $self->logger,
-                                      config_file => $self->config_file,
-                                      logging_file => $self->logging_file );
+        #my $worker = GRNOC::NetSage::Anonymizer::FlowTagger->new( config => $self->config,
+        #							      logger => $self->logger,
+        #                              config_file => $self->config_file,
+        #                              logging_file => $self->logging_file );
+        my $worker = $self->worker;
 
         # this should only return if we tell it to stop via TERM signal etc.
         $worker->start();

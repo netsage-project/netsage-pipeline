@@ -33,18 +33,18 @@ usage() if $help;
 # start/daemonize writer
 my $tagger = GRNOC::NetSage::Anonymizer::FlowTagger->new( config_file => $config,
                                                           logging_file => $logging,
-                                                          input_queue_name => 'raw',
-                                                          output_queue_name => 'tagged',
                                                           process_name => 'netsage_flowtagger',
                                                           daemonize => !$nofork );
 
-#$my $worker = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
-#                                                          logging_file => $logging,
-#                                                          daemonize => !$nofork,
-#                                                          worker => $tagger );
+my $worker = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
+                                                          logging_file => $logging,
+                                                          daemonize => !$nofork,
+                                                          process_name => 'netsage_flowtagger',
+                                                          worker => $tagger );
 
 
-$tagger->start();
+$worker->start();
+#$tagger->start();
 
 ### helpers ###
 
