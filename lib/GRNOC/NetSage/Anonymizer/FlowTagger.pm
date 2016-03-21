@@ -20,9 +20,6 @@ use Data::Dumper;
 
 ### internal attributes ###
             
-
-has pipeline => ( is => 'rwp' );
-
 has handler => ( is => 'rwp');
 
 has geoip_country => ( is => 'rwp' );
@@ -40,42 +37,9 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    # create and store logger object
-    #my $grnoc_log = GRNOC::Log->new( config => $self->logging_file );
-    #my $logger = GRNOC::Log->get_logger();
-
-    #$self->_set_logger( $logger );
-
-    ## create and store config object
-    #my $config = GRNOC::Config->new( config_file => $self->config_file,
-    #                                 force_array => 0 );
-
-    #$self->_set_config( $config );
-
-
-    # create the Pipeline object, which handles the Rabbit queues
-
     my $config = $self->config;
     warn "config: " . Dumper $config->get('/config');
     $self->_set_handler( sub { $self->_tag_messages(@_) } );
-
-    #my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
-    #    config_file => $self->config_file,
-    #    logging_file => $self->logging_file,
-    #    input_queue_name => 'raw',
-    #    output_queue_name => 'tagged',
-    #    handler => sub { $self->_tag_messages(@_) },
-    #    process_name => 'netsage_flowtagger',
-    #);
-    #$self->_set_pipeline( $pipeline );
-
-    # TODO : extend this to ipv6
-    # TODO: review whether we need the country db. the city db seems to have 
-    # all the country data as well
-    #my $geoip_country_file = $config->get( '/config/geoip/config_files/country' );
-    #my $geoip_country = Geo::IP->open( $geoip_country_file, GEOIP_MEMORY_CACHE);
-    #warn "geoip_country_file: $geoip_country_file";
-    #$self->_set_geoip_country( $geoip_country );
 
     my $geoip_country_ipv6_file = $config->get( '/config/geoip/config_files/country_ipv6' );
     my $geoip_country_ipv6 = Geo::IP->open( $geoip_country_ipv6_file, GEOIP_MEMORY_CACHE);
@@ -92,8 +56,6 @@ sub BUILD {
     my $geoip_city_ipv6_file = $config->get( '/config/geoip/config_files/city_ipv6' );
     my $geoip_city_ipv6 = Geo::IP->open( $geoip_city_ipv6_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_city_ipv6( $geoip_city_ipv6 );
-    #die "Please install the CAPI for IPv6 support\n" unless Geo::IP->api eq 'CAPI';
-
 
     my $geoip_city_file = $config->get( '/config/geoip/config_files/city' );
     my $geoip_city = Geo::IP->open( $geoip_city_file, GEOIP_MEMORY_CACHE);
@@ -102,23 +64,13 @@ sub BUILD {
     return $self;
 }
 
-### public methods ###
-
-#sub start {
-#
-#    my ( $self ) = @_;
-#    return $self->pipeline->start();
-#
-#}
-
 ### private methods ###
 
 # expects an array of data for it to tag
 # returns the tagged array
 sub _tag_messages {
-    # TODO: the actual tagging
     my ( $self, $caller, $messages ) = @_;
-    #my $geoip_country = $self->geoip_country;
+    #my $geoip_country = $self->geoip_country; # we're using city for country also
     my $geoip_city = $self->geoip_city;
     my $geoip_city_ipv6 = $self->geoip_city_ipv6;
     my $geoip_country_ipv6 = $self->geoip_country_ipv6;
@@ -244,10 +196,6 @@ sub _tag_messages {
 
         }
 
-
-        # $message->{'src_ip'} = $self->_anonymize_ip( $message->{'src_ip'} );
-        # $message->{'dest_ip'} = $self->_anonymize_ip( $message->{'dest_ip'} );
-        
     }
 
     return $finished_messages;
