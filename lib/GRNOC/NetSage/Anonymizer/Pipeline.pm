@@ -44,8 +44,8 @@ has input_queue_name => ( is => 'ro',
 has output_queue_name => ( is => 'ro',
                      required => 1 );
 
-has handler => ( is => 'ro',
-                 required => 1 );
+has handler => ( is => 'rwp');
+#                 required => 1 );
 
 ### internal attributes ###
 
@@ -56,6 +56,8 @@ has config => ( is => 'rwp' );
 has is_running => ( is => 'rwp',
                     default => 0 );
 
+has rabbit_config => ( is => 'rwp' );
+
 # ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
 # if you disable this, we don't ack the rabbit messages and they go back in the queue. 
 # usually this is only desired for testing purposes. Don't touch this unless you
@@ -63,7 +65,9 @@ has is_running => ( is => 'rwp',
 has ack_messages => ( is => 'rwp',
                       default => 1 );    
 
-has rabbit => ( is => 'rwp' );
+has rabbit_input => ( is => 'rwp' );
+
+has rabbit_output => ( is => 'rwp' );
 
 has input_queue => ( is => 'rwp' );
 
@@ -155,8 +159,13 @@ sub _consume_loop {
 
     my ( $self ) = @_;
 
-    my $input_queue = $self->input_queue;
-    my $input_channel = $self->input_channel;
+    warn "consume loop!";
+
+    my $input_queue = $self->rabbit_config->{'input'}->{'queue'};
+    my $input_channel = $self->rabbit_config->{'input'}->{'channel'};
+    my $rabbit = $self->rabbit_input;
+    warn "input queue $input_queue";
+    warn "input channel $input_channel";
 
     while ( 1 ) {
 
@@ -172,7 +181,7 @@ sub _consume_loop {
 
         try {
 
-            $rabbit_message = $self->rabbit->recv( QUEUE_FETCH_TIMEOUT );
+            $rabbit_message = $rabbit->recv( QUEUE_FETCH_TIMEOUT );
         }
 
         catch {
@@ -210,7 +219,7 @@ sub _consume_loop {
             try {
 
                 # reject the message and do NOT requeue it since its malformed JSON
-                $self->rabbit->reject( $self->input_channel, $rabbit_message->{'delivery_tag'}, 0 );
+                $rabbit->reject( $input_channel, $rabbit_message->{'delivery_tag'}, 0 );
             }
 
             catch {
@@ -233,7 +242,7 @@ sub _consume_loop {
             try {
 
                 # reject the message and do NOT requeue since its not properly formed
-                $self->rabbit->reject( $input_queue, $rabbit_message->{'delivery_tag'}, 0 );
+                $rabbit->reject( $input_queue, $rabbit_message->{'delivery_tag'}, 0 );
             }
 
             catch {
@@ -266,7 +275,7 @@ sub _consume_loop {
 
             try {
 
-                $self->rabbit->reject( $input_channel, $rabbit_message->{'delivery_tag'}, 1 );
+                $rabbit->reject( $input_channel, $rabbit_message->{'delivery_tag'}, 1 );
             }
 
             catch {
@@ -286,7 +295,7 @@ sub _consume_loop {
 
                 try {
 
-                    $self->rabbit->ack( $input_channel, $rabbit_message->{'delivery_tag'} );
+                    $rabbit->ack( $input_channel, $rabbit_message->{'delivery_tag'} );
                 }
 
                 catch {
@@ -356,20 +365,22 @@ sub _consume_messages {
 
 sub _publish_data {
     my ( $self, $messages ) = @_;
+    my $batch_size = $self->rabbit_config->{'output'}->{'batch_size'};
     if ( ! @$messages ) {
         $self->logger->info("No data found to publish");
         return;
     }
 
-    # send a max of $self->batch_size messages at a time to rabbit
-    my $it = natatime( $self->batch_size, @$messages );
-    $self->logger->debug("Publishing up to " . $self->batch_size . " messages per batch");
+    # send a max of $batch_size messages at a time to rabbit
+    my $it = natatime( $batch_size, @$messages );
+    $self->logger->debug("Publishing up to " . $batch_size . " messages per batch");
 
-    my $queue = $self->output_queue;
+    my $queue = $self->rabbit_config->{'output'}->{'queue'};
+    my $channel = $self->rabbit_config->{'output'}->{'channel'};
 
     while ( my @finished_messages = $it->() ) {
 
-       $self->rabbit->publish( $self->output_channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
+       $self->rabbit_output->publish( $channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
     }
     return $messages;
     
@@ -393,41 +404,70 @@ sub _process_messages {
 sub _rabbit_connect {
 
     my ( $self ) = @_;
+    my $rabbit_config = {};
+    my @directions = ('input', 'output');
 
-    my $rabbit_host = $self->config->get( '/config/rabbit/host' );
-    my $rabbit_port = $self->config->get( '/config/rabbit/port' );
-    my $rabbit_username = $self->config->get( '/config/rabbit/username' );
-    my $rabbit_password = $self->config->get( '/config/rabbit/password' );
-    my $rabbit_vhost = $self->config->get( '/config/rabbit/vhost' );
-    my $rabbit_ssl = $self->config->get( '/config/rabbit/ssl' ) || 0;
-    my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
-    my $batch_size = $self->config->get('/config/rabbit/batch_size') || 100;
-    $self->_set_batch_size( $batch_size );
+    foreach my $direction ( @directions ) {
+        $rabbit_config->{$direction} = {};
 
-    my $rabbit_conf = $self->config->get( '/config/rabbit' );
-    my $input_name = $self->input_queue_name;
-    my $output_name = $self->output_queue_name;
+        my $rabbit_host = $self->config->get( "/config/rabbit_$direction/host" );
+        $rabbit_config->{$direction}->{'host'} = $rabbit_host;
 
-    my $input_conf = $rabbit_conf->{'queue'}->{ $input_name };
-    my $output_conf = $rabbit_conf->{'queue'}->{ $output_name };
+        my $rabbit_port = $self->config->get( "/config/rabbit_$direction/port" );
+        $rabbit_config->{$direction}->{'port'} = $rabbit_port;
 
-    my $input_queue = $input_conf->{'rabbit_name'} || die "No input queue specified";
-    my $output_queue = $output_conf->{'rabbit_name'} || die "No output queue specified";
-    $self->_set_input_queue( $input_queue );
-    $self->_set_output_queue( $output_queue );
+        my $rabbit_username = $self->config->get( "/config/rabbit_$direction/username" );
+        $rabbit_config->{$direction}->{'username'} = $rabbit_username;
 
-    my $input_channel = $input_conf->{'channel'};
-    my $output_channel = $output_conf->{'channel'};
-    $self->_set_input_channel( $input_channel );
-    $self->_set_output_channel( $output_channel );
+        my $rabbit_password = $self->config->get( "/config/rabbit_$direction/password" );
+        $rabbit_config->{$direction}->{'password'} = $rabbit_password;
 
+        my $rabbit_vhost = $self->config->get( "/config/rabbit_$direction/vhost" );
+        $rabbit_config->{$direction}->{'vhost'} = $rabbit_vhost if defined $rabbit_vhost;
+
+        my $rabbit_ssl = $self->config->get( "/config/rabbit_$direction/ssl" ) || 0;
+        $rabbit_config->{$direction}->{'ssl'} = $rabbit_ssl if defined $rabbit_ssl;
+
+        my $rabbit_ca_cert = $self->config->get( "/config/rabbit_$direction/cacert" );
+        $rabbit_config->{$direction}->{'ca_cert'} = $rabbit_ca_cert if defined $rabbit_ca_cert;
+
+        my $batch_size = $self->config->get("/config/rabbit_$direction/batch_size") || 100;
+        $rabbit_config->{$direction}->{'batch_size'} = $batch_size if defined $batch_size;
+
+        my $queue = $self->config->get("/config/rabbit_$direction/queue");
+        $rabbit_config->{$direction}->{'queue'} = $queue;
+
+        my $channel = $self->config->get("/config/rabbit_$direction/channel");
+        $rabbit_config->{$direction}->{'channel'} = $channel;
+
+    }
+    $self->_set_rabbit_config($rabbit_config);
+
+
+    my %connected = ();
+    $connected{'input'} = 0;
+    $connected{'output'} = 0;
     while ( 1 ) {
 
-        $self->logger->info( "Connecting to RabbitMQ $rabbit_host:$rabbit_port." );
+    foreach my $direction ( @directions ) {
+        warn "rabbit_config $direction " . Dumper $rabbit_config;
 
-        my $connected = 0;
+        my $rabbit_host = $rabbit_config->{ $direction }->{'host'};
+        my $rabbit_port = $rabbit_config->{ $direction }->{'port'};
+        my $rabbit_username = $rabbit_config->{ $direction }->{'username'};
+        my $rabbit_password = $rabbit_config->{ $direction }->{'password'};
+        my $rabbit_ssl = $rabbit_config->{ $direction }->{'ssl'};
+        my $rabbit_ca_cert = $rabbit_config->{ $direction }->{'ca_cert'};
+        my $rabbit_vhost = $rabbit_config->{ $direction }->{'vhost'};
+        my $rabbit_channel = $rabbit_config->{ $direction }->{'channel'};
+        my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
+
+        $self->logger->info( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
+
+        $connected{ $direction } = 0;
 
         try {
+
 
             my $rabbit = Net::AMQP::RabbitMQ->new();
             my $params = {};
@@ -443,41 +483,62 @@ sub _rabbit_connect {
                 $params->{'vhost'} = $rabbit_vhost;
             }
 
-            $rabbit->connect( $rabbit_host, $params  );
+            $rabbit->connect( $rabbit_host, $params );
 
-	    # open channel to the pending queue we'll read from
-            $rabbit->channel_open( $input_channel );
-            $rabbit->queue_declare( $input_channel, $input_queue, {'auto_delete' => 0} );
-            if ( $self->ack_messages ) {
-                $rabbit->basic_qos( $input_channel, { prefetch_count => QUEUE_PREFETCH_COUNT } );
-            } else {
-                #$rabbit->basic_qos( $input_channel );
-                $rabbit->basic_qos( $input_channel, { prefetch_count => QUEUE_PREFETCH_COUNT_NOACK } );
+            if ( $direction eq 'input' ) {
+                # open channel to the pending queue we'll read from
+                $rabbit->channel_open( $rabbit_channel );
+                $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0} );
+                if ( $self->ack_messages ) {
+                    $rabbit->basic_qos( $rabbit_channel, { prefetch_count => QUEUE_PREFETCH_COUNT } );
+                } else {
+                    #$rabbit->basic_qos( $rabbit_channel );
+                    $rabbit->basic_qos( $rabbit_channel, { prefetch_count => QUEUE_PREFETCH_COUNT_NOACK } );
+                }
+                $rabbit->consume( $rabbit_channel, $rabbit_queue, {'no_ack' => 0} );
+
+                } else {
+        #open channel to the finished queue we'll send to
+        #
+            $rabbit->channel_open( $rabbit_channel );
+            $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0} );
+#
+#
+
             }
 
-            $rabbit->consume( $input_channel, $input_queue, {'no_ack' => 0} );
-
-	    # open channel to the finished queue we'll send to
-            $rabbit->channel_open( $output_channel );
-            $rabbit->queue_declare( $output_channel, $output_queue, {'auto_delete' => 0} );
-
-
-
-            $self->_set_rabbit( $rabbit );
-
-            $connected = 1;
+            my $setter = "_set_rabbit_$direction";
+            warn "setting rabbit; setter: '$setter'";
+            warn "vhost: $rabbit_vhost";
+            warn "queue: $rabbit_queue";
+            warn "channel: $rabbit_channel";
+            $self->$setter( $rabbit );
+           
+#
+#            $self->_set_rabbit( $rabbit );
+#
+            $connected{ $direction } = 1;
+            #if ( $connected{'input'} && $connected{'output'}  && $direction eq 'input') {
+            #    warn "consuming!";
+            #    $rabbit->consume( $rabbit_channel, $rabbit_queue, {'no_ack' => 0} );
+            #}
         }
 
         catch {
 
-            $self->logger->error( "Error connecting to RabbitMQ: $_" );
+            $self->logger->error( "Error connecting to $direction RabbitMQ: $_" );
         };
+            warn "got here; connected: " . Dumper %connected;
 
-        last if $connected;
+        if ( $connected{'input'} && $connected{'output'}) {
+            return;
+        };
+        next if $connected{ $direction };
 
-        $self->logger->info( "Reconnecting after " . RECONNECT_TIMEOUT . " seconds..." );
+        $self->logger->info( "Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
         sleep( RECONNECT_TIMEOUT );
-    }
+    } # end foreach directoin
+}# end while 1 
 }
 
 1;

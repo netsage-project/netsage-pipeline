@@ -4,32 +4,22 @@ use strict;
 use warnings;
 
 use Moo;
+extends 'GRNOC::NetSage::Anonymizer::Pipeline';
 use Socket;
 use Socket6;
 use Geo::IP;
 use Data::Validate::IP;
 use Net::IP;
 
-use GRNOC::NetSage::Anonymizer::Pipeline;
+#use GRNOC::NetSage::Anonymizer::Pipeline;
 use GRNOC::Log;
 use GRNOC::Config;
 
 use Data::Dumper;
 
 
-### required attributes ###
-
-has config_file => ( is => 'ro',
-                required => 1 );
-
-has logging_file => ( is => 'ro',
-                      required => 1 );
-
 ### internal attributes ###
             
-has logger => ( is => 'rwp' );
-
-has config => ( is => 'rwp' );
 
 has pipeline => ( is => 'rwp' );
 
@@ -51,30 +41,33 @@ sub BUILD {
     my ( $self ) = @_;
 
     # create and store logger object
-    my $grnoc_log = GRNOC::Log->new( config => $self->logging_file );
-    my $logger = GRNOC::Log->get_logger();
+    #my $grnoc_log = GRNOC::Log->new( config => $self->logging_file );
+    #my $logger = GRNOC::Log->get_logger();
 
-    $self->_set_logger( $logger );
+    #$self->_set_logger( $logger );
 
-    # create and store config object
-    my $config = GRNOC::Config->new( config_file => $self->config_file,
-                                     force_array => 0 );
+    ## create and store config object
+    #my $config = GRNOC::Config->new( config_file => $self->config_file,
+    #                                 force_array => 0 );
 
-    $self->_set_config( $config );
+    #$self->_set_config( $config );
 
 
     # create the Pipeline object, which handles the Rabbit queues
 
-    my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
-        config_file => $self->config_file,
-        logging_file => $self->logging_file,
-        input_queue_name => 'raw',
-        output_queue_name => 'tagged',
-        handler => sub { $self->_tag_messages(@_) },
-        process_name => 'netsage_flowtagger',
-    );
-    $self->_set_pipeline( $pipeline );
+    my $config = $self->config;
     warn "config: " . Dumper $config->get('/config');
+    $self->_set_handler( sub { $self->_tag_messages(@_) } );
+
+    #my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
+    #    config_file => $self->config_file,
+    #    logging_file => $self->logging_file,
+    #    input_queue_name => 'raw',
+    #    output_queue_name => 'tagged',
+    #    handler => sub { $self->_tag_messages(@_) },
+    #    process_name => 'netsage_flowtagger',
+    #);
+    #$self->_set_pipeline( $pipeline );
 
     # TODO : extend this to ipv6
     # TODO: review whether we need the country db. the city db seems to have 
@@ -86,29 +79,24 @@ sub BUILD {
 
     my $geoip_country_ipv6_file = $config->get( '/config/geoip/config_files/country_ipv6' );
     my $geoip_country_ipv6 = Geo::IP->open( $geoip_country_ipv6_file, GEOIP_MEMORY_CACHE);
-    warn "geoip_country_ipv6_file: $geoip_country_ipv6_file";
     $self->_set_geoip_country_ipv6( $geoip_country_ipv6 );
 
     my $geoip_asn_file = $config->get( '/config/geoip/config_files/asn' );
     my $geoip_asn = Geo::IP->open( $geoip_asn_file, GEOIP_MEMORY_CACHE);
-    warn "geoip_asn_file: $geoip_asn_file";
     $self->_set_geoip_asn( $geoip_asn );
 
     my $geoip_asn_ipv6_file = $config->get( '/config/geoip/config_files/asn_ipv6' );
     my $geoip_asn_ipv6 = Geo::IP->open( $geoip_asn_ipv6_file, GEOIP_MEMORY_CACHE);
-    warn "geoip_asn_ipv6_file: $geoip_asn_ipv6_file";
     $self->_set_geoip_asn_ipv6( $geoip_asn_ipv6 );
 
     my $geoip_city_ipv6_file = $config->get( '/config/geoip/config_files/city_ipv6' );
     my $geoip_city_ipv6 = Geo::IP->open( $geoip_city_ipv6_file, GEOIP_MEMORY_CACHE);
-    warn "geoip_city_ipv6_file: $geoip_city_ipv6_file";
     $self->_set_geoip_city_ipv6( $geoip_city_ipv6 );
     #die "Please install the CAPI for IPv6 support\n" unless Geo::IP->api eq 'CAPI';
 
 
     my $geoip_city_file = $config->get( '/config/geoip/config_files/city' );
     my $geoip_city = Geo::IP->open( $geoip_city_file, GEOIP_MEMORY_CACHE);
-    warn "geoip_city_file: $geoip_city_file";
     $self->_set_geoip_city( $geoip_city );
 
     return $self;
@@ -116,12 +104,12 @@ sub BUILD {
 
 ### public methods ###
 
-sub start {
-
-    my ( $self ) = @_;
-    return $self->pipeline->start();
-
-}
+#sub start {
+#
+#    my ( $self ) = @_;
+#    return $self->pipeline->start();
+#
+#}
 
 ### private methods ###
 
@@ -146,7 +134,19 @@ sub _tag_messages {
             $field_direction =~ s/_ip//g;
             my $ip = $message->{'meta'}->{ $field };
             my %metadata = ();
+            $metadata{'country_code'} = undef;
+            $metadata{'country_name'} = undef;
+            $metadata{'city'} = undef;
+            $metadata{'region'} = undef;
+            $metadata{'region_name'} = undef;
+            $metadata{'postal_code'} = undef;                
+            $metadata{'time_zone'} = undef;
+            $metadata{'latitude'} = undef;
+            $metadata{'longitude'} = undef;
+            $metadata{'asn'} = undef;
+            $metadata{'organization'} = undef;
             my $asn_org;
+            $message->{'type'} = 'flow'; # TODO: remove. temporary until the data pushed has this field
 
             if ( is_ipv4( $ip ) ) {
                 #my $record = $geoip->record_by_addr( $ip );
@@ -171,10 +171,8 @@ sub _tag_messages {
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
 
-                    #warn "metadata: " . Dumper %metadata;
-
-                }
-                
+                    }
+                    #warn "metadata " . Dumper %metadata; 
                 #warn "$field: $ip; record:";
                 #warn Dumper $record;
                 if ( $country_code ) {
@@ -204,9 +202,9 @@ sub _tag_messages {
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
 
-                    #warn "metadata IPV6: " . Dumper \%metadata;
 
                 }
+                #warn "metadata IPV6: " . Dumper \%metadata;
 
 
 
@@ -241,7 +239,7 @@ sub _tag_messages {
             my @meta_names = ( 'asn', 'city', 'country_code', 'country_name', 
                 'latitude', 'longitude', 'organization');
             foreach my $name ( @meta_names ) {
-                $message->{'values'}->{ $field_direction ."_" . $name } = $metadata{ $name } if $metadata{ $name };
+                $message->{'values'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };
             }
 
         }
