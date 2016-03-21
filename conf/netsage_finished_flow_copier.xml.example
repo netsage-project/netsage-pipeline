@@ -1,0 +1,30 @@
+<config>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>host1</host>
+    <port>5671</port>
+    <username>username</username>
+    <password>password</password>
+    <ssl>1</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/cert.crt</cacert>
+    <queue>netsage_anonymizer_anonymized</queue>
+    <channel>4</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <host>host2</host>
+    <port>5672</port>
+    <batch_size>100</batch_size>
+    <queue>tsds_queue</queue>
+    <channel>5</channel>
+  </rabbit_output>
+  <worker>
+    <!-- How many concurrent workers should perform the necessary operations -->
+    <num-processes>4</num-processes>
+
+    <!-- where should we write the worker pid file to -->
+    <pid-file>/var/run/netsage-anonymizer-finished-flow-copier.pid</pid-file>
+
+  </worker>
+</config>

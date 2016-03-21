@@ -1,0 +1,45 @@
+<config>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>localhost</host>
+    <port>5671</port>
+    <username>username</username>
+    <password>password</password>
+    <ssl>1</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/certificate.crt</cacert>
+    <queue>netsage_anonymizer_raw</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <host>localhost</host>
+    <port>5671</port>
+    <username>username</username>
+    <password>password</password>
+    <ssl>1</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/certificate.crt</cacert>
+    <queue>netsage_anonymizer_tagged</queue>
+    <channel>3</channel>
+  </rabbit_output>
+  <worker>
+    <!-- How many concurrent workers should perform the necessary operations -->
+    <num-processes>4</num-processes>
+
+    <!-- where should we write the worker pid file to -->
+    <pid-file>/var/run/netsage-tagger-workers.pid</pid-file>
+
+  </worker>
+  <geoip> 
+    <config_files>
+      <country>/usr/share/GeoIP/GeoIP.dat</country>
+      <country_ipv6>/usr/share/GeoIP/GeoIPv6.dat</country_ipv6>
+      <city>/usr/share/GeoIP/GeoIPCity.dat</city>
+      <city_ipv6>/usr/share/GeoIP/GeoIPCityv6.dat</city_ipv6>
+      <asn>/usr/share/GeoIP/GeoLiteASNum.dat</asn>
+      <asn_ipv6>/usr/share/GeoIP/GeoLiteASNumv6.dat</asn_ipv6>
+    </config_files>
+  </geoip>
+</config>
