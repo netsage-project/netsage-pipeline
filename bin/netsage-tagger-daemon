@@ -12,7 +12,7 @@ use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/anonymizer/config.xml';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/anonymizer/logging.conf';
 
 ### command line options ###
