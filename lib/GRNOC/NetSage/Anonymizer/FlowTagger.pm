@@ -38,7 +38,6 @@ sub BUILD {
     my ( $self ) = @_;
 
     my $config = $self->config;
-    warn "config: " . Dumper $config->get('/config');
     $self->_set_handler( sub { $self->_tag_messages(@_) } );
 
     my $geoip_country_ipv6_file = $config->get( '/config/geoip/config_files/country_ipv6' );

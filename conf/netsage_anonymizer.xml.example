@@ -32,4 +32,9 @@
     <pid-file>/var/run/netsage-anonymizer-workers.pid</pid-file>
 
   </worker>
+  <anonymization>
+      <!-- these probably won't work correctly if they aren't multiples of 8 -->
+      <ipv4_bits_to_strip>8</ipv4_bits_to_strip>
+      <ipv6_bits_to_strip>64</ipv6_bits_to_strip>
+  </anonymization>
 </config>

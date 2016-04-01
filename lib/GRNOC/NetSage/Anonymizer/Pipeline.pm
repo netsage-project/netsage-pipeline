@@ -98,7 +98,6 @@ sub BUILD {
     my $config = GRNOC::Config->new( config_file => $self->config_file,
                                      force_array => 0 );
     
-    warn "pipeline config " . Dumper $config;
     $self->_set_config( $config );
 
     return $self;
@@ -160,13 +159,10 @@ sub _consume_loop {
 
     my ( $self ) = @_;
 
-    warn "consume loop!";
 
     my $input_queue = $self->rabbit_config->{'input'}->{'queue'};
     my $input_channel = $self->rabbit_config->{'input'}->{'channel'};
     my $rabbit = $self->rabbit_input;
-    warn "input queue $input_queue";
-    warn "input channel $input_channel";
 
     while ( 1 ) {
 
@@ -451,7 +447,6 @@ sub _rabbit_connect {
     while ( 1 ) {
 
     foreach my $direction ( @directions ) {
-        warn "rabbit_config $direction " . Dumper $rabbit_config;
 
         my $rabbit_host = $rabbit_config->{ $direction }->{'host'};
         my $rabbit_port = $rabbit_config->{ $direction }->{'port'};
@@ -509,27 +504,18 @@ sub _rabbit_connect {
             }
 
             my $setter = "_set_rabbit_$direction";
-            warn "setting rabbit; setter: '$setter'";
-            #warn "vhost: $rabbit_vhost";
-            warn "queue: $rabbit_queue";
-            warn "channel: $rabbit_channel";
             $self->$setter( $rabbit );
            
 #
 #            $self->_set_rabbit( $rabbit );
 #
             $connected{ $direction } = 1;
-            #if ( $connected{'input'} && $connected{'output'}  && $direction eq 'input') {
-            #    warn "consuming!";
-            #    $rabbit->consume( $rabbit_channel, $rabbit_queue, {'no_ack' => 0} );
-            #}
         }
 
         catch {
 
             $self->logger->error( "Error connecting to $direction RabbitMQ: $_" );
         };
-            warn "got here; connected: " . Dumper %connected;
 
         if ( $connected{'input'} && $connected{'output'}) {
             return;

@@ -21,14 +21,23 @@ use Data::Dumper;
             
 has handler => ( is => 'rwp');
 
+has ipv4_bits_to_strip => ( is => 'rwp', default => 8 );
+has ipv6_bits_to_strip => ( is => 'rwp', default => 64 );
+
 ### constructor builder ###
 
 sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config = $self->config;
-    warn "config: " . Dumper $config->get('/config');
+    my $config_obj = $self->config;
+    my $config = $config_obj->get('/config');
+    # warn "config: " . Dumper $config;
+    my $anon = $config->{'anonymization'};
+    my $ipv4_bits = $config->{'anonymization'}->{'ipv4_bits_to_strip'};
+    my $ipv6_bits = $config->{'anonymization'}->{'ipv6_bits_to_strip'};
+    $self->_set_ipv4_bits_to_strip( $ipv4_bits );
+    $self->_set_ipv6_bits_to_strip( $ipv6_bits );
     $self->_set_handler( sub { $self->_anonymize_messages(@_) } );
 
     return $self;
@@ -90,16 +99,25 @@ sub _anonymize_ip {
 
     if ( is_ipv4($ip) ) {
         my @bytes = split(/\./, $ip);
-        $cleaned = join('.', $bytes[0], $bytes[1], 'xxx', 'yyy' );
+        my $total_bytes = @bytes;
+        my $num_to_remove = $self->ipv4_bits_to_strip / 8; 
+        my $num_to_keep = $total_bytes - $num_to_remove;
+        my @new_bytes = splice @bytes, 0, $num_to_keep;
+        for ( my $i=0; $i<$num_to_remove; $i++) {
+            push @new_bytes, 'x';
+        }
+        $cleaned = join('.', @new_bytes );
 
     } elsif ( is_ipv6($ip) ) {
         my $ip_obj = Net::IP->new( $ip );
         my $long = $ip_obj->ip();
+        #warn "$long\tlong";
         my @bytes = split(/:/, $long);
-        # drop have the bytes
-        my $num_to_remove = @bytes / 2; 
+        my $total_bytes = @bytes;
+        # Divide bits by 8 to get bytes; divide by 2 as there are 2 bytes per group
+        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2; 
         my @new_bytes = splice @bytes, 0, $num_to_remove;
-        for( my $i=0; $i<$num_to_remove; $i++ ) {
+        for( my $i=0; $i<$total_bytes - $num_to_remove; $i++ ) {
             push @new_bytes, 'x';
         }
         $cleaned = join(':', @new_bytes);
