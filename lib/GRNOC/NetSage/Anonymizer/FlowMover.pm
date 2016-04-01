@@ -1,4 +1,4 @@
-package GRNOC::NetSage::Anonymizer::FinishedFlowCopier;
+package GRNOC::NetSage::Anonymizer::FlowMover;
 
 use strict;
 use warnings;

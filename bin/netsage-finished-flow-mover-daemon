@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use GRNOC::NetSage::Anonymizer::FinishedFlowCopier;
+use GRNOC::NetSage::Anonymizer::FlowMover;
 use GRNOC::NetSage::Anonymizer::WorkerManager;
 
 use Getopt::Long;
@@ -30,7 +30,7 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $copier = GRNOC::NetSage::Anonymizer::FinishedFlowCopier->new( config_file => $config,
+my $copier = GRNOC::NetSage::Anonymizer::FlowMover->new( config_file => $config,
                                                           logging_file => $logging,
                                                           process_name => 'netsage_finishedflowcopier',
                                                           daemonize => !$nofork );
