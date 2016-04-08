@@ -96,6 +96,3 @@ rm -rf $RPM_BUILD_ROOT
 /etc/init.d/netsage-tagger-daemon
 /etc/init.d/netsage-finished-flow-mover-daemon
 
-%defattr(755, root, root, 755)
-
-%dir /var/lib/grnoc/netsage/anonymizer/
