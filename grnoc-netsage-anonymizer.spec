@@ -18,9 +18,7 @@ Requires: perl-Net-AMQP-RabbitMQ
 Requires: perl-JSON-XS
 Requires: perl-Time-HiRes
 Requires: perl-Moo
-#Requires: perl-Types-XSD-Lite
 Requires: perl-Parallel-ForkManager
-#Requires: perl-GRNOC-WebService-Client
 Requires: perl-Math-Round
 
 %description
@@ -71,7 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(640, root, root, -)
 
-%config(noreplace) /etc/grnoc/netsage/anonymizer/config.xml
+%config(noreplace) /etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml
+%config(noreplace) /etc/grnoc/netsage/anonymizer/netsage_tagger.xml
+%config(noreplace) /etc/grnoc/netsage/anonymizer/netsage_finished_flow_mover.xml
 %config(noreplace) /etc/grnoc/netsage/anonymizer/logging.conf
 
 %defattr(644, root, root, -)
@@ -85,7 +85,6 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Anonymizer/FlowAnonymizer.pm
 %{perl_vendorlib}/GRNOC/NetSage/Anonymizer/FlowTagger.pm
 %{perl_vendorlib}/GRNOC/NetSage/Anonymizer/FlowMover.pm
-%{perl_vendorlib}/GRNOC/NetSage/Anonymizer/Aggregator/Message.pm
 
 %defattr(754, root, root, -)
 
@@ -97,6 +96,6 @@ rm -rf $RPM_BUILD_ROOT
 /etc/init.d/netsage-tagger-daemon
 /etc/init.d/netsage-finished-flow-mover-daemon
 
-%defattr(755, root, root, -)
+%defattr(755, root, root, 755)
 
 %dir /var/lib/grnoc/netsage/anonymizer/
