@@ -46,7 +46,9 @@ make pure_install
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-anonymizer/CHANGES.md
 %{__install} INSTALL.md %{buildroot}/usr/share/doc/grnoc/netsage-anonymizer/INSTALL.md
 
-%{__install} conf/config.xml.example %{buildroot}/etc/grnoc/netsage/anonymizer/config.xml
+%{__install} conf/netsage_anonymizer.xml.example %{buildroot}/etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml
+%{__install} conf/netsage_tagger.xml.example %{buildroot}/etc/grnoc/netsage/anonymizer/netsage_tagger.xml
+%{__install} conf/netsage_finished_flow_mover.xml.example %{buildroot}/etc/grnoc/netsage/anonymizer/netsage_finished_flow_mover.xml
 %{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/anonymizer/logging.conf
 
 %{__install} init.d/netsage-anonymizer-daemon  %{buildroot}/etc/init.d/netsage-anonymizer-daemon
