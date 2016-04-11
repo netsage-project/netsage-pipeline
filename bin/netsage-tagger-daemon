@@ -4,16 +4,16 @@ use strict;
 use warnings;
 
 # do we need both of these?
-use GRNOC::NetSage::Anonymizer::FlowTagger;
-use GRNOC::NetSage::Anonymizer::WorkerManager;
+use GRNOC::NetSage::Deidentifier::FlowTagger;
+use GRNOC::NetSage::Deidentifier::WorkerManager;
 
 use Getopt::Long;
 use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml';
-use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/anonymizer/logging.conf';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_tagger.xml';
+use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
 
@@ -31,12 +31,12 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $tagger = GRNOC::NetSage::Anonymizer::FlowTagger->new( config_file => $config,
+my $tagger = GRNOC::NetSage::Deidentifier::FlowTagger->new( config_file => $config,
                                                           logging_file => $logging,
                                                           process_name => 'netsage_flowtagger',
                                                           daemonize => !$nofork );
 
-my $worker = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
+my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
                                                           process_name => 'netsage_flowtagger',

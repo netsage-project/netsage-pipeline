@@ -9,7 +9,7 @@
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <cacert>/path/to/certificate.crt</cacert>
-    <queue>netsage_anonymizer_tagged</queue>
+    <queue>netsage_deidentifier_tagged</queue>
     <channel>3</channel>
   </rabbit_input>
   <rabbit_output>
@@ -21,7 +21,7 @@
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <cacert>/path/to/certificate.crt</cacert>
-    <queue>netsage_anonymizer_anonymized</queue>
+    <queue>netsage_deidentifier_anonymized</queue>
     <channel>4</channel>
   </rabbit_output>
   <worker>
@@ -29,7 +29,7 @@
     <num-processes>4</num-processes>
 
     <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-anonymizer-workers.pid</pid-file>
+    <pid-file>/var/run/netsage-deidentifier-workers.pid</pid-file>
 
   </worker>
   <anonymization>

@@ -3,15 +3,15 @@
 use strict;
 use warnings;
 
-use GRNOC::NetSage::Anonymizer::FlowImporter;
+use GRNOC::NetSage::Deidentifier::FlowImporter;
 
 use Getopt::Long;
 use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/anonymizer/config.xml';
-use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/anonymizer/logging.conf';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/config.xml';
+use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
 
@@ -31,7 +31,7 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $flow_importer = GRNOC::NetSage::Anonymizer::FlowImporter->new( config_file => $config,
+my $flow_importer = GRNOC::NetSage::Deidentifier::FlowImporter->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
                                                           jsonfile => \@jsonfile );

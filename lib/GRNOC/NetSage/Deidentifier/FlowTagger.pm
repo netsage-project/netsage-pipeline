@@ -1,17 +1,17 @@
-package GRNOC::NetSage::Anonymizer::FlowTagger;
+package GRNOC::NetSage::Deidentifier::FlowTagger;
 
 use strict;
 use warnings;
 
 use Moo;
-extends 'GRNOC::NetSage::Anonymizer::Pipeline';
+extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 use Socket;
 use Socket6;
 use Geo::IP;
 use Data::Validate::IP;
 use Net::IP;
 
-#use GRNOC::NetSage::Anonymizer::Pipeline;
+#use GRNOC::NetSage::Deidentifier::Pipeline;
 use GRNOC::Log;
 use GRNOC::Config;
 

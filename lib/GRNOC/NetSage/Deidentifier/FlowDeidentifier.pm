@@ -1,11 +1,11 @@
-package GRNOC::NetSage::Anonymizer::FlowAnonymizer;
+package GRNOC::NetSage::Deidentifier::FlowDeidentifier;
 
 use strict;
 use warnings;
 
 use Moo;
 
-extends 'GRNOC::NetSage::Anonymizer::Pipeline';
+extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 
 use GRNOC::Log;
 use GRNOC::Config;
@@ -33,22 +33,22 @@ sub BUILD {
     my $config_obj = $self->config;
     my $config = $config_obj->get('/config');
     # warn "config: " . Dumper $config;
-    my $anon = $config->{'anonymization'};
-    my $ipv4_bits = $config->{'anonymization'}->{'ipv4_bits_to_strip'};
-    my $ipv6_bits = $config->{'anonymization'}->{'ipv6_bits_to_strip'};
+    my $anon = $config->{'deidentification'};
+    my $ipv4_bits = $config->{'deidentification'}->{'ipv4_bits_to_strip'};
+    my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
     $self->_set_ipv4_bits_to_strip( $ipv4_bits );
     $self->_set_ipv6_bits_to_strip( $ipv6_bits );
-    $self->_set_handler( sub { $self->_anonymize_messages(@_) } );
+    $self->_set_handler( sub { $self->_deidentify_messages(@_) } );
 
     return $self;
 }
 
 ### private methods ###
 
-# expects an array of data for it to anonymize
-# returns the anonymized array
-sub _anonymize_messages {
-    # TODO: the actual anonymization in a better way
+# expects an array of data for it to deidentify
+# returns the deidentified array
+sub _deidentify_messages {
+    # TODO: the actual deidentification in a better way
     my ( $self, $caller, $messages ) = @_;
 
     my $finished_messages = $messages;
@@ -58,8 +58,8 @@ sub _anonymize_messages {
         my $dst_ip = $message->{'meta'}->{'dst_ip'};
         my $id = $self->_generate_id( $message );
         $message->{'meta'}->{'id'} = $id;
-        $message->{'meta'}->{'src_ip'} = $self->_anonymize_ip( $src_ip );
-        $message->{'meta'}->{'dst_ip'} = $self->_anonymize_ip( $dst_ip );
+        $message->{'meta'}->{'src_ip'} = $self->_deidentify_ip( $src_ip );
+        $message->{'meta'}->{'dst_ip'} = $self->_deidentify_ip( $dst_ip );
     }
 
     return $finished_messages;
@@ -92,8 +92,8 @@ sub _generate_id {
 
 }
 
-# anonymizes an individual ip
-sub _anonymize_ip {
+# deidentifies an individual ip
+sub _deidentify_ip {
     my ( $self, $ip ) = @_;
     my $cleaned;
 

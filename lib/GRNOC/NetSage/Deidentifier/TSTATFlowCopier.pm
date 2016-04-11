@@ -1,4 +1,4 @@
-package GRNOC::NetSage::Anonymizer::TSTATFlowCopier;
+package GRNOC::NetSage::Deidentifier::TSTATFlowCopier;
 
 use strict;
 use warnings;
@@ -10,7 +10,7 @@ use Geo::IP;
 use Data::Validate::IP;
 use Net::IP;
 
-use GRNOC::NetSage::Anonymizer::Pipeline;
+use GRNOC::NetSage::Deidentifier::Pipeline;
 use GRNOC::Log;
 use GRNOC::Config;
 
@@ -56,7 +56,7 @@ sub BUILD {
 
     # create the Pipeline object, which handles the Rabbit queues
 
-    my $pipeline = GRNOC::NetSage::Anonymizer::Pipeline->new(
+    my $pipeline = GRNOC::NetSage::Deidentifier::Pipeline->new(
         config_file => $self->config_file,
         logging_file => $self->logging_file,
         input_queue_name => 'raw',

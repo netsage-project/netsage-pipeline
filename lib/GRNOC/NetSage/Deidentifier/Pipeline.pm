@@ -1,4 +1,4 @@
-package GRNOC::NetSage::Anonymizer::Pipeline;
+package GRNOC::NetSage::Deidentifier::Pipeline;
 
 use strict;
 use warnings;

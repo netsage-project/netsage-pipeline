@@ -6,7 +6,7 @@ use ExtUtils::MakeMaker;
 sub MY::postamble { <<'END'; }
 
 rpm:	dist
-	rpmbuild -ta grnoc-netsage-anonymizer-$(VERSION).tar.gz
+	rpmbuild -ta grnoc-netsage-deidentifier-$(VERSION).tar.gz
 END
 
 sub MY::test
@@ -23,12 +23,12 @@ test_jenkins : pure_all
 }
 
 WriteMakefile(
-              NAME                => 'grnoc-netsage-anonymizer',
+              NAME                => 'grnoc-netsage-deidentifier',
               AUTHOR              => 'GRNOC Software Engineering <globalnoc@iu.edu>',
-              VERSION_FROM        => 'lib/GRNOC/NetSage/Anonymizer.pm',
+              VERSION_FROM        => 'lib/GRNOC/NetSage/Deidentifier.pm',
               PL_FILES            => {},
               PREREQ_PM => {
                            },
               dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-              clean               => { FILES => 'grnoc-netsage-anonymizer-*' },
+              clean               => { FILES => 'grnoc-netsage-deidentifier-*' },
              );

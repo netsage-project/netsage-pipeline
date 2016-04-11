@@ -1,4 +1,4 @@
-package GRNOC::NetSage::Anonymizer::FlowImporter;
+package GRNOC::NetSage::Deidentifier::FlowImporter;
 
 use Moo;
 

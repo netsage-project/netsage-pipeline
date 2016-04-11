@@ -1,12 +1,12 @@
-package GRNOC::NetSage::Anonymizer::WorkerManager;
+package GRNOC::NetSage::Deidentifier::WorkerManager;
 
 use Moo;
 use Types::Standard qw( Str Bool );
 
 # this one needs to change
-#use GRNOC::NetSage::Anonymizer::WorkerManager::Worker;
-#use GRNOC::NetSage::Anonymizer::Pipeline;
-use GRNOC::NetSage::Anonymizer::FlowTagger;
+#use GRNOC::NetSage::Deidentifier::WorkerManager::Worker;
+#use GRNOC::NetSage::Deidentifier::Pipeline;
+use GRNOC::NetSage::Deidentifier::FlowTagger;
 
 use GRNOC::Config;
 use GRNOC::Log;
@@ -105,7 +105,7 @@ sub start {
             $self->logger->debug( 'Created daemon process.' );
 
             # change process name
-            $0 = "netsage_anonymizer";
+            $0 = "netsage_deidentifier";
 
             $self->_create_workers();
         }
@@ -172,7 +172,7 @@ sub _create_workers {
         $forker->start() and next;
 
         # create worker in this process
-        #my $worker = GRNOC::NetSage::Anonymizer::FlowTagger->new( config => $self->config,
+        #my $worker = GRNOC::NetSage::Deidentifier::FlowTagger->new( config => $self->config,
         #							      logger => $self->logger,
         #                              config_file => $self->config_file,
         #                              logging_file => $self->logging_file );

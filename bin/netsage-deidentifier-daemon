@@ -3,16 +3,16 @@
 use strict;
 use warnings;
 
-use GRNOC::NetSage::Anonymizer::FlowAnonymizer;
-use GRNOC::NetSage::Anonymizer::WorkerManager;
+use GRNOC::NetSage::Deidentifier::FlowDeidentifier;
+use GRNOC::NetSage::Deidentifier::WorkerManager;
 
 use Getopt::Long;
 use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/anonymizer/config.xml';
-use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/anonymizer/logging.conf';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml';
+use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
 
@@ -30,19 +30,19 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $anonymizer = GRNOC::NetSage::Anonymizer::FlowAnonymizer->new( config_file => $config,
+my $deidentifier = GRNOC::NetSage::Deidentifier::FlowDeidentifier->new( config_file => $config,
                                                           logging_file => $logging,
-                                                          process_name => 'netsage_flowanonymizer',
+                                                          process_name => 'netsage_flow_deidentifier',
                                                           daemonize => !$nofork );
 
-my $worker = GRNOC::NetSage::Anonymizer::WorkerManager->new( config_file => $config,
+my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $config,
                                                           logging_file => $logging,
-                                                          process_name => 'netsage_flowanonymizer',
+                                                          process_name => 'netsage_flow_deidentifier',
                                                           daemonize => !$nofork,
-                                                          worker => $anonymizer );
+                                                          worker => $deidentifier );
 
 $worker->start();
-#$anonymizer->start();
+#$deidentifier->start();
 
 ### helpers ###
 

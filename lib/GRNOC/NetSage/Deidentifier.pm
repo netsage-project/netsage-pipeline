@@ -1,4 +1,4 @@
-package GRNOC::NetSage::Anonymizer;
+package GRNOC::NetSage::Deidentifier;
 
 use strict;
 use warnings;

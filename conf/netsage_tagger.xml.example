@@ -9,7 +9,7 @@
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <cacert>/path/to/certificate.crt</cacert>
-    <queue>netsage_anonymizer_raw</queue>
+    <queue>netsage_deidentifier_raw</queue>
     <channel>2</channel>
   </rabbit_input>
   <rabbit_output>
@@ -21,7 +21,7 @@
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <cacert>/path/to/certificate.crt</cacert>
-    <queue>netsage_anonymizer_tagged</queue>
+    <queue>netsage_deidentifier_tagged</queue>
     <channel>3</channel>
   </rabbit_output>
   <worker>
