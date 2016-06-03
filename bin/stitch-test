@@ -1,0 +1,344 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+use JSON::XS;
+use Try::Tiny;
+use Number::Bytes::Human qw(format_bytes);
+use Time::HiRes;
+
+#use constant DATA_DIR => '/home/mj82/dev/netsage/tstat-rabbit-data/netsage_tstat_testcache/05-27-2016';
+#use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-100M';
+use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-500M';
+use constant TIME_THRESHOLD => 5;
+use constant COLLECTION_INTERVAL => 60;
+#use constant ACCEPTABLE_INTERVAL => 2 * COLLECTION_INTERVAL + TIME_THRESHOLD;
+use constant ACCEPTABLE_INTERVAL => 5;
+
+# create JSON object
+my $json = JSON::XS->new();
+
+my $dir = DATA_DIR;
+
+opendir(DIR, $dir) or die $!;
+
+
+my $all_data = [];
+
+while (my $file = readdir(DIR)) {
+    my $path = $dir . '/' . $file;
+    # Use a regular expression to ignore files beginning with a period
+    next if ($file =~ m/^\./);
+
+    #warn "path: $path";
+    my $json_data;
+    {
+        local $/; #Enable 'slurp' mode
+        open my $fh, "<", $path || die ('error loading json file');
+        $json_data = <$fh>;
+        close $fh;
+    }
+
+    my $data;
+    try {
+        $data = $json->decode( $json_data );
+        push @$all_data, @$data;
+    } catch {
+        warn( "Unable to JSON decode message: $_\npath: $path\njson_data: $json_data" )
+    };
+
+}
+
+warn "All data: " .  @$all_data;
+#warn Dumper @$all_data;
+#exit;
+my $cache = {};
+
+$all_data = sortdata( $all_data );
+
+createdatastructure();
+
+print_memusage();
+
+sub createdatastructure {
+    warn "creating datastructure";
+    my $min_start;
+    my $max_start;
+    my $min_end;
+    my $max_end;
+    my $min_bytes;
+    my $max_bytes;
+    my $max_flows;
+    my $min_duration;
+    my $max_duration;
+    my $overlaps = 0;
+    my $stitchable_flows = 0;
+
+    foreach my $row (@$all_data) {
+        my $five = $row->{'meta'}->{'src_ip'};
+        $five .= $row->{'meta'}->{'src_port'};
+        $five .= $row->{'meta'}->{'dst_ip'};
+        $five .= $row->{'meta'}->{'dst_port'};
+        $five .= $row->{'meta'}->{'protocol'};
+        #warn "five: $five\n";
+
+        my $start = $row->{'start'};
+        my $end = $row->{'end'};
+        my $duration = $end - $start;
+        #my $start_date = date( localtime( $start ) );
+        #my $end_date = date( $end );
+        #warn "start date: " . Dumper $start_date;
+        #warn "end date: " . Dumper $end_date;
+        #my $range = Date::Range->new( $start_date, $end_date ); 
+        #$row->{'timerange'} = $range;
+
+        #warn Dumper $row;
+        if ( $cache->{$five}  ) {
+            #warn "FIVE TUPLE ALREADY FOUND";
+        } else {
+            #$cache->{$five} = {};
+        }
+        #$cache->{$five}->{'start'} = $start;
+        #$cache->{$five}->{'end'} = $end;
+        #warn "start: $start; end: $end";
+        my $last_start = $cache->{$five}->{'last_start'} || 0;
+        my $last_end = $cache->{$five}->{'last_end'} || 0;
+        if ( $start <= $last_start ) {
+            #print "overlap: start: " . localtime( $start ) . " last_start: " . localtime( $last_start ) . "\n";
+            print "overlap\n";
+            $overlaps++;
+            print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
+            print localtime( $last_start ) . "\t-\t" . localtime( $last_end ) . "\tlast\n";
+        }
+        $last_start = $start;
+        $last_end = $end;
+        $cache->{$five}->{'last_start'} = $last_start;
+        $cache->{$five}->{'last_end'} = $last_end;
+
+        if ( !defined $min_end || $end < $min_end ) {
+            $min_end = $end;
+        }
+        if ( !defined $max_end || $end > $max_end ) {
+            $max_end = $end;
+        }
+
+        if ( !defined $min_start || $start < $min_start ) {
+            $min_start = $start;
+        }
+        if ( !defined $max_start || $start > $max_start ) {
+            $max_start = $start;
+        }
+        if ( !defined $min_duration || $duration < $min_duration ) {
+            $min_duration = $duration;
+        }
+        if ( !defined $max_duration || $duration > $max_duration ) {
+            $max_duration = $duration;
+        }
+
+        my $bytes = $row->{'values'}->{'num_bits'} / 8;
+        if ( !defined $min_bytes || $bytes < $min_bytes ) {
+            $min_bytes = $bytes;
+        }
+
+        if ( !defined $max_bytes || $bytes > $max_bytes ) {
+            $max_bytes = $bytes;
+        }
+
+        if ( defined ( $cache->{$five}->{'flows'} ) ) {
+            #warn "flow already defined";
+        } else { 
+            $cache->{$five}->{'flows'} = [];
+        }
+        push @{ $cache->{$five}->{'flows'} }, $row;
+
+        if ( !defined $max_flows || @{ $cache->{$five}->{'flows'} } > $max_flows ) {
+            $max_flows = @{ $cache->{$five}->{'flows'} };
+        }
+
+        if ( @{ $cache->{$five}->{'flows'} } > 5 ) {
+            #print "flows: " .  @{ $cache->{$five}->{'flows'} } . "\n";
+            foreach my $flow (@{ $cache->{$five}->{'flows'} } ) {
+                #warn "\tstart: " . $flow->{'start'} . ", end: " .  $flow->{'end'};
+                #print $flow->{'values'}->{'num_bits'}  . "\n";
+                #warn "flow: " . Dumper $flow;
+            }
+
+        }
+        #     'meta' => {
+        #              'protocol' => 'tcp',
+        #              'src_port' => 35176,
+        #              'dst_port' => 5072,
+        #              'src_ip' => '203.181.248.70',
+        #              'dst_ip' => '192.203.116.129'
+        #            }
+
+    }
+
+    while( my ( $five, $flow_container ) = each %$cache ) {
+        warn "five: $five";
+        my $flows = $flow_container->{'flows'};
+        if ( @$flows > 1 ) {
+            print "flows: "  . @$flows . "\n";
+            #warn Dumper @$flows;
+            my $previous_flow;
+            my $i = 0;
+            my %flows_to_remove = ();
+            foreach my $flow (@$flows ) {
+                #warn "flow: " . Dumper $flow;
+                my $start = $flow->{'start'};
+                my $end = $flow->{'end'};
+                $flow->{'flow_num'} = $i;
+                print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
+                if ( $previous_flow  ) {
+                    if ( can_stitch_flows( $previous_flow->{'end'}, $start ) ) {
+                        #warn "stitching flow: $i";
+                        $flow = stitch_flows( $previous_flow, $flow );
+                        $flows_to_remove{$i-1} = 1;
+                        $stitchable_flows++;
+                    }
+
+                }
+                $previous_flow = $flow;
+                $i++;
+            }
+            #warn "removing flows ..." . Dumper \%flows_to_remove;
+            #warn "flows " . Dumper $flows;
+            for (my $i=@$flows-1; $i>=0; $i--) {
+                if ( $flows_to_remove{$i} ) {
+                    #warn "removing flow $i";
+                    splice @$flows, $i, 1;
+                }
+
+            }
+            #warn "flows after removal: " . Dumper $flows;
+
+        } 
+
+    }
+
+    # find stats on the final, stitched flows
+    my $max_stitched_duration = 0;
+    my $max_stitched_bytes = 0;
+    my $min_stitched_duration;
+    while( my ( $five, $flow_container ) = each %$cache ) {
+        foreach my $row ( @{$flow_container->{'flows'}} ) {
+            my $bytes = $row->{'values'}->{'num_bits'} / 8;
+            my $duration = $row->{'values'}->{'duration'};
+            if ( $duration > $max_stitched_duration ) {
+                $max_stitched_duration = $duration;
+            }
+            if ( $bytes > $max_stitched_bytes ) {
+                $max_stitched_bytes = $bytes;
+            }
+        }
+
+    }
+
+    warn "min start: $min_start";
+    warn "max start: $max_start";
+    warn "min end: $min_end";
+    warn "max end: $max_end";
+    warn "min duration: $min_duration";
+    warn "max duration: $max_duration";
+    warn "min bytes: $min_bytes";
+    warn "max bytes: $max_bytes";
+    warn "max flows: $max_flows";
+    warn "overlaps: $overlaps";
+    warn "stitchable flows: $stitchable_flows";
+    warn "max stitched duration: $max_stitched_duration";
+    warn "max stitched bytes: $max_stitched_bytes";
+
+}
+
+sub stitch_flows {
+    my ($flowA, $flowB) = @_;
+
+    my $flow1;
+    my $flow2;
+
+    # make sure flow1 comes before flow2; 
+    if ( $flowA->{'start'} < $flowB->{'start'} ) {
+        $flow1 = $flowA;
+        $flow2 = $flowB;
+    } else {
+        $flow1 = $flowB;
+        $flow2 = $flowA;
+    }
+
+    #warn "stitching flows;  flow1 = \n" . Dumper ($flow1) . "\nflow2 = \n" . Dumper ($flow2);
+
+    # TODO :extend this to other values
+    $flow1->{'end'} = $flow2->{'end'};
+    #warn "flow1 duration: " . $flow1->{'values'}->{'duration'} . " flow2 duration: " . $flow2->{'values'}->{'duration'} . "; sum = " . ( $flow1->{'values'}->{'duration'} + $flow2->{'values'}->{'duration'} );
+    $flow1->{'values'}->{'duration'} += $flow2->{'values'}->{'duration'};
+    $flow1->{'values'}->{'num_bits'} += $flow2->{'values'}->{'num_bits'};
+    $flow1->{'values'}->{'num_packets'} += $flow2->{'values'}->{'num_packets'};
+    $flow1->{'stitched'} = 1;
+
+    #warn "stitched: " . Dumper $flow1;
+
+
+    return $flow1;
+
+}
+
+sub can_stitch_flows {
+    my ($time1, $time2) = @_;
+    if ( abs ( $time1 - $time2 ) < ACCEPTABLE_INTERVAL ) {
+        warn "CAN STITCH FLOWS: time1: $time1; time2: $time2";
+        return 1;
+    } else {
+        return 0;
+    }
+
+}
+
+sub sortdata {
+    my $data = shift;
+    my @sorted_data = sort bystarttime @$data;
+    return \@sorted_data;
+
+}
+sub bystarttime {
+    #$age{$a} <=> $age{$b};  # presuming numeric
+    $a->{'start'} <=> $b->{'start'};
+}
+
+#print "cache: " . Dumper $cache;
+
+#   memusage subroutine
+#
+#   usage: memusage [processid]
+#
+#   this subroutine takes only one parameter, the process id for 
+#   which memory usage information is to be returned.  If 
+#   undefined, the current process id is assumed.
+#
+#   Returns array of two values, raw process memory size and 
+#   percentage memory utilisation, in this order.  Returns 
+#   undefined if these values cannot be determined.
+
+sub print_memusage {
+    my @usage = memusage(@_);
+    warn "Usage: " . format_bytes($usage[0], bs => 1000) . "; " . $usage[1] . "%";
+    return \@usage;
+}
+
+sub memusage {
+    use Proc::ProcessTable;
+    my @results;
+    my $pid = (defined($_[0])) ? $_[0] : $$;
+    my $proc = Proc::ProcessTable->new;
+    my %fields = map { $_ => 1 } $proc->fields;
+    return undef unless exists $fields{'pid'};
+    foreach (@{$proc->table}) {
+        if ($_->pid eq $pid) {
+            push (@results, $_->size) if exists $fields{'size'};
+            push (@results, $_->pctmem) if exists $fields{'pctmem'};
+        };
+    };
+    return @results;
+}
+
