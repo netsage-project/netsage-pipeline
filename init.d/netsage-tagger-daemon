@@ -11,7 +11,7 @@
 name="netsage-tagger-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
-CONFIG="/etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml"
+CONFIG="/etc/grnoc/netsage/deidentifier/netsage_tagger.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6

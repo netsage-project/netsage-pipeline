@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# netsage-anonymizer-daemon        init file for starting up the NetSage Anonymizer daemon
+# netsage-deidentifier-daemon        init file for starting up the NetSage Deidentifier daemon
 #
 # chkconfig:   2345 20 80
 # description: Starts and stops the NetSage Anonymizer daemon
@@ -8,10 +8,10 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-name="netsage-anonymizer-daemon"
+name="netsage-deidentifier-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
-CONFIG="/etc/grnoc/netsage/anonymizer/netsage_anonymizer.xml"
+CONFIG="/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6

@@ -21,7 +21,7 @@
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <cacert>/path/to/certificate.crt</cacert>
-    <queue>netsage_deidentifier_anonymized</queue>
+    <queue>netsage_deidentifier_deidentified</queue>
     <channel>4</channel>
   </rabbit_output>
   <worker>
@@ -32,9 +32,9 @@
     <pid-file>/var/run/netsage-deidentifier-workers.pid</pid-file>
 
   </worker>
-  <anonymization>
+  <deidentification>
       <!-- these probably won't work correctly if they aren't multiples of 8 -->
       <ipv4_bits_to_strip>8</ipv4_bits_to_strip>
       <ipv6_bits_to_strip>64</ipv6_bits_to_strip>
-  </anonymization>
+  </deidentification>
 </config>

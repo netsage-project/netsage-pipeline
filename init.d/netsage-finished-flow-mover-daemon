@@ -11,7 +11,7 @@
 name="netsage-finished-flow-mover-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
-CONFIG="/etc/grnoc/netsage/anonymizer/netsage_finished_flow_mover.xml"
+CONFIG="/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6
