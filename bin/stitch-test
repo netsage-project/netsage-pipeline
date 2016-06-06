@@ -7,6 +7,7 @@ use Data::Dumper;
 use JSON::XS;
 use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
+use Time::Duration;
 use Time::HiRes;
 
 #use constant DATA_DIR => '/home/mj82/dev/netsage/tstat-rabbit-data/netsage_tstat_testcache/05-27-2016';
@@ -236,19 +237,53 @@ sub createdatastructure {
 
     }
 
+    #warn Dumper $cache;
+
+    my $stitched_flows = get_stitched_flows();
+    warn "STITCHED FLOWS:" . Dumper $stitched_flows;
+
+    warn "STITCHED FLOW COUNT: " . @$stitched_flows;
+    output_csv($stitched_flows);
+
     warn "min start: $min_start";
     warn "max start: $max_start";
     warn "min end: $min_end";
     warn "max end: $max_end";
-    warn "min duration: $min_duration";
-    warn "max duration: $max_duration";
-    warn "min bytes: $min_bytes";
-    warn "max bytes: $max_bytes";
+    warn "min duration: " . duration($min_duration);
+    warn "max duration: " . duration($max_duration);
+    warn "min bytes: " . format_bytes($min_bytes, bs => 1000);
+    warn "max bytes: " . format_bytes($max_bytes, bs => 1000);
     warn "max flows: $max_flows";
     warn "overlaps: $overlaps";
     warn "stitchable flows: $stitchable_flows";
-    warn "max stitched duration: $max_stitched_duration";
-    warn "max stitched bytes: $max_stitched_bytes";
+    warn "max stitched duration: " . duration($max_stitched_duration);
+    warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
+
+}
+
+sub output_csv {
+    my $flows = shift;
+    foreach my $flow (@$flows) {
+        my $row = '';
+        $row .= $flow->{'start'} .",". $flow->{'end'} .','. $flow->{'values'}->{'duration'} .",". $flow->{'meta'}->{'src_ip'} .",". $flow->{'meta'}->{'dst_ip'} .",";
+        $row .= $flow->{'meta'}->{'src_port'} .",". $flow->{'meta'}->{'dst_port'} .",". $flow->{'meta'}->{'protocol'} .",". 0 .",". 0 .",". 0 .",";
+        $row .= $flow->{'values'}->{'num_packets'} .",".  $flow->{'values'}->{'num_bits'} .",";
+        $row =~ s/,$//;
+        $row .= "\n";
+        print $row;
+    }
+
+}
+
+sub get_stitched_flows {
+    my $stitched_flows = [];
+    foreach my $five ( keys %$cache ) {
+        my $flow_container = $cache->{$five};
+        my $flows = $flow_container->{'flows'};
+        #warn "flows " . Dumper $flows;
+        push @$stitched_flows,  grep { defined $_->{'stitched'} } @$flows;
+    }
+    return $stitched_flows;
 
 }
 
