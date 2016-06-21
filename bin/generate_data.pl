@@ -1,13 +1,10 @@
 #!/usr/bin/perl
 
 use Data::Dumper;
-use Template;
 use strict;
 use warnings;
 use constant NUM_ENTRIES => 13000;
 use JSON::XS;
-
-my $tt = Template->new();
 
 my @data = ();
 
@@ -129,8 +126,6 @@ sub random_in_range {
 my $vars = {
     data => \@data,
 };
-
-#$tt->process( 'templates/netflow_template.tmpl', $vars );
 
 my $json = JSON::XS->new();
 print $json->encode( \@data );
