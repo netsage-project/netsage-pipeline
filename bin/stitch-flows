@@ -10,13 +10,10 @@ use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
 use Time::HiRes;
 
-#use constant DATA_DIR => '/home/mj82/dev/netsage/tstat-rabbit-data/netsage_tstat_testcache/05-27-2016';
-#use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-100M';
-use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-500M';
-use constant TIME_THRESHOLD => 5;
-use constant COLLECTION_INTERVAL => 60;
-#use constant ACCEPTABLE_OFFSET => 2 * COLLECTION_INTERVAL + TIME_THRESHOLD;
-use constant ACCEPTABLE_OFFSET => 5;
+use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-100M';
+#use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-500M';
+use constant COLLECTION_INTERVAL => 60; # we are not doing anything with this yet
+use constant ACCEPTABLE_OFFSET => 5; # the acceptable offset for flows to be considered the same
 
 # create JSON object
 my $json = JSON::XS->new();
@@ -52,19 +49,17 @@ while (my $file = readdir(DIR)) {
 
 }
 
-warn "All data: " .  @$all_data;
-#warn Dumper @$all_data;
-#exit;
+warn "Total flow count: " .  @$all_data;
+
 my $cache = {};
 
 $all_data = sortdata( $all_data );
 
-createdatastructure();
+create_cache();
 
 print_memusage();
 
-sub createdatastructure {
-    warn "creating datastructure";
+sub create_cache {
     my $min_start;
     my $max_start;
     my $min_end;
@@ -88,12 +83,6 @@ sub createdatastructure {
         my $start = $row->{'start'};
         my $end = $row->{'end'};
         my $duration = $end - $start;
-        #my $start_date = date( localtime( $start ) );
-        #my $end_date = date( $end );
-        #warn "start date: " . Dumper $start_date;
-        #warn "end date: " . Dumper $end_date;
-        #my $range = Date::Range->new( $start_date, $end_date ); 
-        #$row->{'timerange'} = $range;
 
         #warn Dumper $row;
         if ( $cache->{$five}  ) {
@@ -106,12 +95,12 @@ sub createdatastructure {
         #warn "start: $start; end: $end";
         my $last_start = $cache->{$five}->{'last_start'} || 0;
         my $last_end = $cache->{$five}->{'last_end'} || 0;
-        if ( $start <= $last_start ) {
+        if ( $start <= $last_start ) { # TODO: should this be < $last_end?
             #print "overlap: start: " . localtime( $start ) . " last_start: " . localtime( $last_start ) . "\n";
-            print "overlap\n";
+            print "flows overlap -- what should we do about overlapping flows?\n";
             $overlaps++;
-            print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
-            print localtime( $last_start ) . "\t-\t" . localtime( $last_end ) . "\tlast\n";
+            #print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
+            #print localtime( $last_start ) . "\t-\t" . localtime( $last_end ) . "\tlast\n";
         }
         $last_start = $start;
         $last_end = $end;
@@ -178,23 +167,17 @@ sub createdatastructure {
     }
 
     while( my ( $five, $flow_container ) = each %$cache ) {
-        warn "five: $five";
         my $flows = $flow_container->{'flows'};
         if ( @$flows > 1 ) {
-            print "flows: "  . @$flows . "\n";
-            #warn Dumper @$flows;
             my $previous_flow;
             my $i = 0;
             my %flows_to_remove = ();
             foreach my $flow (@$flows ) {
-                #warn "flow: " . Dumper $flow;
                 my $start = $flow->{'start'};
                 my $end = $flow->{'end'};
                 $flow->{'flow_num'} = $i;
-                print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
                 if ( $previous_flow  ) {
                     if ( can_stitch_flows( $previous_flow->{'end'}, $start ) ) {
-                        #warn "stitching flow: $i";
                         $flow = stitch_flows( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
                         $stitchable_flows++;
@@ -204,8 +187,6 @@ sub createdatastructure {
                 $previous_flow = $flow;
                 $i++;
             }
-            #warn "removing flows ..." . Dumper \%flows_to_remove;
-            #warn "flows " . Dumper $flows;
             for (my $i=@$flows-1; $i>=0; $i--) {
                 if ( $flows_to_remove{$i} ) {
                     #warn "removing flow $i";
@@ -213,7 +194,6 @@ sub createdatastructure {
                 }
 
             }
-            #warn "flows after removal: " . Dumper $flows;
 
         } 
 
@@ -258,6 +238,7 @@ sub createdatastructure {
     warn "stitchable flows: $stitchable_flows";
     warn "max stitched duration: " . duration($max_stitched_duration);
     warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
+    warn "Total flow count: " .  @$all_data;
 
 }
 
@@ -312,8 +293,6 @@ sub stitch_flows {
         $flow2 = $flowA;
     }
 
-    #warn "stitching flows;  flow1 = \n" . Dumper ($flow1) . "\nflow2 = \n" . Dumper ($flow2);
-
     # TODO :extend this to other values
     $flow1->{'end'} = $flow2->{'end'};
     #warn "flow1 duration: " . $flow1->{'values'}->{'duration'} . " flow2 duration: " . $flow2->{'values'}->{'duration'} . "; sum = " . ( $flow1->{'values'}->{'duration'} + $flow2->{'values'}->{'duration'} );
@@ -332,7 +311,6 @@ sub stitch_flows {
 sub can_stitch_flows {
     my ($time1, $time2) = @_;
     if ( abs ( $time1 - $time2 ) < ACCEPTABLE_OFFSET ) {
-        warn "CAN STITCH FLOWS: time1: $time1; time2: $time2";
         return 1;
     } else {
         return 0;
@@ -347,31 +325,18 @@ sub sortdata {
 
 }
 sub bystarttime {
-    #$age{$a} <=> $age{$b};  # presuming numeric
     $a->{'start'} <=> $b->{'start'};
 }
 
 #print "cache: " . Dumper $cache;
 
-#   memusage subroutine
-#
-#   usage: memusage [processid]
-#
-#   this subroutine takes only one parameter, the process id for 
-#   which memory usage information is to be returned.  If 
-#   undefined, the current process id is assumed.
-#
-#   Returns array of two values, raw process memory size and 
-#   percentage memory utilisation, in this order.  Returns 
-#   undefined if these values cannot be determined.
-
 sub print_memusage {
-    my @usage = memusage(@_);
+    my @usage = get_memusage(@_);
     warn "Usage: " . format_bytes($usage[0], bs => 1000) . "; " . $usage[1] . "%";
     return \@usage;
 }
 
-sub memusage {
+sub get_memusage {
     use Proc::ProcessTable;
     my @results;
     my $pid = (defined($_[0])) ? $_[0] : $$;
