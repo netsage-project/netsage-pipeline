@@ -18,7 +18,7 @@ use Data::Dumper;
 
 
 ### internal attributes ###
-            
+
 has handler => ( is => 'rwp');
 
 has ipv4_bits_to_strip => ( is => 'rwp', default => 8 );
@@ -48,7 +48,6 @@ sub BUILD {
 # expects an array of data for it to deidentify
 # returns the deidentified array
 sub _deidentify_messages {
-    # TODO: the actual deidentification in a better way
     my ( $self, $caller, $messages ) = @_;
 
     my $finished_messages = $messages;
@@ -82,14 +81,6 @@ sub _generate_id {
 
     }
     return $hash->hexdigest();
-
-    #my $src_ip = $message->{'meta'}->{'src_ip'};
-    #my $dst_ip = $message->{'meta'}->{'dst_ip'};
-    #my $src_port = $message->{'meta'}->{'src_port'};
-    #my $dst_port = $message->{'meta'}->{'dst_port'};
-    #my $protocol = $message->{'meta'}->{'protocol'};
-
-
 }
 
 # deidentifies an individual ip
@@ -131,8 +122,6 @@ sub _deidentify_ip {
         warn "IP was NOT CLEANED. setting blank";
         $cleaned = '';
     }
-
-    
 
     return $cleaned;
 
