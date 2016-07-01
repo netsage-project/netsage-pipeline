@@ -58,6 +58,8 @@ has is_running => ( is => 'rwp',
 
 has rabbit_config => ( is => 'rwp' );
 
+has task_type => ( is => 'rwp' );
+
 # ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
 # if you disable this, we don't ack the rabbit messages and they go back in the queue. 
 # usually this is only desired for testing purposes. Don't touch this unless you
@@ -97,8 +99,10 @@ sub BUILD {
     # create and store config object
     my $config = GRNOC::Config->new( config_file => $self->config_file,
                                      force_array => 0 );
-    
+
     $self->_set_config( $config );
+
+    $self->_rabbit_config();
 
     return $self;
 }
@@ -107,7 +111,8 @@ sub BUILD {
 
 sub start {
 
-    my ( $self ) = @_;
+    my ( $self, $task_type ) = @_;
+    $self->_set_task_type( $task_type );
 
     $self->logger->debug( "Starting." );
 
@@ -134,14 +139,32 @@ sub start {
 
     $self->_set_json( $json );
 
+    if ( $self->task_type && $self->task_type eq "stitching" ) {
+        $self->start_stitching();
+
+    } else {
+
     # connect to rabbit queues
     $self->_rabbit_connect();
 
     # continually consume messages from rabbit queue, making sure we have to acknowledge them
     $self->logger->debug( 'Starting RabbitMQ consume loop.' );
 
+    }
     return $self->_consume_loop();
 }
+
+sub start_stitching {
+# _process_messages takes an argument of an arrayref of data to process
+# and then it calls the specified handler function on it
+#sub _process_messages {
+    my ( $self, $flows_to_process ) = @_;
+
+    my $handler = $self->handler;
+
+    return $self->_consume_cache();
+}
+
 
 sub stop {
 
@@ -154,6 +177,25 @@ sub stop {
 }
 
 ### private methods ###
+
+sub _consume_cache {
+
+    my ( $self ) = @_;
+
+    while( 1 ) {
+        # have we been told to stop?
+        if ( !$self->is_running ) {
+
+            $self->logger->debug( 'Exiting consume loop.' );
+            return 0;
+        }
+        my $handler = $self->handler;
+        $self->handler->( $self );
+        sleep 5;
+
+    }
+
+}
 
 sub _consume_loop {
 
@@ -380,17 +422,16 @@ sub _publish_data {
        $self->rabbit_output->publish( $channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
     }
     return $messages;
-    
+
 }
 
 
 
-# _process_messages takes an argument of an arrayref of data to proces
+# _process_messages takes an argument of an arrayref of data to process
 # and then it calls the specified handler function on it
 sub _process_messages {
     my ( $self, $flows_to_process ) = @_;
 
-    # TODO: make the function call
     my $handler = $self->handler;
     $flows_to_process = $self->handler->( $self, $flows_to_process );
 
@@ -398,9 +439,9 @@ sub _process_messages {
 
 }
 
-sub _rabbit_connect {
+sub _rabbit_config {
+    my $self = shift;
 
-    my ( $self ) = @_;
     my $rabbit_config = {};
     my @directions = ('input', 'output');
 
@@ -440,11 +481,20 @@ sub _rabbit_connect {
     }
     $self->_set_rabbit_config($rabbit_config);
 
+}
+
+sub _rabbit_connect {
+
+    my ( $self ) = @_;
+
+    my $rabbit_config = $self->rabbit_config;
 
     my %connected = ();
     $connected{'input'} = 0;
     $connected{'output'} = 0;
     while ( 1 ) {
+
+    my @directions = ('input', 'output');
 
     foreach my $direction ( @directions ) {
 

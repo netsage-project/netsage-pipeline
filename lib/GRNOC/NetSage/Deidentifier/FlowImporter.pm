@@ -103,8 +103,7 @@ sub run {
 
 sub _get_json_data {
     my ( $self ) = @_;
-    
-   
+
     my @all_data = ();
 
     my $files = $self->jsonfile;
@@ -145,7 +144,7 @@ sub _publish_data {
         return;
     }
     my $data = $self->json_data;
-    
+
     # send a max of 100 messages at a time to rabbit
     my $it = natatime( 100, @$data );
 
@@ -175,7 +174,7 @@ sub _rabbit_connect {
     my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
     my $rabbit_conf = $self->config->get( '/config/rabbit' );
     my $raw_data_queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
-    
+
     while ( 1 ) {
 
         $self->logger->info( "Connecting to RabbitMQ $rabbit_host:$rabbit_port." );

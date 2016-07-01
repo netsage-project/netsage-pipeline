@@ -38,6 +38,8 @@ has daemonize => ( is => 'ro',
                    isa => Bool,
                    default => 1 );
 
+has task_type => ( is => 'rwp' );
+
 ### private attributes ###
 
 has config => ( is => 'rwp' );
@@ -46,6 +48,9 @@ has logger => ( is => 'rwp' );
 
 has children => ( is => 'rwp',
                   default => sub { [] } );
+
+has flow_cache => ( is => 'rwp',
+                    default => sub { {} } );
 
 ### constructor builder ###
 
@@ -68,11 +73,47 @@ sub BUILD {
     return $self;
 }
 
+sub _get_cache {
+    my $self = shift;
+
+    my %flow_cache = (); # $self->flow_cache;
+    #$flow_cache{'test'} = 'value';
+
+    my $glue = 'flow';
+
+    #IPC::Shareable->clean_up_all;
+    my %options = (
+        create    => 0,
+        exclusive => 0,
+        mode      => 0644,
+        destroy   => 0
+    );
+
+    #IPC::Shareable->clean_up;
+    #IPC::Shareable->clean_up_all;
+
+    my $knot = tie %flow_cache, 'IPC::Shareable', $glue, { %options } or die ("failed to tie cache");
+
+    #warn "getting cache ..." . Dumper %flow_cache;
+    #(tied %flow_cache)->shlock;
+    #$flow_cache{'locked_adding'} = 'w00t!';
+    #%flow_cache = (
+    #    'test2' => 'wow!'
+    #);
+    #(tied %flow_cache)->shunlock;
+    #warn "getting cache ..." . Dumper %flow_cache;
+
+    return %flow_cache;
+
+}
+
 ### public methods ###
 
 sub start {
 
-    my ( $self ) = @_;
+    my ( $self, $task_type ) = @_;
+
+    $self->_set_task_type( $task_type );
 
     $self->logger->info( 'Starting.' );
 
@@ -155,6 +196,8 @@ sub _create_workers {
 
     $self->logger->info( "Creating $num_processes child worker processes." );
 
+    my %flow_cache = $self->_get_cache();
+
     my $forker = Parallel::ForkManager->new( $num_processes );
 
     # keep track of children pids
@@ -171,6 +214,9 @@ sub _create_workers {
 
         $forker->start() and next;
 
+
+    #die "done";
+
         # create worker in this process
         #my $worker = GRNOC::NetSage::Deidentifier::FlowTagger->new( config => $self->config,
         #							      logger => $self->logger,
@@ -179,7 +225,7 @@ sub _create_workers {
         my $worker = $self->worker;
 
         # this should only return if we tell it to stop via TERM signal etc.
-        $worker->start();
+        $worker->start( $self->task_type );
 
         # exit child process
         $forker->finish();
@@ -191,6 +237,8 @@ sub _create_workers {
     $forker->wait_all_children();
 
     $self->_set_children( [] );
+
+    (tied %flow_cache)->remove;
 
     $self->logger->debug( 'All child workers have exited.' );
 }
