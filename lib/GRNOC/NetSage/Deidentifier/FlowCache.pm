@@ -10,6 +10,7 @@ extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 use GRNOC::Log;
 use GRNOC::Config;
 
+use Clone qw(clone);
 #use JSON::XS;
 use IPC::Shareable;
 use Try::Tiny;
@@ -25,7 +26,7 @@ has handler => ( is => 'rwp');
 
 #has input_data => ( is => 'rwp', default => [] );
 
-has flow_cache => ( is => 'rwp', default => sub { {} } );
+has flow_cache => ( is => 'rwp', ); # default => sub { {} } );
 
 has knot => ( is => 'rwp' );
 
@@ -66,30 +67,57 @@ sub _init_cache {
         mode      => 0644,
         destroy   => 0,
     );
-    my %cache;
+    my %cache; # = %{ $self->flow_cache };
     #IPC::Shareable->clean_up;
 
     my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
     #IPC::Shareable->clean_up_all;
-    warn "cache: " . Dumper %cache;
+    #warn "cache: " . Dumper %cache;
 
-    #$cache{'set_from_cacher'} = 'y3Ah!!!!';
+    $cache{'set_from_cacher'} = 'y3Ah!!!!';
 
     $self->_set_flow_cache( \%cache );
     $self->_set_knot( $knot );
 
 }
 
+my $knot;
 sub _run_flow_caching {
     my ( $self, $caller, $input_data ) = @_;
 
-    $self->_init_cache();
+    #$self->_init_cache() if ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 );
+    my $glue = 'flow';
+    my %options = (
+        create    => 1,
+        exclusive => 0,
+        mode      => 0644,
+        destroy   => 0,
+    );
+    my %cache;
+    my %ipc_cache;
 
+    #if ( ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 ) ) {}
+    if ( ( not defined( $self->flow_cache ) ) or ( not defined $knot ) ) {
+        #IPC::Shareable->clean_up;
+        #
+        warn "tying knot ...";
 
-    #warn "flow cache: " . Dumper $self->flow_cache;
+        $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
+        #IPC::Shareable->clean_up_all;
+        #warn "cache: " . Dumper %cache;
 
-    my %cache = %{ $self->flow_cache };
-    my $knot = $self->knot;
+        #$cache{'set_from_cacher'} = 'y3Ah!!!!';
+        $self->_set_flow_cache( \%cache );
+        $self->_set_knot( $knot );
+
+    }
+
+    #%cache = %ipc_cache;
+
+    warn "flow cache start of run: " . keys %{ $self->flow_cache };
+
+    #my %cache = %{ $self->flow_cache };
+    #my $knot = $self->knot;
 
     my $min_start;
     my $max_start;
@@ -103,13 +131,14 @@ sub _run_flow_caching {
     my $overlaps = 0;
 
 
+    #$knot->shlock;
     foreach my $row (@$input_data) {
         my $five_tuple = $row->{'meta'}->{'src_ip'};
         $five_tuple .= $row->{'meta'}->{'src_port'};
         $five_tuple .= $row->{'meta'}->{'dst_ip'};
         $five_tuple .= $row->{'meta'}->{'dst_port'};
         $five_tuple .= $row->{'meta'}->{'protocol'};
-        #warn "five_tuple: $five\n";
+        #warn "five_tuple: $five_tuple\n";
 
         my $start = $row->{'start'};
         my $end = $row->{'end'};
@@ -135,8 +164,6 @@ sub _run_flow_caching {
         }
         $last_start = $start;
         $last_end = $end;
-        #(tied %cache)->shlock;
-        $knot->shlock;
 
         $cache{$five_tuple}->{'last_start'} = $last_start;
         $cache{$five_tuple}->{'last_end'} = $last_end;
@@ -182,8 +209,9 @@ sub _run_flow_caching {
         }
 
     }
-    #(tied %cache)->shunlock;
-    $knot->shunlock;
+    #$cache{'test'} = 1;
+    #$knot->remove();
+    #$knot->shunlock;
     warn "min start: $min_start";
     warn "max start: $max_start";
     warn "min end: $min_end";
@@ -194,7 +222,11 @@ sub _run_flow_caching {
     warn "max bytes: " . format_bytes($max_bytes, bs => 1000);
     warn "max flows: $max_flows";
 
+    %cache = %{ clone (\%cache) };
+
     $self->_set_flow_cache( \%cache );
+
+    warn "cache in cache at end: " . keys ( %cache ); # . Dumper %cache;
 
 
     # Flow stitching is a special case in the pipeline in that it doesn't simply

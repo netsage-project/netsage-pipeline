@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+
+use IPC::Shareable;
+
+my $glue = 'flow';
+my %options = (
+        create    => 0,
+        exclusive => 0,
+        mode      => 0644,
+        destroy   => 0,
+    );
+
+my %flow_cache;
+#$flow_cache{'added_by_client'} = 0;
+
+#IPC::Shareable->clean_up;
+
+my $knot = tie %flow_cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
+
+while ( 1 ) {
+    warn "cache at " . time() . ": \n";
+    warn Dumper %flow_cache;
+    warn "number of flows:" . keys %flow_cache;
+    #$knot->remove();
+    sleep 5;
+    #   $flow_cache{'added_by_client'}++;
+    #$flow_cache{'complex'} = {
+    #    test1 => '1',
+    #    test2 => '2',
+    #};
+
+}

@@ -52,6 +52,8 @@ has children => ( is => 'rwp',
 has flow_cache => ( is => 'rwp',
                     default => sub { {} } );
 
+has knot => ( is => 'rwp' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -73,7 +75,7 @@ sub BUILD {
     return $self;
 }
 
-sub _get_cache {
+sub _init_cache {
     my $self = shift;
 
     my %flow_cache = (); # $self->flow_cache;
@@ -92,7 +94,7 @@ sub _get_cache {
     #IPC::Shareable->clean_up;
     #IPC::Shareable->clean_up_all;
 
-    my $knot = tie %flow_cache, 'IPC::Shareable', $glue, { %options } or die ("failed to tie cache");
+    #my $knot = tie %flow_cache, 'IPC::Shareable', $glue, { %options } or die ("failed to tie cache");
 
     #warn "getting cache ..." . Dumper %flow_cache;
     #(tied %flow_cache)->shlock;
@@ -103,7 +105,8 @@ sub _get_cache {
     #(tied %flow_cache)->shunlock;
     #warn "getting cache ..." . Dumper %flow_cache;
 
-    return %flow_cache;
+    #$self->_set_flow_cache( \%flow_cache );
+    #$self->_set_knot( $knot );
 
 }
 
@@ -196,7 +199,9 @@ sub _create_workers {
 
     $self->logger->info( "Creating $num_processes child worker processes." );
 
-    my %flow_cache = $self->_get_cache();
+    $self->_init_cache();
+
+    my %flow_cache = %{ $self->flow_cache };
 
     my $forker = Parallel::ForkManager->new( $num_processes );
 
@@ -238,7 +243,7 @@ sub _create_workers {
 
     $self->_set_children( [] );
 
-    (tied %flow_cache)->remove;
+    #(tied %flow_cache)->remove;
 
     $self->logger->debug( 'All child workers have exited.' );
 }

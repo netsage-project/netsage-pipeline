@@ -29,7 +29,7 @@ has handler => ( is => 'rwp');
 
 #has input_data => ( is => 'rwp', default => [] );
 
-has flow_cache => ( is => 'rwp', default => sub { {} } );
+has flow_cache => ( is => 'rwp' );
 
 has knot => ( is => 'rwp' );
 
@@ -87,9 +87,9 @@ sub _init_cache {
 sub _run_flow_stitching {
     my ( $self, $caller, $messages ) = @_;
 
-    $self->_init_cache();
+    #$self->_init_cache();
 
-    $self->_stitch_flows( $messages );
+    $self->_stitch_flows( );
 
 
     #foreach my $message ( @$messages ) {
@@ -120,10 +120,28 @@ sub _publish_flows {
 sub _stitch_flows {
     my ( $self ) = @_;
 
-    my $knot = $self->knot;
+    my $glue = 'flow';
+    my %options = (
+        create    => 0,
+        exclusive => 0,
+        mode      => 0644,
+        destroy   => 0,
+    );
+    my %cache;
+    my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "client: tie failed\n";
+    warn "cache: " . Dumper %cache;
 
-    my %cache = %{ $self->flow_cache };
+    #$cache{'set_from_stitcher'} = 'DUH!';
+
+    #$self->_set_flow_cache( \%cache );
+    $self->_set_knot( $knot );
+
+
+    #my $knot = $self->knot;
+
+    #my %cache = %{ $self->flow_cache };
     warn "stitcher cache" . Dumper %cache;
+    warn "self: " . Dumper $self;
 
     my $overlaps = 0;
     my $stitchable_flows = 0;
@@ -172,7 +190,7 @@ sub _stitch_flows {
 
     }
 
-    $knot->shunlock();
+    #$knot->shunlock();
 
     # find stats on the final, stitched flows
     my $max_stitched_duration = 0;
@@ -202,13 +220,13 @@ sub _stitch_flows {
 
     warn "STITCHED FLOW COUNT: " . @$stitched_flows;
     #output_csv($stitched_flows);
-    
+
     warn "overlaps: $overlaps";
     warn "stitchable flows: $stitchable_flows";
     warn "max stitched duration: " . duration($max_stitched_duration);
     warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
     #warn "Total flow count: " .  @$input_data;
-    
+
     $self->_set_flow_cache( \%cache );
 
 }
@@ -274,7 +292,7 @@ sub _anonymize_flow {
     if ( is_ipv4($ip) ) {
         my @bytes = split(/\./, $ip);
         my $total_bytes = @bytes;
-        my $num_to_remove = $self->ipv4_bits_to_strip / 8; 
+        my $num_to_remove = $self->ipv4_bits_to_strip / 8;
         my $num_to_keep = $total_bytes - $num_to_remove;
         my @new_bytes = splice @bytes, 0, $num_to_keep;
         for ( my $i=0; $i<$num_to_remove; $i++) {
@@ -289,7 +307,7 @@ sub _anonymize_flow {
         my @bytes = split(/:/, $long);
         my $total_bytes = @bytes;
         # Divide bits by 8 to get bytes; divide by 2 as there are 2 bytes per group
-        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2; 
+        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2;
         my @new_bytes = splice @bytes, 0, $num_to_remove;
         for( my $i=0; $i<$total_bytes - $num_to_remove; $i++ ) {
             push @new_bytes, 'x';

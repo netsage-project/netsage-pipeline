@@ -160,8 +160,6 @@ sub start_stitching {
 #sub _process_messages {
     my ( $self, $flows_to_process ) = @_;
 
-    my $handler = $self->handler;
-
     return $self->_consume_cache();
 }
 
@@ -555,7 +553,7 @@ sub _rabbit_connect {
 
             my $setter = "_set_rabbit_$direction";
             $self->$setter( $rabbit );
-           
+
 #
 #            $self->_set_rabbit( $rabbit );
 #

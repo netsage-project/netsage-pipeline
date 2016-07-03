@@ -55,7 +55,7 @@ warn "Total flow count: " .  @$all_data;
 
 my $cache = {};
 
-$all_data = sortdata( $all_data );
+#$all_data = sortdata( $all_data );
 
 create_cache();
 
@@ -149,23 +149,6 @@ sub create_cache {
             $max_flows = @{ $cache->{$five}->{'flows'} };
         }
 
-        if ( @{ $cache->{$five}->{'flows'} } > 5 ) {
-            #print "flows: " .  @{ $cache->{$five}->{'flows'} } . "\n";
-            foreach my $flow (@{ $cache->{$five}->{'flows'} } ) {
-                #warn "\tstart: " . $flow->{'start'} . ", end: " .  $flow->{'end'};
-                #print $flow->{'values'}->{'num_bits'}  . "\n";
-                #warn "flow: " . Dumper $flow;
-            }
-
-        }
-        #     'meta' => {
-        #              'protocol' => 'tcp',
-        #              'src_port' => 35176,
-        #              'dst_port' => 5072,
-        #              'src_ip' => '203.181.248.70',
-        #              'dst_ip' => '192.203.116.129'
-        #            }
-
     }
 
     while( my ( $five, $flow_container ) = each %$cache ) {
@@ -183,6 +166,9 @@ sub create_cache {
                         $flow = stitch_flows( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
                         $stitchable_flows++;
+                    } else {
+                        # TODO: if can't fix flows, that means that flow has ended and can be output and removed from the cache
+
                     }
 
                 }
