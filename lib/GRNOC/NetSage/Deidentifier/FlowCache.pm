@@ -13,6 +13,8 @@ use GRNOC::Config;
 use Clone qw(clone);
 #use JSON::XS;
 use IPC::Shareable;
+use IPC::ShareLite;
+use Storable qw(freeze thaw);
 use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
@@ -66,22 +68,26 @@ sub _init_cache {
         exclusive => 0,
         mode      => 0644,
         destroy   => 0,
+        size      => 524288000, # 500 MB
     );
-    my %cache; # = %{ $self->flow_cache };
+    my $cache; # = %{ $self->flow_cache };
     #IPC::Shareable->clean_up;
 
-    my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
+    #my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
     #IPC::Shareable->clean_up_all;
     #warn "cache: " . Dumper %cache;
 
-    $cache{'set_from_cacher'} = 'y3Ah!!!!';
+    $cache->{'set_from_cacher'} = 'y3Ah!!!!';
 
-    $self->_set_flow_cache( \%cache );
-    $self->_set_knot( $knot );
+    $self->_set_flow_cache( $cache );
+    #$self->_set_knot( $knot );
+
+
 
 }
 
 my $knot;
+
 sub _run_flow_caching {
     my ( $self, $caller, $input_data ) = @_;
 
@@ -92,27 +98,25 @@ sub _run_flow_caching {
         exclusive => 0,
         mode      => 0644,
         destroy   => 0,
+        size      => 100000000, # 100 MB
     );
-    my %cache;
+    my $cache;
     my %ipc_cache;
 
-    #if ( ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 ) ) {}
-    if ( ( not defined( $self->flow_cache ) ) or ( not defined $knot ) ) {
-        #IPC::Shareable->clean_up;
-        #
-        warn "tying knot ...";
-
-        $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
-        #IPC::Shareable->clean_up_all;
-        #warn "cache: " . Dumper %cache;
-
-        #$cache{'set_from_cacher'} = 'y3Ah!!!!';
-        $self->_set_flow_cache( \%cache );
-        $self->_set_knot( $knot );
-
+    my $share = IPC::ShareLite->new(
+        -key => 'flow',
+        -create => 'yes',
+        -destroy => 'no',
+    ) or die $!;
+    if ( not defined $self->flow_cache ) {
+        warn "initially creating cache ..."; 
+        $cache = {};
+    } else {
+        warn "thawing cache ...";
+        $cache = thaw( $share->fetch );
     }
+    $self->_set_flow_cache( $cache );
 
-    #%cache = %ipc_cache;
 
     warn "flow cache start of run: " . keys %{ $self->flow_cache };
 
@@ -145,16 +149,16 @@ sub _run_flow_caching {
         my $duration = $end - $start;
 
         #warn Dumper $row;
-        if ( $cache{$five_tuple}  ) {
-            #warn "FIVE TUPLE ALREADY FOUND";
+        if ( $cache->{$five_tuple}  ) {
+            warn "FIVE TUPLE ALREADY FOUND";
         } else {
-            #$cache{$five_tuple} = {};
+            $cache->{$five_tuple} = {};
         }
-        #$cache{$five_tuple}->{'start'} = $start;
-        #$cache{$five_tuple}->{'end'} = $end;
+        #$cache->{$five_tuple}->{'start'} = $start;
+        #$cache->{$five_tuple}->{'end'} = $end;
         #warn "start: $start; end: $end";
-        my $last_start = $cache{$five_tuple}->{'last_start'} || 0;
-        my $last_end = $cache{$five_tuple}->{'last_end'} || 0;
+        my $last_start = $cache->{$five_tuple}->{'last_start'} || 0;
+        my $last_end = $cache->{$five_tuple}->{'last_end'} || 0;
         if ( $start <= $last_start ) { # TODO: should this be < $last_end?
             #print "overlap: start: " . localtime( $start ) . " last_start: " . localtime( $last_start ) . "\n";
             print "flows overlap -- what should we do about overlapping flows?\n";
@@ -165,8 +169,8 @@ sub _run_flow_caching {
         $last_start = $start;
         $last_end = $end;
 
-        $cache{$five_tuple}->{'last_start'} = $last_start;
-        $cache{$five_tuple}->{'last_end'} = $last_end;
+        $cache->{$five_tuple}->{'last_start'} = $last_start;
+        $cache->{$five_tuple}->{'last_end'} = $last_end;
 
         if ( !defined $min_end || $end < $min_end ) {
             $min_end = $end;
@@ -197,19 +201,25 @@ sub _run_flow_caching {
             $max_bytes = $bytes;
         }
 
-        if ( defined ( $cache{$five_tuple}->{'flows'} ) ) {
+        my $flows_temp = [];
+        if ( defined ( $cache->{$five_tuple}->{'flows'} ) ) {
             #warn "flow already defined";
+            $flows_temp = $cache->{$five_tuple}->{'flows'};
         } else { 
-            $cache{$five_tuple}->{'flows'} = [];
+            #$cache->{$five_tuple}->{'flows'} = [];
+            $flows_temp = [];
         }
-        push @{ $cache{$five_tuple}->{'flows'} }, $row;
+        #push @{ $cache->{$five_tuple}->{'flows'} }, $row;
+        push @{ $flows_temp }, $row;
 
-        if ( !defined $max_flows || @{ $cache{$five_tuple}->{'flows'} } > $max_flows ) {
-            $max_flows = @{ $cache{$five_tuple}->{'flows'} };
+        $cache->{$five_tuple}->{'flows'} = $flows_temp;
+
+        if ( !defined $max_flows || @{ $cache->{$five_tuple}->{'flows'} } > $max_flows ) {
+            $max_flows = @{ $cache->{$five_tuple}->{'flows'} };
         }
 
     }
-    #$cache{'test'} = 1;
+    #$cache->{'test'} = 1;
     #$knot->remove();
     #$knot->shunlock;
     warn "min start: $min_start";
@@ -222,11 +232,12 @@ sub _run_flow_caching {
     warn "max bytes: " . format_bytes($max_bytes, bs => 1000);
     warn "max flows: $max_flows";
 
-    %cache = %{ clone (\%cache) };
+    #%cache = %{ clone (\%cache) };
+    $share->store(freeze ( $cache ) );
 
-    $self->_set_flow_cache( \%cache );
+    $self->_set_flow_cache( $cache );
 
-    warn "cache in cache at end: " . keys ( %cache ); # . Dumper %cache;
+    warn "cache in cache at end: " . keys ( %$cache ); # . Dumper %cache;
 
 
     # Flow stitching is a special case in the pipeline in that it doesn't simply

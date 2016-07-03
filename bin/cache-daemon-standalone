@@ -13,6 +13,7 @@ my %options = (
         exclusive => 0,
         mode      => 0644,
         destroy   => 0,
+        size      => 10000000, # 10 MB
     );
 
 my %cache;

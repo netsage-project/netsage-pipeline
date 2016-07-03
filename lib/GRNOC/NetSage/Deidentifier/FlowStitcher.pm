@@ -15,7 +15,10 @@ use GRNOC::Config;
 #use Digest::SHA;
 
 #use JSON::XS;
+use Clone qw(clone);
 use IPC::Shareable;
+use IPC::ShareLite;
+use Storable qw(freeze thaw);
 use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
@@ -75,7 +78,7 @@ sub _init_cache {
     my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "client: tie failed\n";
     warn "cache: " . Dumper %cache;
 
-    #$cache{'set_from_stitcher'} = 'DUH!';
+    #$cache->{'set_from_stitcher'} = 'DUH!';
 
     $self->_set_flow_cache( \%cache );
     $self->_set_knot( $knot );
@@ -108,12 +111,17 @@ sub _run_flow_stitching {
     $self->_publish_flows( );
 
     #return $finished_messages;
-    return ();
+    my $finished_messages = $self->_get_flows();
+    warn "finished messagesS: " . Dumper $finished_messages;
+    
+    return ( $finished_messages );
 }
 
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->finished_flows;
+    warn "publishing flows ... " . Dumper $flows;
+    # TODO: fix an issue where flows aren't deleted after being published
     $self->_publish_data( $flows );
 }
 
@@ -127,28 +135,30 @@ sub _stitch_flows {
         mode      => 0644,
         destroy   => 0,
     );
-    my %cache;
-    my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "client: tie failed\n";
-    warn "cache: " . Dumper %cache;
+    my $cache;
+    my $share = IPC::ShareLite->new(
+        -key => 'flow',
+        -create => 'yes',
+        -destroy => 'no',
+    ) or die $!;
+    if ( not defined $self->flow_cache ) {
+        warn "initially creating cache ..."; 
+        $cache = {};
+    } else {
+        warn "thawing cache ...";
+        $cache = thaw( $share->fetch );
+    }
+    $self->_set_flow_cache( $cache );
 
-    #$cache{'set_from_stitcher'} = 'DUH!';
-
-    #$self->_set_flow_cache( \%cache );
-    $self->_set_knot( $knot );
-
-
-    #my $knot = $self->knot;
-
-    #my %cache = %{ $self->flow_cache };
-    warn "stitcher cache" . Dumper %cache;
-    warn "self: " . Dumper $self;
+    warn "stitcher cache: " . keys %$cache; # . Dumper $cache;
+    #warn "self: " . Dumper $self;
 
     my $overlaps = 0;
     my $stitchable_flows = 0;
 
     #$knot->shlock();
     warn "looping through cache";
-    while( my ( $five_tuple, $flow_container ) = each %cache ) {
+    while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         warn "ft: $five_tuple";
         my $flows = $flow_container->{'flows'};
         if ( @$flows > 1 ) {
@@ -169,7 +179,8 @@ sub _stitch_flows {
                         $stitchable_flows++;
                     } else {
                         # TODO: review. If can't stitch flows, that means that flow has ended and can be output and removed from the cache
-                        $self->_publish_data( $flow );
+                        #$self->_publish_data( $flow );
+                        push @{ $self->finished_flows }, %{ clone $flow};
                         $flows_to_remove{$i} = 1;
                     }
 
@@ -196,7 +207,7 @@ sub _stitch_flows {
     my $max_stitched_duration = 0;
     my $max_stitched_bytes = 0;
     my $min_stitched_duration;
-    while( my ( $five_tuple, $flow_container ) = each %cache ) {
+    while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         foreach my $row ( @{$flow_container->{'flows'}} ) {
             my $bytes = $row->{'values'}->{'num_bits'} / 8;
             my $duration = $row->{'values'}->{'duration'};
@@ -227,7 +238,8 @@ sub _stitch_flows {
     warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
     #warn "Total flow count: " .  @$input_data;
 
-    $self->_set_flow_cache( \%cache );
+    $self->_set_flow_cache( $cache );
+
 
 }
 
@@ -235,9 +247,9 @@ sub _get_flows {
     my $self = shift;
     my $type = shift || 'all';
     my $stitched_flows = [];
-    my %cache = %{ $self->flow_cache };
-    foreach my $five ( keys %cache ) {
-        my $flow_container = $cache{$five};
+    my $cache = $self->flow_cache;
+    foreach my $five ( keys %$cache ) {
+        my $flow_container = $cache->{$five};
         my $flows = $flow_container->{'flows'};
         #warn "flows " . Dumper $flows;
         if ( $type eq 'stitched' ) {

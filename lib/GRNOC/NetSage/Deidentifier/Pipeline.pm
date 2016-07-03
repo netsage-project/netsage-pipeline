@@ -415,6 +415,7 @@ sub _publish_data {
     my $queue = $self->rabbit_config->{'output'}->{'queue'};
     my $channel = $self->rabbit_config->{'output'}->{'channel'};
 
+    $self->_rabbit_connect();
     while ( my @finished_messages = $it->() ) {
 
        $self->rabbit_output->publish( $channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );

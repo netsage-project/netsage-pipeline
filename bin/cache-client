@@ -6,6 +6,8 @@ use Data::Dumper;
 
 
 use IPC::Shareable;
+use IPC::ShareLite;
+use Storable qw(freeze thaw);
 
 my $glue = 'flow';
 my %options = (
@@ -15,17 +17,27 @@ my %options = (
         destroy   => 0,
     );
 
-my %flow_cache;
+my $cache;
 #$flow_cache{'added_by_client'} = 0;
 
 #IPC::Shareable->clean_up;
 
-my $knot = tie %flow_cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
+my $share = IPC::ShareLite->new(
+    -key => 'flow',
+    -create => 'yes',
+    -destroy => 'no',
+) or die $!;
+
+warn "initially creating cache ...";
+$cache = {};
+
 
 while ( 1 ) {
     warn "cache at " . time() . ": \n";
-    warn Dumper %flow_cache;
-    warn "number of flows:" . keys %flow_cache;
+    warn "thawing cache ...";
+    $cache = thaw( $share->fetch );
+    #warn Dumper $cache;
+    warn "number of flows:" . keys %$cache;
     #$knot->remove();
     sleep 5;
     #   $flow_cache{'added_by_client'}++;
