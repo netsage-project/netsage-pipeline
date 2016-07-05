@@ -16,7 +16,6 @@ use GRNOC::Config;
 
 #use JSON::XS;
 use Clone qw(clone);
-use IPC::Shareable;
 use IPC::ShareLite;
 use Storable qw(freeze thaw);
 use Try::Tiny;
@@ -34,7 +33,7 @@ has handler => ( is => 'rwp');
 
 has flow_cache => ( is => 'rwp' );
 
-has knot => ( is => 'rwp' );
+has stats => ( is => 'rw', default => sub { {} } );
 
 has acceptable_offset => ( is => 'rwp', default => 5 );
 
@@ -75,13 +74,16 @@ sub _init_cache {
         destroy   => 0,
     );
     my %cache;
-    my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "client: tie failed\n";
     #warn "cache: " . Dumper %cache;
 
     #$cache->{'set_from_stitcher'} = 'DUH!';
 
     $self->_set_flow_cache( \%cache );
-    $self->_set_knot( $knot );
+
+    $self->stats( { 
+            stitched_flow_count => 0,
+
+        });
 
 }
 
@@ -152,8 +154,8 @@ sub _stitch_flows {
 
     my $overlaps = 0;
     my $stitchable_flows = 0;
+    my $stitched_flow_count = 0;
 
-    #$knot->shlock();
     warn "looping through cache";
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         #warn "ft: $five_tuple";
@@ -177,6 +179,7 @@ sub _stitch_flows {
                     if ( $self->_can_stitch_flow( $previous_flow->{'end'}, $start ) ) {
                         $flow = $self->_stitch_flow( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
+                        $stitched_flow_count++;
                         $stitchable_flows++;
                     } else {
                         # TODO: review. If can't stitch flows, that means that flow has ended and can be output and removed from the cache
@@ -187,20 +190,19 @@ sub _stitch_flows {
                     }
 
                 } else {
-                    #warn "no previous flow, NO IDEA what to do";
-
+                    #warn "no previous flow";
                 }
                 $previous_flow = $flow;
                 $i++;
             }
             #warn "flows to remove: " . Dumper %flows_to_remove;
             #warn "before deleting: " . @$flows;
-            
+
             for (my $i=@$flows-1; $i>=0; $i--) {
                 if ( abs $latest_timestamp - $flows->[$i]->{'end'} > $self->acceptable_offset && not $flows_to_remove{$i} ) {
                     warn "flow has expired";
                     $flows_to_remove{$i} = 1;
-                     push @$finished_flows, %{ clone ( $flows->[$i] )};
+                    push @$finished_flows, %{ clone ( $flows->[$i] )};
                 }
                 if ( $flows_to_remove{$i} ) {
                     splice @$flows, $i, 1;
@@ -228,10 +230,10 @@ sub _stitch_flows {
 
     $self->_set_finished_flows( $finished_flows );
 
-    #$knot->shunlock();
+    my $stats = $self->stats;
+    $stats->{'stitched_flow_count'} += $stitched_flow_count; 
 
-
-    # find stats on the final, stitched flows
+    # find stats on the final, stitched flows for this run
     my $max_stitched_duration = 0;
     my $max_stitched_bytes = 0;
     my $min_stitched_duration;
@@ -249,6 +251,8 @@ sub _stitch_flows {
 
     }
 
+    $self->stats( $stats );
+    warn "stats" . Dumper $stats;
 
 
     #warn Dumper $cache;

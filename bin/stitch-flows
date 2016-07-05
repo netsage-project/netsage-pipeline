@@ -11,7 +11,8 @@ use Time::Duration;
 use Time::HiRes;
 
 #use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-50M';
-use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-100M';
+#use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-100M';
+use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1003-csv/json-500M';
 #use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-500M';
 #use constant DATA_DIR => '/home/mj82/dev/netsage/netflow-data/losa1002-csv/json-1G';
 use constant COLLECTION_INTERVAL => 60; # we are not doing anything with this yet
