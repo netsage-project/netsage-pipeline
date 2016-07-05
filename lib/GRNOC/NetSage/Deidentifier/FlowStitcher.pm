@@ -76,7 +76,7 @@ sub _init_cache {
     );
     my %cache;
     my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "client: tie failed\n";
-    warn "cache: " . Dumper %cache;
+    #warn "cache: " . Dumper %cache;
 
     #$cache->{'set_from_stitcher'} = 'DUH!';
 
@@ -111,37 +111,32 @@ sub _run_flow_stitching {
     $self->_publish_flows( );
 
     #return $finished_messages;
-    my $finished_messages = $self->_get_flows();
-    warn "finished messagesS: " . Dumper $finished_messages;
-    
-    return ( $finished_messages );
+    #my $finished_messages = $self->_get_flows('stitching_finished');
+    #warn "finished messagesS: " . Dumper $finished_messages;
+    #$self->_set_finished_flows( [] );
+
+    #return $finished_messages;
 }
 
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->finished_flows;
-    warn "publishing flows ... " . Dumper $flows;
+    warn "publishing flows ... " . @$flows;
     # TODO: fix an issue where flows aren't deleted after being published
     $self->_publish_data( $flows );
+    $self->_set_finished_flows( [] );
 }
 
 sub _stitch_flows {
     my ( $self ) = @_;
 
-    my $glue = 'flow';
-    my %options = (
-        create    => 0,
-        exclusive => 0,
-        mode      => 0644,
-        destroy   => 0,
-    );
     my $cache;
     my $share = IPC::ShareLite->new(
         -key => 'flow',
-        -create => 'yes',
-        -destroy => 'no',
+        -create => 0,
+        -destroy => 0,
     ) or die $!;
-    if ( not defined $self->flow_cache ) {
+    if ( not defined $share ) {
         warn "initially creating cache ..."; 
         $cache = {};
     } else {
@@ -149,6 +144,8 @@ sub _stitch_flows {
         $cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
+
+    my $finished_flows = $self->finished_flows;
 
     warn "stitcher cache: " . keys %$cache; # . Dumper $cache;
     #warn "self: " . Dumper $self;
@@ -159,16 +156,20 @@ sub _stitch_flows {
     #$knot->shlock();
     warn "looping through cache";
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
-        warn "ft: $five_tuple";
+        #warn "ft: $five_tuple";
         my $flows = $flow_container->{'flows'};
-        if ( @$flows > 1 ) {
+        my $latest_timestamp = 0;
+        if ( @$flows > 0 ) {
             my $previous_flow;
             my $i = 0;
+            warn "zero flow: " . Dumper $flows if @$flows == 0;
             my %flows_to_remove = ();
             foreach my $flow (@$flows ) {
+                $flow->{'stitching_finished'} = 0;
                 my $start = $flow->{'start'};
                 my $end = $flow->{'end'};
                 $flow->{'flow_num'} = $i;
+                $latest_timestamp = $end if $end > $latest_timestamp;
                 # If there is a previous flow
                 if ( $previous_flow ) {
                     # If this flow and the previous flow go together, merge them 
@@ -179,29 +180,56 @@ sub _stitch_flows {
                         $stitchable_flows++;
                     } else {
                         # TODO: review. If can't stitch flows, that means that flow has ended and can be output and removed from the cache
-                        #$self->_publish_data( $flow );
-                        push @{ $self->finished_flows }, %{ clone $flow};
+                        #$self->_publish_data( [ $flow ] );
+                        $flow->{'stitching_finished'} = 1;
+                        push @$finished_flows, %{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
                     }
+
+                } else {
+                    #warn "no previous flow, NO IDEA what to do";
 
                 }
                 $previous_flow = $flow;
                 $i++;
             }
-
+            #warn "flows to remove: " . Dumper %flows_to_remove;
+            #warn "before deleting: " . @$flows;
+            
             for (my $i=@$flows-1; $i>=0; $i--) {
+                if ( abs $latest_timestamp - $flows->[$i]->{'end'} > $self->acceptable_offset && not $flows_to_remove{$i} ) {
+                    warn "flow has expired";
+                    $flows_to_remove{$i} = 1;
+                     push @$finished_flows, %{ clone ( $flows->[$i] )};
+                }
                 if ( $flows_to_remove{$i} ) {
-                    #warn "removing flow $i";
                     splice @$flows, $i, 1;
+                    #warn "removing $i";
                 }
 
             }
+            #warn "after deleting: " . @$flows;
+
+            if ( @$flows < 1 ) {
+                # no flows for this five tuple; remove it
+                #warn "LOOP removing cache for $five_tuple ...";
+                delete $cache->{$five_tuple};
+
+            }
+
+        } else {
+            # no flows for this five tuple; remove it
+            warn "removing cache for $five_tuple ...";
+            delete $cache->{$five_tuple};
 
         }
 
     }
 
+    $self->_set_finished_flows( $finished_flows );
+
     #$knot->shunlock();
+
 
     # find stats on the final, stitched flows
     my $max_stitched_duration = 0;
@@ -225,8 +253,15 @@ sub _stitch_flows {
 
     #warn Dumper $cache;
 
+
+    # save updated cache
+    warn "freezing cache " . keys %$cache;
+
+    $self->_set_flow_cache( $cache );
+    $share->store( freeze( $cache ) );
+
     my $stitched_flows = $self->_get_flows('stitched');
-    warn "STITCHED FLOWS:" . Dumper $stitched_flows;
+    #warn "STITCHED FLOWS:" . Dumper $stitched_flows;
     #warn "ALL DATA:" . Dumper $input_data;
 
     warn "STITCHED FLOW COUNT: " . @$stitched_flows;
@@ -237,9 +272,6 @@ sub _stitch_flows {
     warn "max stitched duration: " . duration($max_stitched_duration);
     warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
     #warn "Total flow count: " .  @$input_data;
-
-    $self->_set_flow_cache( $cache );
-
 
 }
 
@@ -256,6 +288,8 @@ sub _get_flows {
             push @$stitched_flows,  grep { defined $_->{'stitched'} } @$flows;
         } elsif ( $type eq 'unstitched' ) {
             push @$stitched_flows,  grep { not defined $_->{'stitched'} } @$flows;
+        } elsif ( $type eq 'stitching_finished' ) {
+            push @$stitched_flows,  grep { defined $_->{'stitching_finished'} } @$flows;
         } else {
             # all flows
             push @$stitched_flows, @$flows;
@@ -293,50 +327,6 @@ sub _stitch_flow {
     #warn "stitched: " . Dumper $flow1;
 
     return $flow1;
-
-}
-
-# anonymizes an individual flow (TODO: remove)
-sub _anonymize_flow {
-    my ( $self, $ip ) = @_;
-    my $cleaned;
-
-    if ( is_ipv4($ip) ) {
-        my @bytes = split(/\./, $ip);
-        my $total_bytes = @bytes;
-        my $num_to_remove = $self->ipv4_bits_to_strip / 8;
-        my $num_to_keep = $total_bytes - $num_to_remove;
-        my @new_bytes = splice @bytes, 0, $num_to_keep;
-        for ( my $i=0; $i<$num_to_remove; $i++) {
-            push @new_bytes, 'x';
-        }
-        $cleaned = join('.', @new_bytes );
-
-    } elsif ( is_ipv6($ip) ) {
-        my $ip_obj = Net::IP->new( $ip );
-        my $long = $ip_obj->ip();
-        #warn "$long\tlong";
-        my @bytes = split(/:/, $long);
-        my $total_bytes = @bytes;
-        # Divide bits by 8 to get bytes; divide by 2 as there are 2 bytes per group
-        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2;
-        my @new_bytes = splice @bytes, 0, $num_to_remove;
-        for( my $i=0; $i<$total_bytes - $num_to_remove; $i++ ) {
-            push @new_bytes, 'x';
-        }
-        $cleaned = join(':', @new_bytes);
-
-    } else {
-        $self->logger->warn('ip address is neither ipv4 or ipv6 ' . $ip);
-
-    }
-
-    if ( not defined $cleaned ) {
-        warn "IP was NOT CLEANED. setting blank";
-        $cleaned = '';
-    }
-
-    return $cleaned;
 
 }
 

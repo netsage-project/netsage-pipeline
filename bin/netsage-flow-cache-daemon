@@ -31,7 +31,7 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $tagger = GRNOC::NetSage::Deidentifier::FlowCache->new( config_file => $config,
+my $cache = GRNOC::NetSage::Deidentifier::FlowCache->new( config_file => $config,
                                                           logging_file => $logging,
                                                           process_name => 'netsage_flowcache',
                                                           daemonize => !$nofork );
@@ -40,10 +40,10 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
                                                           process_name => 'netsage_flowcache',
-                                                          worker => $tagger );
+                                                          worker => $cache );
 
 
-$worker->start();
+$worker->start("caching");
 #$tagger->start();
 
 ### helpers ###

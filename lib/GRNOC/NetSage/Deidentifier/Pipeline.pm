@@ -38,7 +38,7 @@ has process_name => ( is => 'ro',
 
 # input queue, identified by name
 #has input_queue_name => ( is => 'ro',
-#                     required => 1 );                 
+#                     required => 1 );
 
 # output queue, identified by name
 #has output_queue_name => ( is => 'ro',
@@ -65,7 +65,7 @@ has task_type => ( is => 'rwp' );
 # usually this is only desired for testing purposes. Don't touch this unless you
 # know what you're doing.
 has ack_messages => ( is => 'rwp',
-                      default => 1 );    
+                      default => 1 );
 
 has rabbit_input => ( is => 'rwp' );
 
@@ -139,16 +139,15 @@ sub start {
 
     $self->_set_json( $json );
 
+    # connect to rabbit queues
+    $self->_rabbit_connect();
+
     if ( $self->task_type && $self->task_type eq "stitching" ) {
         $self->start_stitching();
 
     } else {
-
-    # connect to rabbit queues
-    $self->_rabbit_connect();
-
-    # continually consume messages from rabbit queue, making sure we have to acknowledge them
-    $self->logger->debug( 'Starting RabbitMQ consume loop.' );
+        # continually consume messages from rabbit queue, making sure we have to acknowledge them
+        $self->logger->debug( 'Starting RabbitMQ consume loop.' );
 
     }
     return $self->_consume_loop();
@@ -375,6 +374,7 @@ sub _consume_messages {
     # process all of the data across all messages
     my $success = 1;
 
+
     try {
 
         $flows_to_process = $self->_process_messages( $flows_to_process ) if ( @$flows_to_process > 0 );
@@ -385,6 +385,10 @@ sub _consume_messages {
         $self->logger->error( "Error processing messages: $_" );
         $success = 0;
     };
+    # if we're caching in memory, we don't need to push to rabbit - just return success
+    if ( $self->task_type && $self->task_type eq "caching" ) {
+        return $success;
+    }
 
     try {
 

@@ -30,7 +30,7 @@ has handler => ( is => 'rwp');
 
 has flow_cache => ( is => 'rwp', ); # default => sub { {} } );
 
-has knot => ( is => 'rwp' );
+has share => ( is => 'rwp' );
 
 has acceptable_offset => ( is => 'rwp', default => 5 );
 
@@ -53,8 +53,9 @@ sub BUILD {
     #my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
     #$self->_set_ipv4_bits_to_strip( $ipv4_bits );
     #$self->_set_ipv6_bits_to_strip( $ipv6_bits );
-    $self->_set_handler( sub { $self->_run_flow_caching(@_) } );
+    $self->_init_cache();
 
+    $self->_set_handler( sub { $self->_run_flow_caching(@_) } );
 
     return $self;
 }
@@ -62,66 +63,41 @@ sub BUILD {
 ### private methods ###
 sub _init_cache {
     my $self = shift;
-    my $glue = 'flow';
-    my %options = (
-        create    => 1,
-        exclusive => 0,
-        mode      => 0644,
-        destroy   => 0,
-        size      => 524288000, # 500 MB
-    );
-    my $cache; # = %{ $self->flow_cache };
-    #IPC::Shareable->clean_up;
 
-    #my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
-    #IPC::Shareable->clean_up_all;
-    #warn "cache: " . Dumper %cache;
-
-    $cache->{'set_from_cacher'} = 'y3Ah!!!!';
-
-    $self->_set_flow_cache( $cache );
-    #$self->_set_knot( $knot );
-
-
-
-}
-
-my $knot;
-
-sub _run_flow_caching {
-    my ( $self, $caller, $input_data ) = @_;
-
-    #$self->_init_cache() if ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 );
-    my $glue = 'flow';
-    my %options = (
-        create    => 1,
-        exclusive => 0,
-        mode      => 0644,
-        destroy   => 0,
-        size      => 100000000, # 100 MB
-    );
     my $cache;
-    my %ipc_cache;
 
     my $share = IPC::ShareLite->new(
         -key => 'flow',
         -create => 'yes',
         -destroy => 'no',
     ) or die $!;
+
     if ( not defined $self->flow_cache ) {
         warn "initially creating cache ..."; 
         $cache = {};
+        $share->store(freeze ( $cache ) );
     } else {
         warn "thawing cache ...";
         $cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
 
+    $self->_set_share( $share );
+
+
+}
+
+sub _run_flow_caching {
+    my ( $self, $caller, $input_data ) = @_;
+
+    #$self->_init_cache() if ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 );
 
     warn "flow cache start of run: " . keys %{ $self->flow_cache };
 
-    #my %cache = %{ $self->flow_cache };
-    #my $knot = $self->knot;
+    my $share = $self->share;
+    my $cache = $self->flow_cache;
+    warn "thawing cache ...";
+    $cache = thaw( $share->fetch );
 
     my $min_start;
     my $max_start;
@@ -201,18 +177,15 @@ sub _run_flow_caching {
             $max_bytes = $bytes;
         }
 
-        my $flows_temp = [];
+        #my $flows_temp = [];
         if ( defined ( $cache->{$five_tuple}->{'flows'} ) ) {
             #warn "flow already defined";
-            $flows_temp = $cache->{$five_tuple}->{'flows'};
+            #$flows_temp = $cache->{$five_tuple}->{'flows'};
         } else { 
-            #$cache->{$five_tuple}->{'flows'} = [];
-            $flows_temp = [];
+            $cache->{$five_tuple}->{'flows'} = [];
+            #$flows_temp = [];
         }
-        #push @{ $cache->{$five_tuple}->{'flows'} }, $row;
-        push @{ $flows_temp }, $row;
-
-        $cache->{$five_tuple}->{'flows'} = $flows_temp;
+        push @{ $cache->{$five_tuple}->{'flows'} }, $row;
 
         if ( !defined $max_flows || @{ $cache->{$five_tuple}->{'flows'} } > $max_flows ) {
             $max_flows = @{ $cache->{$five_tuple}->{'flows'} };
@@ -247,7 +220,8 @@ sub _run_flow_caching {
     #$self->_publish_flows( );
 
     #return $finished_messages;
-    return [];
+    # Return just a dummy array so it knows we were successful
+    return [ 'finished' ];
 }
 
 1;
