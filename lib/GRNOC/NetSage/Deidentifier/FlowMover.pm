@@ -14,12 +14,13 @@ use GRNOC::Config;
 use Data::Validate::IP;
 use Net::IP;
 use Digest::SHA;
+use utf8;
 
 use Data::Dumper;
 
 
 ### internal attributes ###
-            
+
 has handler => ( is => 'rwp');
 
 ### constructor builder ###
@@ -40,11 +41,7 @@ sub BUILD {
 # expects an array of data for it to process
 # in this case we want to copy the messages unmodified, so returns the original data
 sub _process_messages {
-    # TODO: the actual deidentification in a better way
     my ( $self, $messages ) = @_;
-
-    #my $finished_messages = $messages;
-    #warn "messages " . Dumper $messages;
 
     return $messages;
 }

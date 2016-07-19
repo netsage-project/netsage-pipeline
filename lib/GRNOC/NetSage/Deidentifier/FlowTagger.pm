@@ -90,7 +90,7 @@ sub _tag_messages {
             $metadata{'city'} = undef;
             $metadata{'region'} = undef;
             $metadata{'region_name'} = undef;
-            $metadata{'postal_code'} = undef;                
+            $metadata{'postal_code'} = undef;
             $metadata{'time_zone'} = undef;
             $metadata{'latitude'} = undef;
             $metadata{'longitude'} = undef;
@@ -117,7 +117,7 @@ sub _tag_messages {
                     $metadata{'city'} = $record->city;
                     $metadata{'region'} = $record->region;
                     $metadata{'region_name'} = $record->region_name;
-                    $metadata{'postal_code'} = $record->postal_code;                
+                    $metadata{'postal_code'} = $record->postal_code;
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
@@ -148,7 +148,7 @@ sub _tag_messages {
                     $metadata{'city'} = $record->city;
                     $metadata{'region'} = $record->region;
                     $metadata{'region_name'} = $record->region_name;
-                    $metadata{'postal_code'} = $record->postal_code;                
+                    $metadata{'postal_code'} = $record->postal_code;
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
@@ -187,7 +187,7 @@ sub _tag_messages {
             # Country Name
             # Latitude
             # Longitude
-            my @meta_names = ( 'asn', 'city', 'country_code', 'country_name', 
+            my @meta_names = ( 'asn', 'city', 'country_code', 'country_name',
                 'latitude', 'longitude', 'organization');
             foreach my $name ( @meta_names ) {
                 $message->{'meta'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };

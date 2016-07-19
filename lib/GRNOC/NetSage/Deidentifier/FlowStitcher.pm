@@ -126,6 +126,7 @@ sub _publish_flows {
     my $self = shift;
     my $flows = $self->finished_flows;
     warn "publishing flows ... " . @$flows;
+    #warn "flows: " . Dumper $flows;
     # TODO: fix an issue where flows aren't deleted after being published
     $self->_publish_data( $flows );
     $self->_set_finished_flows( [] );
@@ -189,7 +190,7 @@ sub _stitch_flows {
                         # TODO: review. If can't stitch flows, that means that flow has ended and can be output and removed from the cache
                         #$self->_publish_data( [ $flow ] );
                         $flow->{'stitching_finished'} = 1;
-                        push @$finished_flows, %{ clone ( $flow )};
+                        push @$finished_flows, \%{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
                     }
 
@@ -199,7 +200,7 @@ sub _stitch_flows {
                         warn "no previous flow #1; caching";
                     } else {
                         warn "no previous flow #2; finished";
-                        push @$finished_flows, %{ clone ( $flow )};
+                        push @$finished_flows, \%{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
                     }
 
@@ -215,7 +216,7 @@ sub _stitch_flows {
                 if ( ( $self->acceptable_offset + $flows->[$i]->{'end'} < $latest_timestamp ) && ( not $flows_to_remove{$i} ) ) {
                     warn "flow has expired";
                     $flows_to_remove{$i} = 1;
-                    push @$finished_flows, %{ clone ( $flows->[$i] )};
+                    push @$finished_flows, \%{ clone ( $flows->[$i] )};
                 }
                 if ( $flows_to_remove{$i} ) {
                     splice @$flows, $i, 1;

@@ -13,6 +13,8 @@ use GRNOC::Config;
 use Data::Validate::IP;
 use Net::IP;
 use Digest::SHA;
+use POSIX;
+use utf8;
 
 use Data::Dumper;
 
@@ -52,6 +54,7 @@ sub _deidentify_messages {
 
     my $finished_messages = $messages;
 
+    my $tmp = 0;
     foreach my $message ( @$messages ) {
         my $src_ip = $message->{'meta'}->{'src_ip'};
         my $dst_ip = $message->{'meta'}->{'dst_ip'};
@@ -59,9 +62,21 @@ sub _deidentify_messages {
         $message->{'meta'}->{'id'} = $id;
         $message->{'meta'}->{'src_ip'} = $self->_deidentify_ip( $src_ip );
         $message->{'meta'}->{'dst_ip'} = $self->_deidentify_ip( $dst_ip );
+
+        $message->{'start'} = round( $message->{'start'} );
+        $message->{'end'} = round( $message->{'end'} );
+        #$message->{'values'}->{'duration'} = round( $message->{'values'}->{'duration'} );
+        # perform a couple other necessary manipulations
+        warn " message: " . Dumper $message if $tmp == 0;
+        $tmp++;
     }
 
     return $finished_messages;
+}
+
+sub round {
+    my $input = shift;
+    return floor( $input );
 }
 
 # generates a unique id based on required fields
