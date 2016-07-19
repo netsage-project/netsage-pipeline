@@ -39,6 +39,8 @@ has acceptable_offset => ( is => 'rwp', default => 5 );
 
 has finished_flows => ( is => 'rwp', default => sub { [] } );
 
+has latest_timestamp => ( is => 'rwp', default => 0 );
+
 #has ipv4_bits_to_strip => ( is => 'rwp', default => 8 );
 #has ipv6_bits_to_strip => ( is => 'rwp', default => 64 );
 
@@ -156,11 +158,11 @@ sub _stitch_flows {
     my $stitchable_flows = 0;
     my $stitched_flow_count = 0;
 
+    my $latest_timestamp = $self->latest_timestamp;
     warn "looping through cache";
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         #warn "ft: $five_tuple";
         my $flows = $flow_container->{'flows'};
-        my $latest_timestamp = 0;
         if ( @$flows > 0 ) {
             my $previous_flow;
             my $i = 0;
@@ -168,15 +170,17 @@ sub _stitch_flows {
             my %flows_to_remove = ();
             foreach my $flow (@$flows ) {
                 $flow->{'stitching_finished'} = 0;
+                $flow->{'no_previous'} = 0 if not $flow->{'no_previous'};
                 my $start = $flow->{'start'};
                 my $end = $flow->{'end'};
                 $flow->{'flow_num'} = $i;
                 $latest_timestamp = $end if $end > $latest_timestamp;
                 # If there is a previous flow
                 if ( $previous_flow ) {
-                    # If this flow and the previous flow go together, merge them 
+                    # If this flow and the previous flow go together, merge them
                     # and remove previous flow
                     if ( $self->_can_stitch_flow( $previous_flow->{'end'}, $start ) ) {
+                        warn "stitching flows";
                         $flow = $self->_stitch_flow( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
                         $stitched_flow_count++;
@@ -190,7 +194,15 @@ sub _stitch_flows {
                     }
 
                 } else {
-                    #warn "no previous flow";
+                    $flow->{'no_previous'}++;
+                    if ( $flow->{'no_previous'} <= 1 ) {
+                        warn "no previous flow #1; caching";
+                    } else {
+                        warn "no previous flow #2; finished";
+                        push @$finished_flows, %{ clone ( $flow )};
+                        $flows_to_remove{$i} = 1;
+                    }
+
                 }
                 $previous_flow = $flow;
                 $i++;
@@ -199,7 +211,8 @@ sub _stitch_flows {
             #warn "before deleting: " . @$flows;
 
             for (my $i=@$flows-1; $i>=0; $i--) {
-                if ( abs $latest_timestamp - $flows->[$i]->{'end'} > $self->acceptable_offset && not $flows_to_remove{$i} ) {
+                # TODO: fix this logic
+                if ( ( $self->acceptable_offset + $flows->[$i]->{'end'} < $latest_timestamp ) && ( not $flows_to_remove{$i} ) ) {
                     warn "flow has expired";
                     $flows_to_remove{$i} = 1;
                     push @$finished_flows, %{ clone ( $flows->[$i] )};
@@ -227,6 +240,15 @@ sub _stitch_flows {
         }
 
     }
+
+    $self->_set_latest_timestamp( $latest_timestamp );
+
+    #while( my ( $five_tuple, $flow_container ) = each %$cache ) {
+    #    if ( @{ $flow_container->{'flows'} } < 1 ) {
+    #        warn "removing cache for $five_tuple ...";
+    #        delete $cache->{$five_tuple};
+    #    }
+    #}
 
     $self->_set_finished_flows( $finished_flows );
 
