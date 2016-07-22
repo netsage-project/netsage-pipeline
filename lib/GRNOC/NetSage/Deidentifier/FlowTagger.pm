@@ -9,9 +9,10 @@ use Socket;
 use Socket6;
 use Geo::IP;
 use Data::Validate::IP;
+use Text::Unidecode; # TODO: REMOVE THIS once TSDS bug is fixed
+use Encode;
 use Net::IP;
 
-#use GRNOC::NetSage::Deidentifier::Pipeline;
 use GRNOC::Log;
 use GRNOC::Config;
 
@@ -19,7 +20,7 @@ use Data::Dumper;
 
 
 ### internal attributes ###
-            
+
 has handler => ( is => 'rwp');
 
 has geoip_country => ( is => 'rwp' );
@@ -100,11 +101,8 @@ sub _tag_messages {
             $message->{'type'} = 'flow'; # TODO: remove. temporary until the data pushed has this field
 
             if ( is_ipv4( $ip ) ) {
-                #my $record = $geoip->record_by_addr( $ip );
                 my $record;
                 my ( $country_code, $country_name, $city, $latitude, $longitude );
-                #my $country_code = $geoip_country->country_code_by_addr( $ip );
-                #my $country_name = $geoip_country->country_name_by_addr( $ip );
 
                 $asn_org = $geoip_asn->org_by_addr( $ip );
 
@@ -112,43 +110,34 @@ sub _tag_messages {
                 $record = $geoip_city->record_by_addr( $ip );
 
                 if ( $record ) {
-                    $metadata{'country_code'} = $record->country_code;
-                    $metadata{'country_name'} = $record->country_name;
-                    $metadata{'city'} = $record->city;
-                    $metadata{'region'} = $record->region;
-                    $metadata{'region_name'} = $record->region_name;
-                    $metadata{'postal_code'} = $record->postal_code;
+                    $metadata{'country_code'} = $self->convert_chars( $record->country_code );
+                    $metadata{'country_name'} = $self->convert_chars( $record->country_name );
+                    $metadata{'city'} = $self->convert_chars( $record->city );
+                    $metadata{'region'} = $self->convert_chars( $record->region );
+                    $metadata{'region_name'} = $self->convert_chars( $record->region_name );
+                    $metadata{'postal_code'} = $self->convert_chars( $record->postal_code );
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
 
                     }
-                    #warn "metadata " . Dumper %metadata; 
-                #warn "$field: $ip; record:";
-                #warn Dumper $record;
-                if ( $country_code ) {
-                    #warn "\ncountry code: $country_code\n";
-                    #warn "country name: $country_name";
-                }
             } elsif ( is_ipv6( $ip ) )  {
                 # TODO: extend to ipv6
 
                 my $record;
                 $record = $geoip_city_ipv6->record_by_addr_v6( $ip );
-                #warn "country_name IPV6 " . $geoip_country_ipv6->country_name_by_addr_v6( $ip );
-                #warn "country_code IPV6 " . $geoip_country_ipv6->country_code_by_addr_v6( $ip );
 
                 $asn_org =  $geoip_asn_ipv6->name_by_addr_v6 ( $ip );
 
                 if ( $record ) {
                     # NOTE: some of these don't seem to work for ipv6:
                     # city, region/region_name, postal_code, time_zone
-                    $metadata{'country_code'} = $record->country_code;
-                    $metadata{'country_name'} = $record->country_name;
-                    $metadata{'city'} = $record->city;
-                    $metadata{'region'} = $record->region;
-                    $metadata{'region_name'} = $record->region_name;
-                    $metadata{'postal_code'} = $record->postal_code;
+                    $metadata{'country_code'} = $self->convert_chars($record->country_code);
+                    $metadata{'country_name'} = $self->convert_chars($record->country_name);
+                    $metadata{'city'} = $self->convert_chars($record->city);
+                    $metadata{'region'} = $self->convert_chars($record->region);
+                    $metadata{'region_name'} = $self->convert_chars($record->region_name);
+                    $metadata{'postal_code'} = $self->convert_chars($record->postal_code);
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
@@ -172,7 +161,7 @@ sub _tag_messages {
                         my $asn = $1;
                         my $organization = $2;
                         $metadata{'asn'} = $asn;
-                        $metadata{'organization'} = $organization;
+                        $metadata{'organization'} = $self->convert_chars( $organization );
 
                     } else {
                         #warn "\n\nASN/ORG don't match regex\n\n";
@@ -192,12 +181,19 @@ sub _tag_messages {
             foreach my $name ( @meta_names ) {
                 $message->{'meta'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };
             }
+            #warn "message: " . Dumper ( $message ) if $metadata{'city'} =~ /^Mont/;
 
         }
 
     }
 
     return $finished_messages;
+}
+
+sub convert_chars {
+    my ( $self, $input ) = @_;
+    $input = unidecode( $input ); # TODO: REMOVE THIS once TSDS bug is fixed
+    return $input;
 }
 
 1;
