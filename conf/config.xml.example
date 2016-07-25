@@ -3,26 +3,26 @@
   <rabbit_input>
     <host>127.0.0.1</host>
     <port>5671</port>
-    <username>netsage</username>
-    <password>password</password>
-    <ssl>1</ssl>
-    <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
+    <username>guest</username>
+    <password>guest</password>
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <queue>netsage_anonymizer_raw</queue>
     <channel>2</channel>
+    <ssl>0</ssl> <!-- SSL needs to be enabled for this stage of the pipeline if pulling from a remote host -->
+    <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
   </rabbit_input>
   <rabbit_output>
     <host>127.0.0.1</host>
     <port>5671</port>
-    <username>netsage</username>
-    <password>password</password>
-    <ssl>1</ssl>
-    <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
+    <username>guest</username>
+    <password>guest</password>
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
     <queue>netsage_anonymizer_tagged</queue>
     <channel>3</channel>
+    <ssl>0</ssl>
+    <cacert>/path/to/ca_certificate.crt</cacert> <!-- required if ssl is enabled -->
   </rabbit_output>
   <worker>
     <!-- How many concurrent workers should perform the necessary operations -->

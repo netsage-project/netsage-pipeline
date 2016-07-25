@@ -1,28 +1,28 @@
 <config>
   <!-- rabbitmq connection info -->
   <rabbit_input>
-    <host>localhost</host>
+    <host>127.0.0.1</host>
     <port>5671</port>
-    <username>username</username>
-    <password>password</password>
-    <ssl>1</ssl>
+    <username>guest</username>
+    <password>guest</password>
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
-    <cacert>/path/to/certificate.crt</cacert>
     <queue>netsage_deidentifier_tagged</queue>
     <channel>3</channel>
+    <ssl>0</ssl>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
   </rabbit_input>
   <rabbit_output>
-    <host>localhost</host>
+    <host>127.0.0.1</host>
     <port>5671</port>
-    <username>username</username>
-    <password>password</password>
-    <ssl>1</ssl>
+    <username>guest</username>
+    <password>guest</password>
     <batch_size>100</batch_size>
     <vhost>netsage</vhost>
-    <cacert>/path/to/certificate.crt</cacert>
     <queue>netsage_deidentifier_deidentified</queue>
     <channel>4</channel>
+    <ssl>0</ssl>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
   </rabbit_output>
   <worker>
     <!-- How many concurrent workers should perform the necessary operations -->

@@ -91,6 +91,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 
 %defattr(644, root, root, -)
 
