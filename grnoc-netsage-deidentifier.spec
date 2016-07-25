@@ -8,24 +8,30 @@ URL: http://globalnoc.iu.edu
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
+Requires: GeoIP-GeoLite-data
+Requires: GeoIP-GeoLite-data-extra
 Requires: perl >= 5.8.8
-Requires: perl-Try-Tiny
-Requires: perl-GRNOC-Log
+Requires: perl-Clone
+Requires: perl-Data-Validate-IP
+Requires: perl-Geo-IP
 Requires: perl-GRNOC-Config
-Requires: perl-Proc-Daemon
-Requires: perl-List-MoreUtils
-Requires: perl-Net-AMQP-RabbitMQ
+Requires: perl-GRNOC-Log
+Requires: perl-IPC-ShareLite
 Requires: perl-JSON-XS
-Requires: perl-Time-HiRes
-Requires: perl-Moo
-Requires: perl-Parallel-ForkManager
+Requires: perl-List-MoreUtils
 Requires: perl-Math-Round
+Requires: perl-Moo
+Requires: perl-Net-AMQP-RabbitMQ
+Requires: perl-Net-IP
+Requires: perl-Number-Bytes-Human
+Requires: perl-Parallel-ForkManager
+Requires: perl-Proc-Daemon
 Requires: perl-Socket
 Requires: perl-Socket6
-Requires: perl-Geo-IP
-Requires: perl-Data-Validate-IP
 Requires: perl-Text-Unidecode
-Requires: perl-Net-IP
+Requires: perl-Time-Duration
+Requires: perl-Time-HiRes
+Requires: perl-Try-Tiny
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline

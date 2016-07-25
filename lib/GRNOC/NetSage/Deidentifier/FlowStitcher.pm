@@ -22,7 +22,6 @@ use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
 use Time::HiRes;
-use Fcntl;
 use Data::Dumper;
 
 ### internal attributes ###
