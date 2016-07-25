@@ -67,7 +67,7 @@ sub _deidentify_messages {
         $message->{'end'} = round( $message->{'end'} );
         #$message->{'values'}->{'duration'} = round( $message->{'values'}->{'duration'} );
         # perform a couple other necessary manipulations
-        warn " message: " . Dumper $message if $tmp == 0;
+        #warn " message: " . Dumper $message if $tmp == 0;
         $tmp++;
     }
 

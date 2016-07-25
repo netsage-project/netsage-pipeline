@@ -11,9 +11,7 @@ use GRNOC::Log;
 use GRNOC::Config;
 
 use Clone qw(clone);
-#use JSON::XS;
-use IPC::Shareable;
-use IPC::ShareLite;
+use IPC::ShareLite qw( :lock );
 use Storable qw(freeze thaw);
 use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
@@ -73,11 +71,11 @@ sub _init_cache {
     ) or die $!;
 
     if ( not defined $self->flow_cache ) {
-        warn "initially creating cache ..."; 
+        #warn "initially creating cache ..."; 
         $cache = {};
         $share->store(freeze ( $cache ) );
     } else {
-        warn "thawing cache ...";
+        #warn "thawing cache ...";
         $cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
@@ -92,12 +90,16 @@ sub _run_flow_caching {
 
     #$self->_init_cache() if ( not defined( $self->flow_cache ) ) or ( keys %{ $self->flow_cache } == 0 );
 
-    warn "flow cache start of run: " . keys %{ $self->flow_cache };
+    #warn "flow cache start of run: " . keys %{ $self->flow_cache };
 
     my $share = $self->share;
     my $cache = $self->flow_cache;
-    warn "thawing cache ...";
+    #warn "thawing cache ...";
+    $share->lock( LOCK_SH );
+
     $cache = thaw( $share->fetch );
+
+    $share->unlock( );
 
     my $min_start;
     my $max_start;
@@ -110,8 +112,6 @@ sub _run_flow_caching {
     my $max_duration;
     my $overlaps = 0;
 
-
-    #$knot->shlock;
     foreach my $row (@$input_data) {
         my $five_tuple = $row->{'meta'}->{'src_ip'};
         $five_tuple .= $row->{'meta'}->{'src_port'};
@@ -126,7 +126,7 @@ sub _run_flow_caching {
 
         #warn Dumper $row;
         if ( $cache->{$five_tuple}  ) {
-            warn "FIVE TUPLE ALREADY FOUND";
+            #warn "FIVE TUPLE ALREADY FOUND";
         } else {
             $cache->{$five_tuple} = {};
         }
@@ -193,24 +193,27 @@ sub _run_flow_caching {
 
     }
     #$cache->{'test'} = 1;
-    #$knot->remove();
-    #$knot->shunlock;
-    warn "min start: $min_start";
-    warn "max start: $max_start";
-    warn "min end: $min_end";
-    warn "max end: $max_end";
-    warn "min duration: " . duration($min_duration);
-    warn "max duration: " . duration($max_duration);
-    warn "min bytes: " . format_bytes($min_bytes, bs => 1000);
-    warn "max bytes: " . format_bytes($max_bytes, bs => 1000);
-    warn "max flows: $max_flows";
+    #warn "min start: $min_start";
+    #warn "max start: $max_start";
+    #warn "min end: $min_end";
+    #warn "max end: $max_end";
+    #warn "min duration: " . duration($min_duration);
+    #warn "max duration: " . duration($max_duration);
+    #warn "min bytes: " . format_bytes($min_bytes, bs => 1000);
+    #warn "max bytes: " . format_bytes($max_bytes, bs => 1000);
+    #warn "max flows: $max_flows";
 
     #%cache = %{ clone (\%cache) };
+
+    $share->lock( LOCK_EX );
+
     $share->store(freeze ( $cache ) );
+
+    $share->unlock( );
 
     $self->_set_flow_cache( $cache );
 
-    warn "cache in cache at end: " . keys ( %$cache ); # . Dumper %cache;
+    #warn "cache in cache at end: " . keys ( %$cache ); # . Dumper %cache;
 
 
     # Flow stitching is a special case in the pipeline in that it doesn't simply

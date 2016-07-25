@@ -16,13 +16,13 @@ use GRNOC::Config;
 
 #use JSON::XS;
 use Clone qw(clone);
-use IPC::ShareLite;
+use IPC::ShareLite qw( :lock );
 use Storable qw(freeze thaw);
 use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
 use Time::HiRes;
-
+use Fcntl;
 use Data::Dumper;
 
 ### internal attributes ###
@@ -125,7 +125,7 @@ sub _run_flow_stitching {
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->finished_flows;
-    warn "publishing flows ... " . @$flows;
+    #warn "publishing flows ... " . @$flows;
     #warn "flows: " . Dumper $flows;
     # TODO: fix an issue where flows aren't deleted after being published
     $self->_publish_data( $flows );
@@ -141,18 +141,20 @@ sub _stitch_flows {
         -create => 0,
         -destroy => 0,
     ) or die $!;
+    $share->lock( LOCK_SH );
     if ( not defined $share ) {
-        warn "initially creating cache ..."; 
+        #warn "initially creating cache ..."; 
         $cache = {};
     } else {
-        warn "thawing cache ...";
+        #warn "thawing cache ...";
         $cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
+    $share->unlock();
 
     my $finished_flows = $self->finished_flows;
 
-    warn "stitcher cache: " . keys %$cache; # . Dumper $cache;
+    #warn "stitcher cache: " . keys %$cache; # . Dumper $cache;
     #warn "self: " . Dumper $self;
 
     my $overlaps = 0;
@@ -160,14 +162,14 @@ sub _stitch_flows {
     my $stitched_flow_count = 0;
 
     my $latest_timestamp = $self->latest_timestamp;
-    warn "looping through cache";
+    #warn "looping through cache";
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         #warn "ft: $five_tuple";
         my $flows = $flow_container->{'flows'};
         if ( @$flows > 0 ) {
             my $previous_flow;
             my $i = 0;
-            warn "zero flow: " . Dumper $flows if @$flows == 0;
+            #warn "zero flow: " . Dumper $flows if @$flows == 0;
             my %flows_to_remove = ();
             foreach my $flow (@$flows ) {
                 $flow->{'stitching_finished'} = 0;
@@ -181,7 +183,7 @@ sub _stitch_flows {
                     # If this flow and the previous flow go together, merge them
                     # and remove previous flow
                     if ( $self->_can_stitch_flow( $previous_flow->{'end'}, $start ) ) {
-                        warn "stitching flows";
+                        #warn "stitching flows";
                         $flow = $self->_stitch_flow( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
                         $stitched_flow_count++;
@@ -197,9 +199,9 @@ sub _stitch_flows {
                 } else {
                     $flow->{'no_previous'}++;
                     if ( $flow->{'no_previous'} <= 1 ) {
-                        warn "no previous flow #1; caching";
+                        #warn "no previous flow #1; caching";
                     } else {
-                        warn "no previous flow #2; finished";
+                        #warn "no previous flow #2; finished";
                         push @$finished_flows, \%{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
                     }
@@ -214,7 +216,7 @@ sub _stitch_flows {
             for (my $i=@$flows-1; $i>=0; $i--) {
                 # TODO: fix this logic
                 if ( ( $self->acceptable_offset + $flows->[$i]->{'end'} < $latest_timestamp ) && ( not $flows_to_remove{$i} ) ) {
-                    warn "flow has expired";
+                    #warn "flow has expired";
                     $flows_to_remove{$i} = 1;
                     push @$finished_flows, \%{ clone ( $flows->[$i] )};
                 }
@@ -235,7 +237,7 @@ sub _stitch_flows {
 
         } else {
             # no flows for this five tuple; remove it
-            warn "removing cache for $five_tuple ...";
+            #warn "removing cache for $five_tuple ...";
             delete $cache->{$five_tuple};
 
         }
@@ -275,29 +277,31 @@ sub _stitch_flows {
     }
 
     $self->stats( $stats );
-    warn "stats" . Dumper $stats;
+    #warn "stats" . Dumper $stats;
 
 
     #warn Dumper $cache;
 
 
     # save updated cache
-    warn "freezing cache " . keys %$cache;
+    #warn "freezing cache " . keys %$cache;
 
     $self->_set_flow_cache( $cache );
+    $share->lock( LOCK_EX );
     $share->store( freeze( $cache ) );
+    $share->unlock();
 
-    my $stitched_flows = $self->_get_flows('stitched');
+    #my $stitched_flows = $self->_get_flows('stitched');
     #warn "STITCHED FLOWS:" . Dumper $stitched_flows;
     #warn "ALL DATA:" . Dumper $input_data;
 
-    warn "STITCHED FLOW COUNT: " . @$stitched_flows;
+    #warn "STITCHED FLOW COUNT: " . @$stitched_flows;
     #output_csv($stitched_flows);
 
-    warn "overlaps: $overlaps";
-    warn "stitchable flows: $stitchable_flows";
-    warn "max stitched duration: " . duration($max_stitched_duration);
-    warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
+    #warn "overlaps: $overlaps";
+    #warn "stitchable flows: $stitchable_flows";
+    #warn "max stitched duration: " . duration($max_stitched_duration);
+    #warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
     #warn "Total flow count: " .  @$input_data;
 
 }
