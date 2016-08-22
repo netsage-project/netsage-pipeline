@@ -5,6 +5,7 @@ use Moo;
 use GRNOC::Log;
 use GRNOC::Config;
 
+use POSIX;
 use Net::AMQP::RabbitMQ;
 use JSON::XS;
 use Math::Round qw( nlowmult nhimult );
@@ -55,6 +56,9 @@ has min_bytes => ( is => 'rwp',
                    default => 500000000 ); # 500 MB
 
 has flow_batch_size => ( is => 'rwp' );
+
+has latest_ts => ( is => 'rwp',
+                   default => 0 );
 
 ### constructor builder ###
 
@@ -237,14 +241,19 @@ sub _publish_data {
     my $rabbit_conf = $self->config->get( '/config/rabbit' );
     my $queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
 
+    my $i = 0;
     while ( my @finished_messages = $it->() ) {
         warn "publishing " . @finished_messages . " messsages";
+warn "flown: " . Dumper @finished_messages;
+        my $ts = floor( $finished_messages[$i]->{'end'} );
+        $self->_update_latest_ts($ts);
 
         $self->rabbit->publish( RAW_FLOWS_QUEUE_CHANNEL, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
+        $i++;
 
     }
     print_memusage();
-    $self->_set_json_data( () );
+    #$self->_set_json_data( () );
 
 }
 
@@ -314,6 +323,15 @@ sub print_memusage {
     my @usage = get_memusage(@_);
     warn "Usage: " . format_bytes($usage[0], bs => 1000) . "; " . $usage[1] . "%";
     return \@usage;
+}
+
+sub _update_latest_ts {
+    my ( $self, $ts1 ) = @_;
+    my $ts2 = $self->latest_ts;
+    my $latest = ( $ts1 > $ts2 ? $ts1 : $ts2 );
+    $self->_set_latest_ts( $latest );
+    warn "latest ts: $latest";
+    return $latest;
 }
 
 sub get_memusage {
