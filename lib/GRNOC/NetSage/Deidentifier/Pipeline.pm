@@ -142,8 +142,8 @@ sub start {
     # connect to rabbit queues
     $self->_rabbit_connect();
 
-    if ( $self->task_type && $self->task_type eq "stitching" ) {
-        $self->start_stitching();
+    if ( $self->task_type && $self->task_type eq "noinput" ) {
+        $self->start_noinput();
 
     } else {
         # continually consume messages from rabbit queue, making sure we have to acknowledge them
@@ -153,13 +153,13 @@ sub start {
     return $self->_consume_loop();
 }
 
-sub start_stitching {
+sub start_noinput {
 # _process_messages takes an argument of an arrayref of data to process
 # and then it calls the specified handler function on it
 #sub _process_messages {
     my ( $self, $flows_to_process ) = @_;
 
-    return $self->_consume_cache();
+    return $self->_consume_noinput();
 }
 
 
@@ -175,7 +175,7 @@ sub stop {
 
 ### private methods ###
 
-sub _consume_cache {
+sub _consume_noinput {
 
     my ( $self ) = @_;
 

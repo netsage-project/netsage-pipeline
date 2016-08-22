@@ -35,9 +35,10 @@ usage() if $help;
 my $flow_importer = GRNOC::NetSage::Deidentifier::NetflowImporter->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
+                                                          process_name => 'netsage_netflow_importer',
                                                           flowpath => $flowpath );
 
-$flow_importer->run();
+$flow_importer->start("noinput");
 
 ### helpers ###
 

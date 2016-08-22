@@ -43,8 +43,7 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           worker => $stitcher );
 
 
-$worker->start("stitching");
-#$stitcher->start();
+$worker->start("noinput");
 
 ### helpers ###
 
