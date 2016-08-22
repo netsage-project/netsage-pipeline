@@ -10,6 +10,7 @@ use JSON::XS;
 use Math::Round qw( nlowmult nhimult );
 use List::MoreUtils qw( natatime );
 use Try::Tiny;
+use Date::Parse;
 
 use Data::Dumper;
 
@@ -114,16 +115,61 @@ sub _get_flow_data {
     my $path = $self->flowpath;
     my $min_bytes = $self->min_bytes;
 
-    my $command = "|/usr/bin/nfdump -R $path";
+    my $command = "/usr/bin/nfdump -R $path";
     $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
     $command .= ' bytes\>' . $min_bytes;
     $command .= " -N -q";
-    $command .= ' > test.csv ';
+    #$command .= ' > test.csv ';
+    $command .= ' |';
     warn "command:\n\n$command\n\n";
     my $fh;
     open($fh, $command);
+    #my $rows = ();
 
-    return;
+    #return;
+    while ( my $line = <$fh> ) {
+        warn $line;
+        my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
+
+        my $start = str2time( $ts );
+        my $end   = str2time( $te );
+
+        if ( !defined $start || !defined $end ) {
+            die "Invalid line!: $!";
+            next;
+        }
+
+        my $sum_bytes = $ibyt + $obyt;
+        my $sum_packets = $ipkt + $opkt;
+
+        my $row = {};
+        $row->{'type'} = 'flow';
+        $row->{'interval'} = 600;
+        $row->{'meta'} = {};
+        $row->{'meta'}->{'src_ip'} = $sa;
+        $row->{'meta'}->{'src_port'} = $sp;
+        $row->{'meta'}->{'dst_ip'} = $da;
+        $row->{'meta'}->{'dst_port'} = $dp;
+        $row->{'meta'}->{'protocol'} = $pr;
+        $row->{'start'} = $start;
+        $row->{'end'} = $end;
+
+        $row->{'values'} = {};
+        $row->{'values'}->{'duration'} = $td;
+        $row->{'values'}->{'num_bits'} = $sum_bytes * 8;
+        $row->{'values'}->{'num_packets'} = $sum_packets;
+        $row->{'values'}->{'bits_per_second'} = $bps;
+        $row->{'values'}->{'packets_per_second'} = $pps;
+        $row->{'values'}->{'src_asn'} = $sas;
+        $row->{'values'}->{'dst_asn'} = $das;
+
+        #warn "row: " . Dumper $row;
+
+        push @all_data, $row;
+
+    }
+
+    #return;
 
     #my $files = $self->flowpath;
 
