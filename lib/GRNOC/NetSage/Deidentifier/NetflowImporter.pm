@@ -11,6 +11,7 @@ use Math::Round qw( nlowmult nhimult );
 use List::MoreUtils qw( natatime );
 use Try::Tiny;
 use Date::Parse;
+use Number::Bytes::Human qw(format_bytes);
 
 use Data::Dumper;
 
@@ -53,6 +54,8 @@ has status => ( is => 'rwp' );
 has min_bytes => ( is => 'rwp',
                    default => 500000000 ); # 500 MB
 
+has flow_batch_size => ( is => 'rwp' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -70,6 +73,11 @@ sub BUILD {
                                      force_array => 0 );
 
     $self->_set_config( $config );
+
+    my $flow_batch_size =  $self->config->get( '/config/worker/flow-batch-size' );
+    warn "flow batch size: $flow_batch_size";
+
+    $self->_set_flow_batch_size( $flow_batch_size );
 
     return $self;
 }
@@ -95,6 +103,7 @@ sub run {
 
     # continually consume messages from rabbit queue, making sure we have to acknowledge them
     #$self->logger->debug( 'Starting RabbitMQ consume loop.' );
+    print_memusage();
 
     my $success = $self->_get_flow_data();
 
@@ -110,7 +119,7 @@ sub run {
 sub _get_flow_data {
     my ( $self ) = @_;
 
-    my @all_data = ();
+    my $flow_batch_size = $self->flow_batch_size;
 
     my $path = $self->flowpath;
     my $min_bytes = $self->min_bytes;
@@ -124,11 +133,12 @@ sub _get_flow_data {
     warn "command:\n\n$command\n\n";
     my $fh;
     open($fh, $command);
-    #my $rows = ();
+
+    my @all_data = ();
 
     #return;
+    my $i = 0;
     while ( my $line = <$fh> ) {
-        warn $line;
         my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
 
         my $start = str2time( $ts );
@@ -166,7 +176,13 @@ sub _get_flow_data {
         #warn "row: " . Dumper $row;
 
         push @all_data, $row;
-
+        $i++;
+        if ( $i % $flow_batch_size == 0 ) {
+            warn "processed $flow_batch_size flows; publishing ... ";
+            $self->_set_json_data( \@all_data );
+            $self->_publish_data();
+            @all_data = ();
+        }
     }
 
     #return;
@@ -194,7 +210,7 @@ sub _get_flow_data {
     #}
     $self->_set_json_data( \@all_data );
 
-    warn "all floows: " . @all_data;
+    warn "remaining floows: " . @all_data;
 
     if (!@all_data) {
         return;
@@ -222,10 +238,13 @@ sub _publish_data {
     my $queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
 
     while ( my @finished_messages = $it->() ) {
+        warn "publishing " . @finished_messages . " messsages";
 
         $self->rabbit->publish( RAW_FLOWS_QUEUE_CHANNEL, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
 
     }
+    print_memusage();
+    $self->_set_json_data( () );
 
 }
 
@@ -289,6 +308,28 @@ sub _rabbit_connect {
         $self->logger->info( "Reconnecting after " . RECONNECT_TIMEOUT . " seconds..." );
         sleep( RECONNECT_TIMEOUT );
     }
+}
+
+sub print_memusage {
+    my @usage = get_memusage(@_);
+    warn "Usage: " . format_bytes($usage[0], bs => 1000) . "; " . $usage[1] . "%";
+    return \@usage;
+}
+
+sub get_memusage {
+    use Proc::ProcessTable;
+    my @results;
+    my $pid = (defined($_[0])) ? $_[0] : $$;
+    my $proc = Proc::ProcessTable->new;
+    my %fields = map { $_ => 1 } $proc->fields;
+    return undef unless exists $fields{'pid'};
+    foreach (@{$proc->table}) {
+        if ($_->pid eq $pid) {
+            push (@results, $_->size) if exists $fields{'size'};
+            push (@results, $_->pctmem) if exists $fields{'pctmem'};
+        };
+    };
+    return @results;
 }
 
 1;
