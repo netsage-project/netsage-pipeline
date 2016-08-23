@@ -7,7 +7,7 @@ extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 use GRNOC::Log;
 use GRNOC::Config;
 
-use POSIX;
+use POSIX qw( floor  );
 use Net::AMQP::RabbitMQ;
 use JSON::XS;
 use Math::Round qw( nlowmult nhimult );
@@ -16,6 +16,10 @@ use Try::Tiny;
 use Date::Parse;
 use Date::Format;
 use Number::Bytes::Human qw(format_bytes);
+use File::stat;
+use File::Find::Rule;
+use File::Find::Rule::Age;
+use Path::Class;
 
 use Data::Dumper;
 
@@ -62,6 +66,9 @@ has flow_batch_size => ( is => 'rwp' );
 
 has latest_ts => ( is => 'rwp',
                    default => 0 );
+
+has import_status => ( is => 'rwp',
+                       default => sub { {} } );
 
 ### constructor builder ###
 
@@ -116,99 +123,167 @@ sub _get_flow_data {
     my ( $self ) = @_;
 
     my $flow_batch_size = $self->flow_batch_size;
-    my $latest_ts = $self->latest_ts;
-    warn "Latest ts: $latest_ts";
+    my $status = $self->import_status;
 
     my $path = $self->flowpath;
     my $min_bytes = $self->min_bytes;
 
-    my $command = "/usr/bin/nfdump -R $path";
-    $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
-    my $template = '%Y/%m/%d.%H:%M:%S';
-    $command .= ' -t ' . time2str($template, $latest_ts) if $latest_ts > 0;
-    $command .= ' bytes\>' . $min_bytes;
-    $command .= " -N -q";
-    #$command .= ' > test.csv ';
-    $command .= ' |';
-    warn "command:\n\n$command\n\n";
-    my $fh;
-    open($fh, $command);
+    warn "path: $path";
+    my @years = $self->_get_dirs( $path );
+    warn "years: " . Dumper @years;
 
-    my @all_data = ();
+    my $ts_template = '%Y/%m/%d.%H:%M:%S';
 
-    #return;
-    my $i = 0;
-    while ( my $line = <$fh> ) {
-        my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
+    foreach my $year ( @years ) {
+        warn "year relative combined: " . dir( $path, $year);
+        my $year_path = dir( $path, $year );
+        my $stats = stat($year_path);
+        warn "mtime: " . $stats->mtime . " " . time2str( $ts_template, $stats->mtime );
+        warn "size: " . $stats->size;
+        warn "stats: " . Dumper $stats;
 
-        my $start = str2time( $ts );
-        my $end   = str2time( $te );
+        my @months = $self->_get_dirs( $year_path );
 
-        if ( !defined $start || !defined $end ) {
-            die "Invalid line!: $!";
-            next;
-        }
+        warn "months: " . Dumper @months;
 
-        my $sum_bytes = $ibyt + $obyt;
-        my $sum_packets = $ipkt + $opkt;
+        foreach my $month (@months) {
+            my $month_path = dir( $year_path, $month );
+            warn "month relative combined: $month_path";
+            my @days = $self->_get_dirs( $month_path );
+            warn "days: " . Dumper @days;
 
-        my $row = {};
-        $row->{'type'} = 'flow';
-        $row->{'interval'} = 600;
-        $row->{'meta'} = {};
-        $row->{'meta'}->{'src_ip'} = $sa;
-        $row->{'meta'}->{'src_port'} = $sp;
-        $row->{'meta'}->{'dst_ip'} = $da;
-        $row->{'meta'}->{'dst_port'} = $dp;
-        $row->{'meta'}->{'protocol'} = $pr;
-        $row->{'start'} = $start;
-        $row->{'end'} = $end;
+            foreach my $day ( @days ) {
+                my $day_path = dir( $month_path, $day );
+                my @files = File::Find::Rule
+                    ->file()
+                    ->maxdepth(1)
+                    ->age( 'older', '1D' )
+                    ->not( File::Find::Rule->new->name(qr/^\.\.?$/) )
+                    ->relative(1)
+                    ->in($day_path);
+                for(my $i=0; $i<@files; $i++) {
+                    my $file = $files[$i];
+                    my $stats = stat($file);
+                    my $abs = file( $file );
+                    my $rel = $abs->relative( $path );
 
-        $row->{'values'} = {};
-        $row->{'values'}->{'duration'} = $td;
-        $row->{'values'}->{'num_bits'} = $sum_bytes * 8;
-        $row->{'values'}->{'num_packets'} = $sum_packets;
-        $row->{'values'}->{'bits_per_second'} = $bps;
-        $row->{'values'}->{'packets_per_second'} = $pps;
-        $row->{'values'}->{'src_asn'} = $sas;
-        $row->{'values'}->{'dst_asn'} = $das;
+                    my $entry = $status->{ $rel };
 
-        #warn "row: " . Dumper $row;
+                    my $mtime_cache = $entry->{'mtime'};
+                    my $size_cache  = $entry->{'size'};
+                    if ( exists ( $status->{ $rel } )
+                         && $mtime_cache == $stats->{'mtime'}
+                         && $size_cache == $stats->{'size'}
+                     ) {
+                        next;
+                     }
 
-        push @all_data, $row;
-        $i++;
-        if ( $i % $flow_batch_size == 0 ) {
-            warn "processed $flow_batch_size flows; publishing ... ";
-            $self->_set_json_data( \@all_data );
-            $self->_publish_flows();
-            @all_data = ();
+                    $files[$i] =  dir( $day_path, $file ) . "";
+                }
+                @files = sort @files;
+                warn "files: " . Dumper @files;
+                my @remaining_data = $self->_get_nfdump_data(\@files);
+                if (!@remaining_data) {
+                    return;
+                } else {
+                    return 1;
+                }
+
+            }
+
         }
     }
+}
 
-    #return;
+sub _get_nfdump_data {
+    my ( $self, $flowfiles ) = @_;
 
-    #my $files = $self->flowpath;
 
-    ## TODO: update
-    #foreach my $file ( @$files ) {
-    #    my $json_data;
-    #    {
-    #        local $/; #Enable 'slurp' mode
-    #        open my $fh, "<", $file || die ('error loading json file');
-    #        $json_data = <$fh>;
-    #        close $fh;
-    #    }
+    my $status = $self->import_status;
 
-    #    my $data;
-    #    try {
-    #        $data = $self->json->decode( $json_data );
-    #        push @all_data, @$data;
-    #    }
-    #    catch {
-    #        $self->logger->warn( "Unable to JSON decode message: $_" );
-    #    };
-    #}
-    $self->_set_json_data( \@all_data );
+    my $flow_batch_size = $self->flow_batch_size;
+
+    my $path = $self->flowpath;
+    my $min_bytes = $self->min_bytes;
+
+    my @all_data = ();
+    foreach my $flowfile ( @$flowfiles ) {
+        my $stats = stat($flowfile);
+
+        my $command = "/usr/bin/nfdump -R $flowfile";
+        $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
+        #$command .= ' -t ' . time2str($ts_template, $latest_ts) if $latest_ts > 0;
+        $command .= ' bytes\>' . $min_bytes;
+        $command .= " -N -q";
+        #$command .= ' > test.csv ';
+        $command .= ' |';
+        warn "command:\n\n$command\n\n";
+        my $fh;
+        open($fh, $command);
+
+
+        #return;
+        my $i = 0;
+        while ( my $line = <$fh> ) {
+            my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
+
+            my $start = str2time( $ts );
+            my $end   = str2time( $te );
+
+            if ( !defined $start || !defined $end ) {
+                die "Invalid line!: $!";
+                next;
+            }
+
+            my $sum_bytes = $ibyt + $obyt;
+            my $sum_packets = $ipkt + $opkt;
+
+            my $row = {};
+            $row->{'type'} = 'flow';
+            $row->{'interval'} = 600;
+            $row->{'meta'} = {};
+            $row->{'meta'}->{'src_ip'} = $sa;
+            $row->{'meta'}->{'src_port'} = $sp;
+            $row->{'meta'}->{'dst_ip'} = $da;
+            $row->{'meta'}->{'dst_port'} = $dp;
+            $row->{'meta'}->{'protocol'} = $pr;
+            $row->{'start'} = $start;
+            $row->{'end'} = $end;
+
+            $row->{'values'} = {};
+            $row->{'values'}->{'duration'} = $td;
+            $row->{'values'}->{'num_bits'} = $sum_bytes * 8;
+            $row->{'values'}->{'num_packets'} = $sum_packets;
+            $row->{'values'}->{'bits_per_second'} = $bps;
+            $row->{'values'}->{'packets_per_second'} = $pps;
+            $row->{'values'}->{'src_asn'} = $sas;
+            $row->{'values'}->{'dst_asn'} = $das;
+
+            #warn "row: " . Dumper $row;
+
+            push @all_data, $row;
+            if ( @all_data % $flow_batch_size == 0 ) {
+                warn "processed " . @all_data . " (up to $flow_batch_size) flows; publishing ... ";
+                $self->_set_json_data( \@all_data );
+                $self->_publish_flows();
+                @all_data = ();
+            }
+        }
+        # publish any remaining data
+        $self->_set_json_data( \@all_data );
+        $self->_publish_flows();
+        @all_data = ();
+
+        #warn "mtime: " . $stats->mtime . " " . time2str( $ts_template, $stats->mtime );
+        #warn "size: " . $stats->size;
+        my $abs = file( $flowfile );
+        my $rel = $abs->relative( $path );
+        $status->{$rel} = {
+            mtime => $stats->mtime,
+            size => $stats->size
+        };
+        warn "status: " . Dumper $status;
+    }
 
     warn "remaining floows: " . @all_data;
 
@@ -217,6 +292,7 @@ sub _get_flow_data {
     } else {
         return 1;
     }
+
 
 };
 
@@ -239,98 +315,21 @@ sub _publish_flows {
     $self->_set_json_data( [] );
 }
 
-#sub _publish_data {
-#    my ( $self ) = @_;
-#    if ( !$self->json_data ) {
-#        $self->logger->info("No data found to publish");
-#        return;
-#    }
-#    my $data = $self->json_data;
-#
-#    # send a max of 100 messages at a time to rabbit
-#    my $it = natatime( 100, @$data );
-#
-#    #my $queue = $self->config->get( '/config/rabbit/raw-queue' );
-#    my $rabbit_conf = $self->config->get( '/config/rabbit' );
-#    my $queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
-#
-#    my $i = 0;
-#    while ( my @finished_messages = $it->() ) {
-#        warn "publishing " . @finished_messages . " messsages";
-#warn "flown: " . Dumper @finished_messages;
-#        my $ts = floor( $finished_messages[$i]->{'end'} );
-#        $self->_update_latest_ts($ts);
-#
-#        $self->rabbit->publish( RAW_FLOWS_QUEUE_CHANNEL, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
-#        $i++;
-#
-#    }
-#    print_memusage();
-#    #$self->_set_json_data( () );
-#
-#}
-#
+sub _get_dirs {
+    my ( $self, $path ) = @_;
 
-#sub _rabbit_connect {
-#
-#    my ( $self ) = @_;
-#
-#    my $rabbit_host = $self->config->get( '/config/rabbit/host' );
-#    my $rabbit_port = $self->config->get( '/config/rabbit/port' );
-#    my $rabbit_username = $self->config->get( '/config/rabbit/username' );
-#    my $rabbit_password = $self->config->get( '/config/rabbit/password' );
-#    my $rabbit_vhost = $self->config->get( '/config/rabbit/vhost' );
-#    my $rabbit_ssl = $self->config->get( '/config/rabbit/ssl' ) || 0;
-#    my $rabbit_ca_cert = $self->config->get( '/config/rabbit/cacert' );
-#    my $rabbit_conf = $self->config->get( '/config/rabbit' );
-#    my $raw_data_queue = $rabbit_conf->{'queue'}->{'raw'}->{'rabbit_name'};
-#    while ( 1 ) {
-#
-#        $self->logger->info( "Connecting to RabbitMQ $rabbit_host:$rabbit_port." );
-#
-#        my $connected = 0;
-#
-#        try {
-#
-#            my $rabbit = Net::AMQP::RabbitMQ->new();
-#
-#            my $params = {};
-#            $params->{'port'} = $rabbit_port;
-#            $params->{'user'} = $rabbit_username;
-#            $params->{'password'} = $rabbit_password;
-#            if ( $rabbit_ssl ) {
-#                $params->{'ssl'} = $rabbit_ssl;
-#                $params->{'ssl_verify_host'} = 0;
-#                $params->{'ssl_cacert'} = $rabbit_ca_cert;
-#            }
-#            if ( $rabbit_vhost ) {
-#                $params->{'vhost'} = $rabbit_vhost;
-#            }
-#
-#            $rabbit->connect( $rabbit_host, $params  );
-#
-#
-#	    # open channel to the pending queue we'll read from
-#            $rabbit->channel_open( RAW_FLOWS_QUEUE_CHANNEL );
-#            $rabbit->queue_declare( RAW_FLOWS_QUEUE_CHANNEL, $raw_data_queue, {'auto_delete' => 0} );
-#            $rabbit->basic_qos( RAW_FLOWS_QUEUE_CHANNEL, { prefetch_count => QUEUE_PREFETCH_COUNT } );
-#
-#            $self->_set_rabbit( $rabbit );
-#
-#            $connected = 1;
-#        }
-#
-#        catch {
-#
-#            $self->logger->error( "Error connecting to RabbitMQ: $_" );
-#        };
-#
-#        last if $connected;
-#
-#        $self->logger->info( "Reconnecting after " . RECONNECT_TIMEOUT . " seconds..." );
-#        sleep( RECONNECT_TIMEOUT );
-#    }
-#}
+    warn "_get_dirs path: $path";
+    my @dirs = File::Find::Rule
+        ->directory()
+        ->maxdepth(1)
+        ->relative(1)
+        ->not( File::Find::Rule->new->name(qr/^\.\.?$/) )
+        ->in($path);
+
+    warn "dirs: " . Dumper @dirs;
+
+    return @dirs;
+}
 
 sub print_memusage {
     my @usage = get_memusage(@_);

@@ -414,7 +414,7 @@ sub _publish_data {
 
     # send a max of $batch_size messages at a time to rabbit
     my $it = natatime( $batch_size, @$messages );
-    $self->logger->debug("Publishing up to " . $batch_size . " messages per batch");
+    $self->logger->debug("Publishing up to " . $batch_size . " messages per batch ( " . @$messages . " ) ");
 
     my $queue = $self->rabbit_config->{'output'}->{'queue'};
     my $channel = $self->rabbit_config->{'output'}->{'channel'};
