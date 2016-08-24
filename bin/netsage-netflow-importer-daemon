@@ -9,7 +9,6 @@ use Getopt::Long;
 use Data::Dumper;
 
 ### constants ###
-
 use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
@@ -19,6 +18,7 @@ my $config = DEFAULT_CONFIG_FILE;
 my $logging = DEFAULT_LOGGING_FILE;
 my $nofork;
 my $flowpath;
+my $cachefile;
 my $help;
 
 # TODO: change jsonfile to flow data directory
@@ -26,6 +26,7 @@ GetOptions( 'config=s' => \$config,
             'logging=s' => \$logging,
             'nofork' => \$nofork,
             'flowpath=s' => \$flowpath,
+            'cachefile=s' => \$cachefile,
             'help|h|?' => \$help );
 
 # did they ask for help?
@@ -35,8 +36,9 @@ usage() if $help;
 my $flow_importer = GRNOC::NetSage::Deidentifier::NetflowImporter->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
+                                                          cache_file => $cachefile,
                                                           process_name => 'netsage_netflow_importer',
-                                                          flowpath => $flowpath );
+                                                          flow_path => $flowpath );
 
 $flow_importer->start("noinput");
 

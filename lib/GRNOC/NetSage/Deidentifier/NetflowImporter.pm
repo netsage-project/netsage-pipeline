@@ -23,13 +23,6 @@ use Storable qw( store retrieve );
 
 use Data::Dumper;
 
-### constants ###
-
-use constant QUEUE_PREFETCH_COUNT => 20;
-use constant QUEUE_FETCH_TIMEOUT => 10 * 1000;
-use constant RECONNECT_TIMEOUT => 10;
-use constant RAW_FLOWS_QUEUE_CHANNEL => 1;
-
 ### required attributes ###
 
 has config_file => ( is => 'ro',
@@ -38,11 +31,11 @@ has config_file => ( is => 'ro',
 has logging_file => ( is => 'ro',
                       required => 1 );
 
-has flowpath => ( is => 'ro',
-                      required => 1 );
 
 
 ### internal attributes ###
+
+has flow_path => ( is => 'rwp' );
 
 has logger => ( is => 'rwp' );
 
@@ -64,11 +57,10 @@ has min_bytes => ( is => 'rwp',
 
 has flow_batch_size => ( is => 'rwp' );
 
-has import_status => ( is => 'rwp',
+has status_cache => ( is => 'rwp',
                        default => sub { {} } );
 
-has cache_file => ( is => 'rwp',
-                    default => '/var/cache/netsage/netflow_importer.cache' );
+has cache_file => ( is => 'rwp' );
 
 ### constructor builder ###
 
@@ -80,7 +72,16 @@ sub BUILD {
     my $config = $config_obj->get('/config');
 
     my $flow_batch_size =  $config->{'worker'}->{'flow-batch-size'};
-    #warn "flow batch size: $flow_batch_size";
+    my $cache_file = $config->{'worker'}->{'cache-file'} if not defined $self->cache_file;
+    $cache_file = '/var/cache/netsage/netflow_importer.cache' if not defined $cache_file;
+    $self->_set_cache_file( $cache_file );
+    $self->logger->debug("cache file: " . $cache_file);
+
+    my $flow_path = $self->flow_path;
+
+    $flow_path = $config->{'worker'}->{'flow-path'} if not defined $flow_path;
+    $self->_set_flow_path( $flow_path );
+    $self->logger->debug("flow path: $flow_path");
 
     $self->_set_flow_batch_size( $flow_batch_size );
     $self->_set_handler( sub{ $self->_run_netflow_import(@_) } );
@@ -113,9 +114,9 @@ sub _get_flow_data {
     my ( $self ) = @_;
 
     my $flow_batch_size = $self->flow_batch_size;
-    my $status = $self->import_status;
+    my $status = $self->status_cache;
 
-    my $path = $self->flowpath;
+    my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
     my @files = File::Find::Rule
@@ -153,11 +154,11 @@ sub _get_flow_data {
 sub _get_nfdump_data {
     my ( $self, $flowfiles ) = @_;
 
-    my $status = $self->import_status;
+    my $status = $self->status_cache;
 
     my $flow_batch_size = $self->flow_batch_size;
 
-    my $path = $self->flowpath;
+    my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
     my @all_data = ();
@@ -230,7 +231,7 @@ sub _get_nfdump_data {
             mtime => $stats->mtime,
             size => $stats->size
         };
-        $self->_set_import_status( $status );
+        $self->_set_status_cache( $status );
         $self->_write_cache();
     }
 
@@ -248,7 +249,7 @@ sub _get_nfdump_data {
 sub _write_cache {
     my ( $self ) = @_;
     my $filename = $self->cache_file;
-    my $status = $self->import_status;
+    my $status = $self->status_cache;
     store $status, $filename;
 
 }
@@ -257,7 +258,7 @@ sub _write_cache {
 sub _read_cache {
     my ( $self ) = @_;
     my $filename = $self->cache_file;
-    my $status = $self->import_status;
+    my $status = $self->status_cache;
     if ( not -f $filename ) {
         open my $fh, '>', $filename
             or die "Cache file $filename does not exist, and failed to created it: $!\n";
@@ -265,7 +266,7 @@ sub _read_cache {
         store $status, $filename;
     }
     $status = retrieve $filename;
-    $self->_set_import_status( $status );
+    $self->_set_status_cache( $status );
 
 }
 sub _publish_flows {

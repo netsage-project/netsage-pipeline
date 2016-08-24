@@ -114,7 +114,7 @@ sub start {
     my ( $self, $task_type ) = @_;
     $self->_set_task_type( $task_type );
 
-    $self->logger->debug( "Starting." );
+    $self->logger->info( "Starting." );
 
     # flag that we're running
     $self->_set_is_running( 1 );

@@ -3,7 +3,6 @@ package GRNOC::NetSage::Deidentifier::FlowMover;
 use strict;
 use warnings;
 
-
 use Moo;
 
 extends 'GRNOC::NetSage::Deidentifier::Pipeline';
