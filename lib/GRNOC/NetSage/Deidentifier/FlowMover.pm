@@ -30,7 +30,6 @@ sub BUILD {
     my ( $self ) = @_;
 
     my $config = $self->config;
-    warn "config: " . Dumper $config->get('/config');
     $self->_set_handler( sub { $self->_process_messages(@_) } );
 
     return $self;

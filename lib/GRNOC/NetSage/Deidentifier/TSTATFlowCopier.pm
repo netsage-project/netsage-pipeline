@@ -26,7 +26,7 @@ has logging_file => ( is => 'ro',
                       required => 1 );
 
 ### internal attributes ###
-            
+
 has logger => ( is => 'rwp' );
 
 has config => ( is => 'rwp' );
@@ -66,7 +66,6 @@ sub BUILD {
         #ack_messages => 0, # set to 0 to prevent acking messages (they get requeued)
     );
     $self->_set_pipeline( $pipeline );
-    warn "config: " . Dumper $config->get('/config');
 
     return $self;
 }

@@ -408,7 +408,7 @@ sub _publish_data {
     my ( $self, $messages ) = @_;
     my $batch_size = $self->rabbit_config->{'output'}->{'batch_size'};
     if ( ! @$messages ) {
-        $self->logger->info("No data found to publish");
+        $self->logger->debug("No data found to publish");
         return;
     }
 
@@ -511,7 +511,7 @@ sub _rabbit_connect {
         my $rabbit_channel = $rabbit_config->{ $direction }->{'channel'};
         my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
 
-        $self->logger->info( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
+        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
 
         $connected{ $direction } = 0;
 
