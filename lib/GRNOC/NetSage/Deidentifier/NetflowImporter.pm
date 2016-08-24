@@ -20,6 +20,7 @@ use File::stat;
 use File::Find::Rule;
 use File::Find::Rule::Age;
 use Path::Class;
+use Storable qw( store retrieve );
 
 use Data::Dumper;
 
@@ -70,6 +71,9 @@ has latest_ts => ( is => 'rwp',
 has import_status => ( is => 'rwp',
                        default => sub { {} } );
 
+has cache_file => ( is => 'rwp',
+                    default => '/var/cache/netsage/netflow_importer.cache' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -90,6 +94,8 @@ sub BUILD {
     my $json = JSON::XS->new();
 
     $self->_set_json( $json );
+
+    $self->_read_cache();
 
     return $self;
 }
@@ -158,36 +164,38 @@ sub _get_flow_data {
                     ->file()
                     ->maxdepth(1)
                     ->age( 'older', '1D' )
-                    ->not( File::Find::Rule->new->name(qr/^\.\.?$/) )
+                    ->name( 'nfcapd.*' )
                     ->relative(1)
                     ->in($day_path);
+                my @filepaths = ();
                 for(my $i=0; $i<@files; $i++) {
                     my $file = $files[$i];
-                    my $stats = stat($file);
-                    my $abs = file( $file );
-                    my $rel = $abs->relative( $path );
+                    my $file_path = dir( $day_path, $file ) . "";
+                    my $stats = stat($file_path);
+                    my $abs = file( $file_path );
+                    my $rel = $abs->relative( $path ) . "";
+                    #warn "rel: " . Dumper $rel;
+                    if ( exists ( $status->{ $rel } ) ) {
+                        my $entry = $status->{ $rel };
+                        #warn "entry: " . Dumper $entry;
+                        my $mtime_cache = $entry->{'mtime'};
+                        my $size_cache  = $entry->{'size'};
+                        #warn "mtime_cache: " . Dumper $mtime_cache;
+                        #warn "size_cache: " . Dumper $size_cache;
+                        if ( $mtime_cache == $stats->mtime
+                            && $size_cache == $stats->size ) {
+                            next;
+                        }
+                    }
+                    push @filepaths, dir( $day_path, $file ) . "";
 
-                    my $entry = $status->{ $rel };
-
-                    my $mtime_cache = $entry->{'mtime'};
-                    my $size_cache  = $entry->{'size'};
-                    if ( exists ( $status->{ $rel } )
-                         && $mtime_cache == $stats->{'mtime'}
-                         && $size_cache == $stats->{'size'}
-                     ) {
-                        next;
-                     }
-
-                    $files[$i] =  dir( $day_path, $file ) . "";
                 }
-                @files = sort @files;
-                warn "files: " . Dumper @files;
-                my @remaining_data = $self->_get_nfdump_data(\@files);
-                if (!@remaining_data) {
-                    return;
-                } else {
-                    return 1;
-                }
+                #@files = sort @files;
+                @filepaths = sort @filepaths;
+                warn "filepaths: " . Dumper @filepaths;
+                #warn "files: " . Dumper @files;
+                my $success = $self->_get_nfdump_data(\@filepaths);
+                #return $success;
 
             }
 
@@ -200,6 +208,7 @@ sub _get_nfdump_data {
 
 
     my $status = $self->import_status;
+    #warn "get_nfdump status: " . Dumper $status;
 
     my $flow_batch_size = $self->flow_batch_size;
 
@@ -210,7 +219,7 @@ sub _get_nfdump_data {
     foreach my $flowfile ( @$flowfiles ) {
         my $stats = stat($flowfile);
 
-        my $command = "/usr/bin/nfdump -R $flowfile";
+        my $command = "/usr/bin/nfdump -R '$flowfile'";
         $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         #$command .= ' -t ' . time2str($ts_template, $latest_ts) if $latest_ts > 0;
         $command .= ' bytes\>' . $min_bytes;
@@ -277,12 +286,14 @@ sub _get_nfdump_data {
         #warn "mtime: " . $stats->mtime . " " . time2str( $ts_template, $stats->mtime );
         #warn "size: " . $stats->size;
         my $abs = file( $flowfile );
-        my $rel = $abs->relative( $path );
+        my $rel = $abs->relative( $path ) . "";
         $status->{$rel} = {
             mtime => $stats->mtime,
             size => $stats->size
         };
-        warn "status: " . Dumper $status;
+        $self->_set_import_status( $status );
+        warn "status: " . Dumper sort keys( %$status );
+        $self->_write_cache();
     }
 
     warn "remaining floows: " . @all_data;
@@ -298,18 +309,37 @@ sub _get_nfdump_data {
 
 ### private methods ###
 
+sub _write_cache {
+    my ( $self ) = @_;
+    my $filename = $self->cache_file;
+    my $status = $self->import_status;
+    store $status, $filename;
+
+}
+
+
+sub _read_cache {
+    my ( $self ) = @_;
+    my $filename = $self->cache_file;
+    my $status = $self->import_status;
+    if ( not -f $filename ) {
+        open my $fh, '>', $filename
+            or die "Cache file $filename does not exist, and failed to created it: $!\n";
+        close $fh;
+        store $status, $filename;
+    }
+    $status = retrieve $filename;
+    $self->_set_import_status( $status );
+
+}
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->json_data;
     #warn "publishing flows ... " . @$flows;
     #warn "flows: " . Dumper $flows;
     # TODO: fix an issue where flows aren't deleted after being published
-    $self->_publish_data( $flows );
-
-    foreach my $flow (@$flows ) {
-        my $ts = $flow->{'end'};
-        $self->_update_latest_ts( $ts );
-
+    if ( defined $flows ) {
+        $self->_publish_data( $flows );
     }
 
     $self->_set_json_data( [] );

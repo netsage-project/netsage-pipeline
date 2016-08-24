@@ -137,8 +137,9 @@ sub _run_flow_caching {
         my $last_end = $cache->{$five_tuple}->{'last_end'} || 0;
         if ( $start <= $last_start ) { # TODO: should this be < $last_end?
             #print "overlap: start: " . localtime( $start ) . " last_start: " . localtime( $last_start ) . "\n";
-            print "flows overlap -- what should we do about overlapping flows?\n";
+            #print "overlap: end:   " . localtime( $end ) . " last_end: " . localtime( $last_end ) . "\n";
             $overlaps++;
+            print "flows overlap ($overlaps) -- what should we do about overlapping flows?\n";
             #print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
             #print localtime( $last_start ) . "\t-\t" . localtime( $last_end ) . "\tlast\n";
         }

@@ -6,7 +6,7 @@ use Data::Dumper;
 
 
 use IPC::Shareable;
-use IPC::ShareLite;
+use IPC::ShareLite qw( :lock );
 use Storable qw(freeze thaw);
 
 my $glue = 'flow';
@@ -30,7 +30,9 @@ my $share = IPC::ShareLite->new(
 
 warn "initially creating cache ...";
 $cache = {};
-
+$share->lock( LOCK_EX );
+$share->store(freeze ( $cache ) );
+$share->unlock( );
 
 while ( 1 ) {
     warn "cache at " . time() . ": \n";
