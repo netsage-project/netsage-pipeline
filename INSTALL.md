@@ -20,6 +20,7 @@ Typically, the default configuration will work. Perform any desired Rabbit confi
 
 The pipeline consists of several daemons, most of which read data from a Rabbit queue, perform some operations, and then push the results to another queue for further processing. Typically, they are run in this order:
 
+0. Netflow Importer (optional - sometimes TSTAT TRANSPORT is used instead)
 1. Flow Cache - takes raw flows and caches them in shared memory for the stitcher to process
 2. Flow Stitcher - stitches flows spanning the 1-minute boundaries
 3. Flow Tagger - Tags flows with GeoIP/ASN/Organization information
@@ -96,6 +97,7 @@ The configuration files and logging configuration files are listed below:
 
 ```
 /etc/grnoc/netsage/deidentifier/logging.conf
+/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 /etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
@@ -104,6 +106,9 @@ The configuration files and logging configuration files are listed below:
 ```
 
 ### Daemon Listing
+
+#### netsage-netflow-importer-daemon
+This is a daemon that reads raw netflow data, reads it, and pushes it to a Rabbit queue for processing.
 
 #### netsage-flow-cache-daemon
 This is a daemon that polls a Rabbit queue for raw flow data, retrieves it, and stores it in shared memory for the stitching daemon.
