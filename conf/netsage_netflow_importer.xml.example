@@ -1,0 +1,44 @@
+<config>
+    <!-- rabbitmq connection info -->
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
+    <queue>netsage_deidentifier_netflow_raw2</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
+    <channel>3</channel>
+    <queue>netsage_deidentifier_raw</queue>
+  </rabbit_output>
+  <worker>
+    <!-- How many flows to process at once -->
+    <flow-batch-size>1000</flow-batch-size>
+    <!-- How many concurrent workers should perform the necessary operations -->
+    <num-processes>1</num-processes>
+
+    <!-- Directory to find flow data -->
+    <flow-path>/path/to/flow/data</flow-path>
+
+    <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
+    <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
+
+    <!-- where should we write the worker pid file to -->
+    <pid-file>/var/run/netsage-netflow-importer-workers.pid</pid-file>
+
+  </worker>
+</config>
