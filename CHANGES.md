@@ -1,6 +1,7 @@
 ## GRNOC NetSage Deidentifier 0.0.3 -- Wed Aug 24 2016
 ### Features:
  * ISSUE=1359 PROJ=160 Create netflow input module
+
 ### Bugs:
  * ISSUE=1643 PROJ=160 Improve logging in pipeline
 
