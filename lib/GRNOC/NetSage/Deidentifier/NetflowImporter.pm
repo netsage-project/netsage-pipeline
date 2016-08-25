@@ -62,6 +62,11 @@ has status_cache => ( is => 'rwp',
 
 has cache_file => ( is => 'rwp' );
 
+# min_file_age must be one of "older" or "newer". $age must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)"
+# see http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
+has min_file_age => ( is => 'rwp',
+                      default => '1h' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -82,6 +87,10 @@ sub BUILD {
     $flow_path = $config->{'worker'}->{'flow-path'} if not defined $flow_path;
     $self->_set_flow_path( $flow_path );
     $self->logger->debug("flow path: $flow_path");
+
+    my $min_file_age = $self->min_file_age;
+    $min_file_age = $config->{'worker'}->{'min-file-age'} if defined $config->{'worker'}->{'min-file-age'};
+    $self->_set_min_file_age( $min_file_age );
 
     $self->_set_flow_batch_size( $flow_batch_size );
     $self->_set_handler( sub{ $self->_run_netflow_import(@_) } );
@@ -119,9 +128,10 @@ sub _get_flow_data {
     my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
+    $self->logger->debug("min_file_age: " . $self->min_file_age );
     my @files = File::Find::Rule
             ->file()
-            ->age( 'older', '1D' )
+            ->age( 'older', $self->min_file_age )
             ->name( 'nfcapd.*' )
             ->relative(1)
             ->in($path);
