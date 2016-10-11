@@ -203,6 +203,7 @@ sub _get_nfdump_data {
 
             my $row = {};
             $row->{'type'} = 'flow';
+            $row->{'flow_type'} = 'netflow';
             $row->{'interval'} = 600;
             $row->{'meta'} = {};
             $row->{'meta'}->{'src_ip'} = $sa;
