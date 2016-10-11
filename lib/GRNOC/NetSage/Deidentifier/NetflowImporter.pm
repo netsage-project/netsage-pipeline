@@ -194,7 +194,7 @@ sub _get_nfdump_data {
             my $end   = str2time( $te );
 
             if ( !defined $start || !defined $end ) {
-                die "Invalid line!: $!";
+                $self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
                 next;
             }
 
