@@ -1,5 +1,14 @@
 <config>
-    <!-- rabbitmq connection info -->
+    <!-- 
+         "sensor" indicates the node that captured the
+        flow records; it can be any string that uniquely
+        identifies that flow collector.
+        Defaults to the local hostname 
+    -->
+<!--
+  <sensor>hostname.domainname.tld</sensor>
+-->
+
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>

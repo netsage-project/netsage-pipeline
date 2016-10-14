@@ -23,6 +23,7 @@ use Data::Dumper;
 
 has handler => ( is => 'rwp');
 
+
 has geoip_country => ( is => 'rwp' );
 has geoip_country_ipv6 => ( is => 'rwp' );
 
@@ -31,6 +32,7 @@ has geoip_city_ipv6 => ( is => 'rwp' );
 
 has geoip_asn => ( is => 'rwp' );
 has geoip_asn_ipv6 => ( is => 'rwp' );
+
 
 ### constructor builder ###
 
@@ -60,6 +62,7 @@ sub BUILD {
     my $geoip_city_file = $config->get( '/config/geoip/config_files/city' );
     my $geoip_city = Geo::IP->open( $geoip_city_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_city( $geoip_city );
+
 
     return $self;
 }
@@ -97,8 +100,10 @@ sub _tag_messages {
             $metadata{'longitude'} = undef;
             $metadata{'asn'} = undef;
             $metadata{'organization'} = undef;
+
             my $asn_org;
             $message->{'type'} = 'flow'; # TODO: remove. temporary until the data pushed has this field
+
 
             if ( is_ipv4( $ip ) ) {
                 my $record;
@@ -168,6 +173,15 @@ sub _tag_messages {
                     }
                 } else {
                     #warn "ASN NOT DEFINED";
+                }
+
+                # look for null values and change to '';
+                foreach my $key ( keys %metadata ) {
+                    my $val = $metadata{ $key };
+                    if ( not defined $val ) {
+                        $val = '';
+                        $metadata{ $key } = $val;
+                    }
                 }
 
             # for now, we're going to tag these:
