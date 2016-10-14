@@ -120,6 +120,7 @@ sub start {
 
     $self->logger->info( 'Starting.' );
 
+    $self->logger->debug( 'task_type ='. $task_type );
     $self->logger->debug( 'Setting up signal handlers.' );
 
     # setup signal handlers
@@ -143,13 +144,13 @@ sub start {
 
         my $pid = $daemon->Init();
 
-        # in child/daemon process
+        # in child/daemon process 
         if ( !$pid ) {
 
             $self->logger->debug( 'Created daemon process.' );
 
             # change process name
-            $0 = "netsage_deidentifier";
+            ## ?? $0 = "netsage_deidentifier-".$self->process_name;
 
             $self->_create_workers();
         }
@@ -213,7 +214,11 @@ sub _create_workers {
         $self->logger->debug( "Child worker process $pid created." );
 
         push( @{$self->children}, $pid );
-                           } );
+    } );
+
+    $forker->run_on_finish( sub {
+        $self->logger->debug("child process has finished");
+    } );
 
     for ( 1 .. $num_processes ) {
 

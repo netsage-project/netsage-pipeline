@@ -180,7 +180,7 @@ sub _get_nfdump_data {
         $command .= ' bytes\>' . $min_bytes;
         $command .= " -N -q";
         $command .= ' |';
-        $self->logger->debug("\ncommand:\n\n$command\n");
+        ##$self->logger->debug(" command:\n$command\n");
         my $fh;
         open($fh, $command);
 

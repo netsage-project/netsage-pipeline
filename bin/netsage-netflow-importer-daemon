@@ -42,6 +42,8 @@ my $flow_importer = GRNOC::NetSage::Deidentifier::NetflowImporter->new( config_f
 
 $flow_importer->start("noinput");
 
+print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
+
 ### helpers ###
 
 sub usage {

@@ -60,6 +60,7 @@ has rabbit_config => ( is => 'rwp' );
 
 has task_type => ( is => 'rwp' );
 
+
 # ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
 # if you disable this, we don't ack the rabbit messages and they go back in the queue. 
 # usually this is only desired for testing purposes. Don't touch this unless you
@@ -82,7 +83,6 @@ has output_channel => ( is => 'rwp' );
 has batch_size => ( is => 'rwp' );
 
 has json => ( is => 'rwp' );
-
 
 ### constructor builder ###
 
@@ -140,9 +140,12 @@ sub start {
     $self->_set_json( $json );
 
     # connect to rabbit queues
-    $self->_rabbit_connect();
+    # will set is_running to 0 if can't connect
+    my $first_connection_attempt = 1; 
+    $self->_rabbit_connect($first_connection_attempt);
 
     if ( $self->task_type && $self->task_type eq "noinput" ) {
+        $self->logger->debug( 'running start_noinput.' );
         $self->start_noinput();
 
     } else {
@@ -179,11 +182,12 @@ sub _consume_noinput {
 
     my ( $self ) = @_;
 
+    $self->logger->debug( 'starting consume_noinput loop.' );
     while( 1 ) {
         # have we been told to stop?
         if ( !$self->is_running ) {
 
-            $self->logger->debug( 'Exiting consume loop.' );
+            $self->logger->debug( 'Exiting consume_noinput loop.' );
             return 0;
         }
         my $handler = $self->handler;
@@ -203,6 +207,7 @@ sub _consume_loop {
     my $input_channel = $self->rabbit_config->{'input'}->{'channel'};
     my $rabbit = $self->rabbit_input;
 
+    $self->logger->debug( 'starting consume_loop.' );
     while ( 1 ) {
 
         # have we been told to stop?
@@ -487,15 +492,16 @@ sub _rabbit_config {
 }
 
 sub _rabbit_connect {
-
-    my ( $self ) = @_;
+    # $first_connection_attempt is optional; if set to 1, there will be only 1 attempt to connect.
+    my ( $self, $first_connection_attempt ) = @_;
 
     my $rabbit_config = $self->rabbit_config;
 
     my %connected = ();
     $connected{'input'} = 0;
     $connected{'output'} = 0;
-    while ( 1 ) {
+
+  while ( 1 ) {
 
     my @directions = ('input', 'output');
 
@@ -573,12 +579,23 @@ sub _rabbit_connect {
         if ( $connected{'input'} && $connected{'output'}) {
             return;
         };
+
         next if $connected{ $direction };
 
-        $self->logger->info( "Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
+        # don't keep trying to connect if just starting up
+        if ( $first_connection_attempt ) {
+            $self->logger->error( "Could not connect to rabbit and/or open a channel to a queue. Quitting." );
+            $self->_set_is_running( 0 );
+            return;
+        }
+
+        $self->logger->info( " Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
         sleep( RECONNECT_TIMEOUT );
+
     } # end foreach directoin
-}# end while 1 
+
+  }# end while 1 
+
 }
 
 1;

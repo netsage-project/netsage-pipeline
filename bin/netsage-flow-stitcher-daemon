@@ -45,6 +45,8 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
 
 $worker->start("noinput");
 
+print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
+
 ### helpers ###
 
 sub usage {
