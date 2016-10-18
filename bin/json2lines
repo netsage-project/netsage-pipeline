@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Data::Dumper;
+use JSON::XS;
+
+my $json = JSON::XS->new();
+
+### command line options ###
+
+my $help;
+my $filename;
+
+GetOptions( 'help|h|?' => \$help );
+
+# did they ask for help?
+usage() if $help;
+
+warn "reading lines ...";
+my $json_full = "";
+while ( my $line = <> ) {
+    chomp $line;
+    #$line = $json->decode( $line );
+    $json_full .= $line;
+
+}
+warn "lines read (length): " . length($json_full);
+#print "Lines: " . Dumper @lines;
+my $data = $json->decode( $json_full ); # or die ("Error decoding JSON: $!");
+
+warn "data read";
+
+my @lines = ();
+
+my $out = "";
+foreach my $datum ( @$data ) {
+    print $json->encode( $datum ) . "\n";
+    #$out += $json->encode( $datum ) . "\n";
+}
+
+#print $out;
+
+### helpers ###
+
+sub usage {
+
+    print "Usage: $0 [filename]\n";
+    print "Encodes from json to jsonl. Provide a filename to read, or use STDIN\n";
+    exit( 1 );
+}
