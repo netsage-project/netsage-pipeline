@@ -5,9 +5,8 @@ use warnings;
 
 use Getopt::Long;
 use Data::Dumper;
+use JSON::SL;
 use JSON::XS;
-
-my $json = JSON::XS->new();
 
 ### command line options ###
 
@@ -19,29 +18,22 @@ GetOptions( 'help|h|?' => \$help );
 # did they ask for help?
 usage() if $help;
 
-warn "reading lines ...";
-my $json_full = "";
-while ( my $line = <> ) {
-    chomp $line;
-    #$line = $json->decode( $line );
-    $json_full .= $line;
+my $p = JSON::SL->new();
+my $json = JSON::XS->new();
+#look for everthing past the first level (i.e. everything in the array)
+$p->set_jsonpointer(["/^"]);
 
-}
-warn "lines read (length): " . length($json_full);
-#print "Lines: " . Dumper @lines;
-my $data = $json->decode( $json_full ); # or die ("Error decoding JSON: $!");
-
-warn "data read";
-
-my @lines = ();
-
-my $out = "";
-foreach my $datum ( @$data ) {
-    print $json->encode( $datum ) . "\n";
-    #$out += $json->encode( $datum ) . "\n";
+local $/ = \8096; #read only 5 bytes at a time
+while (my $buf = <>) {
+    $p->feed($buf); #parse what you can
+    #fetch anything that completed the parse and matches the JSON Pointer
+    while (my $obj = $p->fetch) {
+       #print "$obj->{Value}{n}: $obj->{Value}{s}\n";
+       #print "found values: " . scalar @{ $obj->{Value} } . "\n";
+       print $json->encode( $obj->{'Value'} ) . "\n";
+    }
 }
 
-#print $out;
 
 ### helpers ###
 

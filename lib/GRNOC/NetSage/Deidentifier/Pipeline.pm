@@ -418,11 +418,12 @@ sub _publish_data {
 
     my $queue = $self->rabbit_config->{'output'}->{'queue'};
     my $channel = $self->rabbit_config->{'output'}->{'channel'};
+    my $exchange = $self->rabbit_config->{'output'}->{'exchange'} || "";
 
     $self->_rabbit_connect();
     while ( my @finished_messages = $it->() ) {
 
-       $self->rabbit_output->publish( $channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => ''} );
+       $self->rabbit_output->publish( $channel, $queue, $self->json->encode( \@finished_messages ), {'exchange' => $exchange} );
     }
     return $messages;
 
@@ -478,6 +479,9 @@ sub _rabbit_config {
         my $queue = $self->config->get("/config/rabbit_$direction/queue");
         $rabbit_config->{$direction}->{'queue'} = $queue;
 
+        my $exchange = $self->config->get("/config/rabbit_$direction/exchange");
+        $rabbit_config->{$direction}->{'exchange'} = $exchange;
+
         my $channel = $self->config->get("/config/rabbit_$direction/channel");
         $rabbit_config->{$direction}->{'channel'} = $channel;
 
@@ -510,8 +514,9 @@ sub _rabbit_connect {
         my $rabbit_vhost = $rabbit_config->{ $direction }->{'vhost'};
         my $rabbit_channel = $rabbit_config->{ $direction }->{'channel'};
         my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
+        my $rabbit_exchange = $rabbit_config->{ $direction }->{'exchange'};
 
-        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
+        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port exchange " . Dumper $rabbit_exchange );
 
         $connected{ $direction } = 0;
 
@@ -530,6 +535,11 @@ sub _rabbit_connect {
             }
             if ( $rabbit_vhost ) {
                 $params->{'vhost'} = $rabbit_vhost;
+            }
+
+            if ( $rabbit_exchange ) {
+                $params->{'exchange'} = $rabbit_exchange;
+
             }
 
             $rabbit->connect( $rabbit_host, $params );

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 # do we need both of these?
-use GRNOC::NetSage::Deidentifier::FlowTagger;
+use GRNOC::NetSage::Deidentifier::FlowArchive;
 use GRNOC::NetSage::Deidentifier::WorkerManager;
 
 use Getopt::Long;
@@ -12,7 +12,7 @@ use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_tagger.xml';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
@@ -31,19 +31,19 @@ GetOptions( 'config=s' => \$config,
 usage() if $help;
 
 # start/daemonize writer
-my $tagger = GRNOC::NetSage::Deidentifier::FlowTagger->new( config_file => $config,
+my $archive = GRNOC::NetSage::Deidentifier::FlowArchive->new( config_file => $config,
                                                           logging_file => $logging,
-                                                          process_name => 'netsage_flowtagger',
+                                                          process_name => 'netsage_flow_archive',
                                                           daemonize => !$nofork );
 
 my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
-                                                          process_name => 'netsage_flowtagger',
-                                                          worker => $tagger );
+                                                          process_name => 'netsage_flow_archive',
+                                                          worker => $archive );
 
 
-$worker->start();
+$worker->start("caching");
 
 ### helpers ###
 
