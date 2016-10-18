@@ -120,13 +120,13 @@ sub start {
 
     $self->logger->info( 'Starting.' );
 
-    $self->logger->debug( 'task_type ='. $task_type );
+    $self->logger->debug( 'In WorkerManager->start()' );
     $self->logger->debug( 'Setting up signal handlers.' );
 
     # setup signal handlers
     $SIG{'TERM'} = sub {
 
-        $self->logger->info( 'Received SIG TERM.' );
+        $self->logger->info( 'Received SIG TERM. Calling stop()' );
         $self->stop();
     };
 
@@ -140,17 +140,20 @@ sub start {
 
         $self->logger->debug( 'Daemonizing.' );
 
-        my $daemon = Proc::Daemon->new( pid_file => $self->config->get( '/config/worker/pid-file' ) );
-
+        my $daemon = Proc::Daemon->new( pid_file => $self->config->get( '/config/master/pid-file' ) );
         my $pid = $daemon->Init();
 
-        # in child/daemon process 
+        # Orig. process "splits into" orig. and child/daemon. Child/daemon has $pid=0, orig has $pid = pid of the child/daemon. 
+        # Both continue from here. Original writes pid file then exits. Child/daemon keeps running.  (???)
+        $self->logger->debug(" pid from daemon->init = $pid");
+
+        # if in child/daemon process  
         if ( !$pid ) {
 
             $self->logger->debug( 'Created daemon process.' );
 
-            # change process name
-            ## ?? $0 = "netsage_deidentifier-".$self->process_name;
+            # change process name of the child/daemon
+            $0 = $self->process_name."-pipeline-daemon";
 
             $self->_create_workers();
         }
@@ -235,6 +238,7 @@ sub _create_workers {
         my $worker = $self->worker;
 
         # this should only return if we tell it to stop via TERM signal etc.
+$self->logger->debug(" doing worker->start");
         $worker->start( $self->task_type );
 
         # exit child process

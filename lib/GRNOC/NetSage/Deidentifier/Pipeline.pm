@@ -210,6 +210,8 @@ sub _consume_loop {
     $self->logger->debug( 'starting consume_loop.' );
     while ( 1 ) {
 
+        $self->logger->debug( 'consume loop. is_running ='.$self->is_running );
+
         # have we been told to stop?
         if ( !$self->is_running ) {
 
@@ -298,7 +300,7 @@ sub _consume_loop {
         }
 
         my $num_messages = @$messages;
-        $self->logger->debug( "Processing message containing $num_messages to process." );
+        $self->logger->debug( "---Processing message containing $num_messages to process." ); # can't stop till done
 
         my $t1 = time();
 
@@ -357,6 +359,9 @@ sub _consume_loop {
 sub _consume_messages {
 
     my ( $self, $messages ) = @_;
+
+    my $num_messages = @$messages;
+    $self->logger->debug( "---consuming $num_messages messages" ); # process and publish. can't stop till done
 
     # gather all messages to process
     my $flows_to_process = [];
