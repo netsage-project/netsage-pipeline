@@ -23,13 +23,11 @@ my $json = JSON::XS->new();
 #look for everthing past the first level (i.e. everything in the array)
 $p->set_jsonpointer(["/^"]);
 
-local $/ = \8096; #read only 5 bytes at a time
+local $/ = \8096; #read this many bytes at a time
 while (my $buf = <>) {
     $p->feed($buf); #parse what you can
     #fetch anything that completed the parse and matches the JSON Pointer
     while (my $obj = $p->fetch) {
-       #print "$obj->{Value}{n}: $obj->{Value}{s}\n";
-       #print "found values: " . scalar @{ $obj->{Value} } . "\n";
        print $json->encode( $obj->{'Value'} ) . "\n";
     }
 }

@@ -8,7 +8,7 @@ use Data::Dumper;
 use JSON::XS;
 
 my $json = JSON::XS->new();
-
+my $batch_size = 4096; # number of rows to process at once; tweaking this may impact performance
 
 ### command line options ###
 
@@ -20,18 +20,33 @@ GetOptions( 'help|h|?' => \$help );
 # did they ask for help?
 usage() if $help;
 
-my @lines = ();
+my $out = "[";
 
+my $i = 0;
 while ( my $line = <> ) {
     chomp $line;
-    $line = $json->decode( $line );
-    push @lines, $line;
+    # We don't actually need to decode, but we are going to do so to make sure 
+    # each line is valid JSON. There's surely a more efficient way of doing this.
+    my $decoded = $json->decode( $line ) or do { 
+        warn "SKIPPING LINE - Error decoding json: $!";
+        next;
+    };
+    $out .= $line;
+    $out .= ",";
+
+    # we want to use a batch size so we can avoid reading the entire data
+    # structure into memory
+    if ( $i >= $batch_size ) {
+        print $out;
+        $out = "";
+        $i = 0;
+        next;
+    }
+    $i++;
+
 }
-
-#print "Lines: " . Dumper @lines;
-my $out = $json->encode( \@lines );
-
-print $out;
+chop $out;
+print $out . "]";
 
 ### helpers ###
 
