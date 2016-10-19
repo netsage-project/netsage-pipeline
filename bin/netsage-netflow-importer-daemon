@@ -48,10 +48,7 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           worker => $flow_importer );
 
 
-$worker->start("noinput");
-
-#$flow_importer->start("noinput");
-
+$worker->start("no_input_queue");
 print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
 
 ### helpers ###
