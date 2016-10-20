@@ -1,0 +1,11 @@
+/path/to/netsage/archive_file.jsonl {
+    daily
+    rotate 3500
+    dateext
+    missingok
+    notifempty
+    compress
+    postrotate
+        /bin/kill -HUP `cat /var/run/netsage-flow-archive-workers.pid 2> /dev/null` 2> /dev/null || true
+    endscript
+}

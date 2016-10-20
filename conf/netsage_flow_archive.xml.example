@@ -1,0 +1,40 @@
+<config>
+  <!-- archive path -->
+  <archive_path>/path/to</archive_path>
+  <archive_file>raw_archive.jsonl</archive_file>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
+    <queue>netsage_raw_archive</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+  </rabbit_output>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
+    <channel>3</channel>
+    <queue>netsage_deidentifier_raw2</queue>
+  <worker>
+    <!-- How many flows to process at once -->
+    <!--<flow-batch-size>1000</flow-batch-size> -->
+    <!-- How many concurrent workers should perform the necessary operations -->
+    <num-processes>1</num-processes>
+
+    <!-- where should we write the worker pid file to -->
+    <pid-file>/var/run/netsage-raw-importer-workers.pid</pid-file>
+
+  </worker>
+</config>
