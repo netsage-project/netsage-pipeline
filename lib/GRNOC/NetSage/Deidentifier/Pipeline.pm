@@ -516,7 +516,7 @@ sub _rabbit_connect {
         my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
         my $rabbit_exchange = $rabbit_config->{ $direction }->{'exchange'};
 
-        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port exchange " . Dumper $rabbit_exchange );
+        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port" );
 
         $connected{ $direction } = 0;
 
