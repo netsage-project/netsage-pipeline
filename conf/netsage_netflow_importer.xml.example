@@ -45,9 +45,9 @@
         "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
     See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
     -->
-
-    <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-netflow-importer-workers.pid</pid-file>
-
   </worker>
+  <master>
+    <!-- where should we write the daemon pid file to -->
+    <pid-file>/var/run/netsage-netflow-importer-daemon.pid</pid-file>
+  </master>
 </config>

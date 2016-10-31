@@ -60,6 +60,7 @@ has rabbit_config => ( is => 'rwp' );
 
 has task_type => ( is => 'rwp' );
 
+
 # ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
 # if you disable this, we don't ack the rabbit messages and they go back in the queue. 
 # usually this is only desired for testing purposes. Don't touch this unless you
@@ -82,7 +83,6 @@ has output_channel => ( is => 'rwp' );
 has batch_size => ( is => 'rwp' );
 
 has json => ( is => 'rwp' );
-
 
 ### constructor builder ###
 
@@ -140,17 +140,18 @@ sub start {
     $self->_set_json( $json );
 
     # connect to rabbit queues
-    $self->_rabbit_connect();
+    # will set is_running to 0 if can't connect
+    my $first_connection_attempt = 1; 
+    $self->_rabbit_connect($first_connection_attempt);
 
-    if ( $self->task_type && $self->task_type eq "noinput" ) {
+    if ( $self->task_type && $self->task_type eq "no_input_queue" ) {
         $self->start_noinput();
 
     } else {
         # continually consume messages from rabbit queue, making sure we have to acknowledge them
-        $self->logger->debug( 'Starting RabbitMQ consume loop.' );
-
+        return $self->_consume_loop();
     }
-    return $self->_consume_loop();
+
 }
 
 sub start_noinput {
@@ -176,14 +177,16 @@ sub stop {
 ### private methods ###
 
 sub _consume_noinput {
+    # for no input queue
 
     my ( $self ) = @_;
 
+    $self->logger->debug( 'Starting consume_noinput loop.' );
     while( 1 ) {
         # have we been told to stop?
         if ( !$self->is_running ) {
 
-            $self->logger->debug( 'Exiting consume loop.' );
+            $self->logger->debug( 'Exiting consume_noinput loop.' );
             return 0;
         }
         my $handler = $self->handler;
@@ -195,6 +198,7 @@ sub _consume_noinput {
 }
 
 sub _consume_loop {
+    # if there is an input queue
 
     my ( $self ) = @_;
 
@@ -203,6 +207,7 @@ sub _consume_loop {
     my $input_channel = $self->rabbit_config->{'input'}->{'channel'};
     my $rabbit = $self->rabbit_input;
 
+    $self->logger->debug( 'Starting consume_loop.' );
     while ( 1 ) {
 
         # have we been told to stop?
@@ -228,10 +233,10 @@ sub _consume_loop {
             $self->_rabbit_connect();
         };
 
-        # didn't get a message?
+        # didn't get a message? (eg, no more to retrieve)
         if ( !$rabbit_message ) {
 
-            $self->logger->debug( 'No message received.' );
+            #$self->logger->debug( 'No message received.' );
 
             # re-enter loop to retrieve the next message
             next;
@@ -293,7 +298,6 @@ sub _consume_loop {
         }
 
         my $num_messages = @$messages;
-        $self->logger->debug( "Processing message containing $num_messages to process." );
 
         my $t1 = time();
 
@@ -302,7 +306,7 @@ sub _consume_loop {
         my $t2 = time();
         my $delta = $t2 - $t1;
 
-        $self->logger->debug( "Processed $num_messages updates in $delta seconds." );
+        $self->logger->debug( "Consumed $num_messages updates in $delta seconds." );
 
         # didn't successfully consume the messages, so reject but requeue the entire message to try again
         if ( !$success ) {
@@ -327,7 +331,7 @@ sub _consume_loop {
         else {
             if ( $self->ack_messages ) {
 
-                $self->logger->debug( "Acknowledging successful message." );
+                #$self->logger->debug( "Acknowledging successful message." );
 
                 try {
 
@@ -352,6 +356,9 @@ sub _consume_loop {
 sub _consume_messages {
 
     my ( $self, $messages ) = @_;
+
+    my $num_messages = @$messages;
+    #$self->logger->debug( "---consuming $num_messages messages" ); 
 
     # gather all messages to process
     my $flows_to_process = [];
@@ -385,8 +392,8 @@ sub _consume_messages {
         $self->logger->error( "Error processing messages: $_" );
         $success = 0;
     };
-    # if we're caching in memory, we don't need to push to rabbit - just return success
-    if ( $self->task_type && $self->task_type eq "caching" ) {
+    # if there's no output queue, eg, we're caching in memory, we don't need to push to rabbit - just return success
+    if ( $self->task_type && $self->task_type eq "no_output_queue" ) {
         return $success;
     }
 
@@ -414,7 +421,7 @@ sub _publish_data {
 
     # send a max of $batch_size messages at a time to rabbit
     my $it = natatime( $batch_size, @$messages );
-    $self->logger->debug("Publishing up to " . $batch_size . " messages per batch ( " . @$messages . " ) ");
+    #$self->logger->debug("Publishing up to " . $batch_size . " messages per batch ( total " . @$messages . " ) ");
 
     my $queue = $self->rabbit_config->{'output'}->{'queue'};
     my $channel = $self->rabbit_config->{'output'}->{'channel'};
@@ -487,15 +494,16 @@ sub _rabbit_config {
 }
 
 sub _rabbit_connect {
-
-    my ( $self ) = @_;
+    # $first_connection_attempt is optional; if set to 1, there will be only 1 attempt to connect.
+    my ( $self, $first_connection_attempt ) = @_;
 
     my $rabbit_config = $self->rabbit_config;
 
     my %connected = ();
     $connected{'input'} = 0;
     $connected{'output'} = 0;
-    while ( 1 ) {
+
+  while ( 1 ) {
 
     my @directions = ('input', 'output');
 
@@ -511,7 +519,7 @@ sub _rabbit_connect {
         my $rabbit_channel = $rabbit_config->{ $direction }->{'channel'};
         my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
 
-        $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
+        # $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port." );
 
         $connected{ $direction } = 0;
 
@@ -573,12 +581,23 @@ sub _rabbit_connect {
         if ( $connected{'input'} && $connected{'output'}) {
             return;
         };
+
         next if $connected{ $direction };
 
-        $self->logger->info( "Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
+        # don't keep trying to connect if just starting up
+        if ( $first_connection_attempt ) {
+            $self->logger->error( "Could not connect to rabbit and/or open a channel to a queue. Quitting." );
+            $self->_set_is_running( 0 );
+            return;
+        }
+
+        $self->logger->info( " Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
         sleep( RECONNECT_TIMEOUT );
+
     } # end foreach directoin
-}# end while 1 
+
+  }# end while 1 
+
 }
 
 1;

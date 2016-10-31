@@ -120,12 +120,13 @@ sub start {
 
     $self->logger->info( 'Starting.' );
 
+    $self->logger->debug( 'In WorkerManager->start()' );
     $self->logger->debug( 'Setting up signal handlers.' );
 
     # setup signal handlers
     $SIG{'TERM'} = sub {
 
-        $self->logger->info( 'Received SIG TERM.' );
+        $self->logger->info( 'Received SIG TERM. Calling stop()' );
         $self->stop();
     };
 
@@ -139,17 +140,20 @@ sub start {
 
         $self->logger->debug( 'Daemonizing.' );
 
-        my $daemon = Proc::Daemon->new( pid_file => $self->config->get( '/config/worker/pid-file' ) );
-
+        my $daemon = Proc::Daemon->new( pid_file => $self->config->get( '/config/master/pid-file' ) );
         my $pid = $daemon->Init();
 
-        # in child/daemon process
+        # Orig. process "splits into" orig. and child/daemon. Child/daemon has $pid=0, orig has $pid = pid of the child/daemon. 
+        # Both continue from here. Original writes pid file then exits. Child/daemon keeps running.  (???)
+        $self->logger->debug(" pid from daemon->init = $pid");
+
+        # if in child/daemon process  
         if ( !$pid ) {
 
             $self->logger->debug( 'Created daemon process.' );
 
-            # change process name
-            $0 = "netsage_deidentifier";
+            # change process name of the child/daemon
+            $0 = $self->process_name."-pipeline-daemon";
 
             $self->_create_workers();
         }
@@ -213,7 +217,11 @@ sub _create_workers {
         $self->logger->debug( "Child worker process $pid created." );
 
         push( @{$self->children}, $pid );
-                           } );
+    } );
+
+    $forker->run_on_finish( sub {
+        $self->logger->debug("child process has finished");
+    } );
 
     for ( 1 .. $num_processes ) {
 
@@ -230,6 +238,7 @@ sub _create_workers {
         my $worker = $self->worker;
 
         # this should only return if we tell it to stop via TERM signal etc.
+$self->logger->debug(" doing worker->start");
         $worker->start( $self->task_type );
 
         # exit child process

@@ -1,5 +1,8 @@
 package GRNOC::NetSage::Deidentifier::NetflowImporter;
 
+use strict;
+use warnings;
+
 use Moo;
 
 extends 'GRNOC::NetSage::Deidentifier::Pipeline';
@@ -23,28 +26,9 @@ use Storable qw( store retrieve );
 
 use Data::Dumper;
 
-### required attributes ###
-
-has config_file => ( is => 'ro',
-                required => 1 );
-
-has logging_file => ( is => 'ro',
-                      required => 1 );
-
-
-
 ### internal attributes ###
 
 has flow_path => ( is => 'rwp' );
-
-has logger => ( is => 'rwp' );
-
-has config => ( is => 'rwp' );
-
-has is_running => ( is => 'rwp',
-                    default => 0 );
-
-has rabbit => ( is => 'rwp' );
 
 has json => ( is => 'rwp' );
 
@@ -173,6 +157,13 @@ sub _get_nfdump_data {
 
     my @all_data = ();
     foreach my $flowfile ( @$flowfiles ) {
+
+        # quit if the process has been told to stop
+        if ( !$self->is_running ) {
+            $self->logger->debug("Quitting flowfile loop and returning from _get_nfdump_data()");
+            return;
+        }
+
         my $stats = stat($flowfile);
 
         my $command = "/usr/bin/nfdump -R '$flowfile'";
@@ -180,12 +171,11 @@ sub _get_nfdump_data {
         $command .= ' bytes\>' . $min_bytes;
         $command .= " -N -q";
         $command .= ' |';
-        $self->logger->debug("\ncommand:\n\n$command\n");
+        ##$self->logger->debug(" command:\n$command\n");
+
         my $fh;
         open($fh, $command);
 
-
-        #return;
         my $i = 0;
         while ( my $line = <$fh> ) {
             my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
@@ -194,7 +184,7 @@ sub _get_nfdump_data {
             my $end   = str2time( $te );
 
             if ( !defined $start || !defined $end ) {
-                die "Invalid line!: $!";
+                $self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
                 next;
             }
 
