@@ -23,8 +23,21 @@ use File::Find::Rule;
 use File::Find::Rule::Age;
 use Path::Class;
 use Storable qw( store retrieve );
+use Sys::Hostname;
 
 use Data::Dumper;
+
+### required attributes ###
+
+has config_file => ( is => 'ro',
+                required => 1 );
+
+has logging_file => ( is => 'ro',
+                      required => 1 );
+
+### optional attributes ###
+
+has sensor_id => ( is => 'rwp', default => hostname() );
 
 ### internal attributes ###
 
@@ -59,6 +72,10 @@ sub BUILD {
 
     my $config_obj = $self->config;
     my $config = $config_obj->get('/config');
+    my $sensor_id = $config_obj->get( '/config/sensor' );
+    if ( defined ( $sensor_id )) {
+        $self->_set_sensor_id( $sensor_id );
+    }
 
     my $flow_batch_size =  $config->{'worker'}->{'flow-batch-size'};
     my $cache_file = $config->{'worker'}->{'cache-file'} if not defined $self->cache_file;
@@ -195,11 +212,13 @@ sub _get_nfdump_data {
             $row->{'type'} = 'flow';
             $row->{'interval'} = 600;
             $row->{'meta'} = {};
+            $row->{'meta'}->{'flow_type'} = 'netflow';
             $row->{'meta'}->{'src_ip'} = $sa;
             $row->{'meta'}->{'src_port'} = $sp;
             $row->{'meta'}->{'dst_ip'} = $da;
             $row->{'meta'}->{'dst_port'} = $dp;
             $row->{'meta'}->{'protocol'} = $pr;
+            $row->{'meta'}->{'sensor_id'} = $self->sensor_id;
             $row->{'start'} = $start;
             $row->{'end'} = $end;
 

@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Data::Dumper;
+use JSON::SL;
+use JSON::XS;
+
+### command line options ###
+
+my $help;
+my $filename;
+
+GetOptions( 'help|h|?' => \$help );
+
+# did they ask for help?
+usage() if $help;
+
+my $p = JSON::SL->new();
+my $json = JSON::XS->new();
+#look for everthing past the first level (i.e. everything in the array)
+$p->set_jsonpointer(["/^"]);
+
+local $/ = \8096; #read this many bytes at a time
+while (my $buf = <>) {
+    $p->feed($buf); #parse what you can
+    #fetch anything that completed the parse and matches the JSON Pointer
+    while (my $obj = $p->fetch) {
+       print $json->encode( $obj->{'Value'} ) . "\n";
+    }
+}
+
+
+### helpers ###
+
+sub usage {
+
+    print "Usage: $0 [filename]\n";
+    print "Encodes from json to jsonl. Provide a filename to read, or use STDIN\n";
+    exit( 1 );
+}
