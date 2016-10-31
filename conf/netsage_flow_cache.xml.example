@@ -11,6 +11,7 @@
     <channel>2</channel>
     <ssl>0</ssl>
     <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
 
   <!-- The cache doesn't output to a rabbit queue (shared memory instead) but we still need something here -->
@@ -25,6 +26,7 @@
     <channel>3</channel>
     <ssl>0</ssl>
     <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   <worker>
       <!-- How many concurrent workers should perform the necessary operations -->
