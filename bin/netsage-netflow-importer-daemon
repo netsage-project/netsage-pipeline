@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use GRNOC::NetSage::Deidentifier::NetflowImporter;
+use GRNOC::NetSage::Deidentifier::WorkerManager;
 
 use Getopt::Long;
 use Data::Dumper;
@@ -40,7 +41,15 @@ my $flow_importer = GRNOC::NetSage::Deidentifier::NetflowImporter->new( config_f
                                                           process_name => 'netsage_netflow_importer',
                                                           flow_path => $flowpath );
 
-$flow_importer->start("noinput");
+my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $config,
+                                                          logging_file => $logging,
+                                                          daemonize => !$nofork,
+                                                          process_name => 'netsage_netflow_importer',
+                                                          worker => $flow_importer );
+
+
+$worker->start("no_input_queue");
+print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
 
 ### helpers ###
 

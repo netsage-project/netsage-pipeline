@@ -29,11 +29,11 @@
   <worker>
     <!-- How many concurrent workers should perform the necessary operations -->
     <num-processes>4</num-processes>
-
-    <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-deidentifier-workers.pid</pid-file>
-
   </worker>
+  <master>
+    <!-- where should we write the daemon pid file to -->
+    <pid-file>/var/run/netsage-deidentifier-daemon.pid</pid-file>
+  </master>
   <deidentification>
       <!-- these probably won't work correctly if they aren't multiples of 8 -->
       <ipv4_bits_to_strip>8</ipv4_bits_to_strip>

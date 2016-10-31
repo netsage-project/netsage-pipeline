@@ -29,11 +29,11 @@
   <worker>
     <!-- How many concurrent workers should perform the necessary operations -->
     <num-processes>4</num-processes>
-
-    <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-tagger-workers.pid</pid-file>
-
   </worker>
+  <master>
+    <!-- where should we write the daemon pid file to -->
+    <pid-file>/var/run/netsage-tagger-daemon.pid</pid-file>
+  </master>
   <geoip>
     <config_files>
       <country>/usr/share/GeoIP/GeoIP.dat</country>

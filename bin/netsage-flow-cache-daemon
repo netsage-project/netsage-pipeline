@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-# do we need both of these?
 use GRNOC::NetSage::Deidentifier::FlowCache;
 use GRNOC::NetSage::Deidentifier::WorkerManager;
 
@@ -43,8 +42,8 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           worker => $cache );
 
 
-$worker->start("caching");
-#$tagger->start();
+$worker->start("no_output_queue");
+print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
 
 ### helpers ###
 

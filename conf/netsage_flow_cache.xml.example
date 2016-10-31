@@ -32,9 +32,9 @@
       <!-- How many concurrent workers should perform the necessary operations -->
       <!-- for stitching, we can only use 1 -->
     <num-processes>1</num-processes>
-
-    <!-- where should we write the cache worker pid file to -->
-    <pid-file>/var/run/netsage-cache-workers.pid</pid-file>
-
   </worker>
+  <master>
+    <!-- where should we write the cache daemon pid file to -->
+    <pid-file>/var/run/netsage-flow-cache-daemon.pid</pid-file>
+  </master>
 </config>

@@ -51,6 +51,7 @@ make pure_install
 
 %{__install} -d -p %{buildroot}/etc/grnoc/netsage/deidentifier/
 %{__install} -d -p %{buildroot}/var/lib/grnoc/netsage/deidentifier/
+%{__install} -d -p %{buildroot}/var/cache/netsage/
 %{__install} -d -p %{buildroot}/usr/bin/
 %{__install} -d -p %{buildroot}/etc/init.d/
 %{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/
@@ -130,3 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/init.d/netsage-netflow-importer-daemon
 /etc/init.d/netsage-flow-cache-daemon
 /etc/init.d/netsage-flow-stitcher-daemon
+
+%defattr(755, root, root, -)
+
+/var/lib/grnoc/netsage/deidentifier/
+/var/cache/netsage/
+
