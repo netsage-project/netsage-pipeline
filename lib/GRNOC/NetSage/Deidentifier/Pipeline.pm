@@ -485,6 +485,10 @@ sub _rabbit_config {
         my $channel = $self->config->get("/config/rabbit_$direction/channel");
         $rabbit_config->{$direction}->{'channel'} = $channel;
 
+        my $durable = $self->config->get("/config/rabbit_$direction/durable");
+        $rabbit_config->{$direction}->{'durable'} = $durable;
+
+
     }
     $self->_set_rabbit_config($rabbit_config);
 
@@ -515,6 +519,10 @@ sub _rabbit_connect {
         my $rabbit_channel = $rabbit_config->{ $direction }->{'channel'};
         my $rabbit_queue = $rabbit_config->{ $direction }->{'queue'};
         my $rabbit_exchange = $rabbit_config->{ $direction }->{'exchange'};
+        my $rabbit_durable = $rabbit_config->{ $direction }->{'durable'};
+        if ( !defined $rabbit_durable ) {
+            $rabbit_durable = 1; #default to durable
+        }
 
         $self->logger->debug( "Connecting to $direction RabbitMQ $rabbit_host:$rabbit_port" );
 
@@ -539,7 +547,6 @@ sub _rabbit_connect {
 
             if ( $rabbit_exchange ) {
                 $params->{'exchange'} = $rabbit_exchange;
-
             }
 
             $rabbit->connect( $rabbit_host, $params );
@@ -547,7 +554,7 @@ sub _rabbit_connect {
             if ( $direction eq 'input' ) {
                 # open channel to the pending queue we'll read from
                 $rabbit->channel_open( $rabbit_channel );
-                $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0} );
+                $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0, durable => $rabbit_durable } );
                 if ( $self->ack_messages ) {
                     $rabbit->basic_qos( $rabbit_channel, { prefetch_count => QUEUE_PREFETCH_COUNT } );
                 } else {
@@ -560,7 +567,7 @@ sub _rabbit_connect {
         #open channel to the finished queue we'll send to
         #
             $rabbit->channel_open( $rabbit_channel );
-            $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0} );
+            $rabbit->queue_declare( $rabbit_channel, $rabbit_queue, {'auto_delete' => 0, durable => $rabbit_durable} );
 #
 #
 

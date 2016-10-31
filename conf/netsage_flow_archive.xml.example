@@ -12,7 +12,7 @@
     <batch_size>100</batch_size>
     <vhost>/</vhost>
     <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
-    <queue>netsage_raw_archive</queue>
+    <queue>netsage_deidentifier_deidentified_archive</queue>
     <channel>2</channel>
   </rabbit_input>
   <rabbit_output>
