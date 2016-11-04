@@ -1,0 +1,131 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use GRNOC::Config;
+use MongoDB;
+
+use Devel::Size qw( total_size );
+use Data::Dumper;
+use Getopt::Long;
+
+my $USAGE = "$0 --to <email>";
+
+my $email_to = "";
+
+#GetOptions("to=s" => \$email_to) or die $USAGE;
+
+#if (! $email_to){
+#    die $USAGE;
+#}
+
+my $config = GRNOC::Config->new(config_file => "/etc/grnoc/tsds/services/config.xml",
+				force_array => 0);
+
+my $host = $config->get('/config/mongo/@host');
+my $port = $config->get('/config/mongo/@port');
+my $user = $config->get('/config/mongo/root');
+
+my $mongo = MongoDB::MongoClient->new(
+    host     => "$host:$port",
+    username => $user->{'user'},
+    password => $user->{'password'}
+    );
+
+my $flow_db = $mongo->get_database('flow');
+
+my $measurements_count = $flow_db->get_collection('measurements')->count();
+my $data_count = $flow_db->get_collection('data')->count();
+my $storage_stats = $flow_db->run_command( { dbStats => 1 } );
+
+my $string = "Information for 'flow' database:\n\n";
+$string .= "Num Measurement Docs -> $measurements_count\n";
+$string .= "Num Data Docs        -> $data_count\n";
+$string .= "Sizeof Data bytes    -> $storage_stats->{'dataSize'}\n";
+$string .= "Sizeof Storage bytes -> $storage_stats->{'storageSize'}\n";
+
+print "$string\n";
+
+$string = "";
+
+my $col = $flow_db->get_collection('measurements');
+my $data_col = $flow_db->get_collection('data');
+
+my $max_count = 0;
+my $max_size = 0;
+my $measurements = $col->find; #->limit(5);
+my $data = [];
+
+while (my $doc = $measurements->next) {
+    my $row = {};
+    #print "doc: " . Dumper $doc;
+    my $id = $doc->{'identifier'};
+    #warn "identifier: $id";
+    #my $data_res = $data_col->find({ identifier => $id })->count;
+    my $data_res = $data_col->find({ identifier => $id });
+    #if ( $data_res > $max_count ) {
+#		$max_count = $data_res;
+#	}
+    #warn "count: $data_res";
+    my $count = 0;
+    my $records = [];
+    while (my $value = $data_res->next) {
+        push @$records, $value;
+        $count++;
+    }
+    #warn "rrecords" . Dumper $records;
+    foreach my $record ( @$records ) {
+        $row = $record;
+        #warn "record " . Dumper $record;
+        $row->{'meta'} = $doc;
+        #warn "before changes " . Dumper $row;
+        $row = _prepare_data( $row );
+        #print "after changes " . Dumper $row;
+        my $size = total_size( $row );
+        warn "row size: $size";
+        #die;
+        #warn "data_res: " . Dumper $data_res;
+        if ( $size > $max_size ) {
+            $max_size = $size;
+
+        }
+    }
+    warn "row " . Dumper $row;
+}
+warn "max count: $max_count; max size: $max_size";
+#warn "measurements " . Dumper $measurements;
+
+sub _prepare_data {
+	my $row = shift;
+	$row = _cleanup_extra_fields( $row );
+    delete $row->{'meta'}->{'start'};
+    delete $row->{'meta'}->{'end'};
+	return $row;
+}
+
+# recursively clean up extra fields
+# delete _id field
+sub _cleanup_extra_fields {
+    my $obj = shift;
+    foreach my $key ( keys %$obj ) {
+        my $val = $obj->{$key};
+        next if not defined $val;
+        if ( ref($val) eq 'HASH' ) { 
+            # recurse
+            $val = _cleanup_extra_fields( $val );
+        } elsif ( ref($val) eq 'ARRAY' ) {
+            for(my $i=0; $i<@$val;$i++) {
+                $val->[$i] = _cleanup_extra_fields( $val->[$i] );
+            }
+        } else {
+            delete $obj->{'_id'};
+            delete $obj->{'identifier'};
+            delete $obj->{'updated_start'};
+            delete $obj->{'updated_end'};
+        }
+    }
+
+    return $obj;
+}
+
