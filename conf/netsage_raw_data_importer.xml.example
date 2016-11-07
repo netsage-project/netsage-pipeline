@@ -21,11 +21,11 @@
     <password>guest</password>
     <ssl>0</ssl>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <channel>3</channel>
-    <queue>netsage_raw_restore2</queue>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+    <exchange>netsage_deidentified</exchange> 
+    <queue>netsage_deidentified</queue> 
   <worker>
     <!-- How many flows to process at once -->
     <!--<flow-batch-size>1000</flow-batch-size> -->
@@ -33,7 +33,7 @@
     <num-processes>1</num-processes>
 
     <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-raw-importer-workers.pid</pid-file>
+    <pid-file>/var/run/netsage-raw-importer.pid</pid-file>
 
   </worker>
 </config>

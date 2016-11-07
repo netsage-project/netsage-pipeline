@@ -60,27 +60,35 @@ make pure_install
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 %{__install} INSTALL.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
 
+%{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
 %{__install} conf/netsage_deidentifier.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
-%{__install} conf/netsage_tagger.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_tagger.xml
 %{__install} conf/netsage_finished_flow_mover.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
+%{__install} conf/netsage_flow_archiver.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_archiver.xml
 %{__install} conf/netsage_flow_cache.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 %{__install} conf/netsage_flow_stitcher.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-%{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
+%{__install} conf/netsage_raw_data_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
+%{__install} conf/netsage_tagger.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_tagger.xml
 
 %{__install} init.d/netsage-deidentifier-daemon  %{buildroot}/etc/init.d/netsage-deidentifier-daemon
-%{__install} init.d/netsage-tagger-daemon %{buildroot}/etc/init.d/netsage-tagger-daemon
-%{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
 %{__install} init.d/netsage-finished-flow-mover-daemon %{buildroot}/etc/init.d/netsage-finished-flow-mover-daemon
+%{__install} init.d/netsage-flow-archive-daemon %{buildroot}/etc/init.d/netsage-flow-archive-daemon
 %{__install} init.d/netsage-flow-cache-daemon %{buildroot}/etc/init.d/netsage-flow-cache-daemon
 %{__install} init.d/netsage-flow-stitcher-daemon %{buildroot}/etc/init.d/netsage-flow-stitcher-daemon
+%{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
+%{__install} init.d/netsage-tagger-daemon %{buildroot}/etc/init.d/netsage-tagger-daemon
 
+%{__install} bin/export-tsds  %{buildroot}/usr/bin/netsage-export-tsds
+%{__install} bin/json2lines  %{buildroot}/usr/bin/json2lines
+%{__install} bin/lines2json  %{buildroot}/usr/bin/lines2json
 %{__install} bin/netsage-deidentifier-daemon  %{buildroot}/usr/bin/netsage-deidentifier-daemon
-%{__install} bin/netsage-tagger-daemon %{buildroot}/usr/bin/netsage-tagger-daemon
-%{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
 %{__install} bin/netsage-finished-flow-mover-daemon %{buildroot}/usr/bin/netsage-finished-flow-mover-daemon
+%{__install} bin/netsage-flow-archive-daemon %{buildroot}/usr/bin/netsage-flow-archive-daemon
 %{__install} bin/netsage-flow-cache-daemon %{buildroot}/usr/bin/netsage-flow-cache-daemon
 %{__install} bin/netsage-flow-stitcher-daemon %{buildroot}/usr/bin/netsage-flow-stitcher-daemon
+%{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
+%{__install} bin/netsage-raw-data-importer %{buildroot}/usr/bin/netsage-raw-data-importer
+%{__install} bin/netsage-tagger-daemon %{buildroot}/usr/bin/netsage-tagger-daemon
 
 # clean up buildroot
 find %{buildroot} -name .packlist -exec %{__rm} {} \;
@@ -94,13 +102,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(640, root, root, -)
 
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
 
 %defattr(644, root, root, -)
 
@@ -119,19 +129,25 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(754, root, root, -)
 
+/usr/bin/json2lines
+/usr/bin/lines2json
 /usr/bin/netsage-deidentifier-daemon
-/usr/bin/netsage-tagger-daemon
+/usr/bin/netsage-export-tsds
 /usr/bin/netsage-finished-flow-mover-daemon
-/usr/bin/netsage-netflow-importer-daemon
+/usr/bin/netsage-flow-archive-daemon
 /usr/bin/netsage-flow-cache-daemon
 /usr/bin/netsage-flow-stitcher-daemon
+/usr/bin/netsage-netflow-importer-daemon
+/usr/bin/netsage-raw_data-importer
+/usr/bin/netsage-tagger-daemon
 
 /etc/init.d/netsage-deidentifier-daemon
-/etc/init.d/netsage-tagger-daemon
 /etc/init.d/netsage-finished-flow-mover-daemon
 /etc/init.d/netsage-netflow-importer-daemon
+/etc/init.d/netsage-flow-archive-daemon
 /etc/init.d/netsage-flow-cache-daemon
 /etc/init.d/netsage-flow-stitcher-daemon
+/etc/init.d/netsage-tagger-daemon
 
 %defattr(755, root, root, -)
 

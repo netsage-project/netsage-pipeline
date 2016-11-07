@@ -17,7 +17,7 @@
     <password>guest</password>
     <ssl>0</ssl>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <queue>netsage_deidentifier_netflow_raw2</queue>
     <channel>2</channel>
@@ -30,7 +30,7 @@
     <password>guest</password>
     <ssl>0</ssl>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <channel>3</channel>
     <queue>netsage_deidentifier_raw</queue>
@@ -38,7 +38,7 @@
   </rabbit_output>
   <worker>
     <!-- How many flows to process at once -->
-    <flow-batch-size>1000</flow-batch-size>
+    <flow-batch-size>100</flow-batch-size>
     <!-- How many concurrent workers should perform the necessary operations -->
     <num-processes>1</num-processes>
 

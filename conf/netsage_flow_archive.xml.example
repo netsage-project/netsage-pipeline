@@ -24,7 +24,7 @@
     <password>guest</password>
     <ssl>0</ssl>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <channel>3</channel>
     <queue>netsage_deidentifier_raw2</queue>
@@ -36,7 +36,7 @@
     <num-processes>1</num-processes>
 
     <!-- where should we write the worker pid file to -->
-    <pid-file>/var/run/netsage-raw-importer-workers.pid</pid-file>
+    <pid-file>/var/run/netsage-raw-archive-workers.pid</pid-file>
 
   </worker>
 </config>

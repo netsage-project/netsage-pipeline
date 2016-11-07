@@ -6,7 +6,7 @@
     <username>guest</username>
     <password>guest</password>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <queue>netsage_deidentifier_raw2</queue>
     <channel>2</channel>
     <ssl>0</ssl>
@@ -19,7 +19,7 @@
     <username>guest</username>
     <password>guest</password>
     <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
+    <vhost>/</vhost>
     <queue>netsage_deidentifier_stitched</queue>
     <channel>3</channel>
     <ssl>0</ssl>
