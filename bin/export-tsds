@@ -168,11 +168,12 @@ sub _prepare_data {
     delete $row->{'meta'}->{'start'};
     delete $row->{'meta'}->{'end'};
     if ( not exists $row->{'meta'}->{'sensor_id'} ) {
-        $row->{'meta'}->{'sensor_id'} = "unknown";
+        $row->{'meta'}->{'sensor_id'} = 'unknown';
     }
     if ( not exists $row->{'meta'}->{'flow_type'} ) {
-        $row->{'meta'}->{'flow_type'} = "unknown";
+        $row->{'meta'}->{'flow_type'} = 'unknown';
     }
+    $row->{'type'} = 'flow';
 	return $row;
 }
 
