@@ -11,6 +11,7 @@ use GRNOC::Log;
 use GRNOC::Config;
 
 use JSON::XS;
+use List::MoreUtils qw( natatime );
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
 use Time::HiRes qw( time );
@@ -76,18 +77,40 @@ sub _import_raw_data {
 sub _handle_jsonl_file {
     my ( $self, $filepath ) = @_;
     my $json = $self->json;
+    my $rabbit_batch_size = 100;
     open my $fh, '<:encoding(UTF-8)', $filepath;
     # we assume each line is 1 Rabbit message 
     # (which typically may contain up to 100 flows)
+    my $batch = [];
     while ( my $line = <$fh> ) {
         chomp $line;
+        my $push_now = 0;
         my $decoded = $json->decode( $line ) or do {
             $self->logger->warn( "SKIPPING LINE - Error decoding json: $!" );
+            if ( ref( $decoded ) eq "HASH" ) {
+                push @$batch, $decoded;
+
+            } elsif ( ref ( $decoded ) eq "ARRAY" ) {
+                $batch = $decoded;
+                $push_now = 1;
+
+            }
             next;
         };
-        $self->_set_json_data( $decoded );
+
+        if ( @$batch >= $rabbit_batch_size || $push_now  ) {
+            $self->_set_json_data( $batch );
+            $self->_publish_messages();
+            $batch = [];
+            $push_now = 0;
+        }
+
+    }
+    if ( @$batch > 0 ) {
+        $self->_set_json_data( $batch );
         $self->_publish_messages();
-        $decoded = [];
+        $batch = [];
+        $push_now = 0;
 
     }
     close $fh;

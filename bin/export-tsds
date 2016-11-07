@@ -4,11 +4,18 @@ use strict;
 use warnings;
 
 use GRNOC::Config;
-use MongoDB;
 
+use MongoDB;
 use Devel::Size qw( total_size );
-use Data::Dumper;
 use Getopt::Long;
+use JSON::XS;
+
+use Data::Dumper;
+
+my $BATCH_SIZE = 100;
+
+my $end = time;
+my $start = $end - 86400 * 30; # 1 day
 
 my $USAGE = "$0 --to <email>";
 
@@ -35,6 +42,8 @@ my $mongo = MongoDB::MongoClient->new(
 
 my $flow_db = $mongo->get_database('flow');
 
+my $json = JSON::XS->new();
+
 my $measurements_count = $flow_db->get_collection('measurements')->count();
 my $data_count = $flow_db->get_collection('data')->count();
 my $storage_stats = $flow_db->run_command( { dbStats => 1 } );
@@ -45,7 +54,7 @@ $string .= "Num Data Docs        -> $data_count\n";
 $string .= "Sizeof Data bytes    -> $storage_stats->{'dataSize'}\n";
 $string .= "Sizeof Storage bytes -> $storage_stats->{'storageSize'}\n";
 
-print "$string\n";
+warn "$string\n";
 
 $string = "";
 
@@ -54,8 +63,14 @@ my $data_col = $flow_db->get_collection('data');
 
 my $max_count = 0;
 my $max_size = 0;
-my $measurements = $col->find; #->limit(5);
-my $data = [];
+#my $measurements = $col->find; #->limit(5);
+my $filter = {
+#    start => { '$gt' => $start, '$lt' => $end },
+    #end => { '$lt' => $end } # NOTE: measurement->end seems to be undef in many (all?) cases
+    };
+#warn "filter " . Dumper $filter;
+my $measurements = $col->find( $filter );
+my $batch = [];
 
 while (my $doc = $measurements->next) {
     my $row = {};
@@ -63,7 +78,12 @@ while (my $doc = $measurements->next) {
     my $id = $doc->{'identifier'};
     #warn "identifier: $id";
     #my $data_res = $data_col->find({ identifier => $id })->count;
-    my $data_res = $data_col->find({ identifier => $id });
+    my $data_res = $data_col->find(
+    { 
+        identifier => $id,
+#        start => { '$gt' => $start },
+#        end => { '$lt' => $end },
+    }  );
     #if ( $data_res > $max_count ) {
 #		$max_count = $data_res;
 #	}
@@ -83,7 +103,7 @@ while (my $doc = $measurements->next) {
         $row = _prepare_data( $row );
         #print "after changes " . Dumper $row;
         my $size = total_size( $row );
-        warn "row size: $size";
+        #warn "row size: $size";
         #die;
         #warn "data_res: " . Dumper $data_res;
         if ( $size > $max_size ) {
@@ -91,8 +111,21 @@ while (my $doc = $measurements->next) {
 
         }
     }
-    warn "row " . Dumper $row;
+    _output_archive( $row );
+    #push @$batch, $row;
+    #warn "row " . Dumper $row;
+    #if ( @$batch >= $BATCH_SIZE ) {
+    #    _output_archive( $batch );
+    #    $batch = [];
+    #}
 }
+
+# output remaining messages
+if ( @$batch > 0 ) {
+    _output_archive( $batch );
+}
+
+
 warn "max count: $max_count; max size: $max_size";
 #warn "measurements " . Dumper $measurements;
 
@@ -127,5 +160,12 @@ sub _cleanup_extra_fields {
     }
 
     return $obj;
+}
+
+sub _output_archive {
+    my $data = shift;
+    my $output = $json->encode( $data );
+    print "$output\n";
+
 }
 
