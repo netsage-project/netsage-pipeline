@@ -183,7 +183,8 @@ sub _cleanup_extra_fields {
     my $obj = shift;
     foreach my $key ( keys %$obj ) {
         my $val = $obj->{$key};
-        next if not defined $val;
+        #warn "null value; key: $key " if not defined $val;
+        $val = '' if not defined $val;
         if ( ref($val) eq 'HASH' ) { 
             # recurse
             $val = _cleanup_extra_fields( $val );
