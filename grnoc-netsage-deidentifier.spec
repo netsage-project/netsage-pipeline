@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Deidentifier 
 Name: grnoc-netsage-deidentifier
-Version: 0.0.3
+Version: 0.0.4
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -19,6 +19,7 @@ Requires: perl-Geo-IP
 Requires: perl-GRNOC-Config
 Requires: perl-GRNOC-Log
 Requires: perl-IPC-ShareLite
+Requires: perl-JSON-SL
 Requires: perl-JSON-XS
 Requires: perl-List-MoreUtils
 Requires: perl-Math-Round

@@ -126,9 +126,32 @@ sub _publish_flows {
     my $flows = $self->finished_flows;
     #warn "publishing flows ... " . @$flows;
     #warn "flows: " . Dumper $flows;
-    # TODO: fix an issue where flows aren't deleted after being published
+
+    # _set_values_strings converts all JSON values to strings (in quotes) so for instance 
+    # instead of "duration":60 you get "duration":"60"
+    # At first it seemed this might be necessary for Logstash, but it turns out it's not.
+    # Leaving here in case we do need it later
+    #foreach my $flow ( @$flows ) {
+    #    $flow = _set_values_strings( $flow );
+    #    warn "new flow: " . Dumper $flow;
+    #}
     $self->_publish_data( $flows );
     $self->_set_finished_flows( [] );
+}
+
+sub _set_values_strings {
+    my $obj = shift;
+    foreach my $key ( keys %$obj ) {
+        my $val = $obj->{$key};
+        next if not defined $val;
+        if ( ref($val) eq 'HASH' ) { # $key eq "values" || $key eq 'meta' ) 
+            $val = _set_values_strings( $val );
+        } else {
+            $obj->{$key} = "$val";
+        }
+    }
+
+    return $obj;
 }
 
 sub _stitch_flows {
@@ -201,6 +224,7 @@ sub _stitch_flows {
                         #warn "no previous flow #1; caching";
                     } else {
                         #warn "no previous flow #2; finished";
+                        $flow->{'stitching_finished'} = 1;
                         push @$finished_flows, \%{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
                     }
@@ -353,7 +377,6 @@ sub _stitch_flow {
     $flow1->{'values'}->{'num_bits'} += $flow2->{'values'}->{'num_bits'};
     $flow1->{'values'}->{'num_packets'} += $flow2->{'values'}->{'num_packets'};
     $flow1->{'stitched'} = 1;
-
     #warn "stitched: " . Dumper $flow1;
 
     return $flow1;

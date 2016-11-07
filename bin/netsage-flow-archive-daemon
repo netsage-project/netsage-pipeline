@@ -43,7 +43,7 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           worker => $archive );
 
 
-$worker->start("caching");
+$worker->start("no_output_queue");
 
 ### helpers ###
 

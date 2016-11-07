@@ -82,23 +82,25 @@ sub _handle_jsonl_file {
     # we assume each line is 1 Rabbit message 
     # (which typically may contain up to 100 flows)
     my $batch = [];
+    my $push_now;
     while ( my $line = <$fh> ) {
+        $push_now = 0;
         chomp $line;
-        my $push_now = 0;
         my $decoded = $json->decode( $line ) or do {
             $self->logger->warn( "SKIPPING LINE - Error decoding json: $!" );
-            if ( ref( $decoded ) eq "HASH" ) {
-                push @$batch, $decoded;
-
-            } elsif ( ref ( $decoded ) eq "ARRAY" ) {
-                $batch = $decoded;
-                $push_now = 1;
-
-            }
             next;
         };
+        if ( ref( $decoded ) eq "HASH" ) {
+            push @$batch, $decoded;
+
+        } elsif ( ref ( $decoded ) eq "ARRAY" ) {
+            $batch = $decoded;
+            $push_now = 1;
+
+        }
 
         if ( @$batch >= $rabbit_batch_size || $push_now  ) {
+            $batch = _process_data( $batch );
             $self->_set_json_data( $batch );
             $self->_publish_messages();
             $batch = [];
@@ -107,6 +109,7 @@ sub _handle_jsonl_file {
 
     }
     if ( @$batch > 0 ) {
+        $batch = _process_data( $batch );
         $self->_set_json_data( $batch );
         $self->_publish_messages();
         $batch = [];
@@ -115,6 +118,43 @@ sub _handle_jsonl_file {
     }
     close $fh;
     $self->_set_is_running( 0 );
+}
+
+sub _process_data {
+    my $data = shift;
+
+    foreach my $row ( @$data ) {
+        $row = _cleanup_null_values( $row );
+    }
+    return $data;
+}
+
+# recursively clean up null values
+# set null to '' 
+sub _cleanup_null_values {
+    my $obj = shift;
+
+    foreach my $key ( keys %$obj ) {
+        my $val = $obj->{$key};
+        if ( ref($val) eq 'HASH' ) {
+            # recurse
+            $val = _cleanup_null_values( $val );
+        } elsif ( ref($val) eq 'ARRAY' ) {
+            for(my $i=0; $i<@$val;$i++) {
+                $val->[$i] = _cleanup_null_values( $val->[$i] );
+            }
+        } else {
+            if ( not defined $val ) {
+                #warn "null value; key: $key ";
+                $val = '' if not defined $val;
+                $obj->{$key} = '';
+            }
+        }
+    }
+    #warn "after checking defined value: " . Dumper $obj;
+    #die;
+
+    return $obj;
 }
 
 sub _publish_messages {

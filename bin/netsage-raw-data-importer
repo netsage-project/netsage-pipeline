@@ -38,7 +38,7 @@ my $raw_importer = GRNOC::NetSage::Deidentifier::RawDataImporter->new( config_fi
                                                           process_name => "netsage_raw_data_importer",
                                                           task_type => "noinput" );
 
-$raw_importer->start("noinput");
+$raw_importer->start("no_input_queue");
 
 ### helpers ###
 
