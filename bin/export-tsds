@@ -6,7 +6,6 @@ use warnings;
 use GRNOC::Config;
 
 use MongoDB;
-use Devel::Size qw( total_size );
 use Getopt::Long;
 use JSON::XS;
 
@@ -43,7 +42,7 @@ my $mongo = MongoDB::MongoClient->new(
     password => $user->{'password'}
     );
 
-my $flow_db = $mongo->get_database('flow');
+my $flow_db = $mongo->get_database('flow_old');
 
 my $json = JSON::XS->new();
 
@@ -51,7 +50,7 @@ my $measurements_count = $flow_db->get_collection('measurements')->count();
 my $data_count = $flow_db->get_collection('data')->count();
 my $storage_stats = $flow_db->run_command( { dbStats => 1 } );
 
-my $string = "Information for 'flow' database (before):\n\n";
+my $string = "Information for 'flow_old' database (before):\n\n";
 $string .= "Num Measurement Docs -> $measurements_count\n";
 $string .= "Num Data Docs        -> $data_count\n";
 $string .= "Sizeof Data bytes    -> $storage_stats->{'dataSize'}\n";
@@ -65,7 +64,6 @@ my $meas_col = $flow_db->get_collection('measurements');
 my $data_col = $flow_db->get_collection('data');
 
 my $max_count = 0;
-my $max_size = 0;
 my $filter = {
     #start => { '$gt' => $start, '$lt' => $end },
     #end => { '$lt' => $end } # NOTE: measurement->end seems to be undef in many (all?) cases
@@ -116,14 +114,9 @@ while (my $val_doc = $data->next) {
     #warn "before changes " . Dumper $row;
     $row = _prepare_data( $row );
     #warn "after changes " . Dumper $row;
-    my $size = total_size( $row );
     #warn "row size: $size";
     #die;
     #warn "data_res: " . Dumper $data_res;
-    if ( $size > $max_size ) {
-        $max_size = $size;
-
-    }
     _output_archive( $row );
     $prev_id = $id;
     #}
@@ -145,14 +138,13 @@ if ( @$batch > 0 ) {
 }
 
 
-warn "max count: $max_count; max size: $max_size";
 #warn "measurements " . Dumper $measurements;
 
 $measurements_count = $flow_db->get_collection('measurements')->count();
 $data_count = $flow_db->get_collection('data')->count();
 $storage_stats = $flow_db->run_command( { dbStats => 1 } );
 
-$string = "Information for 'flow' database (after):\n\n";
+$string = "Information for 'flow_old' database (after):\n\n";
 $string .= "Num Measurement Docs -> $measurements_count\n";
 $string .= "Num Data Docs        -> $data_count\n";
 $string .= "Sizeof Data bytes    -> $storage_stats->{'dataSize'}\n";
@@ -183,8 +175,8 @@ sub _cleanup_extra_fields {
     my $obj = shift;
     foreach my $key ( keys %$obj ) {
         my $val = $obj->{$key};
+        #$val = '' if not defined $val;
         #warn "null value; key: $key " if not defined $val;
-        $val = '' if not defined $val;
         if ( ref($val) eq 'HASH' ) { 
             # recurse
             $val = _cleanup_extra_fields( $val );

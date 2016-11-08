@@ -129,31 +129,43 @@ sub _process_data {
     return $data;
 }
 
-# recursively clean up null values
+# clean up null values
+# metadata only accepts strings or ""
+# values only accepts numeric or null
 # set null to '' 
 sub _cleanup_null_values {
     my $obj = shift;
+    $obj->{'meta'} = _null_to_empty_string( $obj->{'meta'} );
+    $obj->{'values'} = _empty_string_to_null( $obj->{'values'} );
 
+        #foreach my $key ( keys %$obj ) {
+        #my $val = $obj->{$key};
+        #$val->{'meta'} = _null_to_empty_string( $val->{'meta'} );
+        #$val->{'values'} = _empty_string_to_null( $val->{'values'} );
+        #}
+        #warn "after checking defined value: " . Dumper $obj;
+        #die;
+
+    return $obj;
+}
+
+sub _null_to_empty_string {
+    my $obj = shift;
     foreach my $key ( keys %$obj ) {
         my $val = $obj->{$key};
-        if ( ref($val) eq 'HASH' ) {
-            # recurse
-            $val = _cleanup_null_values( $val );
-        } elsif ( ref($val) eq 'ARRAY' ) {
-            for(my $i=0; $i<@$val;$i++) {
-                $val->[$i] = _cleanup_null_values( $val->[$i] );
-            }
-        } else {
-            if ( not defined $val ) {
-                #warn "null value; key: $key ";
-                $val = '' if not defined $val;
-                $obj->{$key} = '';
-            }
-        }
+        $val = "" if not defined $val;
+        $obj->{$key} = $val;
     }
-    #warn "after checking defined value: " . Dumper $obj;
-    #die;
+    return $obj;
+}
 
+sub _empty_string_to_null {
+    my $obj = shift;
+    foreach my $key ( keys %$obj ) {
+        my $val = $obj->{$key};
+        undef $val if ( ( defined $val ) && ( $val eq "" ) );
+        $obj->{$key} = $val;
+    }
     return $obj;
 }
 
