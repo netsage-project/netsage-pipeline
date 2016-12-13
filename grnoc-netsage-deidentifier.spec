@@ -63,7 +63,7 @@ make pure_install
 %{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
 %{__install} conf/netsage_deidentifier.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
 %{__install} conf/netsage_finished_flow_mover.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
-%{__install} conf/netsage_flow_archiver.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_archiver.xml
+%{__install} conf/netsage_flow_archive.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml
 %{__install} conf/netsage_flow_cache.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 %{__install} conf/netsage_flow_stitcher.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
@@ -124,6 +124,8 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowTagger.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowMover.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
+%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/RawDataImporter.pm
+%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowArchive.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowCache.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
 
@@ -138,7 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/netsage-flow-cache-daemon
 /usr/bin/netsage-flow-stitcher-daemon
 /usr/bin/netsage-netflow-importer-daemon
-/usr/bin/netsage-raw_data-importer
+/usr/bin/netsage-raw-data-importer
 /usr/bin/netsage-tagger-daemon
 
 /etc/init.d/netsage-deidentifier-daemon

@@ -217,8 +217,10 @@ sub _get_nfdump_data {
             $row->{'meta'}->{'src_port'} = $sp;
             $row->{'meta'}->{'dst_ip'} = $da;
             $row->{'meta'}->{'dst_port'} = $dp;
-            $row->{'meta'}->{'protocol'} = $pr;
+            $row->{'meta'}->{'protocol'} = getprotobynumber( $pr );
             $row->{'meta'}->{'sensor_id'} = $self->sensor_id;
+            $row->{'meta'}->{'src_asn'} = $sas;
+            $row->{'meta'}->{'dst_asn'} = $das;
             $row->{'start'} = $start;
             $row->{'end'} = $end;
 
@@ -228,8 +230,7 @@ sub _get_nfdump_data {
             $row->{'values'}->{'num_packets'} = $sum_packets;
             $row->{'values'}->{'bits_per_second'} = $bps;
             $row->{'values'}->{'packets_per_second'} = $pps;
-            $row->{'values'}->{'src_asn'} = $sas;
-            $row->{'values'}->{'dst_asn'} = $das;
+
 
             push @all_data, $row;
             if ( @all_data % $flow_batch_size == 0 ) {

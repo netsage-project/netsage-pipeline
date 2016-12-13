@@ -6,7 +6,6 @@ use warnings;
 use GRNOC::Config;
 
 use MongoDB;
-use Devel::Size qw( total_size );
 use Getopt::Long;
 use JSON::XS;
 
@@ -116,7 +115,6 @@ while (my $val_doc = $data->next) {
     #warn "before changes " . Dumper $row;
     $row = _prepare_data( $row );
     #warn "after changes " . Dumper $row;
-    my $size = total_size( $row );
     #warn "row size: $size";
     #die;
     #warn "data_res: " . Dumper $data_res;
