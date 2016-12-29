@@ -1,3 +1,13 @@
+## GRNOC NetSage Deidentifier 0.0.5 -- Thu Dec 29 2016
+
+Features:
+ * ISSUE=2863 PROJ=160 Improved logging
+Bugs:
+ * ISSUE=2505 PROJ=160 Drop redundant netflow src/dst ASN values
+ * ISSUE=2507 PROJ=160 Handling of protocol values - use names instead of numbers
+ * ISSUE=2863 PROJ=160 Fix an incorrect commandline parameter that was being sent to nfdump
+ * ISSUE=2863 PROJ=160 Fix export-tsds and null/empty strings for importer
+
 ## GRNOC NetSage Deidentifier 0.0.4 -- Mon Nov 7 2016
 
 Features:

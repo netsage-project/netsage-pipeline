@@ -68,6 +68,9 @@ has task_type => ( is => 'rwp' );
 has ack_messages => ( is => 'rwp',
                       default => 1 );
 
+has run_once => ( is => 'rwp',
+                  default => 0 );
+
 has rabbit_input => ( is => 'rwp' );
 
 has rabbit_output => ( is => 'rwp' );
@@ -83,6 +86,9 @@ has output_channel => ( is => 'rwp' );
 has batch_size => ( is => 'rwp' );
 
 has json => ( is => 'rwp' );
+
+has num_published_messages => ( is => 'rwp',
+                      default => 0 );
 
 ### constructor builder ###
 
@@ -185,7 +191,6 @@ sub _consume_noinput {
     while( 1 ) {
         # have we been told to stop?
         if ( !$self->is_running ) {
-
             $self->logger->debug( 'Exiting consume_noinput loop.' );
             return 0;
         }
@@ -421,7 +426,11 @@ sub _publish_data {
 
     # send a max of $batch_size messages at a time to rabbit
     my $it = natatime( $batch_size, @$messages );
-    #$self->logger->debug("Publishing up to " . $batch_size . " messages per batch ( total " . @$messages . " ) ");
+
+    my $num = $self->num_published_messages;
+    $num += @$messages;
+    $self->_set_num_published_messages( $num );
+    $self->logger->debug("Publishing up to " . $batch_size . " messages per batch ( this batch " . @$messages . " ); total: " . $num );
 
     my $queue = $self->rabbit_config->{'output'}->{'queue'};
     my $channel = $self->rabbit_config->{'output'}->{'channel'};

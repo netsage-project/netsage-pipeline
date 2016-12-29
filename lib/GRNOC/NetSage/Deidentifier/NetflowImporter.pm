@@ -160,6 +160,7 @@ sub _get_flow_data {
     my $success = $self->_get_nfdump_data(\@filepaths);
 
 
+
 }
 
 sub _get_nfdump_data {
@@ -183,12 +184,12 @@ sub _get_nfdump_data {
 
         my $stats = stat($flowfile);
 
-        my $command = "/usr/bin/nfdump -R '$flowfile'";
+        my $command = "/usr/bin/nfdump -r '$flowfile'";
         $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         $command .= ' bytes\>' . $min_bytes;
         $command .= " -N -q";
         $command .= ' |';
-        ##$self->logger->debug(" command:\n$command\n");
+        $self->logger->debug(" command:\n$command\n");
 
         my $fh;
         open($fh, $command);
@@ -241,6 +242,7 @@ sub _get_nfdump_data {
             }
         }
         # publish any remaining data
+        # TODO: improve performance here by waiting until we have full batches
         $self->_set_json_data( \@all_data );
         $self->_publish_flows();
         @all_data = ();
@@ -253,6 +255,11 @@ sub _get_nfdump_data {
         };
         $self->_set_status_cache( $status );
         $self->_write_cache();
+    }
+
+    if ( $self->run_once ) {
+        $self->logger->debug("only running once, stopping");
+            $self->_set_is_running( 0 );
     }
 
     if (!@all_data) {
