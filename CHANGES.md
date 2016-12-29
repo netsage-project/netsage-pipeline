@@ -2,6 +2,7 @@
 
 Features:
  * ISSUE=2863 PROJ=160 Improved logging
+
 Bugs:
  * ISSUE=2505 PROJ=160 Drop redundant netflow src/dst ASN values
  * ISSUE=2507 PROJ=160 Handling of protocol values - use names instead of numbers
