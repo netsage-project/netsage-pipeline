@@ -1,5 +1,6 @@
 grnoc-netsage-deidentifier.spec
 conf/logging.conf.example
+conf/logging-debug.conf.example
 conf/netsage_deidentifier.xml.example
 conf/netsage_finished_flow_mover.xml.example
 conf/netsage_flow_archive.xml.example

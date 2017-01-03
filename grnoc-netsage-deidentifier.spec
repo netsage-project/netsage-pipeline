@@ -61,6 +61,7 @@ make pure_install
 %{__install} INSTALL.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
 
 %{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
+%{__install} conf/logging-debug.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging-debug.conf
 %{__install} conf/netsage_deidentifier.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
 %{__install} conf/netsage_finished_flow_mover.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
 %{__install} conf/netsage_flow_archive.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml
@@ -103,6 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(640, root, root, -)
 
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
+%config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml

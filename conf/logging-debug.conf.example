@@ -1,0 +1,21 @@
+log4perl.rootLogger = DEBUG, SYSLOG, screen
+log4perl.appender.SYSLOG = Log::Dispatch::Syslog
+# uncomment this next line if you want to restrict syslog to 'info' and above
+#log4perl.appender.SYSLOG.min_level = info
+log4perl.appender.SYSLOG.ident = sub {  \
+    my $process = $0;       \
+    if ( $process =~ /netsage-(.+)-daemon/ ) {  \
+        my $ident = $1;     \
+        return "NETSAGE-".uc($ident);  \
+    } else {                \
+        return "NETSAGE-".$process;    \
+    }  \
+}
+log4perl.appender.SYSLOG.facility = LOCAL0
+log4perl.appender.SYSLOG.layout = PatternLayout
+log4perl.appender.SYSLOG.layout.ConversionPattern=[%d] %F %L %c - %m%n
+
+log4perl.appender.screen = Log::Log4perl::Appender::Screen
+log4perl.appender.screen.stderr = 0
+log4perl.appender.screen.layout = PatternLayout
+log4perl.appender.screen.layout.ConversionPattern = %d %p> %F{1}:%L %M - %m%n
