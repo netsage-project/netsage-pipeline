@@ -1,0 +1,51 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+use Getopt::Long;
+use Storable qw(freeze thaw retrieve store);
+
+my $in_file = '/var/cache/netsage/netflow_importer.cache';
+#my $out_file = '/var/cache/netsage/netflow_importer.cache';
+my $out_file = 'netflow_importer_new.cache';
+
+GetOptions(	
+		'infile=s'  => \$in_file,
+	    	'outfile=s' => \$out_file
+	  );
+
+my $status = read_cache();
+
+
+#print "status: \n " . Dumper ( $status ) . "\n";
+foreach my $key ( keys %$status ) {
+	if ( $key =~ /2017-01-0[234]/ ) {
+		#print "will delete $key\n";
+		#delete $status->{ $key };
+
+	}
+	print "$key\n";
+}
+
+#write_cache( $status );
+
+
+sub read_cache {
+    my $filename = $in_file;
+
+    $status = retrieve $filename
+	    or die "Cache file $filename does not exist! $!\n";
+
+    return $status;
+
+}
+
+sub write_cache {
+    my $status = shift;
+    my $filename = $out_file;
+    store $status, $filename;
+
+}
+
