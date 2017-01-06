@@ -45,6 +45,11 @@
     <!-- Directory to find flow data -->
     <flow-path>/path/to/flow/data</flow-path>
 
+    <!-- path to nfdump executable (defaults to /usr/bin/nfdump) -->
+    <!-- 
+    <nfdump-path>/path/to/nfdump</nfdump-path>
+-->
+
     <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
     <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
 

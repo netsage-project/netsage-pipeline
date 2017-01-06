@@ -64,6 +64,9 @@ has cache_file => ( is => 'rwp' );
 has min_file_age => ( is => 'rwp',
                       default => '1h' );
 
+has nfdump_path => ( is => 'rwp' );
+#                     default => '/usr/bin/nfdump' )
+
 ### constructor builder ###
 
 sub BUILD {
@@ -95,6 +98,9 @@ sub BUILD {
 
     $self->_set_flow_batch_size( $flow_batch_size );
     $self->_set_handler( sub{ $self->_run_netflow_import(@_) } );
+
+    $self->_set_nfdump_path( $config->{'worker'}->{'nfdump-path'} )
+        if defined $config->{'worker'}->{'nfdump-path'};
 
     # create JSON object
     my $json = JSON::XS->new();
@@ -173,6 +179,21 @@ sub _get_nfdump_data {
     my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
+    my $config_path = $self->nfdump_path;
+    my $nfdump = '/usr/bin/nfdump';
+    # if configured nfdump path is a file and is executable, use it
+    if ( defined $config_path ) {
+        if ( -f $config_path && -x _ ) {
+            $nfdump = $config_path
+        } else {
+            $self->logger->error("Invalid nfdump path specified; quitting");
+            $self->_set_is_running( 0 );
+            return;
+
+        }
+
+    }
+
     my @all_data = ();
     foreach my $flowfile ( @$flowfiles ) {
 
@@ -184,7 +205,7 @@ sub _get_nfdump_data {
 
         my $stats = stat($flowfile);
 
-        my $command = "/usr/bin/nfdump -r '$flowfile'";
+        my $command = "$nfdump -r '$flowfile'";
         $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         $command .= ' bytes\>' . $min_bytes;
         $command .= " -N -q";

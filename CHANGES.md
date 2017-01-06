@@ -1,6 +1,7 @@
-## GRNOC NetSage Deidentifier 0.0.5 -- Thu Dec 29 2016
+## GRNOC NetSage Deidentifier 0.0.5-2 -- Fri Jan 6 2017
 
 Features:
+ * ISSUE=2863 PROJ=160 Made nfdump path configurable
  * ISSUE=2863 PROJ=160 Improved logging
 
 Bugs:

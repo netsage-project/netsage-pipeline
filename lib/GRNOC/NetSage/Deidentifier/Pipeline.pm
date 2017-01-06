@@ -196,7 +196,7 @@ sub _consume_noinput {
         }
         my $handler = $self->handler;
         $self->handler->( $self );
-        sleep 5;
+        sleep RECONNECT_TIMEOUT;
 
     }
 
