@@ -33,6 +33,14 @@ has geoip_city_ipv6 => ( is => 'rwp' );
 has geoip_asn => ( is => 'rwp' );
 has geoip_asn_ipv6 => ( is => 'rwp' );
 
+my %continents = (
+    'AF' => 'Africa',
+    'AS' => 'Asia',
+    'EU' => 'Europe',
+    'NA' => 'North America',
+    'OC' => 'Oceania',
+    'SA' => 'South Africa'
+);
 
 ### constructor builder ###
 
@@ -114,6 +122,7 @@ sub _tag_messages {
 
                 $record = $geoip_city->record_by_addr( $ip );
 
+
                 if ( $record ) {
                     $metadata{'country_code'} = $self->convert_chars( $record->country_code );
                     $metadata{'country_name'} = $self->convert_chars( $record->country_name );
@@ -124,6 +133,8 @@ sub _tag_messages {
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
+                    $metadata{'continent_code'} = $record->continent_code;
+                    $metadata{'continent'} = $self->get_continent( $record->continent_code );
 
                     }
             } elsif ( is_ipv6( $ip ) )  {
@@ -146,7 +157,8 @@ sub _tag_messages {
                     $metadata{'time_zone'} = $record->time_zone;
                     $metadata{'latitude'} = $record->latitude;
                     $metadata{'longitude'} = $record->longitude;
-
+                    $metadata{'continent_code'} = $record->continent_code;
+                    $metadata{'continent'} = $self->get_continent( $record->continent_code );
 
                 }
                 #warn "metadata IPV6: " . Dumper \%metadata;
@@ -191,7 +203,7 @@ sub _tag_messages {
             # Latitude
             # Longitude
             my @meta_names = ( 'asn', 'city', 'country_code', 'country_name',
-                'latitude', 'longitude', 'organization');
+                'latitude', 'longitude', 'organization', 'continent_code', 'continent');
             foreach my $name ( @meta_names ) {
                 $message->{'meta'}->{ $field_direction ."_" . $name } = $metadata{ $name }; # if $metadata{ $name };
             }
@@ -202,6 +214,13 @@ sub _tag_messages {
     }
 
     return $finished_messages;
+}
+
+sub get_continent {
+    my ( $self, $abbr ) = @_;
+    my $continent = $continents{ $abbr };
+
+    return $continent;
 }
 
 sub convert_chars {
