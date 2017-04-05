@@ -152,8 +152,13 @@ sub _get_flow_data {
         my $rel = $abs->relative( $path ) . "";
         if ( exists ( $status->{ $rel } ) ) {
             my $entry = $status->{ $rel };
+            if ( (!defined $stats) or (!defined $entry) ) {
+                next;
+            }
             my $mtime_cache = $entry->{'mtime'};
             my $size_cache  = $entry->{'size'};
+
+            # If file size and last-modified time are unchanged, skip it
             if ( $mtime_cache == $stats->mtime
                 && $size_cache == $stats->size ) {
                 next;
