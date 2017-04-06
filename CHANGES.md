@@ -1,3 +1,11 @@
+## GRNOC NetSage Deidentifier 0.0.6 -- Wed Apr 5 2017
+
+Features:
+ * ISSUE=2996 PROJ=160 Added tagging of Continent
+
+Bugs:
+ * ISSUE=2505 PROJ=160 Fixed a crash in the netflow importer
+
 ## GRNOC NetSage Deidentifier 0.0.5-2 -- Fri Jan 6 2017
 
 Features:
