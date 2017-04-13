@@ -2,7 +2,7 @@
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <batch_size>100</batch_size>
@@ -15,7 +15,7 @@
   </rabbit_input>
   <rabbit_output>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <batch_size>100</batch_size>
@@ -40,8 +40,8 @@
       <country_ipv6>/usr/share/GeoIP/GeoIPv6.dat</country_ipv6>
       <city>/usr/share/GeoIP/GeoIPCity.dat</city>
       <city_ipv6>/usr/share/GeoIP/GeoIPCityv6.dat</city_ipv6>
-      <asn>/usr/share/GeoIP/GeoLiteASNum.dat</asn>
-      <asn_ipv6>/usr/share/GeoIP/GeoLiteASNumv6.dat</asn_ipv6>
+      <asn>/usr/share/GeoIP/GeoIPASNum.dat</asn>
+      <asn_ipv6>/usr/share/GeoIP/GeoIPASNumv6.dat</asn_ipv6>
     </config_files>
   </geoip>
 </config>

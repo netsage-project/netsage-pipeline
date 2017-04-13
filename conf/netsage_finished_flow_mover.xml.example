@@ -2,7 +2,7 @@
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <batch_size>100</batch_size>

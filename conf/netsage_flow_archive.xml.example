@@ -5,7 +5,7 @@
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <ssl>0</ssl>
@@ -17,9 +17,8 @@
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
-  </rabbit_output>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <ssl>0</ssl>
@@ -29,6 +28,7 @@
     <channel>3</channel>
     <queue>netsage_deidentifier_raw2</queue>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_output>
   <worker>
     <!-- How many flows to process at once -->
     <!--<flow-batch-size>1000</flow-batch-size> -->
