@@ -213,7 +213,7 @@ sub _get_nfdump_data {
         my $stats = stat($flowfile);
 
         my $command = "$nfdump -r '$flowfile'";
-	$command .= " -a "; # perform aggregation based on 5 tuples
+	    $command .= " -a"; # perform aggregation based on 5 tuples
         $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         $command .= ' -L +' . $min_bytes;
         $command .= " -N -q";
@@ -231,7 +231,7 @@ sub _get_nfdump_data {
             my $end   = str2time( $te );
 
             if ( !defined $start || !defined $end ) {
-                $self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
+                #$self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
                 next;
             }
 
