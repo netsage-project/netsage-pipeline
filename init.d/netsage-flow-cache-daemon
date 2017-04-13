@@ -2,7 +2,7 @@
 #
 # netsage-flow-cache-daemon        init file for starting up the NetSage Flow Cache daemon
 #
-# chkconfig:   2345 20 80
+# chkconfig:   2345 18 80
 # description: Starts and stops the NetSage Flow Cache daemon
 
 # Source function library.
