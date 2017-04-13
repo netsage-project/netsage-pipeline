@@ -3,7 +3,7 @@
 # netsage-deidentifier-daemon        init file for starting up the NetSage Deidentifier daemon
 #
 # chkconfig:   2345 20 80
-# description: Starts and stops the NetSage Anonymizer daemon
+# description: Starts and stops the NetSage Deidentifier daemon
 
 # Source function library.
 . /etc/rc.d/init.d/functions

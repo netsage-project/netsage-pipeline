@@ -2,7 +2,7 @@
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <ssl>0</ssl>
@@ -15,7 +15,7 @@
   </rabbit_input>
   <rabbit_output>
     <host>127.0.0.1</host>
-    <port>5671</port>
+    <port>5672</port>
     <username>guest</username>
     <password>guest</password>
     <ssl>0</ssl>

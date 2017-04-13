@@ -4,7 +4,7 @@ This document covers installing the NetSage deidentification pipeline on a new m
 
 ## Installing the Prerequisites
 
-The pipeline requires RabbitMQ.
+The pipeline requires a RabbitMQ server. Typically, this runs on the same server as the pipeline itself, but if need be, you can separate them (for this reason, the Rabbit server is not automatically installed with the pipeline package).
 
 ```
 [root@host ~]# yum install rabbitmq-server
