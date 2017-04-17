@@ -45,6 +45,15 @@
     <!-- Directory to find flow data -->
     <flow-path>/path/to/flow/data</flow-path>
 
+    <!-- flow-type is optional
+         "netflow" is the default.
+         "sflow" is also supported 
+         this is purely to tag the metadata; it does not change how the data is processed
+    -->
+    <!--
+        <flow-type>netflow</flow-type>
+    -->
+
     <!-- path to nfdump executable (defaults to /usr/bin/nfdump) -->
     <!-- 
     <nfdump-path>/path/to/nfdump</nfdump-path>
