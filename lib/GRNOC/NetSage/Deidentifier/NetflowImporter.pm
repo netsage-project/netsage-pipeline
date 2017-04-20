@@ -67,6 +67,9 @@ has min_file_age => ( is => 'rwp',
 has nfdump_path => ( is => 'rwp' );
 #                     default => '/usr/bin/nfdump' )
 
+has flow_type => ( is => 'rwp', 
+                     default => 'netflow' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -95,6 +98,11 @@ sub BUILD {
     my $min_file_age = $self->min_file_age;
     $min_file_age = $config->{'worker'}->{'min-file-age'} if defined $config->{'worker'}->{'min-file-age'};
     $self->_set_min_file_age( $min_file_age );
+
+    my $flow_type = $self->flow_type;
+    $flow_type = $config->{'worker'}->{'flow-type'} if defined $config->{'worker'}->{'flow-type'};
+    $self->_set_flow_type( $flow_type );
+    $self->logger->debug("flow type: $flow_type");
 
     $self->_set_flow_batch_size( $flow_batch_size );
     $self->_set_handler( sub{ $self->_run_netflow_import(@_) } );
@@ -141,7 +149,7 @@ sub _get_flow_data {
             ->age( 'older', $self->min_file_age )
             ->name( 'nfcapd.*' )
             ->relative(1)
-	    ->extras({ follow => 1 })
+	        ->extras({ follow => 1 })
             ->in($path);
 
     my @filepaths = ();
@@ -242,7 +250,7 @@ sub _get_nfdump_data {
             $row->{'type'} = 'flow';
             $row->{'interval'} = 600;
             $row->{'meta'} = {};
-            $row->{'meta'}->{'flow_type'} = 'netflow';
+            $row->{'meta'}->{'flow_type'} = $self->flow_type || 'netflow';
             $row->{'meta'}->{'src_ip'} = $sa;
             $row->{'meta'}->{'src_port'} = $sp;
             $row->{'meta'}->{'dst_ip'} = $da;
