@@ -1,3 +1,9 @@
+## GRNOC NetSage Deidentifier 0.0.7 -- Fri Apr 21 2017
+
+Features:
+ * ISSUE=3752 PROJ=160 Add support for "sflow" flow type
+ * ISSUE=3553 PROJ=160 Pipeline support for CentOS 7
+
 ## GRNOC NetSage Deidentifier 0.0.6 -- Wed Apr 5 2017
 
 Features:
