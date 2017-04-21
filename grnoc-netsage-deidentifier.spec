@@ -1,7 +1,7 @@
 Summary: GRNOC NetSage Deidentifier 
 Name: grnoc-netsage-deidentifier
 Version: 0.0.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GRNOC
 Group: Measurement
 URL: http://globalnoc.iu.edu
@@ -15,7 +15,6 @@ Requires: GeoIP-GeoLite-data-extra
 Requires: GeoIP
 Requires: GeoIP-data
 %endif
-Requires: nfdump
 Requires: perl >= 5.8.8
 Requires: perl-Clone
 Requires: perl-Data-Validate-IP
