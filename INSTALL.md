@@ -16,6 +16,8 @@ Typically, the default configuration will work. Perform any desired Rabbit confi
 [root@host ~]# /sbin/service rabbitmq-server start
 ```
 
+The NetFlow Importer daemon requires nfdump. This is *not* listed as a dependency as in a lot cases people are running special builds of it -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work.
+
 ## Installing the Pipeline
 
 The pipeline consists of several daemons, most of which read data from a Rabbit queue, perform some operations, and then push the results to another queue for further processing. Typically, they are run in this order:
