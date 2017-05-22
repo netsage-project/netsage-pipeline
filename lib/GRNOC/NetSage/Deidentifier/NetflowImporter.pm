@@ -110,6 +110,10 @@ sub BUILD {
     $self->_set_nfdump_path( $config->{'worker'}->{'nfdump-path'} )
         if defined $config->{'worker'}->{'nfdump-path'};
 
+    my $min_bytes = $self->min_bytes;
+    $min_bytes = $config->{'worker'}->{'min-bytes'} if defined  $config->{'worker'}->{'min-bytes'};
+    $self->_set_min_bytes( $min_bytes );
+
     # create JSON object
     my $json = JSON::XS->new();
 
