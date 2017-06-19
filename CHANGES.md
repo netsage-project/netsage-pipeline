@@ -1,3 +1,8 @@
+## GRNOC NetSage Deidentifier 0.0.8 --  Mon Jun 19 2017
+
+Features:
+ * ISSUE=4171 PROJ=160 Add min byte threshold for flows
+
 ## GRNOC NetSage Deidentifier 0.0.7 -- Fri Apr 21 2017
 
 Features:
