@@ -148,14 +148,21 @@ sub _get_flow_data {
     my $min_bytes = $self->min_bytes;
     $self->logger->debug("path: $path");
     $self->logger->debug("min_file_age: " . $self->min_file_age );
-    my @files = File::Find::Rule
-            ->file()
-            ->age( 'older', $self->min_file_age )
-            ->name( 'nfcapd.*' )
-            ->relative(1)
-	        ->extras({ follow => 1 })
-            ->in($path);
+    my @files;
+    try {
+        @files = File::Find::Rule
+                ->file()
+                ->age( 'older', $self->min_file_age )
+                ->name( 'nfcapd.*' )
+                ->relative(1)
+                ->extras({ follow => 1 })
+                ->in($path);
 
+    } catch {
+        $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
+        sleep(10);
+        return;
+    };
     my @filepaths = ();
     for(my $i=0; $i<@files; $i++) {
         my $file = $files[$i];
@@ -182,7 +189,9 @@ sub _get_flow_data {
 
     }
     @filepaths = sort @filepaths;
-    my $success = $self->_get_nfdump_data(\@filepaths);
+    if ( @filepaths > 0 ) {
+        my $success = $self->_get_nfdump_data(\@filepaths);
+    }
 
 
 
