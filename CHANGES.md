@@ -1,3 +1,9 @@
+## GRNOC NetSage Deidentifier 0.0.9 --  Wed Jun 21 2017
+
+Features:
+ * ISSUE=4271 PROJ=160 Add instance id tag
+ * ISSUE=4441 PROJ=160 Make IPC key configurable
+
 ## GRNOC NetSage Deidentifier 0.0.8 --  Tue Jun 20 2017
 
 Features:
