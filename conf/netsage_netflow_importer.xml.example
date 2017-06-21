@@ -1,12 +1,22 @@
 <config>
-    <!-- 
-         "sensor" indicates the node that captured the
-        flow records; it can be any string that uniquely
-        identifies that flow collector.
-        Defaults to the local hostname 
-    -->
+<!-- 
+     "sensor" indicates the node that captured the
+    flow records; it can be any string that uniquely
+    identifies that flow collector.
+    Defaults to the local hostname 
+-->
 <!--
   <sensor>hostname.domainname.tld</sensor>
+-->
+
+<!-- "instance" goes along with sensor
+     this is to identify various instances if a sensor has more than one
+     "stream" / data collection
+     defaults to 0.
+-->
+
+<!--
+    <instance>1</instance>
 -->
 
   <!-- rabbitmq connection info -->
@@ -61,7 +71,7 @@
 
     <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
     <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
-    <!-- The minium flow size threshold -- will not  import any flows smaller than this
+    <!-- The minium flow size threshold - will not  import any flows smaller than this
          Defaults to 500M
     -->
     <!--

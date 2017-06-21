@@ -39,6 +39,8 @@ has logging_file => ( is => 'ro',
 
 has sensor_id => ( is => 'rwp', default => hostname() );
 
+has instance_id => ( is => 'rwp', default => 0 );
+
 ### internal attributes ###
 
 has flow_path => ( is => 'rwp' );
@@ -82,6 +84,15 @@ sub BUILD {
     if ( defined ( $sensor_id )) {
         $self->_set_sensor_id( $sensor_id );
     }
+    my $instance_id = $config_obj->get( '/config/instance' );
+
+    # for some reason if you leave <instance></instance> blank, you get
+    # an empty hashref back. work around that.
+    if ( defined ( $instance_id ) && ! ( ref $instance_id eq ref {} ) ) {
+        $self->_set_instance_id( $instance_id );
+    }
+
+    $self->logger->debug("instance id: " . $self->instance_id);
 
     my $flow_batch_size =  $config->{'worker'}->{'flow-batch-size'};
     my $cache_file = $config->{'worker'}->{'cache-file'} if not defined $self->cache_file;
@@ -270,6 +281,7 @@ sub _get_nfdump_data {
             $row->{'meta'}->{'dst_port'} = $dp;
             $row->{'meta'}->{'protocol'} = getprotobynumber( $pr );
             $row->{'meta'}->{'sensor_id'} = $self->sensor_id;
+            $row->{'meta'}->{'instance_id'} = $self->instance_id if $self->instance_id ne '';
             $row->{'meta'}->{'src_asn'} = $sas;
             $row->{'meta'}->{'dst_asn'} = $das;
             $row->{'start'} = $start;

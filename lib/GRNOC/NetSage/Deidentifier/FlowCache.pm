@@ -28,6 +28,8 @@ has handler => ( is => 'rwp');
 
 has flow_cache => ( is => 'rwp', ); # default => sub { {} } );
 
+has ipc_key => ( is => 'rwp', default => 'flow' );
+
 has share => ( is => 'rwp' );
 
 has acceptable_offset => ( is => 'rwp', default => 5 );
@@ -45,12 +47,11 @@ sub BUILD {
 
     my $config_obj = $self->config;
     my $config = $config_obj->get('/config');
-    # warn "config: " . Dumper $config;
-    #my $anon = $config->{'deidentification'};
-    #my $ipv4_bits = $config->{'deidentification'}->{'ipv4_bits_to_strip'};
-    #my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
-    #$self->_set_ipv4_bits_to_strip( $ipv4_bits );
-    #$self->_set_ipv6_bits_to_strip( $ipv6_bits );
+    #warn "config: " . Dumper $config;
+
+    my $ipc_key = $config->{'worker'}->{'ipc-key'};
+    $self->_set_ipc_key( $ipc_key ) if defined $ipc_key;
+
     $self->_init_cache();
 
     $self->_set_handler( sub { $self->_run_flow_caching(@_) } );
@@ -63,9 +64,10 @@ sub _init_cache {
     my $self = shift;
 
     my $cache;
+    my $ipc_key = $self->ipc_key;
 
     my $share = IPC::ShareLite->new(
-        -key => 'flow',
+        -key => $ipc_key,
         -create => 'yes',
         -destroy => 'no',
     ) or die $!;

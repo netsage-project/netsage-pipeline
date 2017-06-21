@@ -11,7 +11,7 @@ use Data::Dumper;
 
 ### constants ###
 
-use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_stitcher.xml';
+use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
