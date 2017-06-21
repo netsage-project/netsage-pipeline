@@ -30,6 +30,16 @@
       <!-- How many concurrent workers should perform the necessary operations -->
       <!-- for stitching, we can only use 1 -->
     <num-processes>1</num-processes>
+
+     <!-- IPC key allows you to specify the IPC key that will be used for the
+             flow cache. Defaults to 'flow' - set to different values if you are
+             running multiple pipeline instances on one host
+             Must be a 4-character word, or a number
+     -->
+    <!--
+        <ipc-key>flo2</ipc-key>
+    -->
+
   </worker>
   <master>
     <!-- where should we write the daemon pid file to -->

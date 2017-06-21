@@ -71,7 +71,7 @@
 
     <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
     <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
-    <!-- The minium flow size threshold -- will not  import any flows smaller than this
+    <!-- The minium flow size threshold - will not  import any flows smaller than this
          Defaults to 500M
     -->
     <!--

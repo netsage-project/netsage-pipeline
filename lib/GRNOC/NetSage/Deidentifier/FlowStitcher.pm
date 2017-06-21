@@ -32,6 +32,8 @@ has handler => ( is => 'rwp');
 
 has flow_cache => ( is => 'rwp' );
 
+has ipc_key => ( is => 'rwp', default => 'flow' );
+
 has stats => ( is => 'rw', default => sub { {} } );
 
 has acceptable_offset => ( is => 'rwp', default => 5 );
@@ -51,12 +53,10 @@ sub BUILD {
 
     my $config_obj = $self->config;
     my $config = $config_obj->get('/config');
-    # warn "config: " . Dumper $config;
-    #my $anon = $config->{'deidentification'};
-    #my $ipv4_bits = $config->{'deidentification'}->{'ipv4_bits_to_strip'};
-    #my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
-    #$self->_set_ipv4_bits_to_strip( $ipv4_bits );
-    #$self->_set_ipv6_bits_to_strip( $ipv6_bits );
+
+    my $ipc_key = $config->{'worker'}->{'ipc-key'};
+    $self->_set_ipc_key( $ipc_key ) if defined $ipc_key;
+
     $self->_set_handler( sub { $self->_run_flow_stitching(@_) } );
 
     #$self->_run_flow_stitching();
@@ -67,7 +67,6 @@ sub BUILD {
 ### private methods ###
 sub _init_cache {
     my $self = shift;
-    my $glue = 'flow';
     my %options = (
         create    => 0,
         exclusive => 0,
@@ -157,15 +156,18 @@ sub _set_values_strings {
 sub _stitch_flows {
     my ( $self ) = @_;
 
+    my $ipc_key = $self->ipc_key;
+
     my $cache;
     my $share = IPC::ShareLite->new(
-        -key => 'flow',
+        -key => $ipc_key,
         -create => 0,
         -destroy => 0,
     ) or die $!;
+
     $share->lock( LOCK_SH );
     if ( not defined $share ) {
-        #warn "initially creating cache ..."; 
+        #warn "initially creating cache ...";
         $cache = {};
     } else {
         #warn "thawing cache ...";
