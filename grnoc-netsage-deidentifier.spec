@@ -34,6 +34,7 @@ Requires: perl-Net-IP
 Requires: perl-Number-Bytes-Human
 Requires: perl-Parallel-ForkManager
 Requires: perl-Path-Class
+Requires: perl-Path-Tiny
 Requires: perl-Proc-Daemon
 Requires: perl-Socket6
 Requires: perl-Text-Unidecode
