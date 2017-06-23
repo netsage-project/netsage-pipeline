@@ -19,6 +19,7 @@ use Try::Tiny;
 use Date::Parse;
 use Date::Format;
 use File::stat;
+use File::Find;
 use File::Find::Rule;
 use File::Find::Rule::Age;
 use Path::Class;
@@ -68,19 +69,19 @@ has cache_file => ( is => 'rwp' );
 has min_file_age => ( is => 'rwp',
                       default => '1h' );
 
-# TODO: change default cull_data value to 0
-has cull_data => ( is => 'rwp',
-                    default => 1 );
+has cull_enable => ( is => 'rwp',
+                    default => 0 );
 
-has cull_after => ( is => 'rwp',
-                    default => 30 );
+# wait until files are this old to delete them after processing
+# in days
+has cull_ttl => ( is => 'rwp',
+                    default => 3 );
 
 # cull after reading $cull_count files
 has cull_count => ( is => 'rwp',
                     default => 10 );
 
 has nfdump_path => ( is => 'rwp' );
-#                     default => '/usr/bin/nfdump' )
 
 has flow_type => ( is => 'rwp',
                    default => 'netflow' );
@@ -137,6 +138,14 @@ sub BUILD {
     my $min_bytes = $self->min_bytes;
     $min_bytes = $config->{'worker'}->{'min-bytes'} if defined  $config->{'worker'}->{'min-bytes'};
     $self->_set_min_bytes( $min_bytes );
+
+    my $cull_enable = $self->cull_enable;
+    $cull_enable = $config->{'worker'}->{'cull-enable'} if defined  $config->{'worker'}->{'cull-enable'};
+    $self->_set_cull_enable( $cull_enable );
+
+    my $cull_ttl = $self->cull_ttl;
+    $cull_ttl = $config->{'worker'}->{'cull-ttl'} if defined  $config->{'worker'}->{'cull-ttl'};
+    $self->_set_cull_ttl( $cull_ttl );
 
     # create JSON object
     my $json = JSON::XS->new();
@@ -396,24 +405,24 @@ sub _publish_flows {
 sub _cull_flow_files {
     my ( $self ) = @_;
     my $status = $self->status_cache;
-    $self->logger->debug( "cache status" . Dumper $status );
+    #$self->logger->debug( "cache status" . Dumper $status );
 
-    if ( $self->cull_data < 1 ) {
+    if ( $self->cull_enable < 1 ) {
         warn "not culling!";
         return;
     }
 
     # see how old files should be (in days)
-    my $cull_after = $self->cull_after;
+    my $cull_ttl = $self->cull_ttl;
 
     my @cache_remove = ();
+    my %dirs_to_remove = ();
 
     while( my ($filename, $attributes) = each %$status ) {
         my $mtime = DateTime->from_epoch( epoch =>  $attributes->{'mtime'} );
 
-        #warn "mtime " . Dumper $mtime;
         my $dur = DateTime::Duration->new(
-            days        => $cull_after
+            days        => $cull_ttl
         );
 
         my $dt = DateTime->now;
@@ -424,9 +433,10 @@ sub _cull_flow_files {
             # Make sure that the file exists, AND that it is under our main 
             # flow directory. Just a sanity check to prevent deleting files
             # outside the flow data directory tree.
-            
-            my $filepath = $path . '/' . $filename; #TODO: take out ../!!!!!!
+
+            my $filepath = $path . '/' . $filename;
             my $realpath = "";
+
             try {
                 $realpath = path( $filepath )->realpath;
 
@@ -448,7 +458,9 @@ sub _cull_flow_files {
             #return;
 
             if ( -f $realpath ) {
+                my $parent = path( $realpath )->parent;
                 unlink $filepath or $self->logger->error( "Could not unlink $realpath: $!" );
+                $dirs_to_remove{ $parent } = 1;
             } else {
                 #warn "file does not exist; would delete from cache";
 
@@ -461,7 +473,13 @@ sub _cull_flow_files {
         delete $status->{$file};
 
     }
+
+    foreach my $dir ( keys %dirs_to_remove ) {
+        rmdir $dir;
+
+    }
     $self->_write_cache();
+
 }
 
 1;
