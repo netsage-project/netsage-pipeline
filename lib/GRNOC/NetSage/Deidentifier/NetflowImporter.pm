@@ -457,11 +457,13 @@ sub _cull_flow_files {
                 if ( !$subsumes ) {
                     $self->logger->error("Tried to delete a file outside the flow path!: " . $realpath . " . filename " . $filename);
                     push @cache_remove, $filename;
-                    next;
+                    #next;
                 }
             } catch {
-                push @cache_remove, $filename;
-                next;
+                # an error here is not necessarily a problem, could just be the file
+                # doesn't exist
+                #push @cache_remove, $filename;
+                #next;
 
             };
 
