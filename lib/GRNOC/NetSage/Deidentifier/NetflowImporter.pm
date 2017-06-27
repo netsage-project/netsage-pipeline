@@ -192,11 +192,9 @@ sub _get_flow_data {
     try {
         # TODO: don't forget to ignore nfcapd.current.*
         my @paths = ( $path );
-        warn "path " . Dumper @paths;
         #my $ref = $self->can('find_nfcapd');
         @files = ();
         find({ wanted => sub { find_nfcapd($self)  }, follow => 1 }, @paths );
-        warn "files " . Dumper @files;
 
         # TODO: remove reference to File::Find::Rule
         #my @files_rule = File::Find::Rule
@@ -424,7 +422,7 @@ sub _cull_flow_files {
     #$self->logger->debug( "cache status" . Dumper $status );
 
     if ( $self->cull_enable < 1 ) {
-        warn "not culling!";
+        $self->logger->debug("not culling files (disabled)");
         return;
     }
 
