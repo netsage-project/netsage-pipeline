@@ -19,9 +19,11 @@ use Try::Tiny;
 use Date::Parse;
 use Date::Format;
 use File::stat;
+use File::Find;
 use File::Find::Rule;
 use File::Find::Rule::Age;
 use Path::Class;
+use Path::Tiny;
 use Storable qw( store retrieve );
 use Sys::Hostname;
 
@@ -61,16 +63,28 @@ has status_cache => ( is => 'rwp',
 
 has cache_file => ( is => 'rwp' );
 
+
 # min_file_age must be one of "older" or "newer". $age must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)"
 # see http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
 has min_file_age => ( is => 'rwp',
                       default => '1h' );
 
-has nfdump_path => ( is => 'rwp' );
-#                     default => '/usr/bin/nfdump' )
+has cull_enable => ( is => 'rwp',
+                    default => 0 );
 
-has flow_type => ( is => 'rwp', 
-                     default => 'netflow' );
+# wait until files are this old to delete them after processing
+# in days
+has cull_ttl => ( is => 'rwp',
+                    default => 3 );
+
+# cull after reading $cull_count files
+has cull_count => ( is => 'rwp',
+                    default => 10 );
+
+has nfdump_path => ( is => 'rwp' );
+
+has flow_type => ( is => 'rwp',
+                   default => 'netflow' );
 
 ### constructor builder ###
 
@@ -125,6 +139,14 @@ sub BUILD {
     $min_bytes = $config->{'worker'}->{'min-bytes'} if defined  $config->{'worker'}->{'min-bytes'};
     $self->_set_min_bytes( $min_bytes );
 
+    my $cull_enable = $self->cull_enable;
+    $cull_enable = $config->{'worker'}->{'cull-enable'} if defined  $config->{'worker'}->{'cull-enable'};
+    $self->_set_cull_enable( $cull_enable );
+
+    my $cull_ttl = $self->cull_ttl;
+    $cull_ttl = $config->{'worker'}->{'cull-ttl'} if defined  $config->{'worker'}->{'cull-ttl'};
+    $self->_set_cull_ttl( $cull_ttl );
+
     # create JSON object
     my $json = JSON::XS->new();
 
@@ -159,6 +181,9 @@ sub _get_flow_data {
     my $min_bytes = $self->min_bytes;
     $self->logger->debug("path: $path");
     $self->logger->debug("min_file_age: " . $self->min_file_age );
+
+    $self->_cull_flow_files();
+
     my @files;
     try {
         @files = File::Find::Rule
@@ -200,6 +225,7 @@ sub _get_flow_data {
 
     }
     @filepaths = sort @filepaths;
+
     if ( @filepaths > 0 ) {
         my $success = $self->_get_nfdump_data(\@filepaths);
     }
@@ -233,6 +259,8 @@ sub _get_nfdump_data {
 
     }
 
+    my $file_count = 0;
+    my $cull_count = $self->cull_count;
     my @all_data = ();
     foreach my $flowfile ( @$flowfiles ) {
 
@@ -240,6 +268,11 @@ sub _get_nfdump_data {
         if ( !$self->is_running ) {
             $self->logger->debug("Quitting flowfile loop and returning from _get_nfdump_data()");
             return;
+        }
+
+        $file_count++;
+        if ( $cull_count > 0 && $file_count > 0 && $file_count % $cull_count == 0 ) {
+            $self->_cull_flow_files();
         }
 
         my $stats = stat($flowfile);
@@ -319,6 +352,7 @@ sub _get_nfdump_data {
         $self->_write_cache();
     }
 
+
     if ( $self->run_once ) {
         $self->logger->debug("only running once, stopping");
             $self->_set_is_running( 0 );
@@ -366,6 +400,86 @@ sub _publish_flows {
     }
 
     $self->_set_json_data( [] );
+}
+
+sub _cull_flow_files {
+    my ( $self ) = @_;
+    my $status = $self->status_cache;
+    #$self->logger->debug( "cache status" . Dumper $status );
+
+    if ( $self->cull_enable < 1 ) {
+        warn "not culling!";
+        return;
+    }
+
+    # see how old files should be (in days)
+    my $cull_ttl = $self->cull_ttl;
+
+    my @cache_remove = ();
+    my %dirs_to_remove = ();
+
+    while( my ($filename, $attributes) = each %$status ) {
+        my $mtime = DateTime->from_epoch( epoch =>  $attributes->{'mtime'} );
+
+        my $dur = DateTime::Duration->new(
+            days        => $cull_ttl
+        );
+
+        my $dt = DateTime->now;
+
+        my $path = $self->flow_path;
+
+        if ( DateTime->compare( $mtime,  $dt->subtract_duration( $dur ) ) == -1 ) {
+            # Make sure that the file exists, AND that it is under our main 
+            # flow directory. Just a sanity check to prevent deleting files
+            # outside the flow data directory tree.
+
+            my $filepath = $path . '/' . $filename;
+            my $realpath = "";
+
+            try {
+                $realpath = path( $filepath )->realpath;
+
+                my $subsumes = path( $path )->subsumes( $realpath );
+
+                # if the flow path does not subsume the file we're asked to delete,
+                # refuse
+                if ( !$subsumes ) {
+                    $self->logger->error("Tried to delete a file outside the flow path!: " . $realpath . " . filename " . $filename);
+                    push @cache_remove, $filename;
+                    next;
+                }
+            } catch {
+                push @cache_remove, $filename;
+                next;
+
+            };
+
+            #return;
+
+            if ( -f $realpath ) {
+                my $parent = path( $realpath )->parent;
+                unlink $filepath or $self->logger->error( "Could not unlink $realpath: $!" );
+                $dirs_to_remove{ $parent } = 1;
+            } else {
+                #warn "file does not exist; would delete from cache";
+
+            }
+            push @cache_remove, $filename;
+        }
+
+    }
+    foreach my $file ( @cache_remove ) {
+        delete $status->{$file};
+
+    }
+
+    foreach my $dir ( keys %dirs_to_remove ) {
+        rmdir $dir;
+
+    }
+    $self->_write_cache();
+
 }
 
 1;
