@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Deidentifier 
 Name: grnoc-netsage-deidentifier
-Version: 0.0.9
+Version: 0.1.0
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -18,8 +18,6 @@ Requires: GeoIP-data
 Requires: perl >= 5.8.8
 Requires: perl-Clone
 Requires: perl-Data-Validate-IP
-Requires: perl-File-Find-Rule
-Requires: perl-File-Find-Rule-Age
 Requires: perl-Geo-IP
 Requires: perl-GRNOC-Config
 Requires: perl-GRNOC-Log
