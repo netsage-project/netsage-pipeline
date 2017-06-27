@@ -18,10 +18,9 @@ use List::MoreUtils qw( natatime );
 use Try::Tiny;
 use Date::Parse;
 use Date::Format;
+use DateTime;
 use File::stat;
 use File::Find;
-use File::Find::Rule;
-use File::Find::Rule::Age;
 use Path::Class;
 use Path::Tiny;
 use Storable qw( store retrieve );
@@ -67,7 +66,7 @@ has cache_file => ( is => 'rwp' );
 # min_file_age must be one of "older" or "newer". $age must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)"
 # see http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
 has min_file_age => ( is => 'rwp',
-                      default => '1h' );
+                      default => '0' );
 
 has cull_enable => ( is => 'rwp',
                     default => 0 );
@@ -85,6 +84,8 @@ has nfdump_path => ( is => 'rwp' );
 
 has flow_type => ( is => 'rwp',
                    default => 'netflow' );
+
+my @files;
 
 ### constructor builder ###
 
@@ -184,15 +185,24 @@ sub _get_flow_data {
 
     $self->_cull_flow_files();
 
-    my @files;
     try {
-        @files = File::Find::Rule
-                ->file()
-                ->age( 'older', $self->min_file_age )
-                ->name( 'nfcapd.*' )
-                ->relative(1)
-                ->extras({ follow => 1 })
-                ->in($path);
+        # TODO: don't forget to ignore nfcapd.current.*
+        my @paths = ( $path );
+        #my $ref = $self->can('find_nfcapd');
+        @files = ();
+        find({ wanted => sub { find_nfcapd($self)  }, follow => 1 }, @paths );
+
+        # TODO: remove reference to File::Find::Rule
+        #my @files_rule = File::Find::Rule
+        #        ->file()
+        #        ->age( 'older', $self->min_file_age )
+        #        ->name( 'nfcapd.*' )
+        #        ->relative(1)
+        #        ->extras({ follow => 1 })
+        #        ->in($path);
+
+        #        #warn "files_rules " . Dumper @files_rule;
+
 
     } catch {
         $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
@@ -408,7 +418,7 @@ sub _cull_flow_files {
     #$self->logger->debug( "cache status" . Dumper $status );
 
     if ( $self->cull_enable < 1 ) {
-        warn "not culling!";
+        $self->logger->debug("not culling files (disabled)");
         return;
     }
 
@@ -481,5 +491,63 @@ sub _cull_flow_files {
     $self->_write_cache();
 
 }
+
+sub find_nfcapd {
+    my ( $self ) = @_;
+    my $path = $self->flow_path;
+    my $filepath = $File::Find::name;
+    if ( not -f $filepath ) {
+        return;
+
+    }
+    return if not defined $filepath;
+    #my @files = @_
+    return if $filepath =~ /nfcapd\.current/;
+    my $name = 'nfcapd.*';
+    #my $rel = $path, ("/tmp/foo/bar")->relative("/tmp"); 
+    my $relative = path( $filepath )->relative( $path );
+
+    # if min_file_age is '0' then we don't care about file age (this is default)
+    if ( $self->min_file_age ne '0' ) {
+        if ( $self->get_age( "older", $self->min_file_age, $filepath ) ) {
+
+        } else {
+            return;
+        }
+    }
+
+    push @files, "$relative";
+
+
+
+}
+
+sub get_age {
+    my ( $self, $criterion, $age, $filename ) = @_;
+
+    my ( $interval, $unit ) = ( $age =~ /^(\d+)([DWMYhms])$/ );
+    if ( ! $interval or ! $unit ) {
+        return;
+    } else {
+        my %mapping = (
+            "D" => "days",
+            "W" => "weeks",
+            "M" => "months",
+            "Y" => "years",
+            "h" => "hours",
+            "m" => "minutes",
+            "s" => "seconds", );
+        #exec( sub {
+                         my $dt = DateTime->now;
+                         $dt->subtract( $mapping{$unit} => $interval );
+                         my $compare_to = $dt->epoch;
+                         my $mtime = stat( $filename )->mtime;
+                         return $criterion eq "older" ?
+                            $mtime < $compare_to :
+                            $mtime > $compare_to;
+                            #            } );
+    }
+}
+
 
 1;

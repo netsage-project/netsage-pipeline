@@ -1,3 +1,11 @@
+## GRNOC NetSage Deidentifier 0.1.0 --  Tue Jun 27 2017
+
+Features:
+ * ISSUE=3753 PROJ=160 Ability to cull imported nfdump files after a specified timeperiod
+
+Bugs:
+ * ISSUE=4167 PROJ=160 Remove use of a buggy library that was causing netflow importer to crash
+
 ## GRNOC NetSage Deidentifier 0.0.9 --  Wed Jun 21 2017
 
 Features:
