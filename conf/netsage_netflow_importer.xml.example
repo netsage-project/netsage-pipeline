@@ -84,6 +84,20 @@
         D, W, M, Y, h, m and s are
         "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
     See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
+    Default: 0 (no minimum age)
+
+    <min-file-age>1h</min-file-age>
+
+    -->
+    <!-- cull-enable: whether to cull processed flow data files
+         default: no culling
+         set to 1 to turn culling on
+    <cull-enable>1</cull-enable>
+    -->
+    <!-- cull-tty: cull time to live, in days
+         number of days to retain imported data files before deleting them
+         default: 3
+    <cull-ttl>5</cull-ttl>
     -->
   </worker>
   <master>

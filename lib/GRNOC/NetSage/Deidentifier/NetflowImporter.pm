@@ -21,10 +21,6 @@ use Date::Format;
 use DateTime;
 use File::stat;
 use File::Find;
-
-#use File::Find::Rule;
-#use File::Find::Rule::Age;
-
 use Path::Class;
 use Path::Tiny;
 use Storable qw( store retrieve );
