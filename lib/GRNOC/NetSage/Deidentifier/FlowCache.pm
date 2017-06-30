@@ -115,6 +115,15 @@ sub _run_flow_caching {
     my $overlaps = 0;
 
     foreach my $row (@$input_data) {
+        # if any one of our five tuple is undefined, log a message and skip this message
+        if ( not defined $row->{'meta'}->{'protocol'} ) {
+            $self->logger->debug( 'no protocol! ' . Dumper $row );
+        }
+        next if not defined $row->{'meta'}->{'src_ip'};
+        next if not defined $row->{'meta'}->{'dst_ip'};
+        next if not defined $row->{'meta'}->{'dst_port'};
+        next if not defined $row->{'meta'}->{'protocol'};
+
         my $five_tuple = $row->{'meta'}->{'src_ip'};
         $five_tuple .= $row->{'meta'}->{'src_port'};
         $five_tuple .= $row->{'meta'}->{'dst_ip'};
