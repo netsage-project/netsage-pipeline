@@ -1,0 +1,19 @@
+[Unit]
+Description=Netflow Flow Stitcher (NetSage pipeline)
+After=rabbitmq-server.service netsage-flow-cache.service
+Requires=netsage-flow-cache.service
+
+[Service]
+Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
+ExecStart=/usr/bin/netsage-flow-stitcher-daemon --config ${CONFIG} --nofork
+ExecStop=/bin/kill $MAINPID
+
+# We don't have HUP capability yet
+# ExecReload=/bin/kill -s SIGHUP $MAINPID
+
+# We might want to try restarting automatically, but not now
+# Restart=on-failure
+# RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target
