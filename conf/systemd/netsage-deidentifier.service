@@ -1,7 +1,7 @@
 [Unit]
 Description=NetSage Deidentifier (NetSage pipeline)
-After=rabbitmq-server.service netsage-flow-cache.service
-Requires=netsage-flow-cache.service
+After=rabbitmq-server.service
+Requires=rabbitmq-server.service
 
 [Service]
 Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
