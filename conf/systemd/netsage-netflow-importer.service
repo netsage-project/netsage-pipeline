@@ -1,7 +1,7 @@
 [Unit]
 Description=Netflow Importer (NetSage pipeline)
-After=rabbitmq.service netsage-flow-cache.service
-Requires=netsage-flow-cache.service
+After=rabbitmq-server.service
+Requires=rabbitmq-server.service
 
 [Service]
 
