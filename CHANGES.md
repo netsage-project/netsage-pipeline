@@ -1,3 +1,11 @@
+## GRNOC NetSage Deidentifier 0.1.1 --  Wed Aug 22 2017
+
+Features:
+ * ISSUE=4840 PROJ=160 Additional pipeline stage for filtering flow records before processing
+ * ISSUE=4693 PROJ=160 Add systemd unit files for EL7
+ * ISSUE=4693 PROJ=160 Improvements to EL6 startup scripts
+ * ISSUE=4693 PROJ=160 Make the daemons retry RabbitMQ connections when started
+
 ## GRNOC NetSage Deidentifier 0.1.0 --  Tue Jun 27 2017
 
 Features:
