@@ -1,4 +1,5 @@
 .*.swn
 .*.swo
 .*.swp
+conf/systemd/deploy
 ~

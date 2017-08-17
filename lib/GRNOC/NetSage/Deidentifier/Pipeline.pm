@@ -146,9 +146,7 @@ sub start {
     $self->_set_json( $json );
 
     # connect to rabbit queues
-    # will set is_running to 0 if can't connect
-    my $first_connection_attempt = 1; 
-    $self->_rabbit_connect($first_connection_attempt);
+    $self->_rabbit_connect();
 
     if ( $self->task_type && $self->task_type eq "no_input_queue" ) {
         $self->start_noinput();
@@ -511,8 +509,7 @@ sub _rabbit_config {
 }
 
 sub _rabbit_connect {
-    # $first_connection_attempt is optional; if set to 1, there will be only 1 attempt to connect.
-    my ( $self, $first_connection_attempt ) = @_;
+    my ( $self ) = @_;
 
     my $rabbit_config = $self->rabbit_config;
 
@@ -610,12 +607,6 @@ sub _rabbit_connect {
 
         next if $connected{ $direction };
 
-        # don't keep trying to connect if just starting up
-        if ( $first_connection_attempt ) {
-            $self->logger->error( "Could not connect to rabbit and/or open a channel to a queue. Quitting." );
-            $self->_set_is_running( 0 );
-            return;
-        }
 
         $self->logger->info( " Reconnecting $direction after " . RECONNECT_TIMEOUT . " seconds..." );
         sleep( RECONNECT_TIMEOUT );
