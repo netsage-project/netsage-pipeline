@@ -332,6 +332,8 @@ sub _get_nfdump_data {
             $row->{'meta'}->{'instance_id'} = $self->instance_id if $self->instance_id ne '';
             $row->{'meta'}->{'src_asn'} = $sas;
             $row->{'meta'}->{'dst_asn'} = $das;
+            $row->{'meta'}->{'src_ifindex'} = $in if $in;
+            $row->{'meta'}->{'dst_ifindex'} = $out if $out;
             $row->{'start'} = $start;
             $row->{'end'} = $end;
 
