@@ -33,8 +33,7 @@ usage() if $help;
 my $flow_importer = GRNOC::NetSage::Deidentifier::FlowFilter->new( config_file => $config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
-                                                          process_name => 'netsage_flow_filter',
-                                                          flow_path => $flowpath );
+                                                          process_name => 'netsage_flow_filter' );
 
 my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $config,
                                                           logging_file => $logging,
@@ -43,7 +42,7 @@ my $worker = GRNOC::NetSage::Deidentifier::WorkerManager->new( config_file => $c
                                                           worker => $flow_importer );
 
 
-$worker->start("no_input_queue");
+$worker->start();
 print ("  ** Check ps or /var/log/messages to be sure the processes have started successfully. **\n");
 
 ### helpers ###

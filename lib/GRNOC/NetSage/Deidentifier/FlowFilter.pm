@@ -9,7 +9,9 @@ extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 
 use GRNOC::Log;
 use GRNOC::Config;
+use GRNOC::RabbitMQ::Client;
 
+use AnyEvent;
 use Data::Validate::IP;
 use Net::IP;
 use Digest::SHA;
@@ -22,6 +24,8 @@ use Data::Dumper;
 ### internal attributes ###
 
 has handler => ( is => 'rwp');
+
+has simp_client => ( is => 'rwp');
 
 ### constructor builder ###
 
@@ -38,6 +42,7 @@ sub BUILD {
     #$self->_set_ipv4_bits_to_strip( $ipv4_bits );
     #$self->_set_ipv6_bits_to_strip( $ipv6_bits );
     $self->_set_handler( sub { $self->_filter_messages(@_) } );
+    $self->_connect_simp();
 
     return $self;
 }
@@ -55,14 +60,9 @@ sub _filter_messages {
     foreach my $message ( @$messages ) {
         my $src_ip = $message->{'meta'}->{'src_ip'};
         my $dst_ip = $message->{'meta'}->{'dst_ip'};
-        my $id = $self->_generate_id( $message );
-        $message->{'meta'}->{'id'} = $id;
-        $message->{'meta'}->{'src_ip'} = $self->_deidentify_ip( $src_ip );
-        $message->{'meta'}->{'dst_ip'} = $self->_deidentify_ip( $dst_ip );
+        my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
+        my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
 
-        $message->{'start'} = round( $message->{'start'} );
-        $message->{'end'} = round( $message->{'end'} );
-        #$message->{'values'}->{'duration'} = round( $message->{'values'}->{'duration'} );
         # perform a couple other necessary manipulations
         warn " message: " . Dumper $message if $tmp == 0;
         $tmp++;
@@ -71,30 +71,45 @@ sub _filter_messages {
     return $finished_messages;
 }
 
-sub round {
-    my $input = shift;
-    return floor( $input );
-}
-
-# generates a unique id based on required fields
-sub _generate_id {
+sub _compare_flows {
     my ( $self, $message ) = @_;
-    my @fields = ( 'src_ip', 'dst_ip', 'src_port', 'dst_port', 'protocol' );
-    @fields = sort @fields;
-    my @required = ();
-    my $hash = Digest::SHA->new( 256 );
-    my $id_string = '';
-    foreach my $field (@fields ) {
-        #push @required, $message->{'meta'}->{$field};
-        warn "required field not found: $field " if not defined $message->{'meta'}->{$field};
-        my $value = $message->{'meta'}->{$field};
-        $id_string .= $value;
-        $hash->add( $value );
 
-    }
-    return $hash->hexdigest();
+    my $src_ip = $message->{'meta'}->{'src_ip'};
+    my $dst_ip = $message->{'meta'}->{'dst_ip'};
+    my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
+    my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
+
+   my $client = $self->simp_client;
+
+
+   my $results = $client->get(
+         node => [$src_ip, $dst_ip],
+         #node => ["wrn-elpa-sw-1.cenic.net"],
+         #node    =>  ["cmsstor613.fnal.gov", "cabinet-1-1-30.t2.ucsd.edu", "macrobius.cs.nmt.edu"],
+         #node   => ["156.56.6.103","156.56.6.108"],
+         oidmatch => ["1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.31.1.1.1.18"]
+         #oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
+
+  );
+
+  print Dumper($results)
+
+
 }
 
+sub _connect_simp {
+    my ( $self ) = @_;
+    my $client = GRNOC::RabbitMQ::Client->new(
+        #host => "127.0.0.1",
+        host => "simp.bldc.grnoc.iu.edu",
+        port => 5672,
+        user => "guest",
+        pass => "guest",
+        exchange => 'Simp',
+        timeout => 60,
+        topic => 'Simp.Data');
+    $self->simp_client( $client );
+}
 
 1;
 
