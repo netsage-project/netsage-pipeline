@@ -33,6 +33,11 @@ has router_details => ( is => 'rwp', default => sub { {} } );
 
 has snmp_cache_time => ( is => 'rwp', default => 3600 );
 
+has stats => ( is => 'rwp', default => sub { {
+    dropped => 0,
+    imported => 0
+} } );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -46,7 +51,7 @@ sub BUILD {
     $self->_set_router( $router );
     $self->_set_handler( sub { $self->_filter_messages(@_) } );
     $self->_connect_simp();
-    #$self->test_simp();
+    $self->test_simp();
     $self->get_router_details();
 
     my $snmp_cache_time = $config->{'worker'}->{'snmp-cache-time'};
@@ -67,6 +72,8 @@ sub _filter_messages {
     my $router_details = $self->router_details->{'results'};
     # drop all messages if we don't have router derailts from simp
     if ( keys %$router_details < 1 ) {
+        $self->_add_dropped_count( @$messages );
+
         return [];
     }
 
@@ -76,7 +83,10 @@ sub _filter_messages {
         $self->get_router_details();
 
         my $import_flow = $self->_filter_flow( $message );
-        push @delete_indices, $i if $import_flow < 1;
+        if ( $import_flow < 1 ) {
+            push @delete_indices, $i;
+            $self->_add_dropped_count( 1 );
+        }
         $i++;
     }
 
@@ -84,6 +94,10 @@ sub _filter_messages {
 
     # remove all the deleted indices
     splice @$finished_messages, $_, 1 for reverse @delete_indices;
+
+    $self->_add_imported_count( scalar @$finished_messages );
+
+    warn "stats " . Dumper $self->stats;
 
     return $finished_messages;
 }
@@ -99,10 +113,9 @@ sub _filter_flow {
 
     my $details = $self->router_details;
 
-    #warn "details " . Dumper $details;
     warn "src_ifindex: $src_ifindex; dst_ifindex: $dst_ifindex";
 
-    warn "details " . Dumper $details;
+    #warn "details " . Dumper $details;
     my $num_results = keys ( %{ $details->{'results'} } );
     return 0 if $num_results < 1;
     my $host = ( keys ( %{ $details->{'results'} } ) )[0];
@@ -112,8 +125,8 @@ sub _filter_flow {
     my $src_key = "$mib_base.$src_ifindex";
     my $dst_key = "$mib_base.$dst_ifindex";
 
-    my $src_description = $details->{ 'results' }->{ $host }->{ $src_key }->{ 'value' };
-    my $dst_description = $details->{ 'results' }->{ $host }->{ $dst_key }->{ 'value' };
+    my $src_description = $details->{ 'results' }->{ $host }->{ $src_key }->{ 'value' } || "";
+    my $dst_description = $details->{ 'results' }->{ $host }->{ $dst_key }->{ 'value' } || "";
 
     warn "src_description: $src_description";
     warn "dst_description: $dst_description";
@@ -180,6 +193,9 @@ sub get_router_details {
     if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
         #warn "simp results: " . Dumper($results);\
         warn "router found: $router";
+    } else {
+        warn "router NOT found in simp: $router";
+
     }
 
     my $now = time();
@@ -247,6 +263,41 @@ sub test_simp {
    }
 
 }
+
+sub _add_dropped_count {
+    my ( $self, $num ) = @_;
+    $self->_update_stats( {
+            dropped => $num
+    });
+
+}
+
+sub _add_imported_count {
+    my ( $self, $num ) = @_;
+    $self->_update_stats( {
+            imported => $num
+    });
+
+}
+
+sub _update_stats {
+    my ( $self, $update ) = @_;
+    my $stats = $self->stats;
+    my $dropped = $stats->{'dropped'};
+    my $imported = $stats->{'imported'};
+    if ( $update->{'dropped'} ) {
+        $dropped += $update->{'dropped'};
+    }
+    if ( $update->{'imported'} ) {
+        $imported += $update->{'imported'};
+    }
+
+    $stats->{'dropped'} = $dropped;
+    $stats->{'imported'} = $imported;
+
+    $self->_set_stats( $stats );
+}
+
 
 sub _connect_simp {
     my ( $self ) = @_;
