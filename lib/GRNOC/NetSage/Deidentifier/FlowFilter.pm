@@ -29,7 +29,9 @@ has simp_client => ( is => 'rwp');
 
 has router => ( is => 'rwp');
 
-has router_details => ( is => 'rwp');
+has router_details => ( is => 'rwp', default => sub { {} } );
+
+has snmp_cache_time => ( is => 'rwp', default => 3600 );
 
 ### constructor builder ###
 
@@ -47,6 +49,9 @@ sub BUILD {
     #$self->test_simp();
     $self->get_router_details();
 
+    my $snmp_cache_time = $config->{'worker'}->{'snmp-cache-time'};
+    $self->_set_snmp_cache_time( $snmp_cache_time ) if defined $snmp_cache_time;
+
     return $self;
 }
 
@@ -59,20 +64,31 @@ sub _filter_messages {
 
     my $finished_messages = $messages;
 
-    my $tmp = 0;
-    foreach my $message ( @$messages ) {
-
-        $self->compare_flows( $message );
-
-        # perform a couple other necessary manipulations
-        #warn " message: " . Dumper $message if $tmp == 0;
-        $tmp++;
+    my $router_details = $self->router_details->{'results'};
+    # drop all messages if we don't have router derailts from simp
+    if ( keys %$router_details < 1 ) {
+        return [];
     }
+
+    my $i = 0;
+    my @delete_indices = ();
+    foreach my $message ( @$messages ) {
+        $self->get_router_details();
+
+        my $import_flow = $self->_filter_flow( $message );
+        push @delete_indices, $i if $import_flow < 1;
+        $i++;
+    }
+
+    warn "deleting messages ... " . Dumper \@delete_indices;
+
+    # remove all the deleted indices
+    splice @$finished_messages, $_, 1 for reverse @delete_indices;
 
     return $finished_messages;
 }
 
-sub compare_flows {
+sub _filter_flow {
     my ( $self, $message ) = @_;
 
     #warn "comparing flows ";
@@ -81,14 +97,14 @@ sub compare_flows {
     my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
 
 
-
     my $details = $self->router_details;
 
     #warn "details " . Dumper $details;
     warn "src_ifindex: $src_ifindex; dst_ifindex: $dst_ifindex";
 
-    warn "results " . Dumper $details->{'results'};
-    warn "ref results " . ref $details->{'results'};
+    warn "details " . Dumper $details;
+    my $num_results = keys ( %{ $details->{'results'} } );
+    return 0 if $num_results < 1;
     my $host = ( keys ( %{ $details->{'results'} } ) )[0];
     warn "host: " . Dumper $host;
 
@@ -103,21 +119,25 @@ sub compare_flows {
     warn "dst_description: $dst_description";
 
     # TODO: see if description contains [ns-exp]
-    
+
+    my $import = 0;
+
     if ( $src_description =~ /\[ns-exp\]/ ) {
         warn "IMPORTING src: $src_ifindex!";
+        $import = 1;
     } else {
         warn "SKIPPING src: $src_ifindex!";
-
     }
+
     if ( $dst_description =~ /\[ns-exp\]/ ) {
         warn "IMPORTING dst: $dst_ifindex!";
+        $import = 1;
     } else {
         warn "SKIPPING dst: $dst_ifindex!";
 
     }
 
-
+    return $import;
 
 
 
@@ -128,6 +148,16 @@ sub get_router_details {
 
     my $client = $self->simp_client;
     my $router = $self->router;
+
+    my $details = $self->router_details;
+    if ( defined $details->{'ts'} ) {
+        if ( time() - $details->{'ts'} <= $self->snmp_cache_time ) {
+            warn "cache not expired; using cached router details";
+            return;
+
+        }
+
+    }
 
     warn "querying simp for router $router ...";
 
@@ -151,6 +181,10 @@ sub get_router_details {
         #warn "simp results: " . Dumper($results);\
         warn "router found: $router";
     }
+
+    my $now = time();
+
+    $results->{'ts'} = $now;
 
     $self->_set_router_details( $results );
 
@@ -204,7 +238,7 @@ sub test_simp {
 
        my $results = $client->get( %query );
 
-       if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
+       if ( exists( $results->{'results'} ) && keys ( %{ $results->{'results'} } ) > 0  ) {
            #warn "simp results: " . Dumper($results);
             warn "FOUND: $host";
        } else {
