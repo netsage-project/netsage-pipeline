@@ -11,12 +11,14 @@ use Data::Dumper;
 
 ### constants ###
 use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml';
+use constant DEFAULT_SHARED_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_shared.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
 
 ### command line options ###
 
 my $config = DEFAULT_CONFIG_FILE;
 my $logging = DEFAULT_LOGGING_FILE;
+my $shared_config = DEFAULT_SHARED_CONFIG_FILE;
 my $nofork;
 my $flowpath;
 my $cachefile;
@@ -24,6 +26,7 @@ my $help;
 
 # TODO: change jsonfile to flow data directory
 GetOptions( 'config=s' => \$config,
+            'sharedconfig=s' => \$shared_config,
             'logging=s' => \$logging,
             'nofork' => \$nofork,
             'flowpath=s' => \$flowpath,
@@ -35,6 +38,7 @@ usage() if $help;
 
 # start/daemonize importer 
 my $flow_importer = GRNOC::NetSage::Deidentifier::NetflowImporter->new( config_file => $config,
+                                                          shared_config_file => $shared_config,
                                                           logging_file => $logging,
                                                           daemonize => !$nofork,
                                                           cache_file => $cachefile,

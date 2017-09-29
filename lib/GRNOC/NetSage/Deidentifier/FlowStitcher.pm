@@ -74,9 +74,8 @@ sub _init_cache {
 
     $self->_set_flow_cache( \%cache );
 
-    $self->stats( { 
+    $self->stats( {
             stitched_flow_count => 0,
-
         });
 
 }

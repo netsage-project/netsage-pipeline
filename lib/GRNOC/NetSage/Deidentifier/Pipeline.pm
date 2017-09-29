@@ -15,6 +15,7 @@ use List::MoreUtils qw( natatime );
 use Try::Tiny;
 use Data::Validate::IP;
 use Net::IP;
+use Hash::Merge qw( merge );
 
 use Data::Dumper;
 
@@ -29,6 +30,7 @@ use constant RECONNECT_TIMEOUT => 10;
 
 has config_file => ( is => 'ro',
                 required => 1 );
+
 
 has logging_file => ( is => 'ro',
                       required => 1 );
@@ -53,12 +55,16 @@ has logger => ( is => 'rwp' );
 
 has config => ( is => 'rwp' );
 
+has config_obj => ( is => 'rwp' );
+
 has is_running => ( is => 'rwp',
                     default => 0 );
 
 has rabbit_config => ( is => 'rwp' );
 
 has task_type => ( is => 'rwp' );
+
+has shared_config_file => ( is => 'ro' );
 
 
 # ack_messages indicates whether to ack rabbit messages. normally, this should be 1 (enabled).
@@ -103,8 +109,30 @@ sub BUILD {
     $self->_set_logger( $logger );
 
     # create and store config object
-    my $config = GRNOC::Config->new( config_file => $self->config_file,
+    my $config_obj = GRNOC::Config->new( config_file => $self->config_file,
                                      force_array => 0 );
+
+
+    warn "shared_config_file: " . $self->shared_config_file;
+    # create and store shared config object
+    my $shared_config_obj = GRNOC::Config->new( config_file => $self->shared_config_file,
+                                     force_array => 0 );
+
+    #warn "shared config " . Dumper $shared_config;
+
+    my $shared_config = $shared_config_obj->get('/');
+    warn "shared_config_obj " . Dumper $shared_config;
+
+    my $config_single = $config_obj->get('/');
+    warn "config_single " . Dumper $config_single;
+
+    my $config = merge( $config_single, $shared_config );
+    # Merge the hashes; the "single" values should overrride those
+    # from the "shared" config.
+    #
+    #@$config{ keys %$config_single } = values %$config_single;
+
+    warn "config!!!! " . Dumper $config;
 
     $self->_set_config( $config );
 
@@ -463,43 +491,46 @@ sub _rabbit_config {
     my $rabbit_config = {};
     my @directions = ('input', 'output');
 
+    my $config = $self->config;
+    warn "_RABBIT CONFIG config" . Dumper $config;
+
     foreach my $direction ( @directions ) {
         $rabbit_config->{$direction} = {};
 
-        my $rabbit_host = $self->config->get( "/config/rabbit_$direction/host" );
+        my $rabbit_host = $config->{ "rabbit_$direction" }->{ "host"};
         $rabbit_config->{$direction}->{'host'} = $rabbit_host;
 
-        my $rabbit_port = $self->config->get( "/config/rabbit_$direction/port" );
+        my $rabbit_port = $config->{ "rabbit_$direction" }->{ "port" };
         $rabbit_config->{$direction}->{'port'} = $rabbit_port;
 
-        my $rabbit_username = $self->config->get( "/config/rabbit_$direction/username" );
+        my $rabbit_username = $config->{ "rabbit_$direction" }->{ "username" };
         $rabbit_config->{$direction}->{'username'} = $rabbit_username;
 
-        my $rabbit_password = $self->config->get( "/config/rabbit_$direction/password" );
+        my $rabbit_password = $config->{ "rabbit_$direction" }->{ "password" };
         $rabbit_config->{$direction}->{'password'} = $rabbit_password;
 
-        my $rabbit_vhost = $self->config->get( "/config/rabbit_$direction/vhost" );
+        my $rabbit_vhost = $config->{ "rabbit_$direction" }->{ "vhost" };
         $rabbit_config->{$direction}->{'vhost'} = $rabbit_vhost if defined $rabbit_vhost;
 
-        my $rabbit_ssl = $self->config->get( "/config/rabbit_$direction/ssl" ) || 0;
+        my $rabbit_ssl = $config->{ "rabbit_$direction" }->{ "ssl" } || 0;
         $rabbit_config->{$direction}->{'ssl'} = $rabbit_ssl if defined $rabbit_ssl;
 
-        my $rabbit_ca_cert = $self->config->get( "/config/rabbit_$direction/cacert" );
+        my $rabbit_ca_cert = $config->{ "rabbit_$direction" }->{ "cacert" };
         $rabbit_config->{$direction}->{'ca_cert'} = $rabbit_ca_cert if defined $rabbit_ca_cert;
 
-        my $batch_size = $self->config->get("/config/rabbit_$direction/batch_size") || 100;
+        my $batch_size = $config->{"rabbit_$direction" }->{ "batch_size"} || 100;
         $rabbit_config->{$direction}->{'batch_size'} = $batch_size if defined $batch_size;
 
-        my $queue = $self->config->get("/config/rabbit_$direction/queue");
+        my $queue = $config->{"rabbit_$direction" }->{ "queue" };
         $rabbit_config->{$direction}->{'queue'} = $queue;
 
-        my $exchange = $self->config->get("/config/rabbit_$direction/exchange");
+        my $exchange = $config->{"rabbit_$direction" }->{ "exchange" };
         $rabbit_config->{$direction}->{'exchange'} = $exchange;
 
-        my $channel = $self->config->get("/config/rabbit_$direction/channel");
+        my $channel = $config->{"rabbit_$direction" }->{ "channel" };
         $rabbit_config->{$direction}->{'channel'} = $channel;
 
-        my $durable = $self->config->get("/config/rabbit_$direction/durable");
+        my $durable = $config->{"rabbit_$direction" }->{ "durable" };
         $rabbit_config->{$direction}->{'durable'} = $durable;
 
 

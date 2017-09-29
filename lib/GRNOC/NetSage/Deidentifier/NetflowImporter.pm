@@ -93,13 +93,13 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
-    my $sensor_id = $config_obj->get( '/config/sensor' );
+    #my $config_obj = $self->config;
+    my $config = $self->config;
+    my $sensor_id = $config->{ 'sensor' };
     if ( defined ( $sensor_id )) {
         $self->_set_sensor_id( $sensor_id );
     }
-    my $instance_id = $config_obj->get( '/config/instance' );
+    my $instance_id = $config->{ 'instance' };
 
     # for some reason if you leave <instance></instance> blank, you get
     # an empty hashref back. work around that.
