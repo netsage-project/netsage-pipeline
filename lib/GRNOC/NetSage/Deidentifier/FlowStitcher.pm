@@ -42,9 +42,6 @@ has finished_flows => ( is => 'rwp', default => sub { [] } );
 
 has latest_timestamp => ( is => 'rwp', default => 0 );
 
-#has ipv4_bits_to_strip => ( is => 'rwp', default => 8 );
-#has ipv6_bits_to_strip => ( is => 'rwp', default => 64 );
-
 ### constructor builder ###
 
 sub BUILD {
@@ -74,9 +71,6 @@ sub _init_cache {
         destroy   => 0,
     );
     my %cache;
-    #warn "cache: " . Dumper %cache;
-
-    #$cache->{'set_from_stitcher'} = 'DUH!';
 
     $self->_set_flow_cache( \%cache );
 
@@ -92,19 +86,8 @@ sub _init_cache {
 sub _run_flow_stitching {
     my ( $self, $caller, $messages ) = @_;
 
-    #$self->_init_cache();
-
     $self->_stitch_flows( );
 
-
-    #foreach my $message ( @$messages ) {
-        #my $src_ip = $message->{'meta'}->{'src_ip'};
-        #my $dst_ip = $message->{'meta'}->{'dst_ip'};
-        #my $id = $self->_generate_id( $message );
-        #$message->{'meta'}->{'id'} = $id;
-        #$message->{'meta'}->{'src_ip'} = $self->_deidentify_ip( $src_ip );
-        #$message->{'meta'}->{'dst_ip'} = $self->_deidentify_ip( $dst_ip );
-    #}
 
     # Flow stitching is a special case in the pipeline in that it doesn't simply
     # return values to be stitched and then exit. It explicitly publishes them itself
@@ -112,28 +95,12 @@ sub _run_flow_stitching {
     # that looks at flows over time
     $self->_publish_flows( );
 
-    #return $finished_messages;
-    #my $finished_messages = $self->_get_flows('stitching_finished');
-    #warn "finished messagesS: " . Dumper $finished_messages;
-    #$self->_set_finished_flows( [] );
-
-    #return $finished_messages;
 }
 
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->finished_flows;
-    #warn "publishing flows ... " . @$flows;
-    #warn "flows: " . Dumper $flows;
 
-    # _set_values_strings converts all JSON values to strings (in quotes) so for instance 
-    # instead of "duration":60 you get "duration":"60"
-    # At first it seemed this might be necessary for Logstash, but it turns out it's not.
-    # Leaving here in case we do need it later
-    #foreach my $flow ( @$flows ) {
-    #    $flow = _set_values_strings( $flow );
-    #    warn "new flow: " . Dumper $flow;
-    #}
     $self->_publish_data( $flows );
     $self->_set_finished_flows( [] );
 }
@@ -143,7 +110,7 @@ sub _set_values_strings {
     foreach my $key ( keys %$obj ) {
         my $val = $obj->{$key};
         next if not defined $val;
-        if ( ref($val) eq 'HASH' ) { # $key eq "values" || $key eq 'meta' ) 
+        if ( ref($val) eq 'HASH' ) {
             $val = _set_values_strings( $val );
         } else {
             $obj->{$key} = "$val";
@@ -167,7 +134,6 @@ sub _stitch_flows {
 
     $share->lock( LOCK_SH );
     if ( not defined $share ) {
-        #warn "initially creating cache ...";
         $cache = {};
     } else {
         #warn "thawing cache ...";
@@ -178,22 +144,16 @@ sub _stitch_flows {
 
     my $finished_flows = $self->finished_flows;
 
-    #warn "stitcher cache: " . keys %$cache; # . Dumper $cache;
-    #warn "self: " . Dumper $self;
-
     my $overlaps = 0;
     my $stitchable_flows = 0;
     my $stitched_flow_count = 0;
 
     my $latest_timestamp = $self->latest_timestamp;
-    #warn "looping through cache";
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
-        #warn "ft: $five_tuple";
         my $flows = $flow_container->{'flows'};
         if ( @$flows > 0 ) {
             my $previous_flow;
             my $i = 0;
-            #warn "zero flow: " . Dumper $flows if @$flows == 0;
             my %flows_to_remove = ();
             foreach my $flow (@$flows ) {
                 $flow->{'stitching_finished'} = 0;
@@ -213,8 +173,7 @@ sub _stitch_flows {
                         $stitched_flow_count++;
                         $stitchable_flows++;
                     } else {
-                        # TODO: review. If can't stitch flows, that means that flow has ended and can be output and removed from the cache
-                        #$self->_publish_data( [ $flow ] );
+                        # If can't stitch flows, that means that flow has ended and can be output and removed from the cache
                         $flow->{'stitching_finished'} = 1;
                         push @$finished_flows, \%{ clone ( $flow )};
                         $flows_to_remove{$i} = 1;
@@ -235,34 +194,26 @@ sub _stitch_flows {
                 $previous_flow = $flow;
                 $i++;
             }
-            #warn "flows to remove: " . Dumper %flows_to_remove;
-            #warn "before deleting: " . @$flows;
 
             for (my $i=@$flows-1; $i>=0; $i--) {
-                # TODO: fix this logic
                 if ( ( $self->acceptable_offset + $flows->[$i]->{'end'} < $latest_timestamp ) && ( not $flows_to_remove{$i} ) ) {
-                    #warn "flow has expired";
                     $flows_to_remove{$i} = 1;
                     push @$finished_flows, \%{ clone ( $flows->[$i] )};
                 }
                 if ( $flows_to_remove{$i} ) {
                     splice @$flows, $i, 1;
-                    #warn "removing $i";
                 }
 
             }
-            #warn "after deleting: " . @$flows;
 
             if ( @$flows < 1 ) {
                 # no flows for this five tuple; remove it
-                #warn "LOOP removing cache for $five_tuple ...";
                 delete $cache->{$five_tuple};
 
             }
 
         } else {
             # no flows for this five tuple; remove it
-            #warn "removing cache for $five_tuple ...";
             delete $cache->{$five_tuple};
 
         }
@@ -270,13 +221,6 @@ sub _stitch_flows {
     }
 
     $self->_set_latest_timestamp( $latest_timestamp );
-
-    #while( my ( $five_tuple, $flow_container ) = each %$cache ) {
-    #    if ( @{ $flow_container->{'flows'} } < 1 ) {
-    #        warn "removing cache for $five_tuple ...";
-    #        delete $cache->{$five_tuple};
-    #    }
-    #}
 
     $self->_set_finished_flows( $finished_flows );
 
@@ -302,32 +246,13 @@ sub _stitch_flows {
     }
 
     $self->stats( $stats );
-    #warn "stats" . Dumper $stats;
-
-
-    #warn Dumper $cache;
-
 
     # save updated cache
-    #warn "freezing cache " . keys %$cache;
 
     $self->_set_flow_cache( $cache );
     $share->lock( LOCK_EX );
     $share->store( freeze( $cache ) );
     $share->unlock();
-
-    #my $stitched_flows = $self->_get_flows('stitched');
-    #warn "STITCHED FLOWS:" . Dumper $stitched_flows;
-    #warn "ALL DATA:" . Dumper $input_data;
-
-    #warn "STITCHED FLOW COUNT: " . @$stitched_flows;
-    #output_csv($stitched_flows);
-
-    #warn "overlaps: $overlaps";
-    #warn "stitchable flows: $stitchable_flows";
-    #warn "max stitched duration: " . duration($max_stitched_duration);
-    #warn "max stitched bytes: $max_stitched_bytes (" . format_bytes($max_stitched_bytes, bs => 1000) . ")";
-    #warn "Total flow count: " .  @$input_data;
 
 }
 
@@ -339,7 +264,6 @@ sub _get_flows {
     foreach my $five ( keys %$cache ) {
         my $flow_container = $cache->{$five};
         my $flows = $flow_container->{'flows'};
-        #warn "flows " . Dumper $flows;
         if ( $type eq 'stitched' ) {
             push @$stitched_flows,  grep { defined $_->{'stitched'} } @$flows;
         } elsif ( $type eq 'unstitched' ) {
@@ -372,14 +296,11 @@ sub _stitch_flow {
         $flow2 = $flowA;
     }
 
-    # TODO :extend this to other values
     $flow1->{'end'} = $flow2->{'end'};
-    #warn "flow1 duration: " . $flow1->{'values'}->{'duration'} . " flow2 duration: " . $flow2->{'values'}->{'duration'} . "; sum = " . ( $flow1->{'values'}->{'duration'} + $flow2->{'values'}->{'duration'} );
     $flow1->{'values'}->{'duration'} += $flow2->{'values'}->{'duration'};
     $flow1->{'values'}->{'num_bits'} += $flow2->{'values'}->{'num_bits'};
     $flow1->{'values'}->{'num_packets'} += $flow2->{'values'}->{'num_packets'};
     $flow1->{'stitched'} = 1;
-    #warn "stitched: " . Dumper $flow1;
 
     return $flow1;
 
