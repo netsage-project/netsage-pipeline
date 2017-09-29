@@ -27,6 +27,15 @@
     <queue>netsage_deidentifier_raw</queue>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
+  <simp>
+      <host>127.0.0.1</host>
+      <port>5672</port>
+      <username>guest</username>
+      <password>guest</password>
+      <exchange>Simp</exchange>
+      <timeout>60</timeout>
+      <topic>Simp.Data</topic>
+  </simp>
   <worker>
     <!-- How many flows to process at once -->
     <flow-batch-size>100</flow-batch-size>

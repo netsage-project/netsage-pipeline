@@ -25,6 +25,8 @@ use Data::Dumper;
 
 has handler => ( is => 'rwp');
 
+has simp_config => ( is => 'rwp' );
+
 has simp_client => ( is => 'rwp');
 
 has router => ( is => 'rwp');
@@ -49,6 +51,7 @@ sub BUILD {
     warn "config: " . Dumper $config;
     my $router = $config->{'worker'}->{'router-address'};
     $self->_set_router( $router );
+    $self->_set_simp_config( $config->{'simp'} );
     $self->_set_handler( sub { $self->_filter_messages(@_) } );
     $self->_connect_simp();
     $self->test_simp();
@@ -105,17 +108,13 @@ sub _filter_messages {
 sub _filter_flow {
     my ( $self, $message ) = @_;
 
-    #warn "comparing flows ";
-
     my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
     my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
-
 
     my $details = $self->router_details;
 
     warn "src_ifindex: $src_ifindex; dst_ifindex: $dst_ifindex";
 
-    #warn "details " . Dumper $details;
     my $num_results = keys ( %{ $details->{'results'} } );
     return 0 if $num_results < 1;
     my $host = ( keys ( %{ $details->{'results'} } ) )[0];
@@ -131,7 +130,7 @@ sub _filter_flow {
     warn "src_description: $src_description";
     warn "dst_description: $dst_description";
 
-    # TODO: see if description contains [ns-exp]
+    # see if src OR dst description contains [ns-exp]
 
     my $import = 0;
 
@@ -151,8 +150,6 @@ sub _filter_flow {
     }
 
     return $import;
-
-
 
 }
 
@@ -176,22 +173,13 @@ sub get_router_details {
 
     my %query = (
         node => [$router],
-        #node => [$src_ip, $dst_ip],
-        #node => ["wrn-elpa-sw-1.cenic.net", "cmsstor613.fnal.gov"],
-        #node => ["137.164.20.99"], # wrn-elpa-sw-1.cenic.net
-        #node    =>  ["cmsstor613.fnal.gov", "cabinet-1-1-30.t2.ucsd.edu", "macrobius.cs.nmt.edu"],
-        #node   => ["156.56.6.103","156.56.6.108"],
-        #oidmatch => ["1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.31.1.1.1.18"]
         oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
-        #oidmatch => ["*"]
 
     );
-    #warn "query " . Dumper \%query;
 
     my $results = $client->get( %query );
 
     if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
-        #warn "simp results: " . Dumper($results);\
         warn "router found: $router";
     } else {
         warn "router NOT found in simp: $router";
@@ -211,7 +199,6 @@ sub get_router_details {
 sub test_simp {
     my ( $self, $message ) = @_;
 
-    #warn "comparing flows ";
     my @hosts = (
         "137.164.18.52",
         "137.164.21.3",
@@ -302,15 +289,25 @@ sub _update_stats {
 sub _connect_simp {
     my ( $self ) = @_;
     warn "connecting to simp ...";
+
+    my $simp = $self->simp_config;
+
+    my $host        = $simp->{'host'};
+    my $port        = $simp->{'port'} || 5672;
+    my $user        = $simp->{'username'} || "guest";
+    my $pass        = $simp->{'password'} || "guest";
+    my $exchange    = $simp->{'exchange'} || "Simp";
+    my $timeout     = $simp->{'timeout'} || 60;
+    my $topic       = $simp->{'topic'} || "Simp.Data";
+
     my $client = GRNOC::RabbitMQ::Client->new(
-        #host => "127.0.0.1",
-        host => "simp.bldc.grnoc.iu.edu",
-        port => 5672,
-        user => "guest",
-        pass => "guest",
-        exchange => 'Simp',
-        timeout => 60,
-        topic => 'Simp.Data');
+        host => $host,
+        port => $port,
+        user => $user,
+        pass => $pass,
+        exchange => $exchange,
+        timeout => $timeout,
+        topic => $topic);
     $self->_set_simp_client( $client );
     warn "done";
     return $client;
