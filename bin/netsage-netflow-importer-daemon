@@ -24,7 +24,6 @@ my $flowpath;
 my $cachefile;
 my $help;
 
-# TODO: change jsonfile to flow data directory
 GetOptions( 'config=s' => \$config,
             'sharedconfig=s' => \$shared_config,
             'logging=s' => \$logging,

@@ -492,7 +492,6 @@ sub _rabbit_config {
     my @directions = ('input', 'output');
 
     my $config = $self->config;
-    warn "_RABBIT CONFIG config" . Dumper $config;
 
     foreach my $direction ( @directions ) {
         $rabbit_config->{$direction} = {};
