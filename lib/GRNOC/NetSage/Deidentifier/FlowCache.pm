@@ -36,6 +36,8 @@ has acceptable_offset => ( is => 'rwp', default => 5 );
 
 has finished_flows => ( is => 'rwp', default => sub { [] } );
 
+has sensors => ( is => 'rwp', default => sub { {} } );
+
 #has ipv4_bits_to_strip => ( is => 'rwp', default => 8 );
 #has ipv6_bits_to_strip => ( is => 'rwp', default => 64 );
 
@@ -45,12 +47,14 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
+    my $config = $self->config; # $self->config;
+    #my $config = $config_obj->get('/config');
     #warn "config: " . Dumper $config;
 
     my $ipc_key = $config->{'worker'}->{'ipc-key'};
     $self->_set_ipc_key( $ipc_key ) if defined $ipc_key;
+
+    $self->_get_sensors();
 
     $self->_init_cache();
 
@@ -87,6 +91,29 @@ sub _init_cache {
 
 }
 
+sub _get_sensors {
+    my ( $self ) = @_;
+
+    my $collections = $self->config->{'collection'};
+
+    my %sensors = ();
+
+    if ( ref($collections) ne "ARRAY" ) {
+        $collections = [ $collections ];
+    }
+    warn "collections " . Dumper $collections;
+
+    foreach my $collection ( @$collections ) {
+        #warn "collection " . Dumper $collection;
+        my $sensor = $collection->{'sensor'};
+        $sensors{ $sensor } = 1;
+    }
+    warn "sensors " . Dumper \%sensors;
+
+    $self->_set_sensors( \%sensors );
+
+}
+
 sub _run_flow_caching {
     my ( $self, $caller, $input_data ) = @_;
 
@@ -96,12 +123,20 @@ sub _run_flow_caching {
 
     my $share = $self->share;
     my $cache = $self->flow_cache;
-    #warn "thawing cache ...";
+    my @keys = keys %$cache;
+    warn "keys " . Dumper \@keys;
+    my $key1 = pop @keys;
+    warn "key1 " . Dumper $key1;
+    #warn "cache: " . Dumper $cache; #->{ $key1 };
+    my $sensors = $self->sensors;
+    #warn "sensors " . Dumper $sensors;
+    warn "thawing cache ...";
     $share->lock( LOCK_SH );
 
     $cache = thaw( $share->fetch );
 
     $share->unlock( );
+
 
     my $min_start;
     my $max_start;
@@ -129,36 +164,44 @@ sub _run_flow_caching {
         $five_tuple .= $row->{'meta'}->{'dst_ip'};
         $five_tuple .= $row->{'meta'}->{'dst_port'};
         $five_tuple .= $row->{'meta'}->{'protocol'};
+        
+        my $sensor_id = $row->{'meta'}->{'sensor_id'};
+
         #warn "five_tuple: $five_tuple\n";
 
         my $start = $row->{'start'};
         my $end = $row->{'end'};
         my $duration = $end - $start;
+        if ( $cache->{$sensor_id}  ) {
+            #warn "SENSOR ALREADY FOUND";
+        } else {
+            $cache->{$sensor_id} = {};
+        }
 
         #warn Dumper $row;
-        if ( $cache->{$five_tuple}  ) {
+        if ( $cache->{ $sensor_id }->{$five_tuple}  ) {
             #warn "FIVE TUPLE ALREADY FOUND";
         } else {
-            $cache->{$five_tuple} = {};
+            $cache->{ $sensor_id }->{$five_tuple} = {};
         }
         #$cache->{$five_tuple}->{'start'} = $start;
         #$cache->{$five_tuple}->{'end'} = $end;
         #warn "start: $start; end: $end";
-        my $last_start = $cache->{$five_tuple}->{'last_start'} || 0;
-        my $last_end = $cache->{$five_tuple}->{'last_end'} || 0;
+        my $last_start = $cache->{ $sensor_id }->{$five_tuple}->{'last_start'} || 0;
+        my $last_end = $cache->{ $sensor_id }->{$five_tuple}->{'last_end'} || 0;
         if ( $start <= $last_start ) { # TODO: should this be < $last_end?
             #print "overlap: start: " . localtime( $start ) . " last_start: " . localtime( $last_start ) . "\n";
             #print "overlap: end:   " . localtime( $end ) . " last_end: " . localtime( $last_end ) . "\n";
             $overlaps++;
-            print "flows overlap ($overlaps) -- what should we do about overlapping flows?\n";
+            #print "flows overlap ($overlaps) -- what should we do about overlapping flows?\n";
             #print localtime( $start ) . "\t-\t" . localtime( $end ) . "\tcurrent\n";
             #print localtime( $last_start ) . "\t-\t" . localtime( $last_end ) . "\tlast\n";
         }
         $last_start = $start;
         $last_end = $end;
 
-        $cache->{$five_tuple}->{'last_start'} = $last_start;
-        $cache->{$five_tuple}->{'last_end'} = $last_end;
+        $cache->{ $sensor_id }->{$five_tuple}->{'last_start'} = $last_start;
+        $cache->{ $sensor_id }->{$five_tuple}->{'last_end'} = $last_end;
 
         if ( !defined $min_end || $end < $min_end ) {
             $min_end = $end;
@@ -190,20 +233,22 @@ sub _run_flow_caching {
         }
 
         #my $flows_temp = [];
-        if ( defined ( $cache->{$five_tuple}->{'flows'} ) ) {
+        if ( defined ( $cache->{ $sensor_id }->{$five_tuple}->{'flows'} ) ) {
             #warn "flow already defined";
             #$flows_temp = $cache->{$five_tuple}->{'flows'};
         } else { 
-            $cache->{$five_tuple}->{'flows'} = [];
+            $cache->{ $sensor_id }->{$five_tuple}->{'flows'} = [];
             #$flows_temp = [];
         }
-        push @{ $cache->{$five_tuple}->{'flows'} }, $row;
+        push @{ $cache->{ $sensor_id }->{$five_tuple}->{'flows'} }, $row;
 
-        if ( !defined $max_flows || @{ $cache->{$five_tuple}->{'flows'} } > $max_flows ) {
-            $max_flows = @{ $cache->{$five_tuple}->{'flows'} };
+        if ( !defined $max_flows || @{ $cache->{ $sensor_id }->{$five_tuple}->{'flows'} } > $max_flows ) {
+            $max_flows = @{ $cache->{ $sensor_id }->{$five_tuple}->{'flows'} };
         }
 
-    }
+    } 
+
+    #warn "caache after caching " . Dumper $cache;
     #$cache->{'test'} = 1;
     #warn "min start: $min_start";
     #warn "max start: $max_start";
@@ -217,6 +262,7 @@ sub _run_flow_caching {
 
     #%cache = %{ clone (\%cache) };
 
+
     $share->lock( LOCK_EX );
 
     $share->store(freeze ( $cache ) );
@@ -224,6 +270,8 @@ sub _run_flow_caching {
     $share->unlock( );
 
     $self->_set_flow_cache( $cache );
+
+
 
     #warn "cache in cache at end: " . keys ( %$cache ); # . Dumper %cache;
 

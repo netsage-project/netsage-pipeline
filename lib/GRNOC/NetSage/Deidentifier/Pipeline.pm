@@ -113,15 +113,20 @@ sub BUILD {
                                      force_array => 0 );
 
 
-    warn "shared_config_file: " . $self->shared_config_file;
+    # TODO: make shared config file optional
+    warn "shared_config_file: " . Dumper $self->shared_config_file;
     # create and store shared config object
-    my $shared_config_obj = GRNOC::Config->new( config_file => $self->shared_config_file,
-                                     force_array => 0 );
+    my $shared_config_obj;
+    my $shared_config = {};
+    if ( defined ( $self->shared_config_file ) ) {
+        $shared_config_obj = GRNOC::Config->new( config_file => $self->shared_config_file,
+            force_array => 0 );
 
-    #warn "shared config " . Dumper $shared_config;
+        #warn "shared config " . Dumper $shared_config;
 
-    my $shared_config = $shared_config_obj->get('/');
-    warn "shared_config_obj " . Dumper $shared_config;
+        $shared_config = $shared_config_obj->get('/');
+        warn "shared_config_obj " . Dumper $shared_config;
+    }
 
     my $config_single = $config_obj->get('/');
     warn "config_single " . Dumper $config_single;
@@ -187,10 +192,7 @@ sub start {
 }
 
 sub start_noinput {
-# _process_messages takes an argument of an arrayref of data to process
-# and then it calls the specified handler function on it
-#sub _process_messages {
-    my ( $self, $flows_to_process ) = @_;
+    my ( $self ) = @_;
 
     return $self->_consume_noinput();
 }
@@ -486,7 +488,7 @@ sub _process_messages {
 }
 
 sub _rabbit_config {
-    my $self = shift;
+    my ( $self ) = @_ ;
 
     my $rabbit_config = {};
     my @directions = ('input', 'output');

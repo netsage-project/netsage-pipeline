@@ -20,7 +20,9 @@ my %options = (
 my $cache;
 #$flow_cache{'added_by_client'} = 0;
 
-#IPC::Shareable->clean_up;
+IPC::Shareable->clean_up;
+
+exit;
 
 my $share = IPC::ShareLite->new(
     -key => 'flow',

@@ -46,8 +46,7 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
+    my $config = $self->config;
     warn "config: " . Dumper $config;
     my $router = $config->{'worker'}->{'router-address'};
     $self->_set_router( $router );

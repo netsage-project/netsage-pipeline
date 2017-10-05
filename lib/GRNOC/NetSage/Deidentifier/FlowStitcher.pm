@@ -48,8 +48,7 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
+    my $config = $self->config;
 
     my $ipc_key = $config->{'worker'}->{'ipc-key'};
     $self->_set_ipc_key( $ipc_key ) if defined $ipc_key;
@@ -124,7 +123,7 @@ sub _stitch_flows {
 
     my $ipc_key = $self->ipc_key;
 
-    my $cache;
+    my $cache_all;
     my $share = IPC::ShareLite->new(
         -key => $ipc_key,
         -create => 0,
@@ -133,13 +132,15 @@ sub _stitch_flows {
 
     $share->lock( LOCK_SH );
     if ( not defined $share ) {
-        $cache = {};
+        $cache_all = {};
     } else {
         #warn "thawing cache ...";
-        $cache = thaw( $share->fetch );
+        $cache_all = thaw( $share->fetch );
     }
-    $self->_set_flow_cache( $cache );
+    $self->_set_flow_cache( $cache_all );
     $share->unlock();
+
+    warn "cache_all " . Dumper keys %$cache_all;
 
     my $finished_flows = $self->finished_flows;
 
@@ -148,6 +149,12 @@ sub _stitch_flows {
     my $stitched_flow_count = 0;
 
     my $latest_timestamp = $self->latest_timestamp;
+
+    while( my ( $sensor, $cache ) = each %$cache_all ) {
+        warn "sensor: " . Dumper $sensor;
+        #warn "cache " . Dumper $cache;
+
+
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
         my $flows = $flow_container->{'flows'};
         if ( @$flows > 0 ) {
@@ -219,6 +226,11 @@ sub _stitch_flows {
 
     }
 
+    if ( keys %{ $cache_all->{ $sensor } } < 1 ) {
+        delete $cache_all->{ $sensor };
+
+    }
+
     $self->_set_latest_timestamp( $latest_timestamp );
 
     $self->_set_finished_flows( $finished_flows );
@@ -246,36 +258,16 @@ sub _stitch_flows {
 
     $self->stats( $stats );
 
+
+    } # end while sensors
+
+
     # save updated cache
 
-    $self->_set_flow_cache( $cache );
+    $self->_set_flow_cache( $cache_all );
     $share->lock( LOCK_EX );
-    $share->store( freeze( $cache ) );
+    $share->store( freeze( $cache_all ) );
     $share->unlock();
-
-}
-
-sub _get_flows {
-    my $self = shift;
-    my $type = shift || 'all';
-    my $stitched_flows = [];
-    my $cache = $self->flow_cache;
-    foreach my $five ( keys %$cache ) {
-        my $flow_container = $cache->{$five};
-        my $flows = $flow_container->{'flows'};
-        if ( $type eq 'stitched' ) {
-            push @$stitched_flows,  grep { defined $_->{'stitched'} } @$flows;
-        } elsif ( $type eq 'unstitched' ) {
-            push @$stitched_flows,  grep { not defined $_->{'stitched'} } @$flows;
-        } elsif ( $type eq 'stitching_finished' ) {
-            push @$stitched_flows,  grep { defined $_->{'stitching_finished'} } @$flows;
-        } else {
-            # all flows
-            push @$stitched_flows, @$flows;
-
-        }
-    }
-    return $stitched_flows;
 
 }
 
