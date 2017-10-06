@@ -32,12 +32,12 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
-    # warn "config: " . Dumper $config;
+    my $config = $self->config;
+    #warn "config: " . Dumper $config;
     my $anon = $config->{'deidentification'};
     my $ipv4_bits = $config->{'deidentification'}->{'ipv4_bits_to_strip'};
     my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
+
     $self->_set_ipv4_bits_to_strip( $ipv4_bits );
     $self->_set_ipv6_bits_to_strip( $ipv6_bits );
     $self->_set_handler( sub { $self->_deidentify_messages(@_) } );
@@ -103,6 +103,7 @@ sub _deidentify_ip {
     my ( $self, $ip ) = @_;
     my $cleaned;
 
+
     if ( is_ipv4($ip) ) {
         my @bytes = split(/\./, $ip);
         my $total_bytes = @bytes;
@@ -134,7 +135,7 @@ sub _deidentify_ip {
     }
 
     if ( not defined $cleaned ) {
-        warn "IP was NOT CLEANED. setting blank";
+        warn "IP $ip was NOT CLEANED. setting blank";
         $cleaned = '';
     }
 

@@ -51,23 +51,24 @@ sub BUILD {
     my $config = $self->config;
     $self->_set_handler( sub { $self->_tag_messages(@_) } );
 
-    my $geoip_country_ipv6_file = $config->get( '/config/geoip/config_files/country_ipv6' );
+    #my $geoip_country_ipv6_file = $config->get( '/config/geoip/config_files/country_ipv6' );
+    my $geoip_country_ipv6_file = $config->{ 'geoip'}->{'config_files'}->{'country_ipv6'};
     my $geoip_country_ipv6 = Geo::IP->open( $geoip_country_ipv6_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_country_ipv6( $geoip_country_ipv6 );
 
-    my $geoip_asn_file = $config->get( '/config/geoip/config_files/asn' );
-    my $geoip_asn = Geo::IP->open( $geoip_asn_file, GEOIP_MEMORY_CACHE);
-    $self->_set_geoip_asn( $geoip_asn );
+        my $geoip_asn_file = $config->{'geoip'}->{'config_files'}->{'asn'};
+        my $geoip_asn = Geo::IP->open( $geoip_asn_file, GEOIP_MEMORY_CACHE);
+        $self->_set_geoip_asn( $geoip_asn );
 
-    my $geoip_asn_ipv6_file = $config->get( '/config/geoip/config_files/asn_ipv6' );
+    my $geoip_asn_ipv6_file = $config->{'geoip'}->{'config_files'}->{'asn_ipv6'};
     my $geoip_asn_ipv6 = Geo::IP->open( $geoip_asn_ipv6_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_asn_ipv6( $geoip_asn_ipv6 );
 
-    my $geoip_city_ipv6_file = $config->get( '/config/geoip/config_files/city_ipv6' );
+    my $geoip_city_ipv6_file = $config->{'geoip'}->{'config_files'}->{'city_ipv6'};
     my $geoip_city_ipv6 = Geo::IP->open( $geoip_city_ipv6_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_city_ipv6( $geoip_city_ipv6 );
 
-    my $geoip_city_file = $config->get( '/config/geoip/config_files/city' );
+    my $geoip_city_file = $config->{ 'geoip'}->{'config_files'}->{'city'};
     my $geoip_city = Geo::IP->open( $geoip_city_file, GEOIP_MEMORY_CACHE);
     $self->_set_geoip_city( $geoip_city );
 

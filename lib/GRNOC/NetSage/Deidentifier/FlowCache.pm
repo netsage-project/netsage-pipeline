@@ -164,7 +164,7 @@ sub _run_flow_caching {
         $five_tuple .= $row->{'meta'}->{'dst_ip'};
         $five_tuple .= $row->{'meta'}->{'dst_port'};
         $five_tuple .= $row->{'meta'}->{'protocol'};
-        
+
         my $sensor_id = $row->{'meta'}->{'sensor_id'};
 
         #warn "five_tuple: $five_tuple\n";
@@ -246,7 +246,7 @@ sub _run_flow_caching {
             $max_flows = @{ $cache->{ $sensor_id }->{$five_tuple}->{'flows'} };
         }
 
-    } 
+    }
 
     #warn "caache after caching " . Dumper $cache;
     #$cache->{'test'} = 1;
