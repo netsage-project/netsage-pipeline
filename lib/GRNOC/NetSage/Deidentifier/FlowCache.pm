@@ -96,6 +96,13 @@ sub _get_sensors {
 
     my $collections = $self->config->{'collection'};
 
+    if ( ! defined( $collections ) ) {
+        $collections = {
+            'flow-path' => $self->flow_path,
+            'sensor' => $self->config->{'sensor'}
+        };
+    }
+
     my %sensors = ();
 
     if ( ref($collections) ne "ARRAY" ) {
@@ -103,7 +110,6 @@ sub _get_sensors {
     }
     warn "collections " . Dumper $collections;
 
-    # TODO: Handle situation where there are no collections defined
 
     foreach my $collection ( @$collections ) {
         #warn "collection " . Dumper $collection;
