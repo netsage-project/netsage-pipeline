@@ -200,6 +200,8 @@ sub _get_flow_data {
     my $flow_batch_size = $self->flow_batch_size;
     my $status = $self->status_cache;
 
+    #warn "cache: " . Dumper $status;
+
     my $collections = $self->config->{'collection'};
 
 
@@ -210,7 +212,7 @@ sub _get_flow_data {
 
     foreach my $collection ( @$collections ) {
 
-        my $path = $collection->{'flow-path'};
+        my $path = $collection->{'flow-path'} || $self->flow_path;
         my $sensor = $collection->{'sensor'};
 
         my %params = %{ $self->_get_params( $collection ) };
@@ -249,9 +251,16 @@ sub _get_flow_data {
             my $file_path = dir( $path, $file ) . "";
             my $stats = stat($file_path);
             my $abs = file( $file_path );
+            # TODO: changed rel to abs; need a way to figure out a way to convert
+            # the old rel paths to abs
+            
             my $rel = $abs->relative( $path ) . "";
             if ( exists ( $status->{ $rel } ) ) {
-                my $entry = $status->{ $rel };
+                $status->{ $abs } = $status->{ $rel };
+                delete $status->{ $rel };
+            }
+            if ( exists ( $status->{ $abs } ) ) {
+                my $entry = $status->{ $abs };
                 if ( (!defined $stats) or (!defined $entry) ) {
                     next;
                 }
@@ -286,7 +295,9 @@ sub _get_nfdump_data {
 
     my $sensor = $params{'sensor'};
     my $instance = $params{'instance'};
-    my $path = $params{'path'};
+
+my $path = $params{'path'};
+    
     my $flow_type = $params{'flow_type'};
 
     my $status = $self->status_cache;
@@ -306,7 +317,6 @@ sub _get_nfdump_data {
             $self->logger->error("Invalid nfdump path specified; quitting");
             $self->_set_is_running( 0 );
             return;
-
         }
 
     }
@@ -401,9 +411,11 @@ sub _get_nfdump_data {
         $self->_publish_flows();
         @all_data = ();
 
+        # TODO: changed rel to abs; need a way to figure out a way to convert
+        # the old rel paths to abs
         my $abs = file( $flowfile );
-        my $rel = $abs->relative( $path ) . "";
-        $status->{$rel} = {
+        #my $rel = $abs->relative( $path ) . "";
+        $status->{$abs} = {
             mtime => $stats->mtime,
             size => $stats->size
         };
@@ -471,6 +483,9 @@ sub _cull_flow_files {
         return;
     }
 
+    $self->logger->debug("CULLING files (enabled)");
+
+
     # see how old files should be (in days)
     my $cull_ttl = $self->cull_ttl;
 
@@ -486,14 +501,16 @@ sub _cull_flow_files {
 
         my $dt = DateTime->now;
 
+        warn "examining $filename ...";
+
         #my $path = $self->flow_path;
 
         if ( DateTime->compare( $mtime,  $dt->subtract_duration( $dur ) ) == -1 ) {
-            # Make sure that the file exists, AND that it is under our main 
+            # Make sure that the file exists, AND that it is under our main
             # flow directory. Just a sanity check to prevent deleting files
             # outside the flow data directory tree.
 
-            my $filepath = $path . '/' . $filename;
+            my $filepath = $filename;
             my $realpath = "";
 
             try {
@@ -520,6 +537,7 @@ sub _cull_flow_files {
 
             if ( -f $realpath ) {
                 my $parent = path( $realpath )->parent;
+                $self->logger->debug("deleting $filepath ...");
                 unlink $filepath or $self->logger->error( "Could not unlink $realpath: $!" );
                 $dirs_to_remove{ $parent } = 1;
             } else {
@@ -554,6 +572,8 @@ sub find_nfcapd {
     }
     return if not defined $filepath;
     return if $filepath =~ /nfcapd\.current/;
+    return if $filepath =~ /\.nfstat$/;
+
     my $name = 'nfcapd.*';
     my $relative = path( $filepath )->relative( $path );
 

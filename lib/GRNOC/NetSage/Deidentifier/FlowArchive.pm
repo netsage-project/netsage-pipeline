@@ -28,14 +28,15 @@ has archive_path => ( is => 'rwp' );
 
 has archive_file => ( is => 'rwp', default => "flow_archive.jsonl" );
 
+has sensors => ( is => 'rwp', default => sub { {} } );
+
 ### constructor builder ###
 
 sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
+    my $config = $self->config;
     $self->_set_archive_path( $config->{'archive_path'} );
     my $file = $config->{'archive_file'};
     if ( defined $file ) {
@@ -57,6 +58,26 @@ sub _archive_flows {
     my $path = $self->archive_path;
 
     my $filename = $self->archive_file;
+
+    my %sensors = %{ $self->sensors };
+
+    #warn "input data ref: " . ref $input_data;
+    foreach my $row ( @$input_data ) {
+        #warn "archive keys: " . Dumper keys %$row;
+        my $sensor = $row->{'meta'}->{'sensor_id'};
+        #warn "sensor: $sensor";
+        if ( ! $sensors{ $sensor } ) {
+            $sensors{ $sensor } = 1;
+        } else {
+            $sensors{ $sensor } += 1;
+
+        }
+
+    }
+    $self->logger->debug( "sensor stats " . Dumper \%sensors );
+    warn "sensor stats " . Dumper \%sensors;
+
+    $self->_set_sensors( \%sensors );
 
     my $filepath = $path . "/" . $filename;
     open my $fh, '>>', $filepath;

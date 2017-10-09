@@ -47,7 +47,6 @@ sub BUILD {
     my ( $self ) = @_;
 
     my $config = $self->config;
-    warn "config: " . Dumper $config;
     my $router = $config->{'worker'}->{'router-address'};
     $self->_set_router( $router );
     $self->_set_simp_config( $config->{'simp'} );
@@ -92,14 +91,12 @@ sub _filter_messages {
         $i++;
     }
 
-    warn "deleting messages ... " . Dumper \@delete_indices;
-
     # remove all the deleted indices
     splice @$finished_messages, $_, 1 for reverse @delete_indices;
 
     $self->_add_imported_count( scalar @$finished_messages );
 
-    warn "stats " . Dumper $self->stats;
+    $self->logger->debug( "stats " . Dumper $self->stats );
 
     return $finished_messages;
 }
@@ -112,12 +109,9 @@ sub _filter_flow {
 
     my $details = $self->router_details;
 
-    warn "src_ifindex: $src_ifindex; dst_ifindex: $dst_ifindex";
-
     my $num_results = keys ( %{ $details->{'results'} } );
     return 0 if $num_results < 1;
     my $host = ( keys ( %{ $details->{'results'} } ) )[0];
-    warn "host: " . Dumper $host;
 
     my $mib_base = "1.3.6.1.2.1.31.1.1.1.18";
     my $src_key = "$mib_base.$src_ifindex";
@@ -126,25 +120,23 @@ sub _filter_flow {
     my $src_description = $details->{ 'results' }->{ $host }->{ $src_key }->{ 'value' } || "";
     my $dst_description = $details->{ 'results' }->{ $host }->{ $dst_key }->{ 'value' } || "";
 
-    warn "src_description: $src_description";
-    warn "dst_description: $dst_description";
 
     # see if src OR dst description contains [ns-exp]
 
     my $import = 0;
 
     if ( $src_description =~ /\[ns-exp\]/ ) {
-        warn "IMPORTING src: $src_ifindex!";
+        $self->logger->debug( "IMPORTING src: $src_ifindex!" );
         $import = 1;
     } else {
-        warn "SKIPPING src: $src_ifindex!";
+        $self->logger->debug( "SKIPPING src: $src_ifindex!" );
     }
 
     if ( $dst_description =~ /\[ns-exp\]/ ) {
-        warn "IMPORTING dst: $dst_ifindex!";
+        $self->logger->debug( "IMPORTING dst: $dst_ifindex!" );
         $import = 1;
     } else {
-        warn "SKIPPING dst: $dst_ifindex!";
+        $self->logger->debug( "SKIPPING dst: $dst_ifindex!" );
 
     }
 
@@ -161,14 +153,12 @@ sub get_router_details {
     my $details = $self->router_details;
     if ( defined $details->{'ts'} ) {
         if ( time() - $details->{'ts'} <= $self->snmp_cache_time ) {
-            warn "cache not expired; using cached router details";
             return;
 
         }
 
     }
 
-    warn "querying simp for router $router ...";
 
     my %query = (
         node => [$router],
@@ -179,9 +169,9 @@ sub get_router_details {
     my $results = $client->get( %query );
 
     if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
-        warn "router found: $router";
+        $self->logger->debug( "router found: $router" );
     } else {
-        warn "router NOT found in simp: $router";
+        $self->logger->debug( "router NOT found in simp: $router" );
 
     }
 
@@ -220,31 +210,19 @@ sub test_simp {
 
    my $client = $self->simp_client;
 
-   warn "querying simp for hosts  ... " . Dumper \@hosts;
-
    foreach my $host (@hosts ) {
        my %query = (
            node => [$host],
-           #node => \@hosts,
-           #node => [$src_ip, $dst_ip],
-           #node => ["wrn-elpa-sw-1.cenic.net", "cmsstor613.fnal.gov"],
-           #node => ["137.164.20.99"], # wrn-elpa-sw-1.cenic.net
-           #node    =>  ["cmsstor613.fnal.gov", "cabinet-1-1-30.t2.ucsd.edu", "macrobius.cs.nmt.edu"],
-           #node   => ["156.56.6.103","156.56.6.108"],
-           #oidmatch => ["1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.31.1.1.1.18"]
            oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
-           #oidmatch => ["*"]
 
        );
-       #warn "query " . Dumper \%query;
 
        my $results = $client->get( %query );
 
        if ( exists( $results->{'results'} ) && keys ( %{ $results->{'results'} } ) > 0  ) {
-           #warn "simp results: " . Dumper($results);
-            warn "FOUND: $host";
+           $self->logger->debug( "FOUND: $host" );
        } else {
-           warn "no results: $host";
+           $self->logger->debug( "no results: $host" );
        }
    }
 
@@ -287,7 +265,6 @@ sub _update_stats {
 
 sub _connect_simp {
     my ( $self ) = @_;
-    warn "connecting to simp ...";
 
     my $simp = $self->simp_config;
 
@@ -308,7 +285,6 @@ sub _connect_simp {
         timeout => $timeout,
         topic => $topic);
     $self->_set_simp_client( $client );
-    warn "done";
     return $client;
 }
 

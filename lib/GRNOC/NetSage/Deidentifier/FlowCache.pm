@@ -103,6 +103,8 @@ sub _get_sensors {
     }
     warn "collections " . Dumper $collections;
 
+    # TODO: Handle situation where there are no collections defined
+
     foreach my $collection ( @$collections ) {
         #warn "collection " . Dumper $collection;
         my $sensor = $collection->{'sensor'};
@@ -124,13 +126,13 @@ sub _run_flow_caching {
     my $share = $self->share;
     my $cache = $self->flow_cache;
     my @keys = keys %$cache;
-    warn "keys " . Dumper \@keys;
+    #warn "keys " . Dumper \@keys;
     my $key1 = pop @keys;
-    warn "key1 " . Dumper $key1;
+    #warn "key1 " . Dumper $key1;
     #warn "cache: " . Dumper $cache; #->{ $key1 };
     my $sensors = $self->sensors;
     #warn "sensors " . Dumper $sensors;
-    warn "thawing cache ...";
+    #warn "thawing cache ...";
     $share->lock( LOCK_SH );
 
     $cache = thaw( $share->fetch );
