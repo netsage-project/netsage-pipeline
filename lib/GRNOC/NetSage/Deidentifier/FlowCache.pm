@@ -80,11 +80,11 @@ sub _init_cache {
     ) or die $!;
 
     if ( not defined $self->flow_cache ) {
-        #warn "initially creating cache ..."; 
+        warn "initially creating cache ..."; 
         $cache = {};
         $share->store(freeze ( $cache ) );
     } else {
-        #warn "thawing cache ...";
+        warn "thawing cache ...";
         $cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
@@ -134,8 +134,15 @@ sub _get_sensors {
 
 sub _upgrade_cache_format {
     my ( $self ) = @_;
-    my $cache = $self->flow_cache;
-    warn "cache " . Dumper $cache;
+    my $share = $self->share;
+    my $cache;
+
+    $share->lock( LOCK_SH );
+
+    $cache = thaw( $share->fetch );
+
+    $share->unlock( );
+    warn "UPGRADE cache " . Dumper $cache;
     #while ( my ( $key, $val )  = each %$cache ) {
     #    warn "key: $key; val: " . Dumper $val;
     #}
