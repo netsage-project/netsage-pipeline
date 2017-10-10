@@ -142,6 +142,8 @@ sub _stitch_flows {
 
     warn "cache_all " . Dumper keys %$cache_all;
 
+    warn "cache_all contents " . Dumper $cache_all;
+
     my $finished_flows = $self->finished_flows;
 
     my $overlaps = 0;

@@ -182,7 +182,7 @@ sub _run_flow_caching {
 
         my $sensor_id = $row->{'meta'}->{'sensor_id'};
 
-        warn "sensor_id from metadata " . Dumper $row;
+        #warn "sensor_id from metadata " . Dumper $row;
 
         #warn "five_tuple: $five_tuple\n";
 
