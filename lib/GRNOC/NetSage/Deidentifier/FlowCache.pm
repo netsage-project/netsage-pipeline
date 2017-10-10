@@ -148,9 +148,9 @@ sub _upgrade_cache_format {
     my $new_cache = {};
 
     $share->unlock( );
-    warn "UPGRADE cache "; # . Dumper $cache;
+    warn "UPGRADE cache " . Dumper $cache;
     while ( my ( $key, $val )  = each %$cache ) {
-        warn "key: $key; val: " . Dumper $val;
+        warn "key: $key; val: "; # . Dumper $val;
         # If the key isn't one of our sensors, it must be a five tuple
         if ( not  defined ( $sensors->{ $key } ) )  {
             my $sensor = $val->{'flows'}->[0]->{'meta'}->{'sensor_id'};
@@ -180,8 +180,9 @@ sub _upgrade_cache_format {
 
         }
     }
-    #warn "upgraded cache " . Dumper $new_cache;
-    $self->_set_flow_cache( $new_cache );
+    warn "upgraded cache " . Dumper $new_cache;
+    $cache = $new_cache;
+    $self->_set_flow_cache( $cache );
 
     $share->lock( LOCK_EX );
 
