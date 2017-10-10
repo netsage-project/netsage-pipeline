@@ -1,3 +1,10 @@
+## GRNOC NetSage Deidentifier 1.0.0 --  Wed Oct 10 2017
+
+Features:
+ * ISSUE=3754 PROJ=160 Support for importing data from multiple routers on one host
+ * ISSUE=3754 PROJ=160 Add shared config capability
+ * ISSUE=4840 PROJ=160 filtered flow collection capability; add ifindex metadata
+
 ## GRNOC NetSage Deidentifier 0.1.1 --  Wed Aug 22 2017
 
 Features:

@@ -113,15 +113,12 @@ sub BUILD {
                                      force_array => 0 );
 
 
-    # TODO: make shared config file optional
     # create and store shared config object
     my $shared_config_obj;
     my $shared_config = {};
-    warn "shared_config_file " . Dumper $self->shared_config_file;
     if ( defined ( $self->shared_config_file ) ) {
         $shared_config_obj = GRNOC::Config->new( config_file => $self->shared_config_file,
             force_array => 0 );
-        #warn "shared_config_obj " . Dumper $shared_config_obj;
         my $new_shared_config = {};
         if ( !$shared_config_obj->{'error'} ) {
             $new_shared_config = $shared_config_obj->get('/*');
@@ -132,15 +129,10 @@ sub BUILD {
     }
 
     my $config_single = $config_obj->get('/*') or die "DEATH2!!";
-    warn "config_single " . Dumper $config_single;
 
-    my $config = merge( $config_single, $shared_config );
     # Merge the hashes; the "single" values should overrride those
     # from the "shared" config.
-    #
-    #@$config{ keys %$config_single } = values %$config_single;
-
-    warn "config!!!! " . Dumper $config;
+    my $config = merge( $config_single, $shared_config );
 
     $self->_set_config( $config );
 

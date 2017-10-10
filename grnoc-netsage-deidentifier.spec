@@ -1,7 +1,7 @@
 Summary: GRNOC NetSage Deidentifier 
 Name: grnoc-netsage-deidentifier
-Version: 0.1.0
-Release: 2%{?dist}
+Version: 1.0.0
+Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
 URL: http://globalnoc.iu.edu
@@ -21,6 +21,7 @@ Requires: perl-Data-Validate-IP
 Requires: perl-Geo-IP
 Requires: perl-GRNOC-Config
 Requires: perl-GRNOC-Log
+Requires: perl-Hash-Merge
 Requires: perl-IPC-ShareLite
 Requires: perl-JSON-SL
 Requires: perl-JSON-XS
