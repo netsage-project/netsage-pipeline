@@ -79,13 +79,16 @@ sub _init_cache {
         -destroy => 'no',
     ) or die $!;
 
-    if ( not defined $self->flow_cache ) {
+    warn "thawing cache ...";
+    $cache = thaw( $share->fetch );
+
+    if ( not defined( $cache ) ) {
         warn "initially creating cache ..."; 
         $cache = {};
         $share->store(freeze ( $cache ) );
     } else {
-        warn "thawing cache ...";
-        $cache = thaw( $share->fetch );
+        #warn "thawing cache ...";
+        #$cache = thaw( $share->fetch );
     }
     $self->_set_flow_cache( $cache );
 
@@ -142,10 +145,10 @@ sub _upgrade_cache_format {
     $cache = thaw( $share->fetch );
 
     $share->unlock( );
-    warn "UPGRADE cache " . Dumper $cache;
-    #while ( my ( $key, $val )  = each %$cache ) {
-    #    warn "key: $key; val: " . Dumper $val;
-    #}
+    warn "UPGRADE cache "; # . Dumper $cache;
+    while ( my ( $key, $val )  = each %$cache ) {
+        warn "key: $key; val: " . Dumper $val;
+    }
     #die;
 }
 
