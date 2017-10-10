@@ -89,6 +89,8 @@ sub _init_cache {
 
     $self->_set_share( $share );
 
+    $self->_upgrade_cache_format();
+
 
 }
 
@@ -128,6 +130,17 @@ sub _get_sensors {
     $self->_set_sensors( \%sensors );
 
 }
+
+sub _upgrade_cache_format {
+    my ( $self ) = @_;
+    my $cache = $self->flow_cache;
+    while ( my ( $key, $val ) ) {
+        warn "key: $key; val: " . Dumper $val;
+
+    }
+    die;
+}
+
 
 sub _run_flow_caching {
     my ( $self, $caller, $input_data ) = @_;
@@ -174,11 +187,7 @@ sub _run_flow_caching {
         next if not defined $row->{'meta'}->{'dst_port'};
         next if not defined $row->{'meta'}->{'protocol'};
 
-        my $five_tuple = $row->{'meta'}->{'src_ip'};
-        $five_tuple .= $row->{'meta'}->{'src_port'};
-        $five_tuple .= $row->{'meta'}->{'dst_ip'};
-        $five_tuple .= $row->{'meta'}->{'dst_port'};
-        $five_tuple .= $row->{'meta'}->{'protocol'};
+        my $five_tuple = $self->_get_five_tuple( $row );
 
         my $sensor_id = $row->{'meta'}->{'sensor_id'};
 
@@ -302,6 +311,20 @@ sub _run_flow_caching {
     #return $finished_messages;
     # Return just a dummy array so it knows we were successful
     return [ 'finished' ];
+}
+
+sub _get_five_tuple {
+    my ( $self, $row ) = @_;
+
+    my $five_tuple = $row->{'meta'}->{'src_ip'};
+    $five_tuple .= $row->{'meta'}->{'src_port'};
+    $five_tuple .= $row->{'meta'}->{'dst_ip'};
+    $five_tuple .= $row->{'meta'}->{'dst_port'};
+    $five_tuple .= $row->{'meta'}->{'protocol'};
+
+    return $five_tuple;
+
+
 }
 
 1;
