@@ -134,11 +134,11 @@ sub _get_sensors {
 sub _upgrade_cache_format {
     my ( $self ) = @_;
     my $cache = $self->flow_cache;
-    while ( my ( $key, $val ) ) {
-        warn "key: $key; val: " . Dumper $val;
-
-    }
-    die;
+    warn "cache " . Dumper $cache;
+    #while ( my ( $key, $val )  = each %$cache ) {
+    #    warn "key: $key; val: " . Dumper $val;
+    #}
+    #die;
 }
 
 
