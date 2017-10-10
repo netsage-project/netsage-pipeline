@@ -83,12 +83,12 @@ sub _init_cache {
     $cache = thaw( $share->fetch );
 
     if ( not defined( $cache ) ) {
-        warn "initially creating cache ..."; 
+        $self->logger->debug( "initially creating cache ..." );
+
         $cache = {};
         $share->store(freeze ( $cache ) );
     } else {
-        #warn "thawing cache ...";
-        #$cache = thaw( $share->fetch );
+         $self->logger->debug( "thawing cache ..." );
     }
     $self->_set_flow_cache( $cache );
 
@@ -121,15 +121,12 @@ sub _get_sensors {
     if ( ref($collections) ne "ARRAY" ) {
         $collections = [ $collections ];
     }
-    warn "collections " . Dumper $collections;
 
 
     foreach my $collection ( @$collections ) {
-        #warn "collection " . Dumper $collection;
         my $sensor = $collection->{'sensor'};
         $sensors{ $sensor } = 1;
     }
-    warn "sensors " . Dumper \%sensors;
 
     $self->_set_sensors( \%sensors );
 
@@ -148,9 +145,7 @@ sub _upgrade_cache_format {
     my $new_cache = {};
 
     $share->unlock( );
-    warn "UPGRADE cache " . Dumper $cache;
     while ( my ( $key, $val )  = each %$cache ) {
-        warn "key: $key; val: "; # . Dumper $val;
         # If the key isn't one of our sensors, it must be a five tuple
         if ( not  defined ( $sensors->{ $key } ) )  {
             my $sensor = $val->{'flows'}->[0]->{'meta'}->{'sensor_id'};
@@ -180,7 +175,9 @@ sub _upgrade_cache_format {
 
         }
     }
-    warn "upgraded cache " . Dumper $new_cache;
+
+    return if ( not ( defined $new_cache ) || keys %$new_cache == 0 );
+
     $cache = $new_cache;
     $self->_set_flow_cache( $cache );
 
