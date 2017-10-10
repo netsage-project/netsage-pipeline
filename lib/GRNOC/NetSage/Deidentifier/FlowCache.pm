@@ -138,17 +138,56 @@ sub _get_sensors {
 sub _upgrade_cache_format {
     my ( $self ) = @_;
     my $share = $self->share;
+    my $sensors = $self->sensors;
     my $cache;
 
     $share->lock( LOCK_SH );
 
     $cache = thaw( $share->fetch );
 
+    my $new_cache = {};
+
     $share->unlock( );
     warn "UPGRADE cache "; # . Dumper $cache;
     while ( my ( $key, $val )  = each %$cache ) {
         warn "key: $key; val: " . Dumper $val;
+        # If the key isn't one of our sensors, it must be a five tuple
+        if ( not  defined ( $sensors->{ $key } ) )  {
+            my $sensor = $val->{'flows'}->[0]->{'meta'}->{'sensor_id'};
+            next if not defined $sensor;
+            if ( $new_cache->{ $sensor } ) {
+                # merge
+                
+                if ( $new_cache->{ $sensor }->{ $key } &&  $new_cache->{ $sensor }->{ $key }->{'flows'} ) {
+                    # merge
+                    my $oldflows = $new_cache->{ $sensor }->{ $key }->{'flows'};
+                    my $newflows = $val->{'flows'};
+                    my $mergedflows = \push @$oldflows, @$newflows;
+                    $new_cache->{ $sensor }->{ $key }->{'flows'} = $mergedflows;
+
+
+                } else {
+                    # create/assign
+                    $new_cache->{ $sensor }->{ $key } = $val;
+
+                }
+
+            } else {
+                #create/assign
+                $new_cache->{ $sensor } = {};
+                $new_cache->{ $sensor }->{ $key } = $val;
+            }
+
+        }
     }
+    #warn "upgraded cache " . Dumper $new_cache;
+    $self->_set_flow_cache( $new_cache );
+
+    $share->lock( LOCK_EX );
+
+    $share->store(freeze ( $cache ) );
+
+    $share->unlock( );
     #die;
 }
 
