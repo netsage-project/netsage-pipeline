@@ -200,15 +200,12 @@ sub _get_flow_data {
     my $flow_batch_size = $self->flow_batch_size;
     my $status = $self->status_cache;
 
-    #warn "cache: " . Dumper $status;
-
     my $collections = $self->config->{'collection'};
 
 
     if ( ref($collections) ne "ARRAY" ) {
         $collections = [ $collections ];
     }
-    warn "collections " . Dumper $collections;
 
     foreach my $collection ( @$collections ) {
 
@@ -216,10 +213,6 @@ sub _get_flow_data {
         my $sensor = $collection->{'sensor'} || hostname();
 
         my %params = %{ $self->_get_params( $collection ) };
-        #$params{'path'}  = $path;
-
-        warn "params " . Dumper \%params;
-        warn "path " . Dumper $path;
 
         $params{'flow-path'} = $path;
         $params{'sensor'} = $sensor;
@@ -237,7 +230,6 @@ sub _get_flow_data {
             #my $ref = $self->can('find_nfcapd');
             @files = ();
             find({ wanted => sub { find_nfcapd($self, \%params)  }, follow => 1 }, @paths );
-            warn "found files: " . Dumper \@files;
 
         } catch {
             $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
@@ -258,7 +250,7 @@ sub _get_flow_data {
             if ( exists ( $status->{ $rel } ) ) {
                 $status->{ $abs } = $status->{ $rel };
                 delete $status->{ $rel };
-                warn "$rel being changed to $abs in file cache ...";
+                #warn "$rel being changed to $abs in file cache ...";
             }
             if ( exists ( $status->{ $abs } ) ) {
                 my $entry = $status->{ $abs };
@@ -501,10 +493,6 @@ sub _cull_flow_files {
         );
 
         my $dt = DateTime->now;
-
-        warn "examining $filename ...";
-
-        #my $path = $self->flow_path;
 
         if ( DateTime->compare( $mtime,  $dt->subtract_duration( $dur ) ) == -1 ) {
             # Make sure that the file exists, AND that it is under our main

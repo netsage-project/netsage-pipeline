@@ -58,7 +58,7 @@ print ("  ** Check ps or /var/log/messages to be sure the processes have started
 
 sub usage {
 
-    print "Usage: $0 [--config <file path>] [--logging <file path>] [--flowpath <file path>]\n";
+    print "Usage: $0 [--config <file path>] [--sharedconfig <file path>] [--logging <file path>] [--flowpath <file path>]\n";
 
     exit( 1 );
 }

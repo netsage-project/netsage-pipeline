@@ -140,10 +140,6 @@ sub _stitch_flows {
     $self->_set_flow_cache( $cache_all );
     $share->unlock();
 
-    warn "cache_all " . Dumper keys %$cache_all;
-
-    #warn "cache_all contents " . Dumper $cache_all;
-
     my $finished_flows = $self->finished_flows;
 
     my $overlaps = 0;
@@ -153,8 +149,6 @@ sub _stitch_flows {
     my $latest_timestamp = $self->latest_timestamp;
 
     while( my ( $sensor, $cache ) = each %$cache_all ) {
-        warn "sensor: " . Dumper $sensor;
-        #warn "cache " . Dumper $cache;
 
 
     while( my ( $five_tuple, $flow_container ) = each %$cache ) {
@@ -175,7 +169,6 @@ sub _stitch_flows {
                     # If this flow and the previous flow go together, merge them
                     # and remove previous flow
                     if ( $self->_can_stitch_flow( $previous_flow->{'end'}, $start ) ) {
-                        #warn "stitching flows";
                         $flow = $self->_stitch_flow( $previous_flow, $flow );
                         $flows_to_remove{$i-1} = 1;
                         $stitched_flow_count++;
