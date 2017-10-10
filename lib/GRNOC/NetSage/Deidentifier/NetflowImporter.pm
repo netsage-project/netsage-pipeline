@@ -95,8 +95,8 @@ sub BUILD {
 
     #my $config_obj = $self->config;
     my $config = $self->config;
-    my $sensor_id = $config->{ 'sensor' };
-    if ( defined ( $sensor_id )) {
+    my $sensor_id = $config->{ 'sensor' } || hostname();
+    if ( defined ( $sensor_id ) ) {
         $self->_set_sensor_id( $sensor_id );
     }
     my $instance_id = $config->{ 'instance' };
@@ -213,7 +213,7 @@ sub _get_flow_data {
     foreach my $collection ( @$collections ) {
 
         my $path = $collection->{'flow-path'} || $self->flow_path;
-        my $sensor = $collection->{'sensor'};
+        my $sensor = $collection->{'sensor'} || hostname();
 
         my %params = %{ $self->_get_params( $collection ) };
         #$params{'path'}  = $path;
@@ -258,6 +258,7 @@ sub _get_flow_data {
             if ( exists ( $status->{ $rel } ) ) {
                 $status->{ $abs } = $status->{ $rel };
                 delete $status->{ $rel };
+                warn "$rel being changed to $abs in file cache ...";
             }
             if ( exists ( $status->{ $abs } ) ) {
                 my $entry = $status->{ $abs };

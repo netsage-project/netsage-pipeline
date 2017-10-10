@@ -17,6 +17,7 @@ use Try::Tiny;
 use Number::Bytes::Human qw(format_bytes);
 use Time::Duration;
 use Time::HiRes;
+use Sys::Hostname;
 
 use Data::Dumper;
 
@@ -97,10 +98,16 @@ sub _get_sensors {
     my $collections = $self->config->{'collection'};
 
     if ( ! defined( $collections ) ) {
-        $collections = {
-            'flow-path' => $self->flow_path,
-            'sensor' => $self->config->{'sensor'}
-        };
+        $collections = {};
+        if ( $self->config->{'worker'}->{'flow-path'} ) {
+            $collections->{'flow-path'} = $self->config->{'worker'}->{'flow-path'};
+        }
+        if ( $self->config->{'sensor'} ) {
+            $collections->{'sensor'} = $self->config->{'sensor'};
+
+        } else {
+            $collections->{'sensor'} = hostname();
+        }
     }
 
     my %sensors = ();
@@ -174,6 +181,8 @@ sub _run_flow_caching {
         $five_tuple .= $row->{'meta'}->{'protocol'};
 
         my $sensor_id = $row->{'meta'}->{'sensor_id'};
+
+        warn "sensor_id from metadata " . Dumper $row;
 
         #warn "five_tuple: $five_tuple\n";
 
