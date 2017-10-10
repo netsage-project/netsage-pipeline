@@ -59,6 +59,8 @@ sub BUILD {
 
     $self->_init_cache();
 
+    $self->_upgrade_cache_format();
+
     $self->_set_handler( sub { $self->_run_flow_caching(@_) } );
 
     return $self;
@@ -89,7 +91,6 @@ sub _init_cache {
 
     $self->_set_share( $share );
 
-    $self->_upgrade_cache_format();
 
 
 }
