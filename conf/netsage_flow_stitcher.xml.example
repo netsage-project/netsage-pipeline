@@ -1,30 +1,12 @@
 <config>
   <!-- rabbitmq connection info -->
   <rabbit_input>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
     <queue>netsage_deidentifier_raw2</queue>
     <channel>2</channel>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
     <queue>netsage_deidentifier_stitched</queue>
     <channel>3</channel>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   <worker>
       <!-- How many concurrent workers should perform the necessary operations -->

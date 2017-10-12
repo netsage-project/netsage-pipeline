@@ -16,6 +16,7 @@ Requires: GeoIP
 Requires: GeoIP-data
 %endif
 Requires: perl >= 5.8.8
+Requires: perl-Class-Accessor
 Requires: perl-Clone
 Requires: perl-Data-Validate-IP
 Requires: perl-Geo-IP

@@ -11,7 +11,7 @@
 name="netsage-flow-filter-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
-CONFIG="/etc/grnoc/netsage/flow-filter/netsage_flow_filter.xml"
+CONFIG="/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6

@@ -119,7 +119,7 @@ sub BUILD {
 
     $flow_path = $config->{'worker'}->{'flow-path'} if not defined $flow_path;
     $self->_set_flow_path( $flow_path );
-    $self->logger->debug("flow path: $flow_path");
+    $self->logger->debug("flow path: " . Dumper $flow_path);
 
     my $min_file_age = $self->min_file_age;
     $min_file_age = $config->{'worker'}->{'min-file-age'} if defined $config->{'worker'}->{'min-file-age'};

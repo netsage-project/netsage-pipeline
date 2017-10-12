@@ -79,7 +79,7 @@ sub _init_cache {
         -destroy => 'no',
     ) or die $!;
 
-    warn "thawing cache ...";
+    #warn "thawing cache ...";
     $cache = thaw( $share->fetch );
 
     if ( not defined( $cache ) ) {
@@ -152,7 +152,7 @@ sub _upgrade_cache_format {
             next if not defined $sensor;
             if ( $new_cache->{ $sensor } ) {
                 # merge
-                
+
                 if ( $new_cache->{ $sensor }->{ $key } &&  $new_cache->{ $sensor }->{ $key }->{'flows'} ) {
                     # merge
                     my $oldflows = $new_cache->{ $sensor }->{ $key }->{'flows'};

@@ -52,7 +52,6 @@ sub BUILD {
     $self->_set_simp_config( $config->{'simp'} );
     $self->_set_handler( sub { $self->_filter_messages(@_) } );
     $self->_connect_simp();
-    $self->test_simp();
     $self->get_router_details();
 
     my $snmp_cache_time = $config->{'worker'}->{'snmp-cache-time'};
@@ -70,7 +69,7 @@ sub _filter_messages {
 
     my $finished_messages = $messages;
 
-    my $router_details = $self->router_details->{'results'};
+    my $router_details = $self->router_details;
     # drop all messages if we don't have router derailts from simp
     if ( keys %$router_details < 1 ) {
         $self->_add_dropped_count( @$messages );
@@ -81,9 +80,10 @@ sub _filter_messages {
     my $i = 0;
     my @delete_indices = ();
     foreach my $message ( @$messages ) {
-        $self->get_router_details();
+        my $sensor = $message->{'meta'}->{'sensor_id'};
+        my $details = $router_details->{ $sensor };
 
-        my $import_flow = $self->_filter_flow( $message );
+        my $import_flow = $self->_filter_flow( $message, $details );
         if ( $import_flow < 1 ) {
             push @delete_indices, $i;
             $self->_add_dropped_count( 1 );
@@ -102,15 +102,18 @@ sub _filter_messages {
 }
 
 sub _filter_flow {
-    my ( $self, $message ) = @_;
+    my ( $self, $message, $details ) = @_;
+
+    return 0 if !defined ($details) || !defined( $details->{'results'} ) || keys %{ $details->{'results'} } == 0;
 
     my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
     my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
 
-    my $details = $self->router_details;
 
     my $num_results = keys ( %{ $details->{'results'} } );
+
     return 0 if $num_results < 1;
+
     my $host = ( keys ( %{ $details->{'results'} } ) )[0];
 
     my $mib_base = "1.3.6.1.2.1.31.1.1.1.18";
@@ -148,83 +151,59 @@ sub get_router_details {
     my ( $self ) = @_;
 
     my $client = $self->simp_client;
-    my $router = $self->router;
 
-    my $details = $self->router_details;
-    if ( defined $details->{'ts'} ) {
-        if ( time() - $details->{'ts'} <= $self->snmp_cache_time ) {
-            return;
+    my $router_details = $self->router_details || {};
+
+    my $collections = $self->config->{'collection'};
+
+    if ( ref($collections) ne "ARRAY" ) {
+        $collections = [ $collections ];
+
+    }
+
+    foreach my $collection (@$collections) {
+
+        #my $router = $self->router;
+        my $sensor = $collection->{'sensor'};
+        my $router = $collection->{'sensor'};
+        $router = $collection->{'router-address'} if $collection->{'router-address'};
+
+        my $row = {};
+
+        my $details = $router_details->{'router'};
+        if ( defined $details->{'ts'} ) {
+            if ( time() - $details->{'ts'} <= $self->snmp_cache_time ) {
+                return;
+            }
+        }
+
+        my %query = (
+            node => [$router],
+            oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
+
+        );
+
+        my $results = $client->get( %query );
+
+        if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
+            $self->logger->debug( "router found: $router" );
+            $row->{'results'} = $results->{'results'};
+            $self->logger->debug( "router found in simp: " . Dumper $results->{'results'} );
+        } else {
+            $self->logger->debug( "router NOT found in simp: " . Dumper $router );
+            $row->{'results'} = undef;
 
         }
 
+        my $now = time();
+
+        $row->{'ts'} = $now;
+
+        $router_details->{ $sensor } = $row;
     }
 
+    $self->_set_router_details( $router_details );
 
-    my %query = (
-        node => [$router],
-        oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
-
-    );
-
-    my $results = $client->get( %query );
-
-    if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
-        $self->logger->debug( "router found: $router" );
-    } else {
-        $self->logger->debug( "router NOT found in simp: $router" );
-
-    }
-
-    my $now = time();
-
-    $results->{'ts'} = $now;
-
-    $self->_set_router_details( $results );
-
-
-
-}
-
-sub test_simp {
-    my ( $self, $message ) = @_;
-
-    my @hosts = (
-        "137.164.18.52",
-        "137.164.21.3",
-        "137.164.20.99",
-        "137.164.20.105",
-        "137.164.20.106",
-        "137.164.20.109",
-        "137.164.20.110",
-        "137.164.21.17",
-        "209.124.178.139"
-    );
-
-
-
-    my $src_ip = $message->{'meta'}->{'src_ip'};
-    my $dst_ip = $message->{'meta'}->{'dst_ip'};
-    my $router = $self->router;
-    my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
-    my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
-
-   my $client = $self->simp_client;
-
-   foreach my $host (@hosts ) {
-       my %query = (
-           node => [$host],
-           oidmatch => ["1.3.6.1.2.1.31.1.1.1.18.*"]
-
-       );
-
-       my $results = $client->get( %query );
-
-       if ( exists( $results->{'results'} ) && keys ( %{ $results->{'results'} } ) > 0  ) {
-           $self->logger->debug( "FOUND: $host" );
-       } else {
-           $self->logger->debug( "no results: $host" );
-       }
-   }
 
 }
 

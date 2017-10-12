@@ -1,47 +1,12 @@
 <config>
-<!-- 
-     "sensor" indicates the node that captured the
-    flow records; it can be any string that uniquely
-    identifies that flow collector.
-    Defaults to the local hostname 
--->
-<!--
-  <sensor>hostname.domainname.tld</sensor>
--->
-
-<!-- "instance" goes along with sensor
-     this is to identify various instances if a sensor has more than one
-     "stream" / data collection
-     defaults to 0.
--->
-
-<!--
-    <instance>1</instance>
--->
 
   <!-- rabbitmq connection info -->
   <rabbit_input>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <ssl>0</ssl>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
-    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <queue>netsage_deidentifier_netflow_raw2</queue>
     <channel>2</channel>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <ssl>0</ssl>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
-    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <channel>3</channel>
     <queue>netsage_deidentifier_raw</queue>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
@@ -52,10 +17,7 @@
     <!-- How many concurrent workers should perform the necessary operations -->
     <num-processes>1</num-processes>
 
-    <!-- Directory to find flow data -->
-    <flow-path>/path/to/flow/data</flow-path>
-
-    <!-- flow-type is optional
+    <!-- flow-type is optional; this sets the default in case not specified in the shared config
          "netflow" is the default.
          "sflow" is also supported 
          this is purely to tag the metadata; it does not change how the data is processed
