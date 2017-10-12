@@ -1,10 +1,12 @@
 grnoc-netsage-deidentifier.spec
 conf/logging.conf.example
 conf/logging-debug.conf.example
+conf/netsage_shared.xml.example
 conf/netsage_deidentifier.xml.example
 conf/netsage_finished_flow_mover.xml.example
 conf/netsage_flow_archive.xml.example
 conf/netsage_flow_cache.xml.example
+conf/netsage_flow_filter.xml.example
 conf/netsage_flow_stitcher.xml.example
 conf/netsage_netflow_importer.xml.example
 conf/netsage_raw_data_importer.xml.example
@@ -16,6 +18,7 @@ bin/netsage-deidentifier-daemon
 bin/netsage-finished-flow-mover-daemon
 bin/netsage-flow-archive-daemon
 bin/netsage-flow-cache-daemon
+bin/netsage-flow-filter-daemon
 bin/netsage-flow-stitcher-daemon
 bin/netsage-netflow-importer-daemon
 bin/netsage-raw-data-importer
@@ -26,11 +29,13 @@ init.d/netsage-netflow-importer-daemon
 init.d/netsage-finished-flow-mover-daemon
 init.d/netsage-flow-archive-daemon
 init.d/netsage-flow-cache-daemon
+init.d/netsage-flow-filter-daemon
 init.d/netsage-flow-stitcher-daemon
 lib/GRNOC/NetSage/Deidentifier.pm
 lib/GRNOC/NetSage/Deidentifier/FlowArchive.pm
 lib/GRNOC/NetSage/Deidentifier/FlowCache.pm
 lib/GRNOC/NetSage/Deidentifier/FlowDeidentifier.pm
+lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 lib/GRNOC/NetSage/Deidentifier/FlowMover.pm
 lib/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
 lib/GRNOC/NetSage/Deidentifier/FlowTagger.pm

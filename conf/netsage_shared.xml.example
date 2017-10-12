@@ -1,0 +1,52 @@
+<!-- 
+    This is the shared config file for Netsage flow processing pipeline.
+    Configuration placed here will be shared with all the individual pipeline
+    components. Those components also have their own config; if a variable is set in
+    both places, the value in the individual config overrides the shared one.
+-->
+
+<config>
+    <!-- NOTE: you may have multiple <collection> stanzas -->
+    <collection>
+        <flow-path>/path/to/flow-files</flow-path>
+        <sensor>hostname</sensor>
+      <!-- "instance" goes along with sensor
+           this is to identify various instances if a sensor has more than one
+           "stream" / data collection
+           defaults to 0.
+      -->
+      <!--
+          <instance>1</instance>
+      -->
+      <!--
+           Defaults to sensor, but you can set it to something else here
+          <router-address></router-address>
+      
+      -->
+     <!--
+        <flow-type>sflow</flow-type>
+     -->
+    </collection>
+
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>127.0.0.1</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+  </rabbit_input>
+  <rabbit_output>
+    <host>127.0.0.1</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <channel>3</channel>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_output>
+</config>

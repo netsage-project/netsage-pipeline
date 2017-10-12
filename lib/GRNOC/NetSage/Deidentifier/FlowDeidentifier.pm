@@ -32,12 +32,11 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
-    # warn "config: " . Dumper $config;
+    my $config = $self->config;
     my $anon = $config->{'deidentification'};
     my $ipv4_bits = $config->{'deidentification'}->{'ipv4_bits_to_strip'};
     my $ipv6_bits = $config->{'deidentification'}->{'ipv6_bits_to_strip'};
+
     $self->_set_ipv4_bits_to_strip( $ipv4_bits );
     $self->_set_ipv6_bits_to_strip( $ipv6_bits );
     $self->_set_handler( sub { $self->_deidentify_messages(@_) } );
@@ -89,7 +88,7 @@ sub _generate_id {
     my $id_string = '';
     foreach my $field (@fields ) {
         #push @required, $message->{'meta'}->{$field};
-        warn "required field not found: $field " if not defined $message->{'meta'}->{$field};
+        #warn "required field not found: $field " if not defined $message->{'meta'}->{$field};
         my $value = $message->{'meta'}->{$field};
         $id_string .= $value;
         $hash->add( $value );
@@ -102,6 +101,7 @@ sub _generate_id {
 sub _deidentify_ip {
     my ( $self, $ip ) = @_;
     my $cleaned;
+
 
     if ( is_ipv4($ip) ) {
         my @bytes = split(/\./, $ip);
@@ -117,11 +117,10 @@ sub _deidentify_ip {
     } elsif ( is_ipv6($ip) ) {
         my $ip_obj = Net::IP->new( $ip );
         my $long = $ip_obj->ip();
-        #warn "$long\tlong";
         my @bytes = split(/:/, $long);
         my $total_bytes = @bytes;
         # Divide bits by 8 to get bytes; divide by 2 as there are 2 bytes per group
-        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2; 
+        my $num_to_remove = $total_bytes - $self->ipv6_bits_to_strip / 8 / 2;
         my @new_bytes = splice @bytes, 0, $num_to_remove;
         for( my $i=0; $i<$total_bytes - $num_to_remove; $i++ ) {
             push @new_bytes, 'x';
@@ -134,7 +133,6 @@ sub _deidentify_ip {
     }
 
     if ( not defined $cleaned ) {
-        warn "IP was NOT CLEANED. setting blank";
         $cleaned = '';
     }
 

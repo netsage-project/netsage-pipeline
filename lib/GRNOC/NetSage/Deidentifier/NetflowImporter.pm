@@ -93,13 +93,13 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
-    my $sensor_id = $config_obj->get( '/config/sensor' );
-    if ( defined ( $sensor_id )) {
+    #my $config_obj = $self->config;
+    my $config = $self->config;
+    my $sensor_id = $config->{ 'sensor' } || hostname();
+    if ( defined ( $sensor_id ) ) {
         $self->_set_sensor_id( $sensor_id );
     }
-    my $instance_id = $config_obj->get( '/config/instance' );
+    my $instance_id = $config->{ 'instance' };
 
     # for some reason if you leave <instance></instance> blank, you get
     # an empty hashref back. work around that.
@@ -119,7 +119,7 @@ sub BUILD {
 
     $flow_path = $config->{'worker'}->{'flow-path'} if not defined $flow_path;
     $self->_set_flow_path( $flow_path );
-    $self->logger->debug("flow path: $flow_path");
+    $self->logger->debug("flow path: " . Dumper $flow_path);
 
     my $min_file_age = $self->min_file_age;
     $min_file_age = $config->{'worker'}->{'min-file-age'} if defined $config->{'worker'}->{'min-file-age'};
@@ -172,86 +172,132 @@ sub _run_netflow_import {
 
 }
 
+sub _get_params {
+    my ( $self, $collection ) = @_;
+    my %params = ();
+    my $config = $self->config;
+
+    my $path = $collection->{'flow-path'} || $self->flow_path;
+    my $sensor = $collection->{'sensor'} || $self->sensor_id;
+    my $instance = $collection->{'instance'} || $self->instance_id || '';
+    my $flow_type = $collection->{'flow-type'} || $self->flow_type || 'netflow';
+
+
+    %params = (
+        path => $path,
+        sensor => $sensor,
+        instance => $instance,
+        flow_type => $flow_type
+    );
+
+
+    return \%params;
+}
+
 sub _get_flow_data {
     my ( $self ) = @_;
 
     my $flow_batch_size = $self->flow_batch_size;
     my $status = $self->status_cache;
 
-    my $path = $self->flow_path;
-    my $min_bytes = $self->min_bytes;
-    $self->logger->debug("path: $path");
-    $self->logger->debug("min_file_age: " . $self->min_file_age );
-
-    $self->_cull_flow_files();
-
-    try {
-        # TODO: don't forget to ignore nfcapd.current.*
-        my @paths = ( $path );
-        #my $ref = $self->can('find_nfcapd');
-        @files = ();
-        find({ wanted => sub { find_nfcapd($self)  }, follow => 1 }, @paths );
-
-        # TODO: remove reference to File::Find::Rule
-        #my @files_rule = File::Find::Rule
-        #        ->file()
-        #        ->age( 'older', $self->min_file_age )
-        #        ->name( 'nfcapd.*' )
-        #        ->relative(1)
-        #        ->extras({ follow => 1 })
-        #        ->in($path);
-
-        #        #warn "files_rules " . Dumper @files_rule;
+    my $collections = $self->config->{'collection'};
 
 
-    } catch {
-        $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
-        sleep(10);
-        return;
-    };
-    my @filepaths = ();
-    for(my $i=0; $i<@files; $i++) {
-        my $file = $files[$i];
+    if ( ref($collections) ne "ARRAY" ) {
+        $collections = [ $collections ];
+    }
+
+    foreach my $collection ( @$collections ) {
+
+        my $path = $collection->{'flow-path'} || $self->flow_path;
+        my $sensor = $collection->{'sensor'} || hostname();
+
+        my %params = %{ $self->_get_params( $collection ) };
+
+        $params{'flow-path'} = $path;
+        $params{'sensor'} = $sensor;
+
+        #my $path = $self->flow_path;
+        my $min_bytes = $self->min_bytes;
+        $self->logger->debug("path: $path");
+        $self->logger->debug("min_file_age: " . $self->min_file_age );
+
+        $self->_cull_flow_files( $path );
+
+        try {
+            # TODO: don't forget to ignore nfcapd.current.*
+            my @paths = ( $path );
+            #my $ref = $self->can('find_nfcapd');
+            @files = ();
+            find({ wanted => sub { find_nfcapd($self, \%params)  }, follow => 1 }, @paths );
+
+        } catch {
+            $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
+            sleep(10);
+            return;
+        };
+        my @filepaths = ();
+        for(my $i=0; $i<@files; $i++) {
+            my $file = $files[$i];
 #$self->logger->debug("file: $file");
-        my $file_path = dir( $path, $file ) . "";
-        my $stats = stat($file_path);
-        my $abs = file( $file_path );
-        my $rel = $abs->relative( $path ) . "";
-        if ( exists ( $status->{ $rel } ) ) {
-            my $entry = $status->{ $rel };
-            if ( (!defined $stats) or (!defined $entry) ) {
-                next;
+            my $file_path = dir( $path, $file ) . "";
+            my $stats = stat($file_path);
+            my $abs = file( $file_path );
+            # TODO: changed rel to abs; need a way to figure out a way to convert
+            # the old rel paths to abs
+            
+            my $rel = $abs->relative( $path ) . "";
+            if ( exists ( $status->{ $rel } ) ) {
+                $status->{ $abs } = $status->{ $rel };
+                delete $status->{ $rel };
+                #warn "$rel being changed to $abs in file cache ...";
             }
-            my $mtime_cache = $entry->{'mtime'};
-            my $size_cache  = $entry->{'size'};
+            if ( exists ( $status->{ $abs } ) ) {
+                my $entry = $status->{ $abs };
+                if ( (!defined $stats) or (!defined $entry) ) {
+                    next;
+                }
+                my $mtime_cache = $entry->{'mtime'};
+                my $size_cache  = $entry->{'size'};
 
-            # If file size and last-modified time are unchanged, skip it
-            if ( $mtime_cache == $stats->mtime
-                && $size_cache == $stats->size ) {
-                next;
+                # If file size and last-modified time are unchanged, skip it
+                if ( $mtime_cache == $stats->mtime
+                    && $size_cache == $stats->size ) {
+                    next;
+                }
             }
+            push @filepaths, dir( $path, $file ) . "";
+
         }
-        push @filepaths, dir( $path, $file ) . "";
+        @filepaths = sort @filepaths;
 
-    }
-    @filepaths = sort @filepaths;
+        if ( @filepaths > 0 ) {
+            my $success = $self->_get_nfdump_data(\@filepaths, %params);
+        }
 
-    if ( @filepaths > 0 ) {
-        my $success = $self->_get_nfdump_data(\@filepaths);
-    }
 
+
+
+    } # end collections foreach loop
 
 
 }
 
 sub _get_nfdump_data {
-    my ( $self, $flowfiles ) = @_;
+    my ( $self, $flowfiles, %params ) = @_;
+
+    my $sensor = $params{'sensor'};
+    my $instance = $params{'instance'};
+
+my $path = $params{'path'};
+    
+    my $flow_type = $params{'flow_type'};
 
     my $status = $self->status_cache;
 
     my $flow_batch_size = $self->flow_batch_size;
 
-    my $path = $self->flow_path;
+    #my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
     my $config_path = $self->nfdump_path;
@@ -264,7 +310,6 @@ sub _get_nfdump_data {
             $self->logger->error("Invalid nfdump path specified; quitting");
             $self->_set_is_running( 0 );
             return;
-
         }
 
     }
@@ -282,7 +327,7 @@ sub _get_nfdump_data {
 
         $file_count++;
         if ( $cull_count > 0 && $file_count > 0 && $file_count % $cull_count == 0 ) {
-            $self->_cull_flow_files();
+            $self->_cull_flow_files( $path );
         }
 
         my $stats = stat($flowfile);
@@ -322,16 +367,18 @@ sub _get_nfdump_data {
             $row->{'type'} = 'flow';
             $row->{'interval'} = 600;
             $row->{'meta'} = {};
-            $row->{'meta'}->{'flow_type'} = $self->flow_type || 'netflow';
+            $row->{'meta'}->{'flow_type'} = $flow_type || 'netflow';
             $row->{'meta'}->{'src_ip'} = $sa;
             $row->{'meta'}->{'src_port'} = $sp;
             $row->{'meta'}->{'dst_ip'} = $da;
             $row->{'meta'}->{'dst_port'} = $dp;
             $row->{'meta'}->{'protocol'} = getprotobynumber( $pr );
-            $row->{'meta'}->{'sensor_id'} = $self->sensor_id;
-            $row->{'meta'}->{'instance_id'} = $self->instance_id if $self->instance_id ne '';
+            $row->{'meta'}->{'sensor_id'} = $sensor;
+            $row->{'meta'}->{'instance_id'} = $instance if $instance ne '';
             $row->{'meta'}->{'src_asn'} = $sas;
             $row->{'meta'}->{'dst_asn'} = $das;
+            $row->{'meta'}->{'src_ifindex'} = $in if $in;
+            $row->{'meta'}->{'dst_ifindex'} = $out if $out;
             $row->{'start'} = $start;
             $row->{'end'} = $end;
 
@@ -357,9 +404,11 @@ sub _get_nfdump_data {
         $self->_publish_flows();
         @all_data = ();
 
+        # TODO: changed rel to abs; need a way to figure out a way to convert
+        # the old rel paths to abs
         my $abs = file( $flowfile );
-        my $rel = $abs->relative( $path ) . "";
-        $status->{$rel} = {
+        #my $rel = $abs->relative( $path ) . "";
+        $status->{$abs} = {
             mtime => $stats->mtime,
             size => $stats->size
         };
@@ -418,7 +467,7 @@ sub _publish_flows {
 }
 
 sub _cull_flow_files {
-    my ( $self ) = @_;
+    my ( $self, $path ) = @_;
     my $status = $self->status_cache;
     #$self->logger->debug( "cache status" . Dumper $status );
 
@@ -426,6 +475,9 @@ sub _cull_flow_files {
         $self->logger->debug("not culling files (disabled)");
         return;
     }
+
+    $self->logger->debug("CULLING files (enabled)");
+
 
     # see how old files should be (in days)
     my $cull_ttl = $self->cull_ttl;
@@ -442,14 +494,12 @@ sub _cull_flow_files {
 
         my $dt = DateTime->now;
 
-        my $path = $self->flow_path;
-
         if ( DateTime->compare( $mtime,  $dt->subtract_duration( $dur ) ) == -1 ) {
-            # Make sure that the file exists, AND that it is under our main 
+            # Make sure that the file exists, AND that it is under our main
             # flow directory. Just a sanity check to prevent deleting files
             # outside the flow data directory tree.
 
-            my $filepath = $path . '/' . $filename;
+            my $filepath = $filename;
             my $realpath = "";
 
             try {
@@ -476,6 +526,7 @@ sub _cull_flow_files {
 
             if ( -f $realpath ) {
                 my $parent = path( $realpath )->parent;
+                $self->logger->debug("deleting $filepath ...");
                 unlink $filepath or $self->logger->error( "Could not unlink $realpath: $!" );
                 $dirs_to_remove{ $parent } = 1;
             } else {
@@ -500,18 +551,19 @@ sub _cull_flow_files {
 }
 
 sub find_nfcapd {
-    my ( $self ) = @_;
-    my $path = $self->flow_path;
+    my ( $self, $params ) = @_;
+    #my $path = $self->flow_path;
+    my $path = $params->{'path'};
     my $filepath = $File::Find::name;
     if ( not -f $filepath ) {
         return;
 
     }
     return if not defined $filepath;
-    #my @files = @_
     return if $filepath =~ /nfcapd\.current/;
+    return if $filepath =~ /\.nfstat$/;
+
     my $name = 'nfcapd.*';
-    #my $rel = $path, ("/tmp/foo/bar")->relative("/tmp"); 
     my $relative = path( $filepath )->relative( $path );
 
     # if min_file_age is '0' then we don't care about file age (this is default)
