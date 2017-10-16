@@ -136,18 +136,14 @@ As you can see above, by default, the Flow Cacher expects to find raw flows in a
 The rabbit output queue for last stage must be configured; currently this is the Flow Mover. It should be set to a queue from which TSDS writers read. From there, the data will be directly ingested by TSDS.
 
 
-### Config file listing
+### Shared config file listing
 
-The configuration files and logging configuration files are listed below:
+The shared configuration files and logging configuration files are listed below (all of the pipeline components use these):
 
 ```
-/etc/grnoc/netsage/deidentifier/logging.conf
-/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
-/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
-/etc/grnoc/netsage/deidentifier/netsage_tagger.xml
-/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml
-/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
+/etc/grnoc/netsage/deidentifier/netsage_shared.xml - Shared config file allowing configuration of collections, and Rabbit connection information
+/etc/grnoc/netsage/deidentifier/logging.conf - logging config
+/etc/grnoc/netsage/deidentifier/logging-debug.conf - logging config with debug enabled
 ```
 
 ## Running the daemons
@@ -169,19 +165,31 @@ For more details on each individual daemon, use the `--help` flag.
 #### netsage-netflow-importer-daemon
 This is a daemon that reads raw netflow data, reads it, and pushes it to a Rabbit queue for processing.
 
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml`
+
 #### netsage-flow-cache-daemon
 This is a daemon that polls a Rabbit queue for raw flow data, retrieves it, and stores it in shared memory for the stitching daemon.
+
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml`
 
 #### netsage-flow-stitcher-daemon
 This is a daemon that polls the shared memory cache for flow data, retrieves it, and stitches long-running flows based on 5-tuples and timestamps
 
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml`
+
 #### netsage-tagger-daemon
 This is a daemon that polls a Rabbit queue for flow data, retrieves it, and tags it with GeoIP/ASN/Organization information.
+
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_tagger.xml`
 
 #### netsage-deidentifier-daemon
 
 This is daemon that polls a Rabbit queue for tagged flow data, retrieves it, and deidentifies the IP addresses.
 
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml`
+
 #### netsage-flow-mover-daemon
 This is a daemon that polls a Rabbit queue for flow data, retrieves it, and pushes it to another queue 
+
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml`
 
