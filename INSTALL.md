@@ -1,6 +1,6 @@
-# NetSage Deidentifier Install Guide
+# NetSage Flow Processing Pipeline Install Guide
 
-This document covers installing the NetSage deidentification pipeline on a new machine. Steps should be followed below in order unless you know for sure what you are doing. This document assumes a RedHat Linux environment or one of its derivatives.
+This document covers installing the NetSage Flow Processing Pipeline on a new machine. Steps should be followed below in order unless you know for sure what you are doing. This document assumes a RedHat Linux environment or one of its derivatives.
 
 ## Installing the Prerequisites
 
@@ -16,7 +16,45 @@ Typically, the default configuration will work. Perform any desired Rabbit confi
 [root@host ~]# /sbin/service rabbitmq-server start
 ```
 
-The NetFlow Importer daemon requires nfdump. This is *not* listed as a dependency as in a lot cases people are running special builds of it -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work.
+## nfdump
+
+The NetFlow Importer daemon requires nfdump. If you're using tstat instead, you don't need nfdump. nfdump is *not* listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
+
+## Installing the EPEL repo
+
+Some of our dependencies come from the EPEL repo. To install this:
+
+```
+[root@host ~]# yum install epel-release
+```
+
+## Installing the GlobalNOC Open Source repo
+
+The Pipeline package (and its dependencies that are not in EPEL) are in the GlobalNOC Open Source Repo.
+
+For Red Hat/CentOS 6, create `/etc/yum.repos.d/grnoc6.repo` with the following content.
+
+```
+[grnoc6]
+name=GlobalNOC Public el6 Packages - $basearch
+baseurl=https://repo-public.grnoc.iu.edu/repo/6/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://repo-public.grnoc.iu.edu/repo/RPM-GPG-KEY-GRNOC6
+```
+
+For Red Hat/CentOS 7, create `/etc/yum.repos.d/grnoc7.repo` with the following content.
+
+```
+[grnoc7]
+name=GlobalNOC Public el7 Packages - $basearch
+baseurl=https://repo-public.grnoc.iu.edu/repo/7/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://repo-public.grnoc.iu.edu/repo/RPM-GPG-KEY-GRNOC7
+```
+
+The first time you install packages from the repo, you will have to accept the GlobalNOC repo key.
 
 ## Installing the Pipeline
 
@@ -27,13 +65,18 @@ The pipeline consists of several daemons, most of which read data from a Rabbit 
 2. Flow Stitcher - stitches flows spanning the 1-minute boundaries
 3. Flow Tagger - Tags flows with GeoIP/ASN/Organization information
 4. Flow Deidentifer - Deidentifies flow by stripping bits from the IP addresses (configurable)
-5. Flow Mover - Moves finished flows to a queue for ingestion by TSDS (though actually this can generally be used to move flows from one queue to another)
+5. Flow Mover - Moves finished flows to a queue for ingestion by GlobalNOC TSDS, Elasticsearch, etc (though actually this can generally be used to move flows from one queue to another)
 
 The daemons are all contained within one package. Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
 
 ```
 [root@host ~]# yum install grnoc-netsage-deidentifier
 ```
+
+## Setting up the shared config file
+
+New in version 1.0.0 is a shared config file that all the pipeline components read before reading their individual config files. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
+
 
 ## Configuring the Pipeline Stages
 

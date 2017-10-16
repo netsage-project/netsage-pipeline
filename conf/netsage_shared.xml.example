@@ -37,6 +37,7 @@
     <ssl>0</ssl>
     <batch_size>100</batch_size>
     <vhost>/</vhost>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
     <host>127.0.0.1</host>
@@ -46,7 +47,6 @@
     <ssl>0</ssl>
     <batch_size>100</batch_size>
     <vhost>/</vhost>
-    <channel>3</channel>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
 </config>
