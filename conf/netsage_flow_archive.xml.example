@@ -4,30 +4,12 @@
   <archive_file>raw_archive.jsonl</archive_file>
   <!-- rabbitmq connection info -->
   <rabbit_input>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <ssl>0</ssl>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
-    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <queue>netsage_deidentifier_deidentified_archive</queue>
     <channel>2</channel>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
-    <host>127.0.0.1</host>
-    <port>5672</port>
-    <username>guest</username>
-    <password>guest</password>
-    <ssl>0</ssl>
-    <batch_size>100</batch_size>
-    <vhost>/</vhost>
-    <cacert>/path/to/certificate.crt</cacert> <!-- required if ssl is 1 -->
     <channel>3</channel>
     <queue>netsage_deidentifier_raw2</queue>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   <worker>
     <!-- How many flows to process at once -->

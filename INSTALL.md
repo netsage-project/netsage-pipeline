@@ -119,6 +119,7 @@ The shared config looks like this. Note that RabbitMQ connection information is 
     <flow-path>/path/to/flow-files2</flow-path>
     <sensor>hostname2.tld</sensor>
   </collection>
+
   <!-- rabbitmq connection info -->
   <rabbit_input>
     <host>127.0.0.1</host>
@@ -151,34 +152,20 @@ Each stage must be configured with Rabbit input and output queue information. Th
 
 The username/password are both set to "guest" by default, as this is the default provided by RabbitMQ. This works fine if the localhost is processing all the data. The configs look something like this (some have additional sections).
 
+Notice that the only Rabbit connection information that's provided here is that which is not specific in the shared config file. This way if we need to change the credentials throughout the entire pipeline, it's easy to do.
+
 ```
 <config>
   <!-- rabbitmq connection info -->
   <rabbit_input>
-    <host>127.0.0.1</host>
-    <port>5671</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
     <queue>netsage_deidentifier_raw</queue>
     <channel>2</channel>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
   </rabbit_input>
 
   <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
   <rabbit_output>
-    <host>127.0.0.1</host>
-    <port>5671</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
     <queue>netsage_deidentifier_cached</queue>
     <channel>3</channel>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
   </rabbit_output>
   <worker>
       <!-- How many concurrent workers should perform the necessary operations -->
@@ -200,7 +187,7 @@ As you can see above, by default, the Flow Cacher expects to find raw flows in a
 
 ### Configuring the last stage
 
-The rabbit output queue for last stage must be configured; currently this is the Flow Mover. It should be set to a queue from which TSDS writers read. From there, the data will be directly ingested by TSDS.
+The rabbit output queue for last stage must be configured; currently this is the Flow Mover. It should be set to a queue from which TSDS or other writers read. From there, the data will be directly ingested by TSDS/Logstash/etc. Unless you are running an ELK stack on the same host as your flow collection, you will also need to set the hostname and credentials for the Flow Mover, since they will be different from those in the shared config.
 
 
 ### Shared config file listing

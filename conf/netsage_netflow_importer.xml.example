@@ -4,27 +4,16 @@
   <rabbit_input>
     <queue>netsage_deidentifier_netflow_raw2</queue>
     <channel>2</channel>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
     <channel>3</channel>
     <queue>netsage_deidentifier_raw</queue>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   <worker>
     <!-- How many flows to process at once -->
     <flow-batch-size>100</flow-batch-size>
     <!-- How many concurrent workers should perform the necessary operations -->
     <num-processes>1</num-processes>
-
-    <!-- flow-type is optional; this sets the default in case not specified in the shared config
-         "netflow" is the default.
-         "sflow" is also supported 
-         this is purely to tag the metadata; it does not change how the data is processed
-    -->
-    <!--
-        <flow-type>netflow</flow-type>
-    -->
 
     <!-- path to nfdump executable (defaults to /usr/bin/nfdump) -->
     <!-- 

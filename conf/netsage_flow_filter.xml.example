@@ -4,12 +4,10 @@
   <rabbit_input>
     <queue>netsage_deidentifier_raw_prefilter</queue>
     <channel>2</channel>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_input>
   <rabbit_output>
     <channel>3</channel>
     <queue>netsage_deidentifier_raw</queue>
-    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   <simp>
       <host>127.0.0.1</host>
