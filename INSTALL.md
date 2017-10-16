@@ -77,6 +77,73 @@ The daemons are all contained within one package. Nothing will automatically sta
 
 New in version 1.0.0 is a shared config file that all the pipeline components read before reading their individual config files. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
 
+The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
+```
+<collection>
+    <flow-path>/path/to/flow-files</flow-path>
+    <sensor>hostname.tld</sensor>
+  <!-- "instance" goes along with sensor
+       this is to identify various instances if a sensor has more than one
+       "stream" / data collection
+       defaults to 0.
+  -->
+  <!--
+      <instance>1</instance>
+  -->
+  <!--
+       Defaults to sensor, but you can set it to something else here
+      <router-address></router-address>
+  -->
+ <!--
+    Flow type: type of flow data (defaults to netflow)
+ -->
+ <!--
+    <flow-type>sflow</flow-type>
+ -->
+</collection>
+```
+
+Notice that `instance`, `router-address`, and `flow-type` are commented out. You only need these if you need an something other than the default values, as described in the comments in the default shared config file.
+
+You can have multiple `collection` stanzas, to import multiple collections on one host.
+
+The shared config looks like this. Note that RabbitMQ connection information is listed, but not the queue or channel, as these will vary per daemon. If you're running a default RabbitMQ config, which is open only to 'localhost' as guest/guest, you won't need to change anything here. Note that you will need to change the rabbit_output for the Finished Flow Mover Daemon regardless (see below).
+
+```
+<config>
+  <collection>
+    <flow-path>/path/to/flow-files1</flow-path>
+    <sensor>hostname1.tld</sensor>
+  </collection>
+  <collection>
+    <flow-path>/path/to/flow-files2</flow-path>
+    <sensor>hostname2.tld</sensor>
+  </collection>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <ssl>0</ssl>
+    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
+  </rabbit_input>
+
+  <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
+  <rabbit_output>
+    <host>127.0.0.1</host>
+    <port>5671</port>
+    <username>guest</username>
+    <password>guest</password>
+    <batch_size>100</batch_size>
+    <vhost>netsage</vhost>
+    <ssl>0</ssl>
+    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
+  </rabbit_output>
+</config>
+```
 
 ## Configuring the Pipeline Stages
 
