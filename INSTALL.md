@@ -150,6 +150,17 @@ The configuration files and logging configuration files are listed below:
 /etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml
 ```
 
+## Running the daemons
+
+Typically, the daemons are started and stopped via init script (CentOS 6) or systemd (CentOS 7). They can also be run manually. The daemons all support these flags:
+
+`--config [file]` - specify which config file to read
+`--sharedconfig [file]` - specify which shared config file to read
+`--logging [file]` - the logging config
+`--nofork` - run in foreground (do not daemonize)
+
+For more details on each individual daemon, use the `--help` flag.
+
 ### Daemon Listing
 
 #### netsage-netflow-importer-daemon
