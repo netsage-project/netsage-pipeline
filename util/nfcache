@@ -8,13 +8,23 @@ use Getopt::Long;
 use Storable qw(freeze thaw retrieve store);
 
 my $in_file = '/var/cache/netsage/netflow_importer.cache';
-#my $out_file = '/var/cache/netsage/netflow_importer.cache';
-my $out_file = 'netflow_importer_new.cache';
+#my $in_file = '/var/cache/netsage/netflow_importer_cenic.cache';
+my $out_file; # = 'netflow_importer_new.cache';
+my $pattern = '';
+my $delete=0;
 
 GetOptions(	
 		'infile=s'  => \$in_file,
-	    	'outfile=s' => \$out_file
+        'outfile=s' => \$out_file,
+        'pattern=s' => \$pattern,
+        'delete=i' =>  \$delete
 	  );
+
+if ( ! $out_file ) {
+    $out_file = $in_file . ".new";
+}
+
+$pattern = qr/$pattern/;
 
 my $status = read_cache();
 
@@ -26,6 +36,11 @@ foreach my $key ( keys %$status ) {
 		#delete $status->{ $key };
 
 	}
+    if ( $delete && $pattern ne "" && $key =~ $pattern ) {
+        warn "would delete key: $key";
+        delete $status->{ $key };
+
+    }
 	print "$key\n";
 }
 
