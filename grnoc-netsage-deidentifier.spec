@@ -1,7 +1,7 @@
 Summary: GRNOC NetSage Deidentifier
 Name: grnoc-netsage-deidentifier
-Version: 1.0.0
-Release: 2%{?dist}
+Version: 1.0.1
+Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
 URL: http://globalnoc.iu.edu

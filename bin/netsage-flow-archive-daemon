@@ -14,11 +14,13 @@ use Data::Dumper;
 
 use constant DEFAULT_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml';
 use constant DEFAULT_LOGGING_FILE => '/etc/grnoc/netsage/deidentifier/logging.conf';
+use constant DEFAULT_SHARED_CONFIG_FILE => '/etc/grnoc/netsage/deidentifier/netsage_shared.xml';
 
 ### command line options ###
 
 my $config = DEFAULT_CONFIG_FILE;
 my $logging = DEFAULT_LOGGING_FILE;
+my $shared_config = DEFAULT_SHARED_CONFIG_FILE;
 my $nofork;
 my $help;
 
@@ -32,6 +34,7 @@ usage() if $help;
 
 # start/daemonize writer
 my $archive = GRNOC::NetSage::Deidentifier::FlowArchive->new( config_file => $config,
+                                                          shared_config_file => $shared_config,
                                                           logging_file => $logging,
                                                           process_name => 'netsage_flow_archive',
                                                           daemonize => !$nofork );
