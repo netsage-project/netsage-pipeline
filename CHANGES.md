@@ -1,3 +1,8 @@
+## GRNOC NetSage Deidentifier 1.0.1 --  Wed Oct 25 2017
+
+Features:
+ * ISSUE=3754 PROJ=160 Extend shared config to archiver and flow mover
+
 ## GRNOC NetSage Deidentifier 1.0.0 --  Wed Oct 10 2017
 
 Features:
