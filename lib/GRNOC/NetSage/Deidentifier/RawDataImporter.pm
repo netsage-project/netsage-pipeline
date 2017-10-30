@@ -35,8 +35,9 @@ sub BUILD {
 
     my ( $self ) = @_;
 
-    my $config_obj = $self->config;
-    my $config = $config_obj->get('/config');
+    #my $config_obj = $self->config;
+    #my $config = $config_obj->get('/config');
+    my $config = $self->config;
     #$self->_set_archive_path( $config->{'archive_path'} );
     #my $file = $config->{'archive_file'};
     #if ( defined $file ) {
@@ -45,6 +46,7 @@ sub BUILD {
     #}
     my $json = JSON::XS->new();
     $self->_set_json( $json );
+
 
     $self->_set_handler( sub { $self->_import_raw_data(@_) } );
 

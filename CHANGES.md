@@ -1,3 +1,8 @@
+## GRNOC NetSage Deidentifier 1.0.2 --  Day Month Date Year
+
+Features:
+ * ISSUE=5575 PROJ=160 Improve handling of bad input data
+
 ## GRNOC NetSage Deidentifier 1.0.1 --  Wed Oct 25 2017
 
 Features:

@@ -20,9 +20,9 @@ my %cache;
 
 my $knot = tie %cache, 'IPC::Shareable', $glue, { %options } or die "cache: tie failed\n";
 
-IPC::Shareable->clean_up_all;
+#IPC::Shareable->clean_up_all;
 $knot->remove();
-die;
+#die;
 
 $cache{'added_by_daemon'} = 0;
 

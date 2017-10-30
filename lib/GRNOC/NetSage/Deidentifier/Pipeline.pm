@@ -16,6 +16,7 @@ use Try::Tiny;
 use Data::Validate::IP;
 use Net::IP;
 use Hash::Merge qw( merge );
+use POSIX;
 
 use Data::Dumper;
 
@@ -248,10 +249,15 @@ sub _consume_loop {
         # receive the next rabbit message
         my $rabbit_message;
 
+        my $delivery_tag;
+
         try {
 
             $rabbit_message = $rabbit->recv( QUEUE_FETCH_TIMEOUT );
+
+
         }
+
 
         catch {
 
@@ -273,6 +279,8 @@ sub _consume_loop {
         # try to JSON decode the messages
         my $messages;
 
+            $delivery_tag = $rabbit_message->{'delivery_tag'};
+
         try {
 
             $messages = $self->json->decode( $rabbit_message->{'body'} );
@@ -288,7 +296,7 @@ sub _consume_loop {
             try {
 
                 # reject the message and do NOT requeue it since its malformed JSON
-                $rabbit->reject( $input_channel, $rabbit_message->{'delivery_tag'}, 0 );
+                $rabbit->reject( $input_channel, $delivery_tag, 0 );
             }
 
             catch {
@@ -308,10 +316,10 @@ sub _consume_loop {
 
             $self->logger->error( "Message body must be an array." );
 
-            try {
 
-                # reject the message and do NOT requeue since its not properly formed
-                $rabbit->reject( $input_queue, $rabbit_message->{'delivery_tag'}, 0 );
+            try {
+                # reject the message and do NOT requeue since it's not properly formed
+                $rabbit->reject( $input_channel, $delivery_tag, 0 );
             }
 
             catch {
@@ -319,7 +327,7 @@ sub _consume_loop {
                 $self->logger->error( "Unable to reject rabbit message: $_" );
 
                 # reconnect to rabbit since we had a failure
-                $self->_rabbit_connect();
+                #$self->_rabbit_connect();
             };
 
             next;
