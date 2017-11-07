@@ -6,7 +6,7 @@
   </rabbit_input>
   <rabbit_output>
     <queue>netsage_deidentified</queue>
-    <exchange>netsage_deidentified</exchange>
+    <!--    <exchange>netsage_deidentified</exchange> -->
     <channel>4</channel>
   </rabbit_output>
   <worker>

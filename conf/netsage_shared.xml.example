@@ -9,7 +9,9 @@
     <!-- NOTE: you may have multiple <collection> stanzas -->
     <collection>
         <flow-path>/path/to/flow-files</flow-path>
+        <!--
         <sensor>hostname</sensor>
+        -->
       <!-- "instance" goes along with sensor
            this is to identify various instances if a sensor has more than one
            "stream" / data collection
