@@ -80,7 +80,11 @@ sub _init_cache {
     ) or die $!;
 
     #warn "thawing cache ...";
-    $cache = thaw( $share->fetch );
+    $cache = {};
+
+    my $fetch = $share->fetch;
+
+    $cache = thaw( $fetch ) if $fetch;
 
     if ( not defined( $cache ) ) {
         $self->logger->debug( "initially creating cache ..." );
@@ -140,7 +144,13 @@ sub _upgrade_cache_format {
 
     $share->lock( LOCK_SH );
 
-    $cache = thaw( $share->fetch );
+    my $fetch = $share->fetch;
+
+    if ( $fetch ) {
+    	$cache = thaw( $fetch );
+    } else {
+	$cache = {};
+    }
 
     my $new_cache = {};
 
@@ -209,7 +219,14 @@ sub _run_flow_caching {
     #warn "thawing cache ...";
     $share->lock( LOCK_SH );
 
-    $cache = thaw( $share->fetch );
+    my $fetch = $share->fetch;
+
+    if ( $fetch ) {
+        $cache = thaw( $fetch );
+    } else {
+	$cache = {};
+
+   }
 
     $share->unlock( );
 
