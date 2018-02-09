@@ -209,7 +209,7 @@ sub _get_flow_data {
 
     foreach my $collection ( @$collections ) {
 
-        my $path = $collection->{'flow-path'} || $self->flow_path;
+        my $path = $collection->{'flow-path'}; # || $self->flow_path;
         my $sensor = $collection->{'sensor'} || hostname();
 
         my %params = %{ $self->_get_params( $collection ) };
@@ -469,6 +469,7 @@ sub _publish_flows {
 sub _cull_flow_files {
     my ( $self, $path ) = @_;
     my $status = $self->status_cache;
+#warn "status " . Dumper $status;
     #$self->logger->debug( "cache status" . Dumper $status );
 
     if ( $self->cull_enable < 1 ) {
@@ -484,6 +485,7 @@ sub _cull_flow_files {
 
     my @cache_remove = ();
     my %dirs_to_remove = ();
+
 
     while( my ($filename, $attributes) = each %$status ) {
         my $mtime = DateTime->from_epoch( epoch =>  $attributes->{'mtime'} );
@@ -510,8 +512,8 @@ sub _cull_flow_files {
                 # if the flow path does not subsume the file we're asked to delete,
                 # refuse
                 if ( !$subsumes ) {
-                    $self->logger->error("Tried to delete a file outside the flow path!: " . $realpath . " . filename " . $filename);
-                    push @cache_remove, $filename;
+                    #$self->logger->debug("Tried to delete a file outside the flow path!: " . $realpath . "; path: " . $path);
+                    #push @cache_remove, $filename;
                     #next;
                 }
             } catch {
@@ -523,6 +525,7 @@ sub _cull_flow_files {
             };
 
             #return;
+            #
 
             if ( -f $realpath ) {
                 my $parent = path( $realpath )->parent;
