@@ -1,0 +1,23 @@
+<config>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <queue>netsage_deidentifier_tagged</queue>
+    <channel>6</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <queue>netsage_deidentifier_scireg_tagged</queue>
+    <vhost>/</vhost>
+    <channel>7</channel>
+  </rabbit_output>
+  <scireg>
+      <location>/path/to/file.json</location>
+  </scireg>
+  <worker>
+    <!-- How many concurrent workers should perform the necessary operations -->
+    <num-processes>2</num-processes>
+  </worker>
+  <master>
+    <!-- where should we write the daemon pid file to -->
+    <pid-file>/var/run/netsage-scireg-tagger-daemon.pid</pid-file>
+  </master>
+</config>

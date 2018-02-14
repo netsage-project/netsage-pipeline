@@ -31,6 +31,7 @@ Requires: perl-Math-Round
 Requires: perl-Moo
 Requires: perl-Net-AMQP-RabbitMQ
 Requires: perl-Net-IP
+Requires: perl-Net-CIDR-Lite
 Requires: perl-Number-Bytes-Human
 Requires: perl-Parallel-ForkManager
 Requires: perl-Path-Class

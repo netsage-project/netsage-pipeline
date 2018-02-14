@@ -9,6 +9,7 @@ extends 'GRNOC::NetSage::Deidentifier::Pipeline';
 
 use GRNOC::Log;
 use GRNOC::Config;
+use GRNOC::NetSage::Deidentifier::DataService::ScienceRegistry;
 
 use Data::Validate::IP;
 use Net::IP;
@@ -16,8 +17,6 @@ use Text::Unidecode; # TODO: REMOVE THIS once TSDS bug is fixed
 use Digest::SHA;
 use utf8;
 use JSON::XS;
-
-
 
 use Data::Dumper;
 
@@ -39,6 +38,11 @@ sub BUILD {
     $self->_set_handler( sub { $self->_process_messages(@_) } );
     my $json = JSON::XS->new();
     $self->_set_json( $json );
+
+    my $scireg = new GRNOC::NetSage::Deidentifier::DataService::ScienceRegistry(
+            config => $config,
+            logger => $self->logger
+    );
 
     return $self;
 }
