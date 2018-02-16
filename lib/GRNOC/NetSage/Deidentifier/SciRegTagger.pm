@@ -27,6 +27,8 @@ has handler => ( is => 'rwp');
 
 has json => ( is => 'rwp' );
 
+has scireg => ( is => 'rwp' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -43,6 +45,7 @@ sub BUILD {
             config => $config,
             logger => $self->logger
     );
+    $self->_set_scireg( $scireg );
 
     return $self;
 }
@@ -53,11 +56,22 @@ sub BUILD {
 # in this case we want to copy the messages unmodified, so returns the original data
 sub _process_messages {
     my ( $self, $messages ) = @_;
+    my $scireg = $self->scireg;
 
-    warn "MESSAGES\n" . Dumper $messages;
+    #warn "MESSAGES\n" . Dumper $messages;
+    foreach my $row (@$messages ) {
+        #warn "row:\n" . Dumper $row;
+        my $src = $row->{'meta'}->{'src_ip'};
+        warn "querying src: $src";
+        my $src_meta = $scireg->get_metadata( $src );
+        if ( $src_meta ) {
+            $row->{'meta'}->{'scireg'}->{'src'} = $src_meta;
+            #warn "src_meta\n" . Dumper $src_meta;
+        my $dst = $row->{'meta'}->{'dst_ip'};
+        }
+
+    }
 
     return $messages;
-
 }
-
 1;

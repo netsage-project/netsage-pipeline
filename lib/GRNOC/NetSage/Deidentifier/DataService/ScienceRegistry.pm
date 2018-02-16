@@ -108,8 +108,8 @@ sub BUILD {
 
     $self->_init_datasource();
 
-    my $address = "131.217.63.225"; #UTAS  # TODO: make this dynamic
-    $self->get_metadata( $address );
+    #my $address = "131.217.63.225"; #UTAS  # TODO: make this dynamic
+    #$self->get_metadata( $address );
 
     return $self;
 }
@@ -144,7 +144,7 @@ sub _init_datasource {
 
     my $data = $json->decode( $content );
     $self->_set_scireg( $data );
-    warn "data from json\n" . Dumper $data;
+    #warn "data from json\n" . Dumper $data;
     warn "number of records: " . @$data;
 
 
@@ -155,26 +155,35 @@ sub _init_datasource {
 sub get_metadata {
     my ( $self, $address ) = @_;
     my $scireg = $self->scireg;
+    # TODO: method for searching metadata is inefficient, improve when time
     foreach my $row (@$scireg ) {
         my $addresses = $row->{'addresses'};
-        warn "addresses : " . Dumper $addresses;
+        #warn "addresses : " . Dumper $addresses;
         foreach my $addr ( @$addresses ) {
             my $cidr = Net::CIDR::Lite->new;
             $addr =~ s/^\s+|\s+$//g;
+            my $success = 0;
             try {
                 $cidr->add_any( $addr );
-        warn "cidrs " . Dumper $cidr->list();
-        if ( $cidr->find( $address ) ) {
-            warn "!!!!!!!!!!!!address found in cidr range!\n" . Dumper $row;
-        } else {
-            #warn "address not found $address in " . Dumper $row;
-        }
+                #warn "cidrs " . Dumper $cidr->list();
+                if ( $cidr->find( $address ) ) {
+                    warn "!!!!!!!!!!!!address found in cidr range!\n" . Dumper $row;
+                    $success = 1;
+                    #return $row;
+                } else {
+                    #warn "address not found $address in " . Dumper $row;
+                    $success = 0;
+                }
 
             } catch {
                 warn "WARNING: Error adding address: " . $addr;
-                return;
+                $success = 0;
+                #return;
+            };
+            if ( $success ) {
+                return $row;
             }
-            
+
         }
 
     }

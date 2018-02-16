@@ -245,7 +245,7 @@ sub _get_flow_data {
             my $abs = file( $file_path );
             # TODO: changed rel to abs; need a way to figure out a way to convert
             # the old rel paths to abs
-            
+
             my $rel = $abs->relative( $path ) . "";
             if ( exists ( $status->{ $rel } ) ) {
                 $status->{ $abs } = $status->{ $rel };
