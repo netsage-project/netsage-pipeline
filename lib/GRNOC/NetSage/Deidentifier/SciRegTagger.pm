@@ -62,12 +62,23 @@ sub _process_messages {
     foreach my $row (@$messages ) {
         #warn "row:\n" . Dumper $row;
         my $src = $row->{'meta'}->{'src_ip'};
+        my $dst = $row->{'meta'}->{'dst_ip'};
         warn "querying src: $src";
         my $src_meta = $scireg->get_metadata( $src );
+        my $dst_meta = $scireg->get_metadata( $dst );
         if ( $src_meta ) {
+            delete $src_meta->{'addresses_str'};
+            delete $src_meta->{'addresses'};
+            delete $src_meta->{'ip_block_id'};
             $row->{'meta'}->{'scireg'}->{'src'} = $src_meta;
             #warn "src_meta\n" . Dumper $src_meta;
-        my $dst = $row->{'meta'}->{'dst_ip'};
+        }
+        if ( $dst_meta ) {
+            my $dst = $row->{'meta'}->{'dst_ip'};
+            delete $dst_meta->{'addresses_str'};
+            delete $dst_meta->{'addresses'};
+            delete $dst_meta->{'ip_block_id'};
+            $row->{'meta'}->{'scireg'}->{'dst'} = $dst_meta;
         }
 
     }
