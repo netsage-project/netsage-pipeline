@@ -13,7 +13,7 @@ use GRNOC::NetSage::Deidentifier::DataService::ScienceRegistry;
 
 use Data::Validate::IP;
 use Net::IP;
-use Text::Unidecode; # TODO: REMOVE THIS once TSDS bug is fixed
+use Text::Unidecode;
 use Digest::SHA;
 use utf8;
 use JSON::XS;
@@ -58,20 +58,20 @@ sub _process_messages {
     my ( $self, $messages ) = @_;
     my $scireg = $self->scireg;
 
-    #warn "MESSAGES\n" . Dumper $messages;
     foreach my $row (@$messages ) {
-        #warn "row:\n" . Dumper $row;
         my $src = $row->{'meta'}->{'src_ip'};
         my $dst = $row->{'meta'}->{'dst_ip'};
-        warn "querying src: $src";
         my $src_meta = $scireg->get_metadata( $src );
+        $self->hash_walk( $src_meta );
+
         my $dst_meta = $scireg->get_metadata( $dst );
+        $self->hash_walk( $dst_meta );
+
         if ( $src_meta ) {
             delete $src_meta->{'addresses_str'};
             delete $src_meta->{'addresses'};
             delete $src_meta->{'ip_block_id'};
             $row->{'meta'}->{'scireg'}->{'src'} = $src_meta;
-            #warn "src_meta\n" . Dumper $src_meta;
         }
         if ( $dst_meta ) {
             my $dst = $row->{'meta'}->{'dst_ip'};
@@ -84,5 +84,35 @@ sub _process_messages {
     }
 
     return $messages;
+}
+
+# recursively walk hash and format characters as needed
+sub hash_walk {
+    my ($self, $hash) = @_;
+    while (my ($k, $v) = each %$hash) {
+
+        if (ref($v) eq 'HASH' ) {
+            # Recurse.
+            $self->hash_walk($v);
+        } elsif ( ref($v) eq 'ARRAY' ) {
+            foreach my $row (@$v) {
+                if ( ref ( $row ) eq 'HASH' ) {
+                    $self->hash_walk($row);
+                }
+            }
+        } else {
+            # Otherwise, convert the characters
+            my $newv = _convert_chars( $v );
+            $hash->{ $k } = $newv;
+        }
+
+    }
+}
+
+# formatting callback
+sub _convert_chars {
+    my ( $input ) = @_;
+    $input = unidecode( $input );
+    return $input;
 }
 1;
