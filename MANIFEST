@@ -10,7 +10,9 @@ conf/netsage_flow_filter.xml.example
 conf/netsage_flow_stitcher.xml.example
 conf/netsage_netflow_importer.xml.example
 conf/netsage_raw_data_importer.xml.example
+conf/netsage_scireg_tagger.xml.example
 conf/netsage_tagger.xml.example
+conf/cron.d/netsage-scireg-update
 bin/export-tsds
 bin/json2lines
 bin/lines2json
@@ -22,9 +24,11 @@ bin/netsage-flow-filter-daemon
 bin/netsage-flow-stitcher-daemon
 bin/netsage-netflow-importer-daemon
 bin/netsage-raw-data-importer
+bin/netsage-scireg-tagger-daemon
 bin/netsage-tagger-daemon
 init.d/netsage-deidentifier-daemon
 init.d/netsage-tagger-daemon
+init.d/netsage-scireg-tagger-daemon
 init.d/netsage-netflow-importer-daemon
 init.d/netsage-finished-flow-mover-daemon
 init.d/netsage-flow-archive-daemon
@@ -39,6 +43,8 @@ lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 lib/GRNOC/NetSage/Deidentifier/FlowMover.pm
 lib/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
 lib/GRNOC/NetSage/Deidentifier/FlowTagger.pm
+lib/GRNOC/NetSage/Deidentifier/SciRegTagger.pm
+lib/GRNOC/NetSage/Deidentifier/DataService/ScienceRegistry.pm
 lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
 lib/GRNOC/NetSage/Deidentifier/Pipeline.pm
 lib/GRNOC/NetSage/Deidentifier/RawDataImporter.pm

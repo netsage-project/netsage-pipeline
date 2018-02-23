@@ -42,6 +42,7 @@ Requires: perl-Text-Unidecode
 Requires: perl-Time-Duration
 Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
+Requires: wget
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
@@ -133,7 +134,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_scireg_tagger.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
-%config(noreplace) /etc/cron.d/netsage-scireg-update
 
 %defattr(644, root, root, -)
 
@@ -170,7 +170,6 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/netsage-raw-data-importer
 /usr/bin/netsage-scireg-tagger-daemon
 /usr/bin/netsage-tagger-daemon
-/etc/cron.d/netsage-scireg-update
 
 /etc/init.d/netsage-deidentifier-daemon
 /etc/init.d/netsage-finished-flow-mover-daemon
@@ -184,6 +183,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(755, root, root, -)
 
+%config(noreplace) /etc/cron.d/netsage-scireg-update
 /var/lib/grnoc/netsage/deidentifier/
 /var/cache/netsage/
 
