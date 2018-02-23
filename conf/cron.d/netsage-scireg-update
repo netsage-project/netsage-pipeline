@@ -1,0 +1,10 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+# You'll need to configure the URL and possibly pass auth parameters to wget,
+# depending on your environment.
+# Commented out by default, must be configured before it will work
+# You will likely need something like this for basic auth
+# --user=USER               set both ftp and http user to USER.
+# --password=PASS           set both ftp and http password to PASS.
+#48 * * * * root /usr/bin/wget https://hostname/scireg.json -O /var/cache/netsage/scireg.json

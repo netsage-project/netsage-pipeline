@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Deidentifier
 Name: grnoc-netsage-deidentifier
-Version: 1.0.2
+Version: 1.0.3
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -62,7 +62,8 @@ make pure_install
 %{__install} -d -p %{buildroot}/var/cache/netsage/
 %{__install} -d -p %{buildroot}/usr/bin/
 %{__install} -d -p %{buildroot}/etc/init.d/
-%{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/
+%{__install} -d -p %{buildroot}/etc/cron.d/
+%{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/DataService
 
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 %{__install} INSTALL.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
@@ -78,6 +79,7 @@ make pure_install
 %{__install} conf/netsage_flow_stitcher.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf/netsage_raw_data_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
+%{__install} conf/netsage_scireg_tagger.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_scireg_tagger.xml
 %{__install} conf/netsage_tagger.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_tagger.xml
 
 %{__install} init.d/netsage-deidentifier-daemon  %{buildroot}/etc/init.d/netsage-deidentifier-daemon
@@ -87,7 +89,10 @@ make pure_install
 %{__install} init.d/netsage-flow-filter-daemon %{buildroot}/etc/init.d/netsage-flow-filter-daemon
 %{__install} init.d/netsage-flow-stitcher-daemon %{buildroot}/etc/init.d/netsage-flow-stitcher-daemon
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
+%{__install} init.d/netsage-scireg-tagger-daemon %{buildroot}/etc/init.d/netsage-scireg-tagger-daemon
 %{__install} init.d/netsage-tagger-daemon %{buildroot}/etc/init.d/netsage-tagger-daemon
+
+%{__install} conf/cron.d/netsage-scireg-update %{buildroot}/etc/cron.d/netsage-scireg-update
 
 %{__install} bin/export-tsds  %{buildroot}/usr/bin/netsage-export-tsds
 %{__install} bin/json2lines  %{buildroot}/usr/bin/json2lines
@@ -100,6 +105,7 @@ make pure_install
 %{__install} bin/netsage-flow-stitcher-daemon %{buildroot}/usr/bin/netsage-flow-stitcher-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
 %{__install} bin/netsage-raw-data-importer %{buildroot}/usr/bin/netsage-raw-data-importer
+%{__install} bin/netsage-scireg-tagger-daemon %{buildroot}/usr/bin/netsage-scireg-tagger-daemon
 %{__install} bin/netsage-tagger-daemon %{buildroot}/usr/bin/netsage-tagger-daemon
 
 # clean up buildroot
@@ -125,7 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
+%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_scireg_tagger.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_tagger.xml
+%config(noreplace) /etc/cron.d/netsage-scireg-update
 
 %defattr(644, root, root, -)
 
@@ -144,6 +152,8 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowArchive.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowCache.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
+%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/SciRegTagger.pm
+%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/DataService/ScienceRegistry.pm
 
 %defattr(754, root, root, -)
 
@@ -158,7 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/netsage-flow-stitcher-daemon
 /usr/bin/netsage-netflow-importer-daemon
 /usr/bin/netsage-raw-data-importer
+/usr/bin/netsage-scireg-tagger-daemon
 /usr/bin/netsage-tagger-daemon
+/etc/cron.d/netsage-scireg-update
 
 /etc/init.d/netsage-deidentifier-daemon
 /etc/init.d/netsage-finished-flow-mover-daemon
@@ -167,6 +179,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/init.d/netsage-flow-cache-daemon
 /etc/init.d/netsage-flow-filter-daemon
 /etc/init.d/netsage-flow-stitcher-daemon
+/etc/init.d/netsage-scireg-tagger-daemon
 /etc/init.d/netsage-tagger-daemon
 
 %defattr(755, root, root, -)

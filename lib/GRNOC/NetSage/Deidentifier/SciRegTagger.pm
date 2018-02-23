@@ -44,7 +44,6 @@ sub BUILD {
     $self->_set_msg_count( 0 );
 
     my $config = $self->config;
-    warn "config " . Dumper $config;
     $self->_set_handler( sub { $self->_process_messages(@_) } );
     my $json = JSON::XS->new();
     $self->_set_json( $json );
@@ -54,6 +53,8 @@ sub BUILD {
             logger => $self->logger
     );
     $self->_set_scireg( $scireg );
+
+    $self->logger->debug( "Config:\n" . Dumper ($config ) );
 
     return $self;
 }
@@ -71,7 +72,6 @@ sub _process_messages {
         my $src = $row->{'meta'}->{'src_ip'};
         my $dst = $row->{'meta'}->{'dst_ip'};
         my $src_meta = $scireg->get_metadata( $src );
-#warn "src_meta\n" . Dumper $src_meta;
 
         my $dst_meta = $scireg->get_metadata( $dst );
 
@@ -98,40 +98,27 @@ sub _process_messages {
     my $start = $self->start_time;
     my $now = time();
     my $delta = $now - $start;
-    warn "finished batch ... time elapsed: " . $delta;
-    warn "messages " . $msg_count . " per second: " . ( $msg_count  / $delta );
     return $messages;
 }
 
 # recursively walk hash and format characters as needed
 sub hash_walk {
     my ($self, $hash, $key_list )  = @_;
-    #warn "now walking hash" . Dumper $hash;
     foreach my $k ( keys %$hash ) { 
         my $v = $hash->{ $k };
          # Keep track of the hierarchy of keys, in case
          # our callback needs it.
          push @$key_list, $k;
-        #warn "k: $k; v: " . Dumper $v;
-        #warn "v:\n" . Dumper $v;
-        #warn "REF " . ref($v);
 
         if (ref($v) eq 'HASH' ) {
             # Recurse. I think this never happens with current data structure?
-            #warn "CURRENT V " . Dumper $v;
-            #warn "RECURSING INTO: " . $v;
             $self->hash_walk($v, $key_list);
         } elsif ( ref($v) eq 'ARRAY' ) {
-            #warn "V is an ARRAY " . Dumper $v;
             my $i = 0;
             foreach my $row (@$v) {
-                #warn "ARRAY ROW: " . Dumper $row;
-                #warn "ROW REF " . ref ($row );
                 if ( ref ( $row ) eq 'HASH' ) {
-                    #warn "RECURSING INTO ARRAY ROW " . Dumper $row;
                     $self->hash_walk($row, $key_list);
                 } elsif ( ref ($row) eq '' ) {
-                    #warn "no ref row " . Dumper $row;
                     $row = _convert_chars($row);
                     $v->[$i] = $row;
 
@@ -139,7 +126,6 @@ sub hash_walk {
                 $i++;
             }
         } else {
-            #warn "converting characters - ref: '" . ref($v) . "' , " . $v;
             # Otherwise, convert the characters
             my $newv = _convert_chars( $v );
             $hash->{ $k } = $newv;

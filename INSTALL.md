@@ -64,6 +64,7 @@ The pipeline consists of several daemons, most of which read data from a Rabbit 
 1. Flow Cache - takes raw flows and caches them in shared memory for the stitcher to process
 2. Flow Stitcher - stitches flows spanning the 1-minute boundaries
 3. Flow Tagger - Tags flows with GeoIP/ASN/Organization information
+4. Science Registry Flow Tagger (optional)
 4. Flow Deidentifer - Deidentifies flow by stripping bits from the IP addresses (configurable)
 5. Flow Mover - Moves finished flows to a queue for ingestion by GlobalNOC TSDS, Elasticsearch, etc (though actually this can generally be used to move flows from one queue to another)
 
@@ -233,6 +234,11 @@ Config file: `/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml`
 
 #### netsage-tagger-daemon
 This is a daemon that polls a Rabbit queue for flow data, retrieves it, and tags it with GeoIP/ASN/Organization information.
+
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_tagger.xml`
+
+#### netsage-scireg-tagger-daemon
+This is a daemon that polls a Rabbit queue for flow data, retrieves it, and tags it with metadata from the Science Registry; usually this is run after the tagger. Must be run before the deidentifier.
 
 Config file: `/etc/grnoc/netsage/deidentifier/netsage_tagger.xml`
 

@@ -10,11 +10,11 @@
     <channel>7</channel>
   </rabbit_output>
   <scireg>
-      <location>/path/to/file.json</location>
+      <location>/var/cache/netsage/scireg.json</location>
   </scireg>
   <worker>
     <!-- How many concurrent workers should perform the necessary operations -->
-    <num-processes>2</num-processes>
+    <num-processes>4</num-processes>
   </worker>
   <master>
     <!-- where should we write the daemon pid file to -->

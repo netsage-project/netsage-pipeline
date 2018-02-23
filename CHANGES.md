@@ -1,3 +1,8 @@
+## GRNOC NetSage Deidentifier 1.0.3 --  Fri Feb 23 2018
+
+Features:
+ * ISSUE= 6365 PROJ=160 Tag flows based on metadata from the science registry
+
 ## GRNOC NetSage Deidentifier 1.0.2 --  Wed Nov 8 2017
 
 Bugs:
