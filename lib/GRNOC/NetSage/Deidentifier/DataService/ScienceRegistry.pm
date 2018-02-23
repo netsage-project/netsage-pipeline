@@ -40,6 +40,8 @@ has data_file => ( is => 'rwp' );
 
 has scireg => ( is => 'rwp' );
 
+has cidr_cache => ( is => 'rwp' );
+
 ### constructor builder ###
 
 sub BUILD {
@@ -54,7 +56,11 @@ sub BUILD {
     my $data_file = $self->config->{'scireg'}->{'location'};
     $self->_set_data_file( $data_file );
 
+    $self->_set_cidr_cache( {} );
+
     $self->_init_datasource();
+    #$self->_create_cidr_cache();
+    
 
     #my $address = "131.217.63.225"; #UTAS  # TODO: make this dynamic
     #$self->get_metadata( $address );
@@ -96,6 +102,22 @@ sub _init_datasource {
     #warn "number of records: " . @$data;
 
 
+}
+
+sub _create_cidr_cache {
+    my ( $self ) = @_;
+    my $scireg = $self->scireg;
+    my $cidr_cache = $self->cidr_cache;
+    # TODO: method for searching metadata is inefficient, improve when time
+    foreach my $row (@$scireg ) {
+        my $addresses = $row->{'addresses'};
+        warn "addresses : " . Dumper $addresses;
+        foreach my $addr ( @$addresses ) {
+            my $cidr = Net::CIDR::Lite->new;
+            $cidr_cache->{ $addr } = $cidr;
+        }
+    }
+    $self->_set_cidr_cache( $cidr_cache );
 }
 
 ### public methods ###
