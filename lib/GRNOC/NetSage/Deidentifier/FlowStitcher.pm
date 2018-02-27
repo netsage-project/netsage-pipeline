@@ -135,7 +135,12 @@ sub _stitch_flows {
         $cache_all = {};
     } else {
         #warn "thawing cache ...";
-        $cache_all = thaw( $share->fetch );
+        my $fetch = $share->fetch;
+	if ( $share->fetch ) {
+	        $cache_all = thaw( $share->fetch );
+	} else {
+		$cache_all = {};
+	}
     }
     $self->_set_flow_cache( $cache_all );
     $share->unlock();
