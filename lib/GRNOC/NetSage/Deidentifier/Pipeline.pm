@@ -314,23 +314,9 @@ sub _consume_loop {
         # make sure its an array (ref) of messages
         if ( ref( $messages ) ne 'ARRAY' ) {
 
-            $self->logger->error( "Message body must be an array." );
+            # make it into a one-element array (needed for rabbit msgs written by logstash)
+            $messages = [$messages]
 
-
-            try {
-                # reject the message and do NOT requeue since it's not properly formed
-                $rabbit->reject( $input_channel, $delivery_tag, 0 );
-            }
-
-            catch {
-
-                $self->logger->error( "Unable to reject rabbit message: $_" );
-
-                # reconnect to rabbit since we had a failure
-                #$self->_rabbit_connect();
-            };
-
-            next;
         }
 
         my $num_messages = @$messages;
