@@ -80,7 +80,8 @@ sub _archive_flows {
     $self->_set_sensors( \%sensors );
 
     my $filepath = $path . "/" . $filename;
-    open my $fh, '>>', $filepath;
+    # 7/20/18 - open with encoding utf-8 to be able to deal with utf-8 in science registry info
+    open my $fh, '>>:encoding(utf-8)', $filepath;
     print $fh $self->json->encode( $input_data ) . "\n";
     close $fh;
 
