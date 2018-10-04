@@ -39,7 +39,7 @@ my %continents = (
     'EU' => 'Europe',
     'NA' => 'North America',
     'OC' => 'Oceania',
-    'SA' => 'South Africa'
+    'SA' => 'South America'
 );
 
 ### constructor builder ###
