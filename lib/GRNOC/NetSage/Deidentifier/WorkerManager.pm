@@ -6,7 +6,7 @@ use Types::Standard qw( Str Bool );
 # this one needs to change
 #use GRNOC::NetSage::Deidentifier::WorkerManager::Worker;
 #use GRNOC::NetSage::Deidentifier::Pipeline;
-use GRNOC::NetSage::Deidentifier::FlowTagger;
+## got rid of FlowTagger    use GRNOC::NetSage::Deidentifier::FlowTagger;
 
 use GRNOC::Config;
 use GRNOC::Log;

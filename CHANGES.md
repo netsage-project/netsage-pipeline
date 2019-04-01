@@ -1,3 +1,19 @@
+
+## GRNOC NetSage Deidentfier 1.1.0 -- Mon Mar 29 2019
+
+Features: 
+  SCTASK0025331 -
+  * Added logstash configs that have replaced some old-pipeline components
+  * Removed unneeded old-pipeline components: deidentifer, tagger, scireg_tagger, finished_flow_mover
+  * Edited spec file, etc. to account for changes, moved some files around
+
+Bugs:
+  Other commits (ticket numbers unknown) -
+  * 02/27/18 - Fixed a subtle bug regarding IPC::ShareLite
+  * 07/05/18 - If a message from a rabbit queue is not an array, make it into one
+  * 07/20/18 - Open file for archiving with utf-8 encoding in order to work right with science registry info
+  * 10/04/18 - SA should be South America, not South Africa
+
 ## GRNOC NetSage Deidentifier 1.0.3 --  Fri Feb 23 2018
 
 Features:
