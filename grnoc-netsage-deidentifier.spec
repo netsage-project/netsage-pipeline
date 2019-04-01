@@ -9,14 +9,17 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 Requires: perl >= 5.8.8
-
+# these are part of perl with centos6, not with centos7. Could just require perl-core package?
+%if 0%{?rhel} >= 7
+Requires: perl-Data-Dumper
+Requires: perl-Getopt-Long
+Requires: perl-Storable
+%endif
 Requires: perl-AnyEvent
 Requires: perl-Clone
-Requires: perl-Data-Dumper
 Requires: perl-Data-Validate-IP
 Requires: perl-TimeDate
 Requires: perl-Digest-SHA
-Requires: perl-Getopt-Long
 Requires: perl-GRNOC-Config
 Requires: perl-GRNOC-Log
 Requires: perl-GRNOC-RabbitMQ
@@ -34,13 +37,12 @@ Requires: perl-Parallel-ForkManager
 Requires: perl-Path-Class
 Requires: perl-Path-Tiny
 Requires: perl-Proc-Daemon
-Requires: perl-Storable
 Requires: perl-TimeDate
 Requires: perl-Time-Duration
 Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
-Requires: wget >= 1.14
+Requires: wget 
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
