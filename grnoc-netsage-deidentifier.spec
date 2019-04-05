@@ -111,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 
-%defattr(640, root, root, -)
+%defattr(644, root, root, 755)
 
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
@@ -122,6 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
+
 # logstash files with usernames and pws - if there are updates, use .rpmnew files to finish update by hand
 %config(noreplace) /etc/logstash/conf.d/01-inputs.conf
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
@@ -131,8 +132,6 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/07-deidentify.conf
 %config /etc/logstash/conf.d/08-cleanup.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
-
-%defattr(644, root, root, -)
 
 /usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
@@ -146,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowArchive.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowCache.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
+
+%config(noreplace) /etc/cron.d/netsage-scireg_update
+%config(noreplace) /etc/cron.d/netsage-geoip_update
 
 %defattr(754, root, root, -)
 
@@ -162,10 +164,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/init.d/netsage-flow-filter-daemon
 /etc/init.d/netsage-flow-stitcher-daemon
 
-%defattr(755, root, root, -)
-
-%config(noreplace) /etc/cron.d/netsage-scireg_update
-%config(noreplace) /etc/cron.d/netsage-geoip_update
+%defattr(-, root, root, 755)
 
 /var/lib/grnoc/netsage/deidentifier/
 /var/cache/netsage/
