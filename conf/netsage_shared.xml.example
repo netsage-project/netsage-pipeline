@@ -9,25 +9,22 @@
     <!-- NOTE: you may have multiple <collection> stanzas -->
     <collection>
         <flow-path>/path/to/flow-files</flow-path>
-        <!--
-        <sensor>hostname</sensor>
+        <!-- "sensor" indicates the node that captured the flow records; 
+              it can be any string that uniquely identifies that flow collector.
+              Defaults to the local hostname
+            <sensor>sensorname</sensor> 
         -->
-      <!-- "instance" goes along with sensor
-           this is to identify various instances if a sensor has more than one
-           "stream" / data collection
-           defaults to 0.
-      -->
-      <!--
-          <instance>1</instance>
-      -->
-      <!--
-           Defaults to sensor, but you can set it to something else here
-          <router-address></router-address>
-      
-      -->
-     <!--
-        <flow-type>sflow</flow-type>
-     -->
+        <!-- "instance" goes along with sensor
+              This is to identify various instances if a sensor has more than one "stream" / data collection
+              Defaults to 0.
+           <instance>1</instance>
+        -->
+        <!-- Defaults to sensor, but you can set it to something else here
+           <router-address></router-address>
+        -->
+        <!-- Flow type can be sflow, tstat, or netflow. Defaults to netflow.
+           <flow-type>sflow</flow-type>
+        -->
     </collection>
 
   <!-- rabbitmq connection info -->
