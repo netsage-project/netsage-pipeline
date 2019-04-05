@@ -339,8 +339,9 @@ my $path = $params{'path'};
 
         my $command = "$nfdump -r '$flowfile'";
 	    $command .= " -a"; # perform aggregation based on 5 tuples
-        $command .= ' -o csv -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
-        $command .= ' -L +' . $min_bytes;
+        $command .= ' -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
+        $command .= ' -6';  # to get full ipv6 addresses
+        $command .= ' -L +' . $min_bytes;   
         $command .= " -N -q";
         $command .= ' |';
         $self->logger->debug(" command:\n$command\n");
