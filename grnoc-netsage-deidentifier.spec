@@ -66,6 +66,7 @@ make pure_install
 %{__install} -d -p %{buildroot}/etc/cron.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/ruby/
+%{__install} -d -p %{buildroot}/usr/share/logstash/config/
 %{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/
 
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
@@ -123,10 +124,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 
-# logstash files with usernames and pws - if there are updates, use .rpmnew files to finish update by hand
+# logstash files to not overwrite. If there are updates, use .rpmnew files to finish update by hand
 %config(noreplace) /etc/logstash/conf.d/01-inputs.conf
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
+%config /etc/logstash/conf.d/02-convert.conf
+%config /etc/logstash/conf.d/04-stitching.conf
 %config /etc/logstash/conf.d/05-geoip-tagging.conf
 %config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/07-deidentify.conf
@@ -168,4 +171,15 @@ rm -rf $RPM_BUILD_ROOT
 
 /var/lib/grnoc/netsage/deidentifier/
 /var/cache/netsage/
+
+%post
+echo "--------------------"
+echo "After installing or upgrading..."
+echo "** Be sure the logstash keystore contains input and output rabbitmq usernames and passwords.**"
+echo "Check to see if 01-inputs.conf or 99-outputs.conf need any updates."
+echo "If you have pipelines set up, check those."
+echo "** Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right.**"
+echo "See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information."
+echo "[Re]start netsage-netflow-importer and logstash services."
+echo "--------------------"
 

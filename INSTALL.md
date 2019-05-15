@@ -60,17 +60,11 @@ The first time you install packages from the repo, you will have to accept the G
 
 ## Installing the Pipeline
 
-The pipeline consists of several daemons, most of which read data from a Rabbit queue, perform some operations, and then push the results to another queue for further processing. Typically, they are run in this order:
+The pipeline consists of one daemon and a set of logstash "filters". 
+1. Netflow Importer (optional - sometimes TSTAT TRANSPORT is used to put data into the correct rabbit queue instead)
+2. Logstash - <FILL IN>
 
-0. Netflow Importer (optional - sometimes TSTAT TRANSPORT is used instead)
-1. Flow Cache - takes raw flows and caches them in shared memory for the stitcher to process
-2. Flow Stitcher - stitches flows spanning the 1-minute boundaries
-3. Flow Tagger - Tags flows with GeoIP/ASN/Organization information
-4. Science Registry Flow Tagger (optional)
-4. Flow Deidentifer - Deidentifies flow by stripping bits from the IP addresses (configurable)
-5. Flow Mover - Moves finished flows to a queue for ingestion by GlobalNOC TSDS, Elasticsearch, etc (though actually this can generally be used to move flows from one queue to another)
-
-The daemons are all contained within one package. Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
+Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
 
 ```
 [root@host ~]# yum install grnoc-netsage-deidentifier
@@ -78,7 +72,7 @@ The daemons are all contained within one package. Nothing will automatically sta
 
 ## Setting up the shared config file
 
-New in version 1.0.0 is a shared config file that all the pipeline components read before reading their individual config files. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
+New in version 1.0.0 is a shared config file that all the pipeline components read before reading their individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
 
 The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
 ```
@@ -184,15 +178,6 @@ Notice that the only Rabbit connection information that's provided here is that 
 
 The defaults should work unless the pipeline stages need to be reordered for some reason, or if SSL or different hosts/credentials are needed. However, the very endpoints should be checked. At the moment that means the flow cache (which is the first stage in the pipeline) and the flow mover (the last stage).
 
-### Configuring the first stage
-
-As you can see above, by default, the Flow Cacher expects to find raw flows in a Rabbit queue in the netsage vhost called "netsage_deidentifier_raw". Have any flow collectors push raw flows here, or point this somewhere else if desired.
-
-### Configuring the last stage
-
-The rabbit output queue for last stage must be configured; currently this is the Flow Mover. It should be set to a queue from which TSDS or other writers read. From there, the data will be directly ingested by TSDS/Logstash/etc. Unless you are running an ELK stack on the same host as your flow collection, you will also need to set the hostname and credentials for the Flow Mover, since they will be different from those in the shared config.
-
-
 ### Shared config file listing
 
 The shared configuration files and logging configuration files are listed below (all of the pipeline components use these):
@@ -224,34 +209,31 @@ This is a daemon that reads raw netflow data, reads it, and pushes it to a Rabbi
 
 Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml`
 
-#### netsage-flow-cache-daemon
-This is a daemon that polls a Rabbit queue for raw flow data, retrieves it, and stores it in shared memory for the stitching daemon.
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml`
 
-#### netsage-flow-stitcher-daemon
-This is a daemon that polls the shared memory cache for flow data, retrieves it, and stitches long-running flows based on 5-tuples and timestamps
+# setup notes
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml`
+INPUT AND OUTPUT LOGSTASH FILTERS
+Standard logstash filter config files are provided with this package. Most should be used as-is, but the input and output configs (01-inputs.conf and 99-outputs.conf) may be modified for your use.
+To use the provided 01-inputs.conf and 99-outputs.conf versions, fill in the IP of the final rabbit host in 99-outputs.conf, and put the rabbitmq usernames and passwords into the logstash keystore.
+Your 01 and 99 conf files should not be overwritten by upgrades.
 
-#### netsage-tagger-daemon
-This is a daemon that polls a Rabbit queue for flow data, retrieves it, and tags it with GeoIP/ASN/Organization information.
+To set up the keystore:  (note that it takes a minute to come back with a prompt)
+  be sure /usr/share/logstash/config exists
+  $ sudo -E logstash-keystore create
+  $ sudo -E logstash-keystore add rabbitmq_input_username     (enter username when prompted)
+  $ sudo -E logstash-keystore add rabbitmq_input_pw           (enter password when prompted)
+  $ sudo -E logstash-keystore add rabbitmq_output_username    (enter username when prompted)
+  $ sudo -E logstash-keystore add rabbitmq_output_pw          (enter password when prompted)
+To list the keys:
+  $ sudo -E logstash-keystore list
+To remove a key-value pair:
+  $ sudo -E logstash-keystore remove <key name>
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_tagger.xml`
 
-#### netsage-scireg-tagger-daemon
-This is a daemon that polls a Rabbit queue for flow data, retrieves it, and tags it with metadata from the Science Registry; usually this is run after the tagger. Must be run before the deidentifier.
+FLOW STITCHING - IMPORTANT!
+Flow stitching (ie, aggregation) will NOT work properly with more than ONE logstash worker!
+Be sure to set "pipeline.workers: 1" in /etc/logstash/logstash.yml (default settingss) and/or /etc/logstash/pipelines.yml (settings take precedence). When running logstash on the command line, use "-w 1".
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_tagger.xml`
-
-#### netsage-deidentifier-daemon
-
-This is daemon that polls a Rabbit queue for tagged flow data, retrieves it, and deidentifies the IP addresses.
-
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_deidentifier.xml`
-
-#### netsage-flow-mover-daemon
-This is a daemon that polls a Rabbit queue for flow data, retrieves it, and pushes it to another queue 
-
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_finished_flow_mover.xml`
+See the comments in 04-stitching.conf to learn more about how complete flows are defined.
 
