@@ -75,30 +75,19 @@ make pure_install
 %{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
 %{__install} conf/logging-debug.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging-debug.conf
 %{__install} conf/netsage_shared.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_shared.xml
-%{__install} conf/netsage_flow_archive.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml
-%{__install} conf/netsage_flow_cache.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 %{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
-%{__install} conf/netsage_flow_stitcher.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf/netsage_raw_data_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 
-%{__install} init.d/netsage-flow-archive-daemon %{buildroot}/etc/init.d/netsage-flow-archive-daemon
-%{__install} init.d/netsage-flow-cache-daemon %{buildroot}/etc/init.d/netsage-flow-cache-daemon
 %{__install} init.d/netsage-flow-filter-daemon %{buildroot}/etc/init.d/netsage-flow-filter-daemon
-%{__install} init.d/netsage-flow-stitcher-daemon %{buildroot}/etc/init.d/netsage-flow-stitcher-daemon
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
 
 %{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
-%{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
-%{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
 %{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
 
-%{__install} bin/netsage-flow-archive-daemon %{buildroot}/usr/bin/netsage-flow-archive-daemon
-%{__install} bin/netsage-flow-cache-daemon %{buildroot}/usr/bin/netsage-flow-cache-daemon
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
-%{__install} bin/netsage-flow-stitcher-daemon %{buildroot}/usr/bin/netsage-flow-stitcher-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
 %{__install} bin/netsage-raw-data-importer %{buildroot}/usr/bin/netsage-raw-data-importer
 
@@ -117,10 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_shared.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_archive.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_cache.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_stitcher.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 
@@ -145,27 +131,18 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/RawDataImporter.pm
-%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowArchive.pm
-%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowCache.pm
-%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowStitcher.pm
 
 %config(noreplace) /etc/cron.d/netsage-scireg_update
 %config(noreplace) /etc/cron.d/netsage-geoip_update
 
 %defattr(754, root, root, -)
 
-/usr/bin/netsage-flow-archive-daemon
-/usr/bin/netsage-flow-cache-daemon
 /usr/bin/netsage-flow-filter-daemon
-/usr/bin/netsage-flow-stitcher-daemon
 /usr/bin/netsage-netflow-importer-daemon
 /usr/bin/netsage-raw-data-importer
 
 /etc/init.d/netsage-netflow-importer-daemon
-/etc/init.d/netsage-flow-archive-daemon
-/etc/init.d/netsage-flow-cache-daemon
 /etc/init.d/netsage-flow-filter-daemon
-/etc/init.d/netsage-flow-stitcher-daemon
 
 %defattr(-, root, root, 755)
 
