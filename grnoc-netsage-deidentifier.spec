@@ -1,4 +1,4 @@
-Summary: GRNOC NetSage Deidentifier
+Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
 Version: 1.1.0
 Release: 1%{?dist}
@@ -63,6 +63,7 @@ make pure_install
 %{__install} -d -p %{buildroot}/var/cache/netsage/
 %{__install} -d -p %{buildroot}/usr/bin/
 %{__install} -d -p %{buildroot}/etc/init.d/
+%{__install} -d -p %{buildroot}/etc/systemd/system/
 %{__install} -d -p %{buildroot}/etc/cron.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/ruby/
@@ -81,8 +82,13 @@ make pure_install
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 
+%if 0%{?rhel} >= 7
+%{__install} systemd/netsage-flow-filter.service %{buildroot}/etc/systemd/system/netsage-flow-filter.service
+%{__install} systemd/netsage-netflow-importer.service %{buildroot}/etc/systemd/system/netsage-netflow-importer.service
+%else
 %{__install} init.d/netsage-flow-filter-daemon %{buildroot}/etc/init.d/netsage-flow-filter-daemon
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
+%endif
 
 %{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
 %{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
@@ -141,8 +147,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/netsage-netflow-importer-daemon
 /usr/bin/netsage-raw-data-importer
 
-/etc/init.d/netsage-netflow-importer-daemon
+%if 0%{?rhel} >= 7
+/etc/systemd/system/netsage-flow-filter.service
+/etc/systemd/system/netsage-netflow-importer.service
+%else
 /etc/init.d/netsage-flow-filter-daemon
+/etc/init.d/netsage-netflow-importer-daemon
+%endif
 
 %defattr(-, root, root, 755)
 
