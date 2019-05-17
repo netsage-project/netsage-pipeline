@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.1.0
+Version: 1.2.0
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -161,13 +161,15 @@ rm -rf $RPM_BUILD_ROOT
 /var/cache/netsage/
 
 %post
-echo "--------------------"
-echo "After installing or upgrading..."
-echo "** Be sure the logstash keystore contains input and output rabbitmq usernames and passwords.**"
-echo "Check to see if 01-inputs.conf or 99-outputs.conf need any updates."
-echo "If you have pipelines set up, check those."
-echo "** Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right.**"
-echo "See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information."
-echo "[Re]start netsage-netflow-importer and logstash services."
-echo "--------------------"
+echo "===================="
+echo "AFTER INSTALLING OR UPGRADING..."
+echo " *  Check files with .rpmnew or .rpmsave versions to see if any need manual updates."
+echo " *  If you are using logstash 'pipelines.yml', make any manual updates needed."
+echo "    This rpm puts logstash config files in /etc/logstash/conf.d/."
+echo " ** NEW: Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
+echo " ** NEW: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
+echo " ** See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information.                 **"
+echo`" *  NEW: netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
+echo "    Restart all except elasticSearch."
+echo "===================="
 
