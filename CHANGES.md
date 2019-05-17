@@ -1,4 +1,7 @@
 ## GRNOC NetSage Deidentfier 1.2.0 -- Fri May 17 2019
+
+SCTASK0028272 (and SCTASK0023793)
+
 Features: 
   * Added option -6 to nfdump command to get full ipv6 addresses
   * Added logstash stitching; removed old pipeline stitcher and cacher, also archiver.
@@ -12,8 +15,7 @@ Bugs:
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.1.0 -- Mon Mar 29 2019
 
-Features: 
-  SCTASK0025331 -
+Features (SCTASK0025331):
   * Added logstash configs that have replaced some old-pipeline components - input, geoip, scireg, deidentify, cleanup, output
   * Removed unneeded old-pipeline components: deidentifer, tagger, scireg_tagger, finished_flow_mover
   * Edited spec file, etc. to account for changes, moved some files around

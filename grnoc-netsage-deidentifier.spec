@@ -169,7 +169,7 @@ echo "    This rpm puts logstash config files in /etc/logstash/conf.d/."
 echo " ** NEW: Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
 echo " ** NEW: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
 echo " ** See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information.                 **"
-echo`" *  NEW: netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
+echo " *  NEW: netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
 echo "    Restart all except elasticSearch."
 echo "===================="
 
