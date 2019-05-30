@@ -218,13 +218,16 @@ Standard logstash filter config files are provided with this package. Most shoul
 To use the provided 01-inputs.conf and 99-outputs.conf versions, fill in the IP of the final rabbit host in 99-outputs.conf, and put the rabbitmq usernames and passwords into the logstash keystore.
 Your 01 and 99 conf files should not be overwritten by upgrades.
 
-To set up the keystore:  (note that it takes a minute to come back with a prompt)
-  be sure /usr/share/logstash/config exists
-  $ sudo -E logstash-keystore create
-  $ sudo -E logstash-keystore add rabbitmq_input_username     (enter username when prompted)
-  $ sudo -E logstash-keystore add rabbitmq_input_pw           (enter password when prompted)
-  $ sudo -E logstash-keystore add rabbitmq_output_username    (enter username when prompted)
-  $ sudo -E logstash-keystore add rabbitmq_output_pw          (enter password when prompted)
+To set up the keystore:  (note that logstash-keystore takes a minute to come back with a prompt)
+  Be sure /usr/share/logstash/config exists
+  (the full path, in case you need it: /usr/share/logstash/bin/logstash-keystore)
+  Create logstash.keystore in /etc/logstash/: (use the same directory as logstash.yml)
+  $ sudo -E logstash-keystore --path.settings /etc/logstash/ create
+    You can set a password for the keystore itself if you want to investigate that; otherwise skip it.
+  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_username     (enter username when prompted)
+  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_pw           (enter password when prompted)
+  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_username    (enter username when prompted)
+  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_pw          (enter password when prompted)
 To list the keys:
   $ sudo -E logstash-keystore list
 To remove a key-value pair:
@@ -232,7 +235,7 @@ To remove a key-value pair:
 
 
 FLOW STITCHING - IMPORTANT!
-Flow stitching (ie, aggregation) will NOT work properly with more than ONE logstash worker!
+Flow stitching (ie, aggregation) will NOT work properly with more than ONE logstash pipeline worker!
 Be sure to set "pipeline.workers: 1" in /etc/logstash/logstash.yml (default settingss) and/or /etc/logstash/pipelines.yml (settings take precedence). When running logstash on the command line, use "-w 1".
 
 See the comments in 04-stitching.conf to learn more about how complete flows are defined.

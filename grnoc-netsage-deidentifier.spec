@@ -43,6 +43,7 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
+Requires: logstash >= 6.2.4
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
@@ -148,9 +149,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/netsage-raw-data-importer
 
 %if 0%{?rhel} >= 7
+%defattr(644, root, root, -)
 /etc/systemd/system/netsage-flow-filter.service
 /etc/systemd/system/netsage-netflow-importer.service
 %else
+%defattr(754, root, root, -)
 /etc/init.d/netsage-flow-filter-daemon
 /etc/init.d/netsage-netflow-importer-daemon
 %endif
@@ -161,15 +164,19 @@ rm -rf $RPM_BUILD_ROOT
 /var/cache/netsage/
 
 %post
-echo "===================="
+echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER INSTALLING OR UPGRADING..."
-echo " *  Check files with .rpmnew or .rpmsave versions to see if any need manual updates."
-echo " *  If you are using logstash 'pipelines.yml', make any manual updates needed."
-echo "    This rpm puts logstash config files in /etc/logstash/conf.d/."
-echo " ** NEW: Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
-echo " ** NEW: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
+echo " "
+echo " *  Check config files with .rpmnew or .rpmsave versions to see if any need manual updates."
+echo " "
+echo " *  If you are using logstash 'pipelines.yml', make any manual updates needed. "
+echo "    This rpm puts logstash config files in /etc/logstash/conf.d/, doesn't manage pipelines.yml."
+echo " "
+echo " ** IMPORTANT: Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
+echo " ** IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
 echo " ** See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information.                 **"
-echo " *  NEW: netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
+echo " "
+echo " *  Netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
 echo "    Restart all except elasticSearch."
-echo "===================="
+echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
