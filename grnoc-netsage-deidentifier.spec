@@ -79,7 +79,6 @@ make pure_install
 %{__install} conf/netsage_shared.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_shared.xml
 %{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-%{__install} conf/netsage_raw_data_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 
@@ -96,7 +95,6 @@ make pure_install
 
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
-%{__install} bin/netsage-raw-data-importer %{buildroot}/usr/bin/netsage-raw-data-importer
 
 # clean up buildroot
 find %{buildroot} -name .packlist -exec %{__rm} {} \;
@@ -115,7 +113,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_shared.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-%config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_raw_data_importer.xml
 
 # logstash files to not overwrite. If there are updates, use .rpmnew files to finish update by hand
 %config(noreplace) /etc/logstash/conf.d/01-inputs.conf
@@ -137,7 +134,6 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/WorkerManager.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
-%{perl_vendorlib}/GRNOC/NetSage/Deidentifier/RawDataImporter.pm
 
 %config(noreplace) /etc/cron.d/netsage-scireg_update
 %config(noreplace) /etc/cron.d/netsage-geoip_update
@@ -146,7 +142,6 @@ rm -rf $RPM_BUILD_ROOT
 
 /usr/bin/netsage-flow-filter-daemon
 /usr/bin/netsage-netflow-importer-daemon
-/usr/bin/netsage-raw-data-importer
 
 %if 0%{?rhel} >= 7
 %defattr(644, root, root, -)

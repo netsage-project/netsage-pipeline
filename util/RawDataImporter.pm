@@ -1,5 +1,8 @@
 package GRNOC::NetSage::Deidentifier::RawDataImporter;
 
+#####  I believe this was used for development and to read files created by the old netsage-flow-archive pipeline piece
+#####  Reads json files which are rabbitmq messages which are batches of 100 flows.
+
 use strict;
 use warnings;
 
