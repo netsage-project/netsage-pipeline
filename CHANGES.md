@@ -1,3 +1,10 @@
+------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2 1 -- Fri May 31 2019
+
+Bugs:
+  * Fixed flow duration calculation, required logstash >= 6.2.4, moved RawDataImporter to util/. (SCTASK0031312)
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.0 -- Fri May 17 2019
 
 SCTASK0028272 (and SCTASK0023793)
