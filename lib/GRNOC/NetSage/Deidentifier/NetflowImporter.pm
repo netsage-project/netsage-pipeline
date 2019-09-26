@@ -63,10 +63,14 @@ has status_cache => ( is => 'rwp',
 has cache_file => ( is => 'rwp' );
 
 
-# min_file_age must be one of "older" or "newer". $age must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)"
+# min and max_file_age must be one of "older" or "newer". $age must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)"
 # see http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
 has min_file_age => ( is => 'rwp',
                       default => '0' );
+
+# don't process any files over max_file_age days old (must be in days)
+has max_file_age => ( is => 'rwp',
+                      default => '30' );
 
 has cull_enable => ( is => 'rwp',
                     default => 0 );
@@ -124,6 +128,10 @@ sub BUILD {
     my $min_file_age = $self->min_file_age;
     $min_file_age = $config->{'worker'}->{'min-file-age'} if defined $config->{'worker'}->{'min-file-age'};
     $self->_set_min_file_age( $min_file_age );
+
+    my $max_file_age = $self->max_file_age;
+    $max_file_age = $config->{'worker'}->{'max-file-age'} if defined $config->{'worker'}->{'max-file-age'};
+    $self->_set_max_file_age( $max_file_age );
 
     my $flow_type = $self->flow_type;
     $flow_type = $config->{'worker'}->{'flow-type'} if defined $config->{'worker'}->{'flow-type'};
@@ -221,6 +229,7 @@ sub _get_flow_data {
         my $min_bytes = $self->min_bytes;
         $self->logger->debug("path: $path");
         $self->logger->debug("min_file_age: " . $self->min_file_age );
+        $self->logger->debug("max_file_age: " . $self->max_file_age . " days");
 
         $self->_cull_flow_files( $path );
 
@@ -229,6 +238,7 @@ sub _get_flow_data {
             my @paths = ( $path );
             #my $ref = $self->can('find_nfcapd');
             @files = ();
+            # add wanted files to @files (ie, files between min_ and max_file_age -see find_nfcapd())
             find({ wanted => sub { find_nfcapd($self, \%params)  }, follow => 1 }, @paths );
 
         } catch {
@@ -236,10 +246,12 @@ sub _get_flow_data {
             sleep(10);
             return;
         };
+        $self->logger->debug("Num files between min and max file ages = ".@files);
+
         my @filepaths = ();
         for(my $i=0; $i<@files; $i++) {
             my $file = $files[$i];
-#$self->logger->debug("file: $file");
+            ##$self->logger->debug("file to process: $file");
             my $file_path = dir( $path, $file ) . "";
             my $stats = stat($file_path);
             my $abs = file( $file_path );
@@ -260,11 +272,14 @@ sub _get_flow_data {
                 my $mtime_cache = $entry->{'mtime'};
                 my $size_cache  = $entry->{'size'};
 
-                # If file size and last-modified time are unchanged, skip it
+                # If this file is in the cache_file but file size and last-modified time are unchanged, skip it
                 if ( $mtime_cache == $stats->mtime
                     && $size_cache == $stats->size ) {
+                    ##$self->logger->debug($file." is alredy in the cache_file and unchanged. Skipping.");
                     next;
                 }
+                else { $self->logger->debug("will process $file"); }
+
             }
             push @filepaths, dir( $path, $file ) . "";
 
@@ -272,10 +287,9 @@ sub _get_flow_data {
         @filepaths = sort @filepaths;
 
         if ( @filepaths > 0 ) {
+            $self->logger->debug("Num files not in the cache_file, ie, to process = ".@filepaths);
             my $success = $self->_get_nfdump_data(\@filepaths, %params);
         }
-
-
 
 
     } # end collections foreach loop
@@ -289,7 +303,7 @@ sub _get_nfdump_data {
     my $sensor = $params{'sensor'};
     my $instance = $params{'instance'};
 
-my $path = $params{'path'};
+    my $path = $params{'path'};
     
     my $flow_type = $params{'flow_type'};
 
@@ -344,7 +358,8 @@ my $path = $params{'path'};
         $command .= ' -L +' . $min_bytes;   
         $command .= " -N -q";
         $command .= ' |';
-        $self->logger->debug(" command:\n$command\n");
+        ##$self->logger->debug(" command:\n$command\n");
+        ##$self->logger->debug(" did nfdump on $flowfile ");
 
         my $fh;
         open($fh, $command);
@@ -356,8 +371,12 @@ my $path = $params{'path'};
             my $start = str2time( $ts );
             my $end   = str2time( $te );
 
+            if ( $line =~ /Byte limit/ ) {
+                next;
+            }
             if ( !defined $start || !defined $end ) {
-                #$self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
+                $self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
+                $self->logger->error("  line: $line"); 
                 next;
             }
 
@@ -393,7 +412,7 @@ my $path = $params{'path'};
 
             push @all_data, $row;
             if ( @all_data % $flow_batch_size == 0 ) {
-                $self->logger->debug("processed " . @all_data . " (up to $flow_batch_size) flows; publishing ... ");
+                ##$self->logger->debug("processed " . @all_data . " (up to $flow_batch_size) flows; publishing ... ");
                 $self->_set_json_data( \@all_data );
                 $self->_publish_flows();
                 @all_data = ();
@@ -405,8 +424,9 @@ my $path = $params{'path'};
         $self->_publish_flows();
         @all_data = ();
 
-        # TODO: changed rel to abs; need a way to figure out a way to convert
-        # the old rel paths to abs
+        # Write the cache_file, adding the processed file, in case the importer dies or is killed. 
+            # TODO: changed rel to abs; need a way to figure out a way to convert
+            # the old rel paths to abs
         my $abs = file( $flowfile );
         #my $rel = $abs->relative( $path ) . "";
         $status->{$abs} = {
@@ -415,6 +435,16 @@ my $path = $params{'path'};
         };
         $self->_set_status_cache( $status );
         $self->_write_cache();
+
+        # Periodically, remove old files from the cache_file. 
+        my $dnow = DateTime->now;
+        my $hnow = $dnow->hour();
+        my $mnow = $dnow->minute();
+            $self->logger->debug("$dnow -  - hnow:dnow = $hnow:$mnow");
+        if ( $hnow == 6 and $mnow == 0 ) {
+            $self->logger->debug("$dnow - removing old files from cache_file - hnow:dnow = $hnow:$mnow");
+            $self->_purge_old_files();
+        } 
     }
 
 
@@ -438,12 +468,15 @@ sub _write_cache {
     my ( $self ) = @_;
     my $filename = $self->cache_file;
     my $status = $self->status_cache;
+    $self->logger->debug("writing cache_file");
     store $status, $filename;
 
 }
 
 
 sub _read_cache {
+    # Read the cache_file to see which files have already been processed. 
+    # This happens only when the importer is started.
     my ( $self ) = @_;
     my $filename = $self->cache_file;
     my $status = $self->status_cache;
@@ -453,10 +486,46 @@ sub _read_cache {
         close $fh;
         store $status, $filename;
     }
+    
+    $self->logger->debug("reading cache_file");
     $status = retrieve $filename;
     $self->_set_status_cache( $status );
 
+    # remove old files from the cache_file
+    $self->_purge_old_files();
+
 }
+
+sub _purge_old_files {
+    # Delete files older than max_file_age + 30 days from cache_file. We don't need to remember every file ever processed!
+    # NOTE: If you INCREASE max_file_age, the cache_file won't include all filenames to that age, so files will get re-processed
+    # unless you do something to add them by hand!  Decreasing it is ok.
+    my ( $self ) = @_;
+    my $filename = $self->cache_file;
+    my $status = $self->status_cache;
+    my @cache_remove = ();
+    while( my ($filename, $attributes) = each %$status ) {
+        my $mtime = DateTime->from_epoch( epoch =>  $attributes->{'mtime'} );
+        my $maxage = $self->max_file_age + 30;
+        my $dur = DateTime::Duration->new(
+            days => $maxage
+        );
+        my $tnow = DateTime->now;
+        if ( DateTime->compare( $mtime,  $tnow->subtract_duration( $dur ) ) == -1 ) {
+            push @cache_remove, $filename;
+        }
+    }
+    foreach my $file ( @cache_remove ) {
+        $self->logger->debug("Deleting from cache file: $file");
+        delete $status->{$file};
+    }
+    $self->_set_status_cache( $status );
+    if (@cache_remove) {
+        $self->_write_cache();
+    }
+}
+
+
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->json_data;
@@ -555,10 +624,11 @@ sub _cull_flow_files {
 }
 
 sub find_nfcapd {
+    # function called for each file found in @paths
     my ( $self, $params ) = @_;
     #my $path = $self->flow_path;
     my $path = $params->{'path'};
-    my $filepath = $File::Find::name;
+    my $filepath = $File::Find::name;  # the path+filename of the current file
     if ( not -f $filepath ) {
         return;
 
@@ -571,6 +641,7 @@ sub find_nfcapd {
     my $relative = path( $filepath )->relative( $path );
 
     # if min_file_age is '0' then we don't care about file age (this is default)
+    # Otherwise, only if file is older than min_file_age, add it to the list.
     if ( $self->min_file_age ne '0' ) {
         if ( $self->get_age( "older", $self->min_file_age, $filepath ) ) {
 
@@ -579,9 +650,14 @@ sub find_nfcapd {
         }
     }
 
+    # ignore/don't process files older than max_file_age. These were presumably already processed.
+    # NOTE - in _read_cache(), we delete files older than max_file_age + 30d from the cache_file.
+    if ( $self->get_age( "older", $self->max_file_age."D", $filepath ) ) {
+    ##  $self->logger->debug("$filepath is older than ".$self->max_file_age. " d. Ignoring.");
+        return;
+    } 
+
     push @files, "$relative";
-
-
 
 }
 

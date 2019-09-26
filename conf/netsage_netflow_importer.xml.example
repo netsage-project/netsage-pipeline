@@ -28,7 +28,6 @@
     <!-- Defaults to 500M  -->
     <!--    <min-bytes>500000000</min-bytes> -->
 
-    <!-- Ignore nfcapd files older than this age -->
     <!-- min-file-age specifies to ignore files newer than $age, which must match
         /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
         "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
@@ -36,6 +35,13 @@
         Default: 0 (no minimum age) 
     -->
     <!--    <min-file-age>1h</min-file-age> -->
+
+    <!-- Ignore/don't process nfcapd files older than this many days                                     -->
+    <!-- and remove files this old + 30  from the cache_file, which keeps track of which files are done. -->
+    <!-- NOTE: If you increase max_file_age, the cache_file won't include all filenames to that age, so  -->
+    <!-- files will get re-processed! Decreasing it, eg if the cache_file gets too big, is ok.           -->
+    <!-- Default: 30 days. -->
+    <!--    <max-file-age>30</max-file-age> -->
 
     <!-- cull-enable: whether to cull processed flow data files -->
     <!-- default: no culling; set to 1 to turn culling on -->
