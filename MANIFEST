@@ -3,11 +3,12 @@ bin/netsage-netflow-importer-daemon
 CHANGES.md
 conf-logstash/01-inputs.conf
 conf-logstash/02-convert.conf
-conf-logstash/04-stitching.conf
+conf-logstash/04-aggregation.conf
 conf-logstash/05-geoip-tagging.conf
 conf-logstash/06-scireg-tagging-fakegeoip.conf
 conf-logstash/07-deidentify.conf
-conf-logstash/08-cleanup.conf
+conf-logstash/08-privatize-org.conf
+conf-logstash/09-cleanup.conf
 conf-logstash/99-outputs.conf
 conf-logstash/ruby/anonymize_ipv6.rb
 conf/config.xml.example

@@ -119,11 +119,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/02-convert.conf
-%config /etc/logstash/conf.d/04-stitching.conf
+%config /etc/logstash/conf.d/04-aggregation.conf
 %config /etc/logstash/conf.d/05-geoip-tagging.conf
 %config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/07-deidentify.conf
-%config /etc/logstash/conf.d/08-cleanup.conf
+%config /etc/logstash/conf.d/08-privatize-org.conf
+%config /etc/logstash/conf.d/09-cleanup.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 
 /usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
