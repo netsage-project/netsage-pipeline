@@ -1,0 +1,4 @@
+# restart logstash so geoip and scireg fake-geoip db's are reread, in case they've been updated
+# daily at 12:00 UTC
+##00 12 * * * root /etc/init.d/logstash restart > /dev/null   
+

@@ -19,6 +19,7 @@ conf/netsage_netflow_importer.xml.example
 conf/netsage_shared.xml.example
 cron.d/netsage-geoip_update
 cron.d/netsage-scireg_update
+cron.d/netsage-logstash_restart
 grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon

@@ -3,15 +3,14 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 MAILTO=root
 
 #  Get updated GeoLite2-ASN and GeoLite2-City databases from scienceregistry.grnoc.iu.edu 
-#    (Save to new.mmdb then mv so logstash doesn't try to use a partial file.)
 #    --no-use-server-timestamps sets the file's time to the download time 
 #      If it is not available in the version of wget on the host, use touch to change the file date.
 #    -q for quiet - so no email if no output.
 #
 
 ## UNCOMMENT AFTER FILLING IN USERNAME AND PW
-# on Tuesdays at 18:05
-##5 18 * * 2 root /usr/bin/wget --user <username> --password <pw> https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb --no-use-server-timestamps -q -O /var/cache/netsage/newASN.mmdb  &&  mv /var/cache/netsage/newASN.mmdb /var/cache/netsage/GeoLite2-ASN.mmdb 
+# on Wednesdays at 11:50 UTC
+##50 11 * * 3 root /usr/bin/wget --user <username> --password <pw> https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb --no-use-server-timestamps -q -O /var/cache/netsage/newASN.mmdb  &&  mv /var/cache/netsage/newASN.mmdb /var/cache/netsage/GeoLite2-ASN.mmdb 
 
-# on Tuesdays at 18:10
-##10 18 * * 2 root /usr/bin/wget --user <username> --password <pw>  https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-City.mmdb --no-use-server-timestamps -q -O /var/cache/netsage/newCity.mmdb  &&  mv /var/cache/netsage/newCity.mmdb /var/cache/netsage/GeoLite2-City.mmdb
+# on Wednesdays at 11:55 UT
+##55 11 * * 3 root /usr/bin/wget --user <username> --password <pw>  https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-City.mmdb --no-use-server-timestamps -q -O /var/cache/netsage/newCity.mmdb  &&  mv /var/cache/netsage/newCity.mmdb /var/cache/netsage/GeoLite2-City.mmdb

@@ -92,6 +92,7 @@ make pure_install
 
 %{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
 %{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
+%{__install} cron.d/netsage-logstash_restart %{buildroot}/etc/cron.d/netsage-logstash_restart
 
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
@@ -138,6 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) /etc/cron.d/netsage-scireg_update
 %config(noreplace) /etc/cron.d/netsage-geoip_update
+%config(noreplace) /etc/cron.d/netsage-logstash_restart
 
 %defattr(754, root, root, -)
 
@@ -163,12 +165,12 @@ rm -rf $RPM_BUILD_ROOT
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER INSTALLING OR UPGRADING..."
 echo " "
-echo " *  Check config files with .rpmnew or .rpmsave versions to see if any need manual updates."
+echo " *  Check config and cron files with .rpmnew or .rpmsave versions to see if any need manual updates."
 echo " "
 echo " *  If you are using logstash 'pipelines.yml', make any manual updates needed. "
 echo "    This rpm puts logstash config files in /etc/logstash/conf.d/, doesn't manage pipelines.yml."
 echo " "
-echo " ** IMPORTANT: Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
+echo " ** Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
 echo " ** IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
 echo " ** See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information.                 **"
 echo " "
