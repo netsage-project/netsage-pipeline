@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.1
+Version: 1.3.0
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -43,7 +43,7 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-Requires: logstash >= 6.2.4
+Requires: logstash >= 7.4.1
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
@@ -120,6 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/02-convert.conf
+%config /etc/logstash/conf.d/03-add-id.conf
 %config /etc/logstash/conf.d/04-aggregation.conf
 %config /etc/logstash/conf.d/05-geoip-tagging.conf
 %config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf

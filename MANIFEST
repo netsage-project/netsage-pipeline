@@ -3,6 +3,7 @@ bin/netsage-netflow-importer-daemon
 CHANGES.md
 conf-logstash/01-inputs.conf
 conf-logstash/02-convert.conf
+conf-logstash/03-add-id.conf
 conf-logstash/04-aggregation.conf
 conf-logstash/05-geoip-tagging.conf
 conf-logstash/06-scireg-tagging-fakegeoip.conf

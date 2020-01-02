@@ -1,12 +1,22 @@
 ------------------------------------------------------
-## GRNOC NetSage Deidentfier 1.2 1 -- Fri May 31 2019
+## GRNOC NetSage Deidentfier 1.3.0 -- Jan 2 2020     
+------------------------------------------------------
+Features 
+  * Added a cron file to restart logstash  (note - restarting logstash will break aggregation currently)
+  * SCTASK0030490  Added redactor/privatize-org logstash config
+  * SCTASK0041528  Made fixes to logstash stitching  (and added old stitcher files to a dir in git)
+  * Various tweaks to other logstash configs
+  * Required logstash >= 7.4.1 (to include changes John contributed to aggregate plugin)
 
+------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2 1 -- Fri May 31 2019
+------------------------------------------------------
 Bugs:
   * Fixed flow duration calculation, required logstash >= 6.2.4, moved RawDataImporter to util/. (SCTASK0031312)
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.0 -- Fri May 17 2019
-
+------------------------------------------------------
 SCTASK0028272 (and SCTASK0023793)
 
 Features: 
@@ -21,7 +31,7 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.1.0 -- Mon Mar 29 2019
-
+------------------------------------------------------
 Features (SCTASK0025331):
   * Added logstash configs that have replaced some old-pipeline components - input, geoip, scireg, deidentify, cleanup, output
   * Removed unneeded old-pipeline components: deidentifer, tagger, scireg_tagger, finished_flow_mover
@@ -36,25 +46,25 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 1.0.3 --  Fri Feb 23 2018
-
+------------------------------------------------------
 Features:
  * ISSUE= 6365 PROJ=160 Tag flows based on metadata from the science registry
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 1.0.2 --  Wed Nov 8 2017
-
+------------------------------------------------------
 Bugs:
  * ISSUE=5575 PROJ=160 Fix issue acking/rejecting bad input data
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 1.0.1 --  Wed Oct 25 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=3754 PROJ=160 Extend shared config to archiver and flow mover
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 1.0.0 --  Wed Oct 10 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=3754 PROJ=160 Support for importing data from multiple routers on one host
  * ISSUE=3754 PROJ=160 Add shared config capability
@@ -62,7 +72,7 @@ Features:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.1.1 --  Wed Aug 22 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=4840 PROJ=160 Additional pipeline stage for filtering flow records before processing
  * ISSUE=4693 PROJ=160 Add systemd unit files for EL7
@@ -71,7 +81,7 @@ Features:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.1.0 --  Tue Jun 27 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=3753 PROJ=160 Ability to cull imported nfdump files after a specified timeperiod
 
@@ -80,14 +90,14 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.9 --  Wed Jun 21 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=4271 PROJ=160 Add instance id tag
  * ISSUE=4441 PROJ=160 Make IPC key configurable
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.8 --  Tue Jun 20 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=4171 PROJ=160 Add min byte threshold for flows
 
@@ -96,14 +106,14 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.7 -- Fri Apr 21 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=3752 PROJ=160 Add support for "sflow" flow type
  * ISSUE=3553 PROJ=160 Pipeline support for CentOS 7
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.6 -- Wed Apr 5 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=2996 PROJ=160 Added tagging of Continent
 
@@ -112,7 +122,7 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.5-2 -- Fri Jan 6 2017
-
+------------------------------------------------------
 Features:
  * ISSUE=2863 PROJ=160 Made nfdump path configurable
  * ISSUE=2863 PROJ=160 Improved logging
@@ -125,7 +135,7 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.4 -- Mon Nov 7 2016
-
+------------------------------------------------------
 Features:
  * ISSUE=2157 PROJ=160 Add new required fields: sensor ID and sensor type, to netflow importer
  * ISSUE=1879 PROJ=160 Changed log messages to include the process name and use different formatting. 
@@ -142,7 +152,7 @@ Bugs:
  
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.3 -- Wed Aug 24 2016
-
+------------------------------------------------------
 Features:
  * ISSUE=1359 PROJ=160 Create netflow input module
 
@@ -151,13 +161,13 @@ Bugs:
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.2 -- Mon July 25 2016
-
+------------------------------------------------------
 Features:
  * ISSUE=635 PROJ=160 Added flow stitching functionality. 
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentifier 0.0.1 -- Fri April 1 2016
-
+------------------------------------------------------
 Features:
  * ISSUE=543 PROJ=160 Initial implementation of NetSage flow deidentification pipeline. 
 
