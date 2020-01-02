@@ -353,11 +353,16 @@ my $path = $params{'path'};
         while ( my $line = <$fh> ) {
             my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
 
+            if ($ts =~ /^Byte/ ) { next; }
+
             my $start = str2time( $ts );
             my $end   = str2time( $te );
 
             if ( !defined $start || !defined $end ) {
-                #$self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
+                $self->logger->error("Invalid line in $flowfile. $!. Start or End time is undefined.");
+                $self->logger->error("line: $line");
+                $self->logger->error("ts: $ts     start: $start");
+                $self->logger->error("te: $te     end: $end");
                 next;
             }
 
