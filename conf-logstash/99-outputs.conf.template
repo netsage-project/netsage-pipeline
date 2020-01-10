@@ -22,9 +22,9 @@ output {
        # The following syntax for user and password works if the rabbitmq username and password are in the logstash keystore as 
        # rabbitmq_output_username and rabbitmq_output_pw. You can also just type in the username and pw here, in quotes.
         rabbitmq {
-            host     => "<DEST RABBITMQ HOST IP>"
-            user     => "${rabbitmq_output_username}"
-            password => "${rabbitmq_output_pw}"
+            host     => "${rabbitmq_output_host:localhost}"
+            user     => "${rabbitmq_output_username:guest}"
+            password => "${rabbitmq_output_pw:guest}"
             key           => "netsage_archive_input"
             exchange      => "netsage.direct"
             exchange_type => "direct"

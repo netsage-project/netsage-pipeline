@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+   tstat_builder:         
+       image: netsage/pipeline/tstat:latest
+       env_file: .env
+       build:
+          context: compose
+          dockerfile: tstat/Dockerfile
+   nfdump_builder:         
+       image: netsage/pipeline/nfdump:latest
+       env_file: .env
+       depends_on: 
+         - rpm_builder
+       build:
+          context: compose
+          dockerfile: pipeline/Dockerfile
+   rpm_builder:
+       image: netsage/pipeline/nfdump:builder
+       env_file: .env
+       build:
+          context: .
+          dockerfile: ./compose/rpm/Dockerfile
+   logstash_builder:
+       image: netsage/logstash/logstash:builder
+       env_file: .env
+       build:
+          context: .
+          dockerfile: ./compose/logstash/Dockerfile

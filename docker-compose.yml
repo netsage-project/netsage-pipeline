@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  collector:
+    image: netsage/nfdump-collector:1.6.18
+    restart: always
+    volumes:
+       - ./data/input_data:/data
+    network_mode: host
+  rabbit:
+    image: rabbitmq:3-management
+    env_file: .env
+    ports:
+      - "15672:15672"
+      - "5671:5671"
+      - "5672:5672"
+  importer:
+       image: netsage/pipeline/nfdump:latest
+       env_file: .env
+       depends_on: 
+         - rabbit
+       restart: always
+       command: netsage-netflow-importer-daemon --nofork  --config /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml 
+       volumes:
+           - ./data:/data
+           - ./data/cache:/var/cache/netsage
+  elasticsearch:
+       image: elasticsearch:7.4.2
+       env_file: .env
+       ports:
+         - "9200:9200"
+         - "9300:9300"
+  logstash:
+       image: netsage/logstash/logstash:builder
+       env_file: .env
+       ports:
+         - "5044:5044"
+       volumes:
+           - ./conf-logstash:/usr/share/logstash/pipeline/
+           - ./data:/data
+           - ./data/cache:/var/cache/netsage
+  kibana:
+       image: kibana:7.4.2
+       env_file: .env
+       ports:
+         - "5601:5601"

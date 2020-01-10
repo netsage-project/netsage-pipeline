@@ -24,7 +24,7 @@ cron.d/netsage-logstash_restart
 grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon
-INSTALL.md
+docs/01_INSTALL.md
 lib/GRNOC/NetSage/Deidentifier.pm
 lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
