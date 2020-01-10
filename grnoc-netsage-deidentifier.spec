@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.1
+Version: 1.2.2
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -43,7 +43,8 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-Requires: logstash >= 6.2.4
+# 7.4.1 includes fix to aggregate filter
+Requires: logstash >= 7.4.1
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
@@ -118,9 +119,10 @@ rm -rf $RPM_BUILD_ROOT
 # logstash files to not overwrite. If there are updates, use .rpmnew files to finish update by hand
 %config(noreplace) /etc/logstash/conf.d/01-inputs.conf
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
+%config(noreplace) /etc/logstash/conf.d/04-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/02-convert.conf
-%config /etc/logstash/conf.d/04-aggregation.conf
+%config /etc/logstash/conf.d/03-add-id.conf
 %config /etc/logstash/conf.d/05-geoip-tagging.conf
 %config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/07-deidentify.conf
@@ -163,18 +165,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-echo "AFTER INSTALLING OR UPGRADING..."
+echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew or .rpmsave versions to see if any need manual updates."
+echo " *  Eg, logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " "
-echo " *  If you are using logstash 'pipelines.yml', make any manual updates needed. "
-echo "    This rpm puts logstash config files in /etc/logstash/conf.d/, doesn't manage pipelines.yml."
+echo " *  This rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
 echo " "
-echo " ** Be sure the logstash keystore contains input and output rabbitmq usernames and passwords. **"
-echo " ** IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
-echo " ** See /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md for more information.                 **"
+echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
 echo " "
-echo " *  Netsage-netflow-importer, logstash, elasticSearch, and possibly netsage-flow-filter are the only services that need to run."
-echo "    Restart all except elasticSearch."
+echo " *  [Re]start logstash, netsage-netflow-importer, and netsage-flow-filter (for cenic) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
