@@ -1,12 +1,12 @@
 ------------------------------------------------------
-## GRNOC NetSage Deidentfier 1.3.0 -- Jan 2 2020     
+## GRNOC NetSage Deidentfier 1.2.2 -- Jan 13 2020     
 ------------------------------------------------------
 Features:
   * SCTASK0030490  Added redactor/privatize-org logstash config
-  * SCTASK0041528  Made fixes to logstash stitching  (and added old stitcher files to a dir in git for reference)
+  * SCTASK0041528  Tested and made changes to logstash stitching  (and added old stitcher files to a dir in git for reference)
   * Made various tweaks to other logstash configs
-  * Required logstash >= 7.4.1 (to include changes John contributed to aggregate plugin)
-  * Added a cron file to restart logstash  (note that restarting logstash will break aggregation currently!)
+  * Required logstash >= 7.4.1 (to include changes John Ratliff contributed to aggregate plugin)
+  * Added a cron file to restart logstash  
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2 1 -- Fri May 31 2019

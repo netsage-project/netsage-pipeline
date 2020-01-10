@@ -1,4 +1,4 @@
-### THIS NEEDS TO BE UPDATED
+NEED TO WORK ON THIS MORE
 
 # NetSage Flow Processing Pipeline Install Guide
 
@@ -15,12 +15,12 @@ The pipeline requires a RabbitMQ server. Typically, this runs on the same server
 Typically, the default configuration will work. Perform any desired Rabbit configuration, if any. Then, start RabbitMQ:
 
 ```
-[root@host ~]# /sbin/service rabbitmq-server start
+[root@host ~]# /sbin/service rabbitmq-server start or # systemctl start rabbitmq-server.service
 ```
 
 ## nfdump
 
-The NetFlow Importer daemon requires nfdump. If you're using tstat instead, you don't need nfdump. nfdump is *not* listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
+The NetFlow Importer daemon requires nfdump. If you are only using tstat, you do not need nfdump. nfdump is *not* listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
 
 ## Installing the EPEL repo
 
@@ -60,9 +60,14 @@ The first time you install packages from the repo, you will have to accept the G
 
 ## Installing the Pipeline
 
-The pipeline consists of one daemon and a set of logstash "filters". 
-1. Netflow Importer (optional - sometimes TSTAT TRANSPORT is used to put data into the correct rabbit queue instead)
-2. Logstash - <FILL IN>
+Pipeline components:
+1. Flow Filter - GlobalNOC uses this for Cenic data as we do not want to process all of it. Not needed otherwise.
+2. Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors, have them
+send directly to the appropriate rabbit queue. 
+3. Logstash configs - These are executed in alphabetical order. They read events from a rabbit queue, aggregate (ie stitch flows 
+that were split between different nfcapd files), add information from geoIP and Science Registry data, and write to a final rabbit queue.
+The final rabbit queue is read by an independent logstash instance and events are put into elasticsearch. One could also modify the
+last logstash conf here to write to elasticsearch.
 
 Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
 
@@ -72,21 +77,18 @@ Nothing will automatically start after installation as we need to move on to con
 
 ## Setting up the shared config file
 
-New in version 1.0.0 is a shared config file that all the pipeline components read before reading their individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
+Theshared config file, used by all the non-logstash pipeline components, is read before reading the individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH. We should redo this]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
 
 The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
 ```
 <collection>
     <flow-path>/path/to/flow-files</flow-path>
     <sensor>hostname.tld</sensor>
-  <!-- "instance" goes along with sensor
-       this is to identify various instances if a sensor has more than one
-       "stream" / data collection
-       defaults to 0.
-  -->
-  <!--
-      <instance>1</instance>
-  -->
+<!--  "instance" goes along with sensor
+       This is to identify various instances if a sensor has more than one "stream" / data collection
+       Defaults to 0.
+    <instance>1</instance>
+-->
   <!--
        Defaults to sensor, but you can set it to something else here
       <router-address></router-address>
