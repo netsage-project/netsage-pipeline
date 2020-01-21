@@ -44,7 +44,7 @@ Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
 # 7.4.1 includes fix to aggregate filter
-Requires: logstash >= 7.4.1
+Requires: logstash = 7.4.2
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
