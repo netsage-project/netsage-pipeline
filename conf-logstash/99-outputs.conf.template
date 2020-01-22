@@ -1,3 +1,6 @@
+##### MODIFY THIS FILE AS NEEDED, THEN RENAME, REMOVING THE .template #####
+##### OR COPY ANY CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE   #####
+
 # info useful for monitoring what logstash is doing
 filter {
   if [type] == "flow" {

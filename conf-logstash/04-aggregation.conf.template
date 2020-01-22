@@ -1,3 +1,6 @@
+##### MODIFY THIS FILE, IF NEEDED, THEN RENAME, REMOVING THE .template #####
+##### OR COPY ANY CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE    #####
+
 # This filter stitches together flows from different nfcapd files, each (usually) spanning a 5 min. period.
 # Note: netflow keeps the start time the same for all flows with the same fingerprint, even across different nfcapd files;
 # duration is cumulative but counts are not. Sflow ends each flow as it is written out, as one would expect.

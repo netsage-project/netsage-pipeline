@@ -117,9 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
 # logstash files to not overwrite. If there are updates, use .rpmnew files to finish update by hand
-%config(noreplace) /etc/logstash/conf.d/01-inputs.conf
-%config(noreplace) /etc/logstash/conf.d/99-outputs.conf
-%config(noreplace) /etc/logstash/conf.d/04-aggregation.conf
+%config /etc/logstash/conf.d/01-inputs.conf.template
+%config /etc/logstash/conf.d/99-outputs.conf.template
+%config /etc/logstash/conf.d/04-aggregation.conf.template
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/02-convert.conf
 %config /etc/logstash/conf.d/03-add-id.conf
@@ -139,6 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
 
+# will not overwrite
 %config(noreplace) /etc/cron.d/netsage-scireg_update
 %config(noreplace) /etc/cron.d/netsage-geoip_update
 %config(noreplace) /etc/cron.d/netsage-logstash_restart
@@ -167,7 +168,7 @@ rm -rf $RPM_BUILD_ROOT
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
-echo " *  Check config and cron files with .rpmnew or .rpmsave versions to see if any need manual updates."
+echo " *  Check config and cron files with .rpmnew, .rpmsave, or .template versions to see if any need manual updates."
 echo " *  Eg, logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " "
 echo " *  This rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."

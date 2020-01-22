@@ -1,5 +1,5 @@
 ------------------------------------------------------
-## GRNOC NetSage Deidentfier 1.2.2 -- Jan 13 2020     
+## GRNOC NetSage Deidentfier 1.2.2 -- Jan 22 2020     
 ------------------------------------------------------
 Features:
   * SCTASK0030490  Added redactor/privatize-org logstash config
@@ -7,6 +7,7 @@ Features:
   * Made various tweaks to other logstash configs
   * Required logstash >= 7.4.1 (to include changes John Ratliff contributed to aggregate plugin)
   * Added a cron file to restart logstash  
+  * Renamed some logstash config files *.conf.template. Upgrades will replace these but not the user-edited *.conf files.
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2 1 -- Fri May 31 2019

@@ -1,3 +1,6 @@
+##### MODIFY THIS FILE IF NEEDED, THEN RENAME, REMOVING THE .template  #####
+##### OR COPY NEEDED CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE #####
+
 input {
     # Input events are flows from the named rabbit queue on LOCALHOST
     # The following works if the rabbitmq username and password are in the logstash keystore as
