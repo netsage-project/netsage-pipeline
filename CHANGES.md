@@ -5,7 +5,7 @@ Features:
   * SCTASK0030490  Added redactor/privatize-org logstash config
   * SCTASK0041528  Tested and made changes to logstash stitching  (and added old stitcher files to a dir in git for reference)
   * Made various tweaks to other logstash configs
-  * Required logstash >= 7.4.1 (to include changes John Ratliff contributed to aggregate plugin)
+  * Required logstash = 7.4.2 (to include changes John Ratliff contributed to aggregate plugin)
   * Added a cron file to restart logstash  
   * Renamed some logstash config files *.conf.template. Upgrades will replace these but not the user-edited *.conf files.
 

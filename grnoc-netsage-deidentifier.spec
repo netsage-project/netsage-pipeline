@@ -117,7 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
-# logstash files to not overwrite. If there are updates, use .rpmnew files to finish update by hand
+# We don't want to overwrite these .confs. If there are updates, read .conf.template files and make updates by hand
 %config /etc/logstash/conf.d/01-inputs.conf.template
 %config /etc/logstash/conf.d/99-outputs.conf.template
 %config /etc/logstash/conf.d/04-aggregation.conf.template
