@@ -14,7 +14,7 @@ services:
       - "5671:5671"
       - "5672:5672"
   importer:
-       image: netsage/pipeline/nfdump:latest
+       image: netsage/pipeline/importer:latest
        env_file: .env
        depends_on: 
          - rabbit
@@ -22,7 +22,7 @@ services:
        command: netsage-netflow-importer-daemon --nofork  --config /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml 
        volumes:
            - ./data:/data
-           - ./data/cache:/var/cache/netsage
+ #          - ./data/cache:/var/cache/netsage
   elasticsearch:
        image: elasticsearch:7.4.2
        env_file: .env
