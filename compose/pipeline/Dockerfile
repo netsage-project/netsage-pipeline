@@ -1,4 +1,5 @@
 FROM centos:7
+ARG RELEASE 
 
 COPY grnoc7.repo /etc/yum.repos.d/grnoc7.repo
 COPY logstash.repo /etc/yum.repos.d/logstash.repo
@@ -15,11 +16,7 @@ COPY --from=netsage/pipeline/nfdump:builder /root/rpmbuild/RPMS/noarch/*.rpm /tm
 COPY ./pipeline/build.sh  /tmp/
 
 ##Build.sh chooses to install the RELEASE vs the DEVEL.  Defaults to DEV version
-RUN bash ./tmp/build.sh 
-
-
-## Skip broken disregards logstash since it won't be used
-RUN for i in $(ls /tmp/*.rpm); do yum localinstall -y $i; done;
+RUN RELEASE="$RELEASE" ./tmp/build.sh 
 
 RUN yum install -y vim  && pip install --upgrade pip pika
 

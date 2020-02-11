@@ -32,6 +32,8 @@ services:
   logstash:
        image: netsage/logstash/logstash:builder
        env_file: .env
+       depends_on: 
+        - elasticsearch
        ports:
          - "5044:5044"
        volumes:

@@ -1,11 +1,5 @@
 version: '3.7'
 services:
-   tstat_builder:         
-       image: netsage/pipeline/tstat:latest
-       env_file: .env
-       build:
-          context: compose
-          dockerfile: tstat/Dockerfile
    importer_builder:         
        image: netsage/pipeline/importer:latest
        env_file: .env
@@ -14,6 +8,8 @@ services:
        build:
           context: compose
           dockerfile: pipeline/Dockerfile
+          args:
+            - RELEASE=$RELEASE
    rpm_builder:
        image: netsage/pipeline/nfdump:builder
        env_file: .env

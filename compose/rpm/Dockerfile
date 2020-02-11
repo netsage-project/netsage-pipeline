@@ -1,8 +1,5 @@
 FROM centos:7
 
-#RUN useradd coder
-#RUN mkdir -p /home/coder
-
 ## Setup baseline 
 RUN  \
     yum  -y update && \ 
