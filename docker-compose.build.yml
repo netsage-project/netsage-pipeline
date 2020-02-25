@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+   importer_builder:         
+       image: netsage/pipeline/importer:latest
+       env_file: .env
+       depends_on: 
+         - rpm_builder
+       build:
+          context: compose
+          dockerfile: pipeline/Dockerfile
+          args:
+            - RELEASE=$RELEASE
+   rpm_builder:
+       image: netsage/pipeline/nfdump:builder
+       env_file: .env
+       build:
+          context: .
+          dockerfile: ./compose/rpm/Dockerfile
+   logstash_builder:
+       image: netsage/logstash/logstash:builder
+       env_file: .env
+       build:
+          context: .
+          dockerfile: ./compose/logstash/Dockerfile

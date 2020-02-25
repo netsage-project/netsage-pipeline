@@ -7,9 +7,9 @@ input {
     # rabbitmq_input_username and rabbitmq_input_pw. You can also type in the username and pw here, in quotes.
     # (The 'netsage_deidentfier_raw' rabbit queue contains flows from netsage-netflow-importer-daemon and tstat_send.)
     rabbitmq{
-        host     => 'localhost'
-        user     => "${rabbitmq_input_username}"
-        password => "${rabbitmq_input_pw}"
+        host     => "${rabbitmq_input_host:localhost}"
+        user     => "${rabbitmq_input_username:guest}"	        
+        password => "${rabbitmq_input_pw:guest}"
         queue    => 'netsage_deidentifier_raw'
         key      => 'netsage_deidentifier_raw'
         exchange => 'amq.direct'

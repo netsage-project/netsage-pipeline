@@ -4,7 +4,7 @@ The Netsage Flow Processing Pipeline includes several components for processing 
 
 The Pipeline is available in a yum repo 
 
-(see [INSTALL](https://github.com/netsage-project/netsage-pipeline/blob/master/INSTALL.md))
+(see [INSTALL](docs/01_INSTALL.md))
 
 
 
