@@ -28,9 +28,8 @@
     <!-- Defaults to 500M  -->
     <!--    <min-bytes>500000000</min-bytes> -->
 
-    <!-- Ignore nfcapd files older than this age -->
-    <!-- min-file-age specifies to ignore files newer than $age, which must match
-        /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
+    <!-- Do not import nfcapd files younger than min-file-age
+        The value must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
         "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
         See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
         Default: 0 (no minimum age) 

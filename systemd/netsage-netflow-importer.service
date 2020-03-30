@@ -4,10 +4,11 @@ After=rabbitmq-server.service
 Requires=rabbitmq-server.service
 
 [Service]
-
 Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
-ExecStart=/usr/bin/netsage-netflow-importer-daemon --config ${CONFIG} --nofork
+Environment=SHAREDCONFIG=/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+ExecStart=/usr/bin/netsage-netflow-importer-daemon --config ${CONFIG} --sharedconfig ${SHAREDCONFIG} --nofork
 ExecStop=/bin/kill $MAINPID
+ExecStopPost=/bin/echo "Use ps to be sure the daemon and worker both stopped"
 
 # We don't have HUP capability yet
 # ExecReload=/bin/kill -s SIGHUP $MAINPID

@@ -5,7 +5,8 @@ Requires=rabbitmq-server.service
 
 [Service]
 Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
-ExecStart=/usr/bin/netsage-flow-filter-daemon --config ${CONFIG} --nofork
+Environment=SHAREDCONFIG=/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+ExecStart=/usr/bin/netsage-flow-filter-daemon --config ${CONFIG} --sharedconfig ${SHAREDCONFIG} --nofork
 ExecStop=/bin/kill $MAINPID
 
 # We don't have HUP capability yet

@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.2
+Version: 1.2.3
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -43,8 +43,9 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-# 7.4.1 includes fix to aggregate filter. Haven't tested 7.5 yet.
-Requires: logstash = 1:7.4.2-1
+## 7.4.1 includes fix to aggregate filter. Haven't tested 7.5 yet.
+## Requires: logstash = 1:7.4.2-1
+Requires: logstash >= 7.4.2
 
 %description
 GRNOC NetSage Flow Deidentifier Pipeline
@@ -81,7 +82,6 @@ make pure_install
 %{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
-%{__install} conf-logstash/*.conf.template  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 
 %if 0%{?rhel} >= 7
@@ -111,18 +111,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(644, root, root, 755)
 
+# Don't overwrite importer configs
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_shared.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
-# We don't want to overwrite these .confs. If there are updates, read .conf.template files and make updates by hand
-%config /etc/logstash/conf.d/01-inputs.conf.template
-%config /etc/logstash/conf.d/99-outputs.conf.template
-%config /etc/logstash/conf.d/04-aggregation.conf.template
+# We don't want to overwrite these .confs. If there are updates, read .conf.rpmnew files and make updates by hand
+%config /etc/logstash/conf.d/01-inputs.conf
+%config /etc/logstash/conf.d/99-outputs.conf
+%config /etc/logstash/conf.d/04-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
-%config /etc/logstash/conf.d/02-convert.conf
+%config /etc/logstash/conf.d/02-preliminaries.conf
 %config /etc/logstash/conf.d/03-add-id.conf
 %config /etc/logstash/conf.d/05-geoip-tagging.conf
 %config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf
@@ -169,13 +170,13 @@ rm -rf $RPM_BUILD_ROOT
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
-echo " *  Check config and cron files with .rpmnew, .rpmsave, or .template versions to see if any need manual updates."
+echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
 echo " *  Eg, logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " "
 echo " *  This rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
 echo " "
 echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
 echo " "
-echo " *  [Re]start logstash, netsage-netflow-importer, and netsage-flow-filter (for cenic) "
+echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter for cenic) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
