@@ -12,12 +12,13 @@ name="netsage-netflow-importer-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
 CONFIG="/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml"
+SHAREDCONFIG="/etc/grnoc/netsage/deidentifier/netsage_shared.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6
     [ -x $exec ] || exit 5
     echo -n $"Starting $name: "
-    daemon "$exec --config $CONFIG"
+    daemon "$exec --config $CONFIG --sharedconfig $SHAREDCONFIG"
     retval=$?
     echo
     return $retval
@@ -27,19 +28,21 @@ stop() {
     echo -n $"Stopping $name: "
     if [ -f $pidfile ]
     then
-        # shutdown haven't work, try old way
+        # shutdown doesn't work, try old way
         killproc -p $pidfile $name
         retval=$?
     else
         success "$name shutdown"
     fi
+    echo -n $"Use ps aux to be sure the daemon and worker both stopped !!"
     echo
     return $retval
 }
 
+# workers don't always quit, certainly not quickly!
 restart() {
-    stop
-    start
+   echo -n $"Use stop, check ps aux, then start"
+   echo
 }
 
 rh_status() {

@@ -1,4 +1,31 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.3 -- Apr 3 2020     
+------------------------------------------------------
+SCTASK0047629
+Features:
+  * Added docker support 
+  * Changed the logstash requirement to be >= 7.4.2 
+  * Added --sharedconfig to startup commands for importer and flow_filter in init.d and systemctl files
+  * Added more info to logstash error tags and added filter ids. Will now not add an error-tag if scireg lookup fails.
+  * If the src or dst IP is in a private range, the flow will now be dropped.
+  * Will now drop flows that have flow start or end time > 1 year in the past or > 10 s in the future.
+  * Renamed 02-convert.conf to 02-preliminaries.conf (added the checks for private addresses and strange dates there)
+  * For Australian flows, will now only redact info if the the continent is Australia (in addition to the ASN being in the list).
+  * Removed unneeded science registry fields from what is saved to elasticsearch.
+  * Removed other unnecessary fields from configs and elasticsearch, eg, timestamps, country codes.
+  * For Multicast destinations, the organization, country, and continent will now be "Multicast". No lat/lon for dst.
+  * If the ASN in the event (from the flow header) is missing, 0, 4294967295, or 23456, it will be overwritten by whatever the 
+    GeoIP ASN db gives (if the IP is in the db), otherwise, the ASN from the flow header will be preserved. 
+    If the saved flow-ASN differs from the geoip-ASN, a tag is added. NOTE that the organization and location will match the geoip-ASN!
+  * If an IP is found in the geoip dbs but there is no organization, country, or continent, the missing fields will be set to "Unknown".
+  * Various other small changes, reorganization, and fixes.
+
+Bugs:
+  * In NetflowImporter.pm, made it skip empty nfcapd files since these were causing occasional crashes
+  * In the ipv6 anonymizer script, made a change to handle addresses ending in ::  
+
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.2 -- Jan 22 2020     
 ------------------------------------------------------
 Features:

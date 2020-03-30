@@ -12,12 +12,13 @@ name="netsage-flow-filter-daemon"
 exec="/usr/bin/$name"
 pidfile="/var/run/$name.pid"
 CONFIG="/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml"
+SHAREDCONFIG="/etc/grnoc/netsage/deidentifier/netsage_shared.xml"
 
 start() {
     [ -f $CONFIG ] || exit 6
     [ -x $exec ] || exit 5
     echo -n $"Starting $name: "
-    daemon "$exec --config $CONFIG"
+    daemon "$exec --config $CONFIG" --sharedconfig $SHAREDCONFIG
     retval=$?
     echo
     return $retval
@@ -33,13 +34,14 @@ stop() {
     else
         success "$name shutdown"
     fi
+    echo -n $"Use ps aux to be sure the worker has stopped also"
     echo
     return $retval
 }
 
 restart() {
-    stop
-    start
+    echo -n $"Use stop, check with ps, then start"
+    echo
 }
 
 rh_status() {

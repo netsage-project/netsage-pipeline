@@ -26,20 +26,20 @@ def filter(event)
                     new_ip_parts.push(part)
                 end
             end
-            if new_ip_parts.length != 8
-                event.set("[ruby_exception]", "No. of parts in address is " + new_ip_parts.length.to_s + ", not 8!?!?")
-                return [event]
-            end
 
             # Anonymize by replacing last 4 parts with x:x:x:x
             new_ip_parts[4] = new_ip_parts[5] = new_ip_parts[6] = new_ip_parts[7] = "x"
 
+            if new_ip_parts.length != 8
+		event.tag('error in anonymize_ipv6 - no. of parts in addr is ' + new_ip_parts.length.to_s + ', not 8 ')
+            end
+            #
             # save new value
             clipped_ip = new_ip_parts.join(":")
             event.set(@ip_field, clipped_ip)
 
             rescue Exception => e
-                event.set("[ruby_exception]", e.message)
+		event.tag('_rubyexception in anonymize_ipv6 - ' + e.message)
                 return [event]
             end
 

@@ -212,6 +212,8 @@ sub _get_flow_data {
         my $path = $collection->{'flow-path'}; # || $self->flow_path;
         my $sensor = $collection->{'sensor'} || hostname();
 
+        $self->logger->info( " Doing collection $sensor "); 
+
         my %params = %{ $self->_get_params( $collection ) };
 
         $params{'flow-path'} = $path;
@@ -246,6 +248,16 @@ sub _get_flow_data {
             # TODO: changed rel to abs; need a way to figure out a way to convert
             # the old rel paths to abs
 
+
+            # skip empty files (header and/or footer only). They can cause problems.
+            if( ! $stats or ! $stats->size ) {
+                $self->logger->info("*** For $path $file, there are no stats. skipping.");
+                next;
+            } elsif( $stats->size <= 420 ) {
+                $self->logger->info("skipping $path because size is <= 420");
+                next;
+            }
+
             my $rel = $abs->relative( $path ) . "";
             if ( exists ( $status->{ $rel } ) ) {
                 $status->{ $abs } = $status->{ $rel };
@@ -274,8 +286,6 @@ sub _get_flow_data {
         if ( @filepaths > 0 ) {
             my $success = $self->_get_nfdump_data(\@filepaths, %params);
         }
-
-
 
 
     } # end collections foreach loop
@@ -337,8 +347,10 @@ my $path = $params{'path'};
             next;
         }
 
+       ### $self->logger->info("importing file: $flowfile"); #######
+
         my $command = "$nfdump -r '$flowfile'";
-	    $command .= " -a"; # perform aggregation based on 5 tuples
+	$command .= " -a"; # perform aggregation based on 5 tuples
         $command .= ' -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         $command .= ' -6';  # to get full ipv6 addresses
         $command .= ' -L +' . $min_bytes;   
@@ -420,7 +432,8 @@ my $path = $params{'path'};
         };
         $self->_set_status_cache( $status );
         $self->_write_cache();
-    }
+
+    } ## end loop over flow files
 
 
     if ( $self->run_once ) {
