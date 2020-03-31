@@ -12,7 +12,6 @@ conf-logstash/08-privatize-org.conf
 conf-logstash/09-cleanup.conf
 conf-logstash/99-outputs.conf
 conf-logstash/ruby/anonymize_ipv6.rb
-conf/config.xml.example
 conf/logging-debug.conf.example
 conf/logging.conf.example
 conf/netsage_flow_filter.xml.example

@@ -10,6 +10,8 @@
 
 name="netsage-netflow-importer-daemon"
 exec="/usr/bin/$name"
+## The pid file name is actually set in the deidentifier config file!
+## This is just using that name.
 pidfile="/var/run/$name.pid"
 CONFIG="/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml"
 SHAREDCONFIG="/etc/grnoc/netsage/deidentifier/netsage_shared.xml"

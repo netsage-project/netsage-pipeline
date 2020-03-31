@@ -111,17 +111,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(644, root, root, 755)
 
-# Don't overwrite importer configs
+# Don't overwrite importer configs. Create .rpmnew files if needed.
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_shared.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
-# We don't want to overwrite these .confs. If there are updates, read .conf.rpmnew files and make updates by hand
-%config /etc/logstash/conf.d/01-inputs.conf
-%config /etc/logstash/conf.d/99-outputs.conf
-%config /etc/logstash/conf.d/04-aggregation.conf
+# We don't want to overwrite these .confs. Create .rpmnew files if needed.
+%config(noreplace) /etc/logstash/conf.d/01-inputs.conf
+%config(noreplace) /etc/logstash/conf.d/99-outputs.conf
+%config(noreplace) /etc/logstash/conf.d/04-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/02-preliminaries.conf
 %config /etc/logstash/conf.d/03-add-id.conf
@@ -171,7 +171,7 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Eg, logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  Logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " "
 echo " *  This rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
 echo " "

@@ -10,6 +10,8 @@
 
 name="netsage-flow-filter-daemon"
 exec="/usr/bin/$name"
+## I believe the pid file name is actually set in the deidentifier config! 
+## This is just using that name.
 pidfile="/var/run/$name.pid"
 CONFIG="/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml"
 SHAREDCONFIG="/etc/grnoc/netsage/deidentifier/netsage_shared.xml"
