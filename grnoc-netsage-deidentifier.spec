@@ -43,12 +43,11 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-## 7.4.1 includes fix to aggregate filter. Haven't tested 7.5 yet.
-## Requires: logstash = 1:7.4.2-1
+## 7.4.1 includes fix to aggregate filter. 
 Requires: logstash >= 7.4.2
 
 %description
-GRNOC NetSage Flow Deidentifier Pipeline
+GRNOC NetSage Flow-Processing Pipeline
 
 %prep
 %setup -q -n grnoc-netsage-deidentifier-%{version}
