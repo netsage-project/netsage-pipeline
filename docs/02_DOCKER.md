@@ -83,8 +83,29 @@ rabbitmq_output_pw=guest
 rabbitmq_output_key=netsage_archive_input
 ```
 
-## Start the Containers
+## Running the Containers
 
+## Start the Containers
 ```sh
 docker-compose up -d 
 ```
+
+## Stop the Containers
+```sh
+docker-compose down
+```
+## Enter a Container Shell
+```sh
+docker-compose exec logstash bash     #bash shell in logstash container
+docker-compose exec importer bash     #bash shell in importer container
+docker-compose exec rabbit bash       #bash shell in rabbit container
+```
+
+## View Container Logs
+```sh
+docker-compose logs -f              #view logs for all containers 
+docker-compose logs -f logstash     #view logs for logstash container
+docker-compose logs -f importer     #view logs for importer container
+docker-compose logs -f rabbit       #view logs for rabbit container
+```
+
