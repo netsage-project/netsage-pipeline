@@ -5,7 +5,8 @@ services:
     restart: always
     volumes:
        - ./data/input_data:/data
-    network_mode: host
+    ports:
+       - "9999:9999/udp"
   rabbit:
     image: rabbitmq:3-management
     env_file: .env
