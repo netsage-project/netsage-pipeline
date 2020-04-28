@@ -7,22 +7,39 @@ SCIENCE_USER='user' SCIENCE_PWD='secret' ./initialize_docker_data.sh
 ## Build base images
 
 ### Build using Dev Release: 
+If you would like to build the *importer* container using the version of the pipeline scripts found in this GitHub repo then run the following:
 
 ```sh 
 docker-compose -f docker-compose.build.yml build
 ```
 
 ### Build using Production Release: 
-copy the env.template to .env
+You may also build the *importer* container using the RPM published in the GRNOC yum repo as opposed to this source code. **NOTE: The RPM may have older code than is found in this GitHub repository.**
 
-add this entry:
+1. Copy the env.example file to .env
+```sh
+cp env.example .env
+```
+
+2. Add this entry:
+```sh
 RELEASE=true
+```
+
+3. Build the containers
+
+```sh 
+docker-compose -f docker-compose.build.yml build
+```
 
 ## Bring up the stack
 
 ### Environment file.
 
-if you haven't done so already, copy env.template and update it to match your own settings.
+If you haven't done so already, copy env.example and update it to match your own settings:
+```sh
+cp env.example .env
+```
 
 #### Rabbit 
 This portion is primarily to set the Rabbit MQ server.  Most of the default settings work but whatever values you set
@@ -53,12 +70,13 @@ rabbitmq_input_pw=guest
 
 ```
 
-Define the output rabbit Queue.  This can be the docker container or any valid rabbit MQ server.
+Define the output rabbit queue.  This can be the docker container or any valid RabbitMQ server.
 
 ```sh
 rabbitmq_output_host=rabbit
 rabbitmq_output_username=guest
 rabbitmq_output_pw=guest
+rabbitmq_output_key=netsage_archive_input
 ```
 
 ## Bring up the stack.
