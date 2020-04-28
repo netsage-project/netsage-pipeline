@@ -45,7 +45,7 @@ If you haven't done so already, copy env.example and update it to match your own
 cp env.example .env
 ```
 
-#### Rabbit 
+### Rabbit 
 This portion is primarily to set the Rabbit MQ server.  Most of the default settings work but whatever values you set
 here should be consistent with the config for the logstash and importer 
 
@@ -85,23 +85,23 @@ rabbitmq_output_key=netsage_archive_input
 
 ## Running the Containers
 
-## Start the Containers
+### Start the Containers
 ```sh
 docker-compose up -d 
 ```
 
-## Stop the Containers
+### Stop the Containers
 ```sh
 docker-compose down
 ```
-## Enter a Container Shell
+### Enter a Container Shell
 ```sh
 docker-compose exec logstash bash     #bash shell in logstash container
 docker-compose exec importer bash     #bash shell in importer container
 docker-compose exec rabbit bash       #bash shell in rabbit container
 ```
 
-## View Container Logs
+### View Container Logs
 ```sh
 docker-compose logs -f              #view logs for all containers 
 docker-compose logs -f logstash     #view logs for logstash container
