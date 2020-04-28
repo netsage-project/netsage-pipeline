@@ -8,16 +8,16 @@ Run the following to download Science Registry and GeoIp data. You may re-run th
 ./initialize_docker_data.sh
 ```
 
-## Build base images
+## Build Base Images
 
-### Build using Dev Release: 
+### Build Using Source Code
 If you would like to build the *importer* container using the version of the pipeline scripts found in this GitHub repo then run the following:
 
 ```sh 
 docker-compose -f docker-compose.build.yml build
 ```
 
-### Build using Production Release: 
+### Build Using Production RPM Release 
 You may also build the *importer* container using the RPM published in the GRNOC yum repo as opposed to this source code. **NOTE: The RPM may have older code than is found in this GitHub repository.**
 
 1. Copy the env.example file to .env
@@ -36,9 +36,9 @@ RELEASE=true
 docker-compose -f docker-compose.build.yml build
 ```
 
-## Bring up the stack
+## Configuring the Containers
 
-### Environment file.
+### Environment File
 
 If you haven't done so already, copy env.example and update it to match your own settings:
 ```sh
@@ -61,11 +61,11 @@ Note the hostname will follow the docker-compose label.  You can rename it if yo
 
 ### Importer 
 
-The importer config is defined in compose/netsage_shared.xml.  If you use different values then the defaults you may want to change them.
+The importer config is defined in compose/netsage_shared.xml.  If you use different values then the defaults you may want to change them/ **NOTE: Changes will require you to rebuild the container**
 
 ### Logstash 
 
-Define the input rabbit Queue.  This should match the Importer output queue
+Define the input rabbit queue.  This should match the importer output queue
 
 ```sh
 rabbitmq_input_host=rabbit
@@ -83,6 +83,8 @@ rabbitmq_output_pw=guest
 rabbitmq_output_key=netsage_archive_input
 ```
 
-## Bring up the stack.
+## Start the Containers
 
+```sh
 docker-compose up -d 
+```
