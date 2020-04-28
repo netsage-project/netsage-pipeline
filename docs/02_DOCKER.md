@@ -18,7 +18,7 @@ docker-compose -f docker-compose.build.yml build
 ```
 
 ### Build Using Production RPM Release 
-You may also build the *importer* container using the RPM published in the GRNOC yum repo as opposed to this source code. **NOTE: The RPM may have older code than is found in this GitHub repository.**
+You may also build the *importer* container using the RPM published in a remote GRNOC yum repo as opposed to your local copy of this source code. **NOTE: The published RPM may install a version of the importer scripts different from what is found in your local copy of this GitHub repository depending on when the RPM was last built and uploaded.**
 
 1. Copy the env.example file to .env
 ```sh
