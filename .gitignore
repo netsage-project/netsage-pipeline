@@ -4,5 +4,6 @@
 conf/systemd/deploy
 ~
 .env
+.DS_Store
 *.pyc
 data
