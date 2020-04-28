@@ -48,4 +48,10 @@
     <vhost>/</vhost>
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
+  
+  <!-- worker settings -->
+  <worker>
+    <cull-enable>1</cull-enable>
+    <cull-ttl>3</cull-ttl>
+  </worker>
 </config>
