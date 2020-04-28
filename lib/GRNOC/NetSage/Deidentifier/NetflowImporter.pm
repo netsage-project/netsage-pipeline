@@ -384,7 +384,7 @@ my $path = $params{'path'};
             if( $pr =~ /^\d+$/ ) {
                 $proto = getprotobynumber( $pr );
             } else {
-                $proto = getprotobyname( lc($pr) );
+                $proto = lc($pr);
             }
 
             my $row = {};
