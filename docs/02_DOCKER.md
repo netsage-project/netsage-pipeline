@@ -1,8 +1,12 @@
 # Docker Setup
 
-## Retrieve Meta data.  Feel free to re-run  to update the data.  Set the correct username/password to match your credentials.
+## Retrieve Enrichment Metadata
 
-SCIENCE_USER='user' SCIENCE_PWD='secret' ./initialize_docker_data.sh
+Run the following to download Science Registry and GeoIp data. You may re-run this at anytime to update these databases.
+
+```sh
+./initialize_docker_data.sh
+```
 
 ## Build base images
 
