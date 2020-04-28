@@ -381,9 +381,9 @@ my $path = $params{'path'};
             my $sum_bytes = $ibyt + $obyt;
             my $sum_packets = $ipkt + $opkt;
             my $proto = '';
-            if($pr =~ /d+/){
+            if( $pr =~ /d+/ ) {
                 $proto = getprotobynumber( $pr );
-            }else{
+            } else {
                 $proto = getprotobyname( lc($pr) );
             }
 
