@@ -24,25 +24,23 @@ services:
        volumes:
            - ./data:/data
  #          - ./data/cache:/var/cache/netsage
-  elasticsearch:
-       image: elasticsearch:7.4.2
-       env_file: .env
-       ports:
-         - "9200:9200"
-         - "9300:9300"
   logstash:
        image: netsage/logstash/logstash:builder
        env_file: .env
-       depends_on: 
-        - elasticsearch
        ports:
          - "5044:5044"
        volumes:
            - ./conf-logstash:/usr/share/logstash/pipeline/
            - ./data:/data
            - ./data/cache:/var/cache/netsage
-  kibana:
-       image: kibana:7.4.2
-       env_file: .env
-       ports:
-         - "5601:5601"
+#  elasticsearch:
+#       image: elasticsearch:7.4.2
+#       env_file: .env
+#       ports:
+#         - "9200:9200"
+#         - "9300:9300"
+#  kibana:
+#       image: kibana:7.4.2
+#       env_file: .env
+#       ports:
+#         - "5601:5601"

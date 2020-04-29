@@ -83,6 +83,22 @@ rabbitmq_output_pw=guest
 rabbitmq_output_key=netsage_archive_input
 ```
 
+### Optional: ElasticSearch and Kibana
+You can optionally store flow data locally in an ElasticSearch container and view the data with Kibana. If you are sending results to be stored remotely, this is not necessary. Local storage can be enabled with the following steps:
+
+1.  You can uncomment the elasticsearch and kibana services in docker-compose.yml. 
+
+2. Edit conf-logstash/99-outputs.conf and uncomment the following lines:
+
+```
+elasticsearch {
+    hosts => ["127.0.0.1"]           
+    index => "test-%{+YYYY.MM.dd}"  
+}
+```
+
+3. Comment out the `rabbitmq {...}` block if you do not want to also send to RabbitMQ.
+
 ## Running the Containers
 
 ### Start the Containers
