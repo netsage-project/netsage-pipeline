@@ -380,6 +380,12 @@ my $path = $params{'path'};
 
             my $sum_bytes = $ibyt + $obyt;
             my $sum_packets = $ipkt + $opkt;
+            my $proto = '';
+            if( $pr =~ /^\d+$/ ) {
+                $proto = getprotobynumber( $pr );
+            } else {
+                $proto = lc($pr);
+            }
 
             my $row = {};
             $row->{'type'} = 'flow';
@@ -390,7 +396,7 @@ my $path = $params{'path'};
             $row->{'meta'}->{'src_port'} = $sp;
             $row->{'meta'}->{'dst_ip'} = $da;
             $row->{'meta'}->{'dst_port'} = $dp;
-            $row->{'meta'}->{'protocol'} = getprotobynumber( $pr );
+            $row->{'meta'}->{'protocol'} = $proto;
             $row->{'meta'}->{'sensor_id'} = $sensor;
             $row->{'meta'}->{'instance_id'} = $instance if $instance ne '';
             $row->{'meta'}->{'src_asn'} = $sas;
