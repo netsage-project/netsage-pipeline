@@ -1,3 +1,10 @@
+---
+id: install
+title: Installation Guide
+sidebar_label: Installation Guide
+---
+
+
 NEED TO WORK ON THIS MORE
 
 # NetSage Flow Processing Pipeline Install Guide
@@ -153,29 +160,29 @@ The username/password are both set to "guest" by default, as this is the default
 
 Notice that the only Rabbit connection information that's provided here is that which is not specific in the shared config file. This way if we need to change the credentials throughout the entire pipeline, it's easy to do.
 
-```
-<config>
-  <!-- rabbitmq connection info -->
-  <rabbit_input>
-    <queue>netsage_deidentifier_raw</queue>
-    <channel>2</channel>
-  </rabbit_input>
-
-  <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
-  <rabbit_output>
-    <queue>netsage_deidentifier_cached</queue>
-    <channel>3</channel>
-  </rabbit_output>
-  <worker>
-      <!-- How many concurrent workers should perform the necessary operations -->
-      <!-- for stitching, we can only use 1 -->
-    <num-processes>1</num-processes>
-
-    <!-- where should we write the cache worker pid file to -->
-    <pid-file>/var/run/netsage-cache-workers.pid</pid-file>
-
-  </worker>
-</config>
+```xml
+   <config>
+     <!-- rabbitmq connection info -->
+     <rabbit_input>
+       <queue>netsage_deidentifier_raw</queue>
+       <channel>2</channel>
+     </rabbit_input>
+   
+     <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
+     <rabbit_output>
+       <queue>netsage_deidentifier_cached</queue>
+       <channel>3</channel>
+     </rabbit_output>
+     <worker>
+         <!-- How many concurrent workers should perform the necessary operations -->
+         <!-- for stitching, we can only use 1 -->
+       <num-processes>1</num-processes>
+   
+       <!-- where should we write the cache worker pid file to -->
+       <pid-file>/var/run/netsage-cache-workers.pid</pid-file>
+   
+     </worker>
+   </config>
 ```
 
 The defaults should work unless the pipeline stages need to be reordered for some reason, or if SSL or different hosts/credentials are needed. However, the very endpoints should be checked. At the moment that means the flow cache (which is the first stage in the pipeline) and the flow mover (the last stage).
@@ -224,16 +231,25 @@ To set up the keystore:  (note that logstash-keystore takes a minute to come bac
   Be sure /usr/share/logstash/config exists
   (the full path, in case you need it: /usr/share/logstash/bin/logstash-keystore)
   Create logstash.keystore in /etc/logstash/: (use the same directory as logstash.yml)
+
+```sh
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ create
     You can set a password for the keystore itself if you want to investigate that; otherwise skip it.
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_username     (enter username when prompted)
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_pw           (enter password when prompted)
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_username    (enter username when prompted)
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_pw          (enter password when prompted)
+```sh
 To list the keys:
+```
   $ sudo -E logstash-keystore list
+
+```sh
 To remove a key-value pair:
+
+```sh
   $ sudo -E logstash-keystore remove <key name>
+```
 
 
 FLOW STITCHING - IMPORTANT!
