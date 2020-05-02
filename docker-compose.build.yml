@@ -1,11 +1,11 @@
 version: '3.7'
 services:
-   importer_builder:         
+   importer:         
        image: netsage/pipeline_importer:latest
        build:
           context: .
           dockerfile: compose/pipeline/Dockerfile
-   logstash_builder:
+   logstash:
        image: netsage/pipeline_logstash:latest
        build:
           context: .

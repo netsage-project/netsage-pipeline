@@ -29,7 +29,6 @@ services:
   logstash:
        image: netsage/pipeline_logstash:latest
        env_file: .env
-#       entrypoint: sleep 99999
        depends_on: 
         - importer
        ports:
