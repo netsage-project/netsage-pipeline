@@ -7,7 +7,6 @@ conf/systemd/deploy
 .DS_Store
 *.pyc
 data
-<<<<<<< HEAD
 # Dependencies
 /node_modules
 
