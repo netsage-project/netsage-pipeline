@@ -1,3 +1,8 @@
+---
+id: docker
+title: Docker Guide
+sidebar_label: Docker Guide
+---
 # Docker Setup
 
 ## Retrieve Enrichment Metadata
