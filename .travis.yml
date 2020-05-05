@@ -19,6 +19,10 @@ install:
 - yarn install
 jobs:
   include:
+  - stage: build docker image
+    if: type = pull_request or branch = 'master'
+    script:
+    - "./scripts/integration.sh"
   - stage: Deploy Docs
     if: type != pull_request and branch = 'master'
     script:
