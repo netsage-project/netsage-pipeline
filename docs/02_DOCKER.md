@@ -5,15 +5,9 @@ sidebar_label: Docker Guide
 ---
 # Docker Setup
 
-## Retrieve Enrichment Metadata
+## Build Base Images 
 
-Run the following to download Science Registry and GeoIp data. You may re-run this at anytime to update these databases.
-
-```sh
-./initialize_docker_data.sh
-```
-
-## Build Base Images
+This is optional.  The image are published on docker hub, but if you'd like to incorporate local changes please follow the process below.
 
 ### Build Using Source Code
 If you would like to build the *importer* container using the version of the pipeline scripts found in this GitHub repo then run the following:
@@ -72,9 +66,7 @@ rabbitmq_output_key=netsage_archive_input
 ### Optional: ElasticSearch and Kibana
 You can optionally store flow data locally in an ElasticSearch container and view the data with Kibana. Local storage can be enabled with the following steps:
 
-1.  Uncomment the elasticsearch and kibana services in docker-compose.yml. 
-
-2.  Uncomment the following lines in conf-logstash/99-outputs.conf:
+1.  Uncomment the following lines in conf-logstash/99-outputs.conf:
 
 ```
 elasticsearch {
@@ -83,7 +75,9 @@ elasticsearch {
 }
 ```
 
-3. Comment out the `rabbitmq {...}` block in conf-logstash/99-outputs.conf if you do not want to also send logstash output to RabbitMQ.
+2. Comment out the `rabbitmq {...}` block in conf-logstash/99-outputs.conf if you do not want to also send logstash output to RabbitMQ.
+
+3.  Run the containers using the following line:  ```docker-compose -f docker-compose.yml  -f docker-compose.develop.yml up  -d```
 
 ## Running the Containers
 
