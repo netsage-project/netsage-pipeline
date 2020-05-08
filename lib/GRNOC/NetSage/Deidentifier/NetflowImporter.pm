@@ -25,6 +25,7 @@ use Path::Class;
 use Path::Tiny;
 use Storable qw( store retrieve );
 use Sys::Hostname;
+use Env;
 
 use Data::Dumper;
 
@@ -88,14 +89,35 @@ has flow_type => ( is => 'rwp',
 my @files;
 
 ### constructor builder ###
+sub getSensorValue()
+{
+    my $sensor_id = $_[0];
+    # check if sensorId value starts with a $ sign, if so get value from env
+    if (index($sensor_id, '$') == 0) {
+        my $env_var  = substr $sensor_id, 1;  ##chop off the $ sign
+        my $env_value =  $ENV{$env_var} || '';
+        ## IF the env is set use its value, otherwise fallback on hostname
+        if ($env_value  ne '') {
+            $sensor_id = $env_value;
+        } else {
+            $sensor_id = hostname();
+        }
+    # If the sensor is set to empty string use hostname
+    } elsif ($sensor_id eq ""){
+        $sensor_id = hostname();
+   }
+
+   return $sensor_id;
+}
+
 
 sub BUILD {
 
     my ( $self ) = @_;
 
-    #my $config_obj = $self->config;
     my $config = $self->config;
-    my $sensor_id = $config->{ 'sensor' } || hostname();
+    my $sensor_id = &getSensorValue($config->{ 'sensor' } || '');
+   
     if ( defined ( $sensor_id ) ) {
         $self->_set_sensor_id( $sensor_id );
     }
@@ -210,7 +232,7 @@ sub _get_flow_data {
     foreach my $collection ( @$collections ) {
 
         my $path = $collection->{'flow-path'}; # || $self->flow_path;
-        my $sensor = $collection->{'sensor'} || hostname();
+        my $sensor = &getSensorValue($collection->{'sensor'}  || '');
 
         $self->logger->info( " Doing collection $sensor "); 
 

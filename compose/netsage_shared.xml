@@ -9,10 +9,10 @@
     <!-- NOTE: you may have multiple <collection> stanzas -->
     <collection>
         <flow-path>/data/input_data</flow-path>
+        <sensor>$sensorName</sensor> 
         <!-- "sensor" indicates the node that captured the flow records; 
               it can be any string that uniquely identifies that flow collector.
               Defaults to the local hostname
-            <sensor>sensorname</sensor> 
         -->
         <!-- "instance" goes along with sensor
               This is to identify various instances if a sensor has more than one "stream" / data collection
