@@ -120,15 +120,15 @@ rm -rf $RPM_BUILD_ROOT
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/logstash/conf.d/01-inputs.conf
 %config(noreplace) /etc/logstash/conf.d/99-outputs.conf
-%config(noreplace) /etc/logstash/conf.d/04-aggregation.conf
+%config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
-%config /etc/logstash/conf.d/02-preliminaries.conf
-%config /etc/logstash/conf.d/03-add-id.conf
-%config /etc/logstash/conf.d/05-geoip-tagging.conf
-%config /etc/logstash/conf.d/06-scireg-tagging-fakegeoip.conf
-%config /etc/logstash/conf.d/07-deidentify.conf
-%config /etc/logstash/conf.d/08-privatize-org.conf
-%config /etc/logstash/conf.d/09-cleanup.conf
+%config /etc/logstash/conf.d/10-preliminaries.conf
+%config /etc/logstash/conf.d/20-add-id.conf
+%config /etc/logstash/conf.d/50-geoip-tagging.conf
+%config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
+%config /etc/logstash/conf.d/70-deidentify.conf
+%config /etc/logstash/conf.d/80-privatize-org.conf
+%config /etc/logstash/conf.d/95-cleanup.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 
 /usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
