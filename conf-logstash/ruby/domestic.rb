@@ -32,7 +32,8 @@ def filter(event)
     #get countries
     source_country = event.get(@src_country_field)
     dest_country = event.get(@dst_country_field)
-    if !source_country or !dest_country then
+    #if no source/dest country or either is 'Unknown' then don't tag
+    if !source_country or !dest_country or source_country == "Unknown" or dest_country == "Unknown" then
         return [event]
     end
     

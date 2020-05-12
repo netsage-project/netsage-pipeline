@@ -1,11 +1,18 @@
 {
     "^.*AMPATH.*": "AMPATH",
-    "^.*TACC.*": "TACC",
-    "^.*Hawaii.*": "Hawaii",
-    "^.*nersc.*": "NERSC",
-    "^.*NEAAR.*": "NEAAR",
-    "^.*TransPAC.*": "TransPAC",
     "^.*CENIC.*": "CENIC",
+    "^.*cenic.*": "CENIC",
+    "^.*FRGP.*": "FRGP",
+    "^.*gpn.*": "GPN",
+    "^.*Hawaii.*": "Hawaii",
+    "^.*i-Light.*": "i-Light",
+    "^.*GigaPOP.*": "i-Light",
+    "^.*NEAAR.*": "NEAAR",
+    "^.*nersc.*": "NERSC",
     "^.*PacWave.*": "PacWave",
-    "^.*pacificwave.*": "PacWave"
+    "^.*pacificwave.*": "PacWave",
+    "^.*PennREN.*": "PennREN",
+    "^.*TACC.*": "TACC",
+    "^.*TransPAC.*": "TransPAC",
+    "^.*UCAR.*": "UCAR"
 }
