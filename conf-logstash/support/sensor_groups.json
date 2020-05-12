@@ -1,0 +1,11 @@
+{
+    "^.*AMPATH.*": "AMPATH",
+    "^.*TACC.*": "TACC",
+    "^.*Hawaii.*": "Hawaii",
+    "^.*nersc.*": "NERSC",
+    "^.*NEAAR.*": "NEAAR",
+    "^.*TransPAC.*": "TransPAC",
+    "^.*CENIC.*": "CENIC",
+    "^.*PacWave.*": "PacWave",
+    "^.*pacificwave.*": "PacWave"
+}
