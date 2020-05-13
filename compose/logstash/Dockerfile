@@ -1,5 +1,9 @@
 FROM logstash:7.4.2
 
-COPY ./conf-logstash/ruby/anonymize_ipv6.rb /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
+#Create symlink so can use paths from production with logstash docker defaults
+USER root
+RUN mkdir -p /etc/logstash && \
+    ln -s /usr/share/logstash/pipeline /etc/logstash/conf.d
+USER logstash
 
 VOLUME /var/cache/netsage

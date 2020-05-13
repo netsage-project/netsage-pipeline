@@ -1,0 +1,18 @@
+{
+    "^.*AMPATH.*": "AMPATH",
+    "^.*CENIC.*": "CENIC",
+    "^.*cenic.*": "CENIC",
+    "^.*FRGP.*": "FRGP",
+    "^.*gpn.*": "GPN",
+    "^.*Hawaii.*": "Hawaii",
+    "^.*i-Light.*": "i-Light",
+    "^.*GigaPOP.*": "i-Light",
+    "^.*NEAAR.*": "NEAAR",
+    "^.*nersc.*": "NERSC",
+    "^.*PacWave.*": "PacWave",
+    "^.*pacificwave.*": "PacWave",
+    "^.*PennREN.*": "PennREN",
+    "^.*TACC.*": "TACC",
+    "^.*TransPAC.*": "TransPAC",
+    "^.*UCAR.*": "UCAR"
+}
