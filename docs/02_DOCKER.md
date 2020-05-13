@@ -88,7 +88,7 @@ docker-compose up -d
 
 ### Stop the Containers
 ```sh
-docker-compose down
+docker-compose stop && docker-compose rm 
 ```
 ### Enter a Container Shell
 ```sh
