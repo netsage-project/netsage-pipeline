@@ -18,7 +18,7 @@ conf-logstash/ruby/anonymize_ipv6.rb
 conf-logstash/ruby/domestic.rb
 conf-logstash/support/sensor_groups.json  
 conf-logstash/support/sensor_types.json  
-conf-logstash/support/xxx-members-list.rb
+conf-logstash/support/example-members-list.rb
 conf/logging-debug.conf.example
 conf/logging.conf.example
 conf/netsage_flow_filter.xml.example
