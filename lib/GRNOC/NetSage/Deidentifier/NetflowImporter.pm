@@ -273,10 +273,10 @@ sub _get_flow_data {
 
             # skip empty files (header and/or footer only). They can cause problems.
             if( ! $stats or ! $stats->size ) {
-                $self->logger->info("*** For $path $file, there are no stats. skipping.");
+                $self->logger->info("*** For $path $file, there are no stats!? skipping.");
                 next;
             } elsif( $stats->size <= 420 ) {
-                $self->logger->info("skipping $path because size is <= 420");
+                $self->logger->debug("skipping $path $file because size is <= 420");
                 next;
             }
 
