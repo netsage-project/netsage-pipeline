@@ -43,8 +43,9 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-## 7.4.1 includes fix to aggregate filter. 
+## logstash 7.4.1 includes a needed fix to aggregate filter. 
 Requires: logstash >= 7.4.2
+Requires: rubygem-ipaddress
 
 %description
 GRNOC NetSage Flow-Processing Pipeline
@@ -69,6 +70,7 @@ make pure_install
 %{__install} -d -p %{buildroot}/etc/cron.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/
 %{__install} -d -p %{buildroot}/etc/logstash/conf.d/ruby/
+%{__install} -d -p %{buildroot}/etc/logstash/conf.d/support/
 %{__install} -d -p %{buildroot}/usr/share/logstash/config/
 %{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/
 
@@ -82,6 +84,7 @@ make pure_install
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
+%{__install} conf-logstash/support/*  %{buildroot}/etc/logstash/conf.d/support/
 
 %if 0%{?rhel} >= 7
 %{__install} systemd/netsage-flow-filter.service %{buildroot}/etc/systemd/system/netsage-flow-filter.service
@@ -125,11 +128,18 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
 %config /etc/logstash/conf.d/50-geoip-tagging.conf
+%config /etc/logstash/conf.d/55-member-orgs.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
+%config /etc/logstash/conf.d/65-preferred-location-org.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
 %config /etc/logstash/conf.d/80-privatize-org.conf
+%config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
+%config /etc/logstash/conf.d/ruby/domestic.rb
+%config /etc/logstash/conf.d/support/sensor_groups.json
+%config /etc/logstash/conf.d/support/sensor_types.json
+%config /etc/logstash/conf.d/support/example-members-list.rb
 
 /usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
@@ -146,7 +156,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/cron.d/netsage-logstash_restart
 
 %defattr(754, root, root, -)
-
 /usr/bin/netsage-flow-filter-daemon
 /usr/bin/netsage-netflow-importer-daemon
 
@@ -161,7 +170,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %defattr(-, root, root, 755)
-
 /var/lib/grnoc/netsage/deidentifier/
 /var/cache/netsage/
 
@@ -171,11 +179,13 @@ echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
 echo " *  Logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
 echo " "
-echo " *  This rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
+echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
+echo " *  Nor does it manage multiple init.d files for sensor- or network-specific importers."
 echo " "
-echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching won't work right. **"
+echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching (aggregation) won't work right. **"
 echo " "
-echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter for cenic) "
+echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter which is only for cenic) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 

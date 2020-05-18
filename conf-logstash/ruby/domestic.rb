@@ -1,9 +1,9 @@
 ##
-# Script that checks a source and destination country to see if they are in 
-# map of "domestic" countries and tags as follows:
+# This script checks source and destination countries to see if 
+# they are in a list of "domestic" countries and tags as follows:
 #  1. If both ends domestic, then tag "Domestic"
 #  2. If only one end is domestic, then tag "Mixed"
-#  3. If no ends is domestic, then tag "International"
+#  3. If neither end is domestic, then tag "International"
 
 DOMESTIC_MAP = {
     "United States" => true,
