@@ -139,7 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/ruby/domestic.rb
 %config /etc/logstash/conf.d/support/sensor_groups.json
 %config /etc/logstash/conf.d/support/sensor_types.json
-%config /etc/logstash/conf.d/support/example-members-list.rb
+%config /etc/logstash/conf.d/support/networkA-members-list.rb.example
 
 /usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 /usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
