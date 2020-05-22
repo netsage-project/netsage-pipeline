@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.3
+Version: 1.2.4
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -43,7 +43,7 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-## logstash 7.4.1 includes a needed fix to aggregate filter. 
+# logstash 7.4.1 includes a needed fix to the aggregate filter. 
 Requires: logstash >= 7.4.2
 Requires: rubygem-ipaddress
 

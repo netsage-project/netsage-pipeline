@@ -1,4 +1,25 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.4 -- May 25 2020     
+------------------------------------------------------
+SCTASK0052575 (release)
+Features:
+  * Various Docker-related updates and fixes
+  * Added automatic docusaurus-based documentation
+  * Updated importer to handle protocols returned as names rather than numbers
+  * Renumbered logstash config files
+  * Added new fields in 90-additional-fields.conf: 
+                      sensor_group (TACC, CENIC, I-Light, etc),
+                      sensor_type  (circuit, exchange-point, etc),
+                      country_scope (Domestic, International, Mixed)
+  * Added 55-member-orgs.conf - replaces Organization with member or customer name according to netblock-entity mapping files
+        for members/customers without their own ASNs.  (SCTASK0052380)
+  * Added 65-preferred-location-org.conf - prefer science registry value, fall back to geoip value. New fields (SCTASK0052382)
+                      src/dst_preferred_location.lat, 
+                      src/dst_preferred_location.lon,
+		      src/dst_preferred_org
+  * Various other small changes, reorganization, and fixes.
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.3 -- Apr 1 2020     
 ------------------------------------------------------
 SCTASK0047629
