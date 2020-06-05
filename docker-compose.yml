@@ -40,6 +40,8 @@ services:
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:latest
     command: daemon --docker
+    depends_on: 
+      - importer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 

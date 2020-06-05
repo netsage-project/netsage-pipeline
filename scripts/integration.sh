@@ -18,6 +18,29 @@ function publish_image
     docker-compose -f docker-compose.build.yml push
 }
 
+function sanity_test
+{
+    echo "Executing Sanity Check Test"
+    #Create env file
+    cp env.example .env
+    # Bringing up the container
+    docker-compose up -d 
+    # Waiting for something to go wrong
+    sleep 60 
+    ## Get count of contains still up and running
+    cnt=$(docker-compose ps | grep "Up" | wc -l)
+    ## Validate count is 5, otherwise we fail
+    if [ "$cnt" -ne 5 ]; then 
+        failed_containers=$(docker-compose ps | grep -v "Up"  | grep  "pipeline" | awk '{print $1}' | cut -d '_' -f 2)
+        docker-compose logs $failed_containers        
+        echo "Sanity check failed expected 5 containers running and got $cnt"
+        exit 1
+    fi
+
+    echo "Docker Pipeline looks stable"
+
+}
+
 
 # Sets up docker compose for regression testing
 function setupDocker 
@@ -40,6 +63,7 @@ function main
         cron_regression
     else
         integration_test
+        sanity_test
     fi
 
 }
