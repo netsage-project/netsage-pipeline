@@ -11,7 +11,7 @@ module.exports = {
       title: 'NetSage Pipeline Documentation',
       logo: {
         alt: 'NetSage Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo.png',
       },
       links: [
         {
@@ -20,9 +20,8 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/netsage-project/netsage-pipeline/',
           label: 'GitHub',
           position: 'right',
         },
