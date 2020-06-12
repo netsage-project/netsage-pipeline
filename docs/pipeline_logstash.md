@@ -90,7 +90,54 @@ sends results to whereever the user wants them to go. In our case, it sends them
 
 ### Final Stage 
 
-In our case, OmniSOC manages the last stage. Their logstash [running on ?] reads flows from the netsage_archive_input queue and sends it into elasticsearch. The indices are named like om-ns-netsage-YYYY.mm.dd-* (or om-ns-ilight-*, etc).  
+In our case, OmniSOC manages the last stage. Their logstash reads flows from the netsage_archive_input queue and sends it into elasticsearch. The indices are named like om-ns-netsage-YYYY.mm.dd-* (or om-ns-ilight-*, etc).  
+
+This can be easily replicated with the following configuration though you'll need one for each feed/index.
+
+Naturally the hosts for rabbit and elastic will need to be updated accordingly.
+
+```
+input {
+  rabbitmq {
+    host => 'localhost'
+    user => 'guest'
+    password => "${rabbitmq_pass}"
+    exchange => 'netsage.direct'
+    key =>   XXXXXXX'
+    queue => 'netsage'
+    durable => true
+    subscription_retry_interval_seconds => 5
+    connection_timeout => 10000
+  }
+}
+filter {
+  if [@metadata][rabbitmq_properties][timestamp] {
+    date {
+      match => ["[@metadata][rabbitmq_properties][timestamp]", "UNIX"]
+    }
+  }
+}
+
+output {
+    elasticsearch {
+      hosts => [
+          "https://CHANGEME1",
+          "https://CHANGEME2"
+      ]
+      user => "logstash"
+      password => "${logstash_elasticsearch_password}"
+      cacert => "/etc/logstash/ca.crt"
+      index => "om-ns-netsage"
+      template_overwrite => true
+      failure_type_logging_whitelist => []
+      action => index
+      #ssl_certificate_verification => false
+    }
+}
+```
+
+Once the data is published in elastic, you can use the [grafana dashboard](https://github.com/netsage-project/netsage-grafana-configs) to visualize the data.
+
 
 ## Elasticsearch Fields
 
