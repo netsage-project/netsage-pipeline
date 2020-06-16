@@ -17,7 +17,12 @@ module.exports = {
         {
           to: 'docs/install',
           activeBasePath: 'docs',
-          label: 'Docs',
+          label: 'Pipeline Documentation',
+          position: 'left',
+        },
+        {
+          href: 'https://netsage-project.github.io/netsage-grafana-configs/',
+          label: 'Dashboard Documentation',
           position: 'left',
         },
         {
