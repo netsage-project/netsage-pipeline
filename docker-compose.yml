@@ -38,7 +38,7 @@ services:
            - ./data:/data
            - ./data/cache:/var/cache/netsage
   ofelia: ## Scheduler Task
-    image: mcuadros/ofelia:latest
+    image: mcuadros/ofelia:v0.3.0
     command: daemon --docker
     depends_on: 
       - importer

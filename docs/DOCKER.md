@@ -5,6 +5,31 @@ sidebar_label: Docker Guide
 ---
 # Docker Setup
 
+
+## Selecting a Version
+
+We currently release a development version and a tagged version.  The first version to support will be. v1.2.5 once release.  
+
+### Stable Release Version
+
+To select a released version please do the following.
+
+```scripts/docker_select_version.sh tagValue```
+
+Example:
+
+```scripts/docker_select_version.sh v1.2.5```
+
+
+If you run the script without any version specified it'll list all the current tags and prompt you to select a version.
+
+Once that's complete, all the instructions below are still applicable. 
+
+### Development Version
+
+If you wish to use the development version you are free to do so.  It is the default behavior on 
+any git checkout.  Simply follow the directions below and setup your pipeline as instructed.
+
 ## Build Base Images 
 
 This is optional.  The image are published on docker hub, but if you'd like to incorporate local changes please follow the process below.
