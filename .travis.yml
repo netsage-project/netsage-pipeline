@@ -23,6 +23,10 @@ jobs:
     if: type = pull_request or branch = 'master'
     script:
     - "./scripts/integration.sh"
+  - stage: Release Tag
+    if: tag =~ ^v[0-9]+.[0-9]+.[0-9]+$
+    script:
+    - "./scripts/integration.sh"
   - stage: Deploy Docs
     if: type != pull_request and branch = 'master'
     script:
