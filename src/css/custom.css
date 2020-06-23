@@ -24,7 +24,11 @@
   padding: 0 var(--ifm-pre-padding);
 }
 
-
 .button.button--secondary.button--outline:not(.button--active):not(:hover) {
   color: #ffffff;
 }
+
+.hero.hero--primary {
+  background-image: url("/netsage-pipeline/img/netsage_bg.webp");
+}
+
