@@ -75,7 +75,7 @@ make pure_install
 %{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/
 
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
-%{__install} docs/INSTALL.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
+%{__install} docs/deploy/install.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
 
 %{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
 %{__install} conf/logging-debug.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging-debug.conf
