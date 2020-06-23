@@ -1,80 +1,80 @@
 module.exports = {
-  title: 'Netsage Pipeline Documentation',
-  tagline: 'Netsage Pipeline Documentation',
-  url: 'https://netsage-project.github.io',
-  baseUrl: '/netsage-pipeline/',
-  favicon: 'img/favicon.ico',
-  organizationName: 'netsage-project', // Usually your GitHub org/user name.
-  projectName: 'netsage-pipeline', // Usually your repo name.
+  title: "Netsage Pipeline Documentation",
+  tagline: "Netsage Pipeline Documentation",
+  url: "https://netsage-project.github.io",
+  baseUrl: "/netsage-pipeline/",
+  favicon: "img/favicon.ico",
+  organizationName: "netsage-project", // Usually your GitHub org/user name.
+  projectName: "netsage-pipeline", // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'NetSage Pipeline Documentation',
+      title: "NetSage Pipeline Documentation",
       logo: {
-        alt: 'NetSage Logo',
-        src: 'img/logo.png',
+        alt: "NetSage Logo",
+        src: "img/logo.png",
       },
       links: [
         {
-          to: 'docs/install',
-          activeBasePath: 'docs',
-          label: 'Pipeline Documentation',
-          position: 'left',
+          to: "docs/pipeline",
+          activeBasePath: "docs",
+          label: "Pipeline Documentation",
+          position: "left",
         },
         {
-          href: 'https://netsage-project.github.io/netsage-grafana-configs/',
-          label: 'Dashboard Documentation',
-          position: 'left',
+          href: "https://netsage-project.github.io/netsage-grafana-configs/",
+          label: "Dashboard Documentation",
+          position: "left",
         },
         {
-          href: 'https://github.com/netsage-project/netsage-pipeline/',
-          label: 'GitHub',
-          position: 'right',
+          href: "https://github.com/netsage-project/netsage-pipeline/",
+          label: "GitHub",
+          position: "right",
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: "dark",
       links: [
         {
-          title: 'Docs',
+          title: "Docs",
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/doc1',
+              label: "Style Guide",
+              to: "docs/doc1",
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2',
+              label: "Second Doc",
+              to: "docs/doc2",
             },
           ],
         },
         {
-          title: 'Community',
+          title: "Community",
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: "Stack Overflow",
+              href: "https://stackoverflow.com/questions/tagged/docusaurus",
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: "Discord",
+              href: "https://discordapp.com/invite/docusaurus",
             },
             {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              label: "Twitter",
+              href: "https://twitter.com/docusaurus",
             },
           ],
         },
         {
-          title: 'More',
+          title: "More",
           items: [
             {
-              label: 'Blog',
-              to: 'blog',
+              label: "Blog",
+              to: "blog",
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: "GitHub",
+              href: "https://github.com/facebook/docusaurus",
             },
           ],
         },
@@ -84,22 +84,22 @@ module.exports = {
   },
   presets: [
     [
-      '@docusaurus/preset-classic',
+      "@docusaurus/preset-classic",
       {
         docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
+          sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/netsage-project/netsage-pipeline/edit/master/'
+            "https://github.com/netsage-project/netsage-pipeline/edit/master/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/netsage-project/netsage-pipeline/edit/master/blog/'
+            "https://github.com/netsage-project/netsage-pipeline/edit/master/blog/",
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve("./src/css/custom.css"),
         },
       },
     ],
