@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  importer:
+    image: netsage/pipeline_importer:latest
+    build:
+       context: .
+       dockerfile: compose/pipeline/Dockerfile
+    env_file: .env
+    depends_on:
+      - rabbit
+    restart: always
+    volumes:
+      - ./data:/data
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.dataUpdate.schedule: "@every 24h"
+      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
+  collector:
+    image: netsage/nfdump-collector:1.6.18
+    restart: always
+    volumes:
+      - ./data/input_data:/data
+    ports:
+      - "9999:9999/udp"

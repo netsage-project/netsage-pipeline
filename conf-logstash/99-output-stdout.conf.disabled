@@ -1,5 +1,4 @@
-##### COPY ANY CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE   #####
-
 output {
-       stdout { codec => rubydebug { metadata => true } }
+      stdout { codec => rubydebug { metadata => true } }
+      #stdout { codec => json {  } }
 }

@@ -1,0 +1,27 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+- add_cloud_metadata: ~
+- add_docker_metadata: ~
+- add_tags:
+      tags: ["sensor_${sensorName:unknown}", "instance_${instanceID:}"]
+
+output.logstash:
+  # Boolean flag to enable or disable the output module.
+  enabled: true
+
+  # The Logstash hosts
+  hosts: ["logstash:5044"]
+
+  worker: 2
+
+  # Set gzip compression level.
+  compression_level: 3
+
+logging.level: '${LOG_LEVEL:info}'
+logging.to_syslog: true
+logging.to_stderr: true
+

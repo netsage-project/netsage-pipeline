@@ -1,0 +1,94 @@
+{
+  "ecs": {
+    "version": "1.4.0"
+  },
+  "event": {
+    "category": "network_traffic",
+    "action": "netflow_flow",
+    "created": "2020-01-12T23:57:58.000Z",
+    "dataset": "netflow.log",
+    "module": "netflow",
+    "kind": "event"
+  },
+  "source": {
+    "packets": 100,
+    "bytes": 4000,
+    "ip": "87.100.13.221",
+    "locality": "public",
+    "port": 55309
+  },
+  "netflow": {
+    "source_transport_port": 55309,
+    "octet_delta_count": 4000,
+    "ip_class_of_service": 0,
+    "exporter": {
+      "uptime_millis": 0,
+      "version": 9,
+      "timestamp": "2020-01-12T23:57:58.000Z",
+      "address": "172.24.0.1:33447",
+      "source_id": 1
+    },
+    "protocol_identifier": 6,
+    "destination_transport_port": 443,
+    "flow_start_sys_up_time": 139205008,
+    "ingress_interface": 909,
+    "source_ipv4_address": "87.100.13.221",
+    "flow_end_sys_up_time": 139205008,
+    "icmp_type_code_ipv4": 0,
+    "egress_interface": 519,
+    "destination_ipv4_address": "47.87.8.224",
+    "bgp_destination_as_number": 0,
+    "packet_delta_count": 100,
+    "bgp_source_as_number": 0,
+    "type": "netflow_flow",
+    "tcp_control_bits": 16,
+    "forwarding_status": 0
+  },
+  "network": {
+      "direction": "unknown",
+      "transport": "tcp",
+      "community_id": "1:fJnepVCvoDtKrvFMIGgPMAfy4C0=",
+      "packets": 100,
+      "bytes": 4000,
+      "iana_number": 6
+    },
+  "flow": {
+      "locality": "public",
+      "id": "vFNYBwTM4r8"
+    },
+  "fileset": {
+      "name": "log"
+    },
+
+  "tags": [
+      "sensor_bestSensorEver",
+      "instance_instanceName",
+      "netflow",
+      "beats_input_raw_event"
+  ],
+  "samir_type": [
+    "flow"
+  ],
+  "service": {
+      "type": "netflow"
+    },
+  "destination": {
+      "ip": "47.87.8.224",
+      "locality": "public",
+      "port": 443
+    },
+  "observer": {
+      "ip": "172.24.0.1"
+    },
+  "agent": {
+      "id": "4352b06c-9978-408d-b721-5d35b2d00f84",
+      "type": "filebeat",
+      "version": "7.6.2",
+      "hostname": "a33518e3c03d",
+      "ephemeral_id": "d57c168c-d89f-4160-97ef-dce712b9e80a"
+    },
+  "type": "netflow",
+  "input": {
+      "type": "netflow"
+    }
+}

@@ -1,0 +1,93 @@
+{
+  "network": {
+    "direction": "unknown",
+    "bytes": 150000,
+    "iana_number": 6,
+    "packets": 100,
+    "community_id": "1:4hSn9QQqONf5T32j1kA6aAnSmgg=",
+    "transport": "tcp"
+  },
+  "observer": {
+    "ip": "192.168.48.1"
+  },
+  "tags": [
+    "sensor_bestSensorEver",
+    "instance_instanceName",
+    "netflow",
+    "beats_input_raw_event"
+  ],
+  "@version": "1",
+  "@timestamp": "2020-01-12T23:57:58.000Z",
+  "destination": {
+    "port": 49468
+  },
+  "flow": {
+    "id": "F7LtEB688EI",
+    "locality": "private"
+  },
+  "fileset": {
+    "name": "log"
+  },
+  "agent": {
+    "ephemeral_id": "a6a27f2b-b600-4e68-9109-ece680b8936e",
+    "name": "bd9d36c2d3a9",
+    "hostname": "bd9d36c2d3a9",
+    "version": "7.8.0",
+    "type": "filebeat",
+    "id": "fc9fbdbf-2bc3-46e7-ab99-b9b8721cf0ec"
+  },
+  "source": {
+    "packets": 100,
+    "bytes": 150000,
+    "port": 443
+  },
+  "host": {
+    "name": "bd9d36c2d3a9"
+  },
+  "service": {
+    "type": "netflow"
+  },
+  "ecs": {
+    "version": "1.5.0"
+  },
+  "input": {
+    "type": "netflow"
+  },
+  "netflow": {
+    "egress_interface": 675,
+    "destination_transport_port": 49468,
+    "octet_delta_count": 150000,
+    "flow_end_sys_up_time": 91410576,
+    "tcp_control_bits": 16,
+    "bgp_destination_as_number": 0,
+    "source_ipv6_address": "df7e:e014:fb08:81eb:ff:ff:ffff:ff72",
+    "bgp_source_as_number": 0,
+    "protocol_identifier": 6,
+    "ingress_interface": 992,
+    "destination_ipv6_address": "2583:d47f:d0:ff16:ffff:ff00:c5ce:4bf3",
+    "exporter": {
+      "source_id": 1,
+      "timestamp": "2020-01-12T23:57:58.000Z",
+      "version": 9,
+      "uptime_millis": 0,
+      "address": "192.168.48.1:37132"
+    },
+    "flow_start_sys_up_time": 91410576,
+    "source_transport_port": 443,
+    "packet_delta_count": 100,
+    "forwarding_status": 0,
+    "type": "netflow_flow",
+    "ip_class_of_service": 0,
+    "icmp_type_code_ipv4": 0
+  },
+  "type": "netflow",
+  "event": {
+    "category": ["network_traffic", "network"],
+    "kind": "event",
+    "created": "2020-01-12T23:57:58.000Z",
+    "module": "netflow",
+    "dataset": "netflow.log",
+    "action": "netflow_flow",
+    "type": ["connection"]
+  }
+}

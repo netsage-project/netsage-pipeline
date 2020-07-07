@@ -83,8 +83,7 @@ has cull_count => ( is => 'rwp',
 
 has nfdump_path => ( is => 'rwp' );
 
-has flow_type => ( is => 'rwp',
-                   default => 'netflow' );
+has flow_type => ( is => 'rwp', default => 'netflow' );
 
 my @files;
 
@@ -385,6 +384,7 @@ my $path = $params{'path'};
 
         my $i = 0;
         while ( my $line = <$fh> ) {
+            #$command .= ' -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
             my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
 
             if ($ts =~ /^Byte/ ) { next; }
@@ -410,30 +410,33 @@ my $path = $params{'path'};
             }
 
             my $row = {};
-            $row->{'type'} = 'flow';
-            $row->{'interval'} = 600;
-            $row->{'meta'} = {};
-            $row->{'meta'}->{'flow_type'} = $flow_type || 'netflow';
-            $row->{'meta'}->{'src_ip'} = $sa;
-            $row->{'meta'}->{'src_port'} = $sp;
-            $row->{'meta'}->{'dst_ip'} = $da;
-            $row->{'meta'}->{'dst_port'} = $dp;
-            $row->{'meta'}->{'protocol'} = $proto;
-            $row->{'meta'}->{'sensor_id'} = $sensor;
-            $row->{'meta'}->{'instance_id'} = $instance if $instance ne '';
-            $row->{'meta'}->{'src_asn'} = $sas;
-            $row->{'meta'}->{'dst_asn'} = $das;
-            $row->{'meta'}->{'src_ifindex'} = $in if $in;
-            $row->{'meta'}->{'dst_ifindex'} = $out if $out;
-            $row->{'start'} = $start;
-            $row->{'end'} = $end;
+            # $row->{'type'} = 'flow';
+            # $row->{'interval'} = 600;
 
-            $row->{'values'} = {};
-            $row->{'values'}->{'duration'} = $td;
-            $row->{'values'}->{'num_bits'} = $sum_bytes * 8;
-            $row->{'values'}->{'num_packets'} = $sum_packets;
-            $row->{'values'}->{'bits_per_second'} = $bps;
-            $row->{'values'}->{'packets_per_second'} = $pps;
+            #$command .= ' -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
+            #my ( $ts,$te,$td,$sa,$da,$sp,$dp,$pr,$flg,$fwd,$stos,$ipkt,$ibyt,$opkt,$obyt,$in,$out,$sas,$das,$smk,$dmk,$dtos,$dir,$nh,$nhb,$svln,$dvln,$ismc,$odmc,$idmc,$osmc,$mpls1,$mpls2,$mpls3,$mpls4,$mpls5,$mpls6,$mpls7,$mpls8,$mpls9,$mpls10,$ra,$eng,$bps,$pps,$bpp ) = split( /\s*,\s*/, $line);
+            $row->{'meta'} = {};
+            # $row->{'meta'}->{'flow_type'} = $flow_type || 'netflow';
+            # $row->{'meta'}->{'src_ip'} = $sa;
+            # $row->{'meta'}->{'src_port'} = $sp;
+            # $row->{'meta'}->{'dst_ip'} = $da;
+            # $row->{'meta'}->{'dst_port'} = $dp;
+            # $row->{'meta'}->{'protocol'} = $proto;
+            # $row->{'meta'}->{'sensor_id'} = $sensor;
+            # $row->{'meta'}->{'instance_id'} = $instance if $instance ne '';
+            # $row->{'meta'}->{'src_asn'} = $sas;
+            # $row->{'meta'}->{'dst_asn'} = $das;
+            # $row->{'meta'}->{'src_ifindex'} = $in if $in;
+            # $row->{'meta'}->{'dst_ifindex'} = $out if $out;
+            # $row->{'start'} = $start;
+            # $row->{'end'} = $end;
+
+            # $row->{'values'} = {};
+            # $row->{'values'}->{'duration'} = $td;
+            # $row->{'values'}->{'num_bits'} = $sum_bytes * 8;
+            # $row->{'values'}->{'num_packets'} = $sum_packets;
+            # $row->{'values'}->{'bits_per_second'} = $bps;
+            # $row->{'values'}->{'packets_per_second'} = $pps;
 
 
             push @all_data, $row;
