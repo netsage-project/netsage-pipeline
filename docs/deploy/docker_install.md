@@ -31,7 +31,7 @@ At this point please proceed to [Common Pattern](#common-pattern)
 
 After you've selected the version of docker you'll be running. you can start the collector by simply running:
 
-```sh
+``` sh
 docker-compose up -d collector
 ```
 
@@ -43,7 +43,7 @@ continue to [Common Pattern](#common-pattern)
 
 ## Common Pattern
 
-Please select the version you wish to use using `./scripts/docker_select_version.sh`. We recommend not using the :latest as that is intended to be a developer release. You may still use it but be aware that you may have some unstability each time you update.
+Please select the version you wish to use using `./scripts/docker_select_version.sh` . We recommend not using the :latest as that is intended to be a developer release. You may still use it but be aware that you may have some unstability each time you update.
 
 ### Environment file
 
@@ -53,7 +53,7 @@ The only major change you should be aware of are the following values. The outpu
 
 If you don't send a sensor name it'll use the default docker hostname which changes each time you run the pipeline.
 
-```ini
+``` ini
 rabbitmq_output_host=rabbit
 rabbitmq_output_username=guest
 rabbitmq_output_pw=guest
@@ -67,19 +67,19 @@ sensorName=bestSensorEver
 
 Starting up the pipeline using:
 
-```sh
+``` sh
 docker-compose up -d
 ```
 
 You can check the logs for each of the container by running
 
-```sh
+``` sh
 docker-compose logs
 ```
 
 ### Shutting Down the pipeline.
 
-```sh
+``` sh
 docker-compose down
 ```
 
@@ -91,18 +91,29 @@ This isn't a production pattern but the tools can be useful at times. Please ref
 
 ## Troubleshooting
 
+### Data Flow issues:
+
+**Troubleshooting checklist:**
+
+  + Make sure you configured your routers to point to the correct address/port where the collector is running.  hostname:9999 is the default.
+  + Make sure you created a .env file and updated the settings accordingly.
+  + sensorName especially since that identifies the source of the data. 
+  + check the logs of the various components to see if anything jumps out as being invalid.  docker-compose logs -f <service_label>
+
+### Resource Limitations 
+
 If you are running a lot of data sometimes docker may need to be allocated more memory.
 
 Applying this snippet to logstash may help. Naturally the values will have to change.
 
-```yaml
+``` yaml
 environment:
   - LS_JAVA_OPTS=-Xmx3g
 ```
 
 Alternatively you may also try doing this:
 
-```yaml
+``` yaml
 deploy:
   resources:
     limits:
@@ -121,13 +132,13 @@ Reference: https://docs.docker.com/compose/compose-file/#resources
 
 If your only changes are the version you selected simply reset and discard your changes.
 
-```
+``` 
 git reset --hard
 ```
 
 Update the git repo. Likely this won't change anything but it's always a good practice to have the latest version. You will need to do at least a git fetch in order to see the latest tags.
 
-```
+``` 
 git pull origin master
 ```
 
@@ -135,6 +146,6 @@ git pull origin master
 
 Select the version to use via `./scripts/docker_select_version.sh` or if you are using the devel simply run:
 
-```
+``` 
 docker-compose pull
 ```
