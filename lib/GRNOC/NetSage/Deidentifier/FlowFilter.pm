@@ -109,6 +109,10 @@ sub _filter_flow {
     my $src_ifindex = $message->{'meta'}->{'src_ifindex'};
     my $dst_ifindex = $message->{'meta'}->{'dst_ifindex'};
 
+    if (! defined $dst_ifindex or ! defined $src_ifindex ) {
+        $self->logger->warn("Missing an ifindex!? Skipping flow.". $message->{'meta'}->{'sensor_id'});
+        return 0;
+    }
 
     my $num_results = keys ( %{ $details->{'results'} } );
 
@@ -190,7 +194,7 @@ sub get_router_details {
             $row->{'results'} = $results->{'results'};
             $self->logger->debug( "router found in simp: " . Dumper $results->{'results'} );
         } else {
-            $self->logger->debug( "router NOT found in simp: " . Dumper $router );
+            $self->logger->warn( "router NOT found in simp: " . Dumper $router );
             $row->{'results'} = undef;
 
         }

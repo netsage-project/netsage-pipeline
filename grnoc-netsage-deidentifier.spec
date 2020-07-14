@@ -113,6 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(644, root, root, 755)
 
+# Don't overwrite cron files. Create .rpmnew files if needed.
+%config(noreplace) /etc/cron.d/netsage-scireg_update
+%config(noreplace) /etc/cron.d/netsage-geoip_update
+%config(noreplace) /etc/cron.d/netsage-logstash_restart
+
 # Don't overwrite importer configs. Create .rpmnew files if needed.
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
