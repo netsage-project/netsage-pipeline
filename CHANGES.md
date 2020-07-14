@@ -1,4 +1,24 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.5 -- Jul 15 2020     
+------------------------------------------------------
+SCTASK0055523 (release)
+Features:
+  * Added new field is_network_testing
+  * Moved project info to new fields meta.scireg.src/dst.project_names and project_abbrs
+  * Uncommented prefiltering by ASN for member-org lists
+  * In FlowFilter.pm, skip flows with a missing ifindex.
+  * Enabled Docker releases based on a Release Tag.
+  * Other changes to comments, misc minor things.
+  * Added some documentation.
+
+Bugs:
+  * Will not save the flow-asn if it is in the private range
+  * If there is no ASN from flow header or geoip, set it to 0
+  * Fixed 80-privatize-org.conf to redact if COUNTRY is Australia
+  * Preferred org and location need to be added after privatize, so renamed it from 65 to 88
+  * Added full paths to logstash ruby and support files
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.4 -- May 25 2020     
 ------------------------------------------------------
 SCTASK0052575 (release)
