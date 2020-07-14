@@ -8,9 +8,9 @@ conf-logstash/40-aggregation.conf
 conf-logstash/50-geoip-tagging.conf
 conf-logstash/55-member-orgs.conf
 conf-logstash/60-scireg-tagging-fakegeoip.conf
-conf-logstash/65-preferred-location-org.conf
 conf-logstash/70-deidentify.conf
 conf-logstash/80-privatize-org.conf
+conf-logstash/88-preferred-location-org.conf
 conf-logstash/90-additional-fields.conf
 conf-logstash/95-cleanup.conf
 conf-logstash/99-outputs.conf

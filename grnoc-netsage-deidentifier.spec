@@ -113,6 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(644, root, root, 755)
 
+# Don't overwrite cron files. Create .rpmnew files if needed.
+%config(noreplace) /etc/cron.d/netsage-scireg_update
+%config(noreplace) /etc/cron.d/netsage-geoip_update
+%config(noreplace) /etc/cron.d/netsage-logstash_restart
+
 # Don't overwrite importer configs. Create .rpmnew files if needed.
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging-debug.conf
@@ -130,9 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/50-geoip-tagging.conf
 %config /etc/logstash/conf.d/55-member-orgs.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
-%config /etc/logstash/conf.d/65-preferred-location-org.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
 %config /etc/logstash/conf.d/80-privatize-org.conf
+%config /etc/logstash/conf.d/88-preferred-location-org.conf
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
@@ -178,14 +183,14 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Logstash configs 01, 04, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  Logstash configs 10, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
 echo " "
-echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage pipelines.yml."
+echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage multiple pipelines in pipelines.yml."
 echo " *  Nor does it manage multiple init.d files for sensor- or network-specific importers."
 echo " "
 echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching (aggregation) won't work right. **"
 echo " "
-echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter which is only for cenic) "
+echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter for cenic sensors only) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 

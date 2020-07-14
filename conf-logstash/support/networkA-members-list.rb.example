@@ -1,9 +1,9 @@
 # This is an example of how to set up member or customer netblock mappings
-# The name of the file must be networkA-members-list.rb
+# The name of the file must be networkA-members-list.rb 
+# (replace networkA with the name of the network in the filename and below)
 
-# For pre-filtering, list ASNs that all the member netblocks belong to, as strings. 
-# *CURRENTLY WE ARE NOT DOING PRE-FILTERING (double check the 55-member-orgs.conf file) SO VALUES DON'T MATTER
-@asn_list['networkA']  = ["1234", "4557", "89"]
+# For pre-filtering, list ASNs that all the member netblocks belong to, as integers
+@asn_list['networkA']  = [1234, 4557, 89]
 
 # List netblocks with the desired organization names
 # Put the biggest blocks/those with most flows at top
