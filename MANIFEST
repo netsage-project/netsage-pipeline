@@ -1,5 +1,6 @@
 bin/netsage-flow-filter-daemon
 bin/netsage-netflow-importer-daemon
+bin/restart-logstash.sh
 CHANGES.md
 conf-logstash/01-inputs.conf
 conf-logstash/10-preliminaries.conf

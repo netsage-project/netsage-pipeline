@@ -10,6 +10,7 @@ Features:
   * Enabled Docker releases based on a Release Tag.
   * Other changes to comments, misc minor things.
   * Added some documentation.
+  * Added a logstash restart script in /usr/bin/ to be run by cron. Will make sure logstash is stopped before starting.
 
 Bugs:
   * Will not save the flow-asn if it is in the private range

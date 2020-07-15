@@ -101,6 +101,8 @@ make pure_install
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
 
+%{__install} bin/restart-logstash.sh %{buildroot}/usr/bin/restart-logstash.sh
+
 # clean up buildroot
 find %{buildroot} -name .packlist -exec %{__rm} {} \;
 
@@ -163,6 +165,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(754, root, root, -)
 /usr/bin/netsage-flow-filter-daemon
 /usr/bin/netsage-netflow-importer-daemon
+/usr/bin/restart-logstash.sh
 
 %if 0%{?rhel} >= 7
 %defattr(644, root, root, -)
