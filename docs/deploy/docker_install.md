@@ -43,7 +43,17 @@ continue to [Common Pattern](#common-pattern)
 
 ## Common Pattern
 
-Please select the version you wish to use using `./scripts/docker_select_version.sh` . We recommend not using the :latest as that is intended to be a developer release. You may still use it but be aware that you may have some unstability each time you update.
+Before continuing you need to choose if you are going to be use the 'Develop' version which has the latest changes but might be a bit less stable or using the 'Release' version.
+
+* Development Version
+
+  + Disregard anything about `docker_select_version.sh` that will not apply to you 
+  + Update to latest code git pull origin master
+
+* Release version
+  + `git fetch; git checkout <tag name>` replace "tag name" with v1.2.5 or the version you intend to use.
+  + Please select the version you wish to use using `./scripts/docker_select_version.sh`
+it is HIGHLY recommended to not use the :latest as that is intended to be a developer release. You may still use it but be aware that you may have some instability each time you update.
 
 ### Environment file
 
@@ -108,7 +118,9 @@ Applying this snippet to logstash may help. Naturally the values will have to ch
 
 ``` yaml
 environment:
-  - LS_JAVA_OPTS=-Xmx3g
+
+  + LS_JAVA_OPTS=-Xmx3g
+
 ```
 
 Alternatively you may also try doing this:
@@ -128,7 +140,7 @@ Reference: https://docs.docker.com/compose/compose-file/#resources
 
 ## Upgrading
 
-### Update Git
+### Update Source Code
 
 If your only changes are the version you selected simply reset and discard your changes.
 
@@ -136,15 +148,22 @@ If your only changes are the version you selected simply reset and discard your 
 git reset --hard
 ```
 
+#### Development
+
 Update the git repo. Likely this won't change anything but it's always a good practice to have the latest version. You will need to do at least a git fetch in order to see the latest tags.
 
 ``` 
 git pull origin master
 ```
 
+#### Release
+
+  1. git checkout <tag_value> (ie. v1.2.6, v1.2.7 etc)
+  2. `./scripts/docker_select_version.sh` select the same version as the tag you checked out.
+
 ### Update docker containers
 
-Select the version to use via `./scripts/docker_select_version.sh` or if you are using the devel simply run:
+This applies for both development and release
 
 ``` 
 docker-compose pull
