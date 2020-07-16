@@ -157,11 +157,6 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 %{perl_vendorlib}/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
 
-# will not overwrite
-%config(noreplace) /etc/cron.d/netsage-scireg_update
-%config(noreplace) /etc/cron.d/netsage-geoip_update
-%config(noreplace) /etc/cron.d/netsage-logstash_restart
-
 %defattr(754, root, root, -)
 /usr/bin/netsage-flow-filter-daemon
 /usr/bin/netsage-netflow-importer-daemon
