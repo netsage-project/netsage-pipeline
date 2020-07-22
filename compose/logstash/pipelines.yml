@@ -1,0 +1,2 @@
+- pipeline.id: elastiflow
+  path.config: "/usr/share/logstash/pipeline/*.conf"

@@ -15,23 +15,29 @@ before_install:
   -s`-`uname -m` > docker-compose
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
+- sudo gem install bundler
 install:
 - yarn install
 jobs:
+  fast_finish: true
   include:
-  - stage: build docker image
-    if: type = pull_request or branch = 'master'
-    script:
-    - "./scripts/integration.sh"
-  - stage: Release Tag
-    if: tag =~ ^v[0-9]+.[0-9]+.[0-9]+$
-    script:
-    - "./scripts/integration.sh"
-  - stage: Deploy Docs
-    if: type != pull_request and branch = 'master'
-    script:
-    - yarn install
-    - git config --global user.email "${GH_EMAIL}"
-    - git config --global user.name "${GH_NAME}"
-    - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
-    - yarn && GIT_USER="${GH_NAME}" yarn deploy
+    - stage: build docker image
+      if: type = pull_request or branch = 'master'
+      script:
+      - "./scripts/integration.sh"
+    - stage: Release Tag
+      if: tag =~ ^v[0-9]+.[0-9]+.[0-9]+$
+      script:
+      - "./scripts/integration.sh"
+    - stage: Ruby Unit Test
+      if: type = pull_request or branch = 'master'
+      script:
+      - "./scripts/ruby.sh"
+    - stage: Deploy Docs
+      if: type != pull_request and branch = 'master'
+      script:
+      - yarn install
+      - git config --global user.email "${GH_EMAIL}"
+      - git config --global user.name "${GH_NAME}"
+      - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+      - yarn && GIT_USER="${GH_NAME}" yarn deploy

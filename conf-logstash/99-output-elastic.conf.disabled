@@ -1,0 +1,9 @@
+output {
+       elasticsearch {
+          hosts => ["elasticsearch"]
+          index => "netsage_flow-%{+YYYY.MM.dd}"
+          password => "${ELASTIC_PASSWORD:secret}"
+          user => "${ELASTIC_USER:elastic}"
+       }
+
+}

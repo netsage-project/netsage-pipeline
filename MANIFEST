@@ -2,7 +2,7 @@ bin/netsage-flow-filter-daemon
 bin/netsage-netflow-importer-daemon
 bin/restart-logstash.sh
 CHANGES.md
-conf-logstash/01-inputs.conf
+conf-logstash/01-input-rabbit.conf
 conf-logstash/10-preliminaries.conf
 conf-logstash/20-add-id.conf
 conf-logstash/40-aggregation.conf
@@ -14,7 +14,8 @@ conf-logstash/80-privatize-org.conf
 conf-logstash/88-preferred-location-org.conf
 conf-logstash/90-additional-fields.conf
 conf-logstash/95-cleanup.conf
-conf-logstash/99-outputs.conf
+conf-logstash/98-post-process.conf
+conf-logstash/99-output-rabbit.conf
 conf-logstash/ruby/anonymize_ipv6.rb
 conf-logstash/ruby/domestic.rb
 conf-logstash/support/sensor_groups.json  
