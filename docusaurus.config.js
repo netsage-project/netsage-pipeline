@@ -21,8 +21,16 @@ module.exports = {
           position: "left",
         },
         {
+          to: "docs/devel/docker",
+          activeBasePath: "docs",
+          label: "Pipeline Dev Guide",
+          position: "left",
+        },
+
+        {
           href: "https://netsage-project.github.io/netsage-grafana-configs/",
           label: "Dashboard Documentation",
+          target: "_self",
           position: "left",
         },
         {
@@ -39,12 +47,15 @@ module.exports = {
           title: "Docs",
           items: [
             {
-              label: "Style Guide",
-              to: "docs/doc1",
+              label: "Dashboard Docs",
+              href:
+                "https://netsage-project.github.io/netsage-grafana-configs/",
+              target: "_self",
             },
             {
-              label: "Second Doc",
-              to: "docs/doc2",
+              label: "Pipeline Docs",
+              href: "https://netsage-project.github.io/netsage-pipeline/",
+              target: "_self",
             },
           ],
         },
@@ -68,13 +79,13 @@ module.exports = {
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "blog",
-            },
+            // {
+            //   label: "Blog",
+            //   to: "blog",
+            // },
             {
               label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              href: "https://github.com/netsage-project/netsage-pipeline/",
             },
           ],
         },

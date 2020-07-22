@@ -2,40 +2,6 @@ require 'json'
 require 'socket'
 
 NETFLOW = "netflow"
-SFLOW = "sflow"
-
-def convert_netflow_event(event)
-  ## Method will take the message from the event and return the JSON representation of it. Returns nil otherwise
-  if event.nil? || (event.class != LogStash::Event && event.class != EventWrapper) ## EventWrapper used for testing
-    return nil
-  end
-  msg = event.get("message")
-  puts "DEBUG: msg is: %s" % msg
-
-  if msg == nil || msg.strip.length == 0
-    return nil
-  end
-
-  begin
-    if is_debug()
-      puts event
-    end
-
-    struct = JSON.parse(msg)
-    if struct.nil? || !struct.key?("message") then
-      puts "DEBUG: Message Failed to retrieve 'message' from %s" % struct
-      return nil
-    end
-
-    raw_message = struct["message"]
-    return JSON.parse(raw_message)
-  rescue StandardError => ex
-    puts ex
-    puts "Invalid JSON in message detected"
-    return nil
-  end
-
-end
 
 def str_to_epoch(str)
   # Convert an ISO8601 string to a epoch timestamp
@@ -53,8 +19,8 @@ def str_to_epoch(str)
 end
 
 def update_instance(msg, meta)
-  instance = get_tag(msg, "instance")
   # Read instanceID from environment and set it, otherwise leave it blank
+  instance = get_tag(msg, "instance")
   if instance.nil?
     return
   end
@@ -84,13 +50,14 @@ def update_sensor(msg, meta)
 end
 
 def is_debug
-  if ENV["DEBUG"] == "debug"
+  if ENV["DEBUG"] == "true"
     return true
   end
   false
 end
 
 def clear_event(event)
+  #Remove all keys in event except the ones listed below
   event.to_hash.each { |k, v|
     unless ["@timestamp", "@version", "host", "message"].include?(k)
       event.remove(k)
@@ -100,6 +67,7 @@ end
 
 
 def is_ipv6(data)
+  # Test if event is for IPv4 or IPV6
   if data.key?("source_ipv6_address") || data.key?("destination_ipv6_address")
     return true
   end
@@ -107,22 +75,22 @@ def is_ipv6(data)
 end
 
 def process_netflow_data(event)
+  # Will convert the filebeat event to the expected data format.
   if is_debug()
     puts "Event type is %s" % event.class
   end
 
   msg = event.to_hash
   clear_event(event)
-  # if is_debug
-  event.set('raw_message', msg.to_json)
-  # end
+  if is_debug
+    event.set('raw_message', msg.to_json)
+  end
 
-
-  if msg.nil? || !msg.key?("netflow") then
+  if msg.nil? || !msg.key?(NETFLOW) then
     puts "Failed sanity check on msg: %s" % msg
     return [event]
   end
-  data = msg["netflow"]
+  data = msg[NETFLOW]
 
   event.set("type", "flow")
   event.set("interval", 600)
@@ -171,7 +139,7 @@ def process_netflow_data(event)
 
   meta["dst_asn"] = data["bgp_destination_as_number"]
   meta["src_asn"] = data["bgp_source_as_number"]
-  meta["flow_type"] = "netflow"
+  meta["flow_type"] = NETFLOW
   meta["num_protocol"] = data["protocol_identifier"]
   meta["src_ifindex"] = data["ingress_interface"]
   meta["dst_ifindex"] = data["egress_interface"]
@@ -186,16 +154,8 @@ def process_netflow_data(event)
   return [event]
 end
 
-def process_sflow_data(event)
-  puts "Sflow data"
-  [event]
-end
-
-def is_numeric? string
-  true if Float(string) rescue false
-end
-
 def get_tags(event)
+  # Gets all tags, or returns empty array otherwise
   tags = event["tags"]
   if tags.nil? || tags.length == 0
     event.tag("Error: netflow/sflow tag missing on input source")
@@ -206,6 +166,7 @@ def get_tags(event)
 end
 
 def get_tag(event, partial)
+  # Find first partial match of a given tag
   tags = get_tags(event)
   tags.each { |item|
     if item.include? partial
@@ -216,6 +177,7 @@ def get_tag(event, partial)
 end
 
 def find_tag(event, name)
+  # Return true if tag exists
   tags = event.get("tags")
   if tags.nil? || tags.length == 0
     event.tag("Error: netflow/sflow tag missing on input source")
@@ -240,7 +202,7 @@ def validate_event(event)
 end
 
 def filter(event)
-  if event.get("type").include? "netflow"
+  if event.get("type").include? NETFLOW
     return process_netflow_data(event)
   else
     return [event]

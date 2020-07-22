@@ -38,7 +38,7 @@ RSpec.describe EventWrapper do
     expect(result_ts).to eq(start_ts)
   end
   it 'Given Sample Data Proper conversion should occur' do
-    ENV["LOG_LEVEL"] = "debug"
+    ENV["DEBUG"] = "true"
     expect(@data).not_to eq(nil)
     #Ensure duration is not 0
     @data["netflow"]["flow_end_sys_up_time"] = @data["netflow"]["flow_start_sys_up_time"] + 1000
@@ -60,7 +60,7 @@ RSpec.describe EventWrapper do
     expect(result_event.get("raw_message")).to be_truthy
   end
   it 'Given IPv6 Message proper conversion occurs' do
-    ENV["LOG_LEVEL"] = "debug"
+    ENV["DEBUG"] = "true"
     expect(@datav6).not_to eq(nil)
     event = EventWrapper.new(@datav6)
     result_event = filter(event)[0]

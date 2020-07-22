@@ -1,9 +1,0 @@
-version: "3.7"
-services:
-  test_ruby:
-    image: test_ruby
-    volumes:
-      - ./:/code
-    command: sleep 99999
-    build:
-      context: .

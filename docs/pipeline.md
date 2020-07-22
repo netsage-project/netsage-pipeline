@@ -3,7 +3,13 @@ id: pipeline
 title: Pipeline
 sidebar_label: Intro
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl'; 
+
 # The NetSage Pipeline
+
+<a href={useBaseUrl('img/dataflow.jpg')}>
+<img alt="DataFlow Diagram" src={useBaseUrl('img/dataflow.jpg')} />
+</a>
 
 # Description 
 
@@ -14,9 +20,13 @@ The Netsage Flow Processing Pipeline includes several components for processing 
 The Pipeline is made of the following components (Currently)
 
  - [Importer](https://github.com/netsage-project/netsage-pipeline/blob/master/lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm)  (Collection of perl scripts)
+
       - [doc](pipeline_importer)
+
  - [Elastic Logstash](https://www.elastic.co/logstash) Performs a variety of transformation on the data
+
      - [doc](pipeline_logstash) 
+
  - [RabbitMQ](https://www.rabbitmq.com/) used for message passing and queing of tasks.
 
 ## Sensors and Data Collection
@@ -28,4 +38,3 @@ Tstat data goes directly into the netsage_deidentifier_raw queue rabbit queue. T
 ### Importer 
 
 A netsage-netflow-importer-daemon reads any new nfcapd files that have come in after a configurable delay. The importer aggregates flows within each file, and writes the results to the netsage_deidentifier_raw queue rabbit queue.
-

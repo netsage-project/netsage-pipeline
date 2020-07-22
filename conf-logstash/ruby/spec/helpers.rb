@@ -61,7 +61,7 @@ def load_data(file)
     s = File.read(file)
     return JSON.parse(s)
   rescue => exception
-    s = File.read("rspec/%s" % file)
+    s = File.read("spec/%s" % file)
     return JSON.parse(s)
    end
 end
