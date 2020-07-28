@@ -128,8 +128,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
-%config(noreplace) /etc/logstash/conf.d/01-inputs.conf
-%config(noreplace) /etc/logstash/conf.d/99-outputs.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
@@ -142,6 +142,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/88-preferred-location-org.conf
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
+%config /etc/logstash/conf.d/98-post-process.conf
+%config /etc/logstash/conf.d/99-output-rabbit.conf
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 %config /etc/logstash/conf.d/ruby/domestic.rb
 %config /etc/logstash/conf.d/support/sensor_groups.json

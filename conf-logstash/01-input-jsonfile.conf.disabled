@@ -1,0 +1,10 @@
+input {
+    # For testing - Read JSON from a file
+     file {
+       path => "/..../events.sample"
+       sincedb_path => "/dev/null"       # to not keep track of processed lines 
+       start_position => "beginning"     # to always redo all lines in the file 
+       codec => "json"                   # parses JSON into logstash fields
+     }
+
+}
