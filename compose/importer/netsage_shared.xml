@@ -8,24 +8,30 @@
 <config>
     <!-- NOTE: you may have multiple <collection> stanzas -->
     <collection>
-        <flow-path>/data/input_data</flow-path>
-        <sensor>$sensorName</sensor> 
-        <!-- "sensor" indicates the node that captured the flow records; 
-              it can be any string that uniquely identifies that flow collector.
-              Defaults to the local hostname
-        -->
-        <!-- "instance" goes along with sensor
-              This is to identify various instances if a sensor has more than one "stream" / data collection
-              Defaults to 0.
-           <instance>1</instance>
-        -->
-        <!-- Defaults to sensor, but you can set it to something else here
-           <router-address></router-address>
-        -->
-        <!-- Flow type can be sflow, tstat, or netflow. Defaults to netflow.
-           <flow-type>sflow</flow-type>
-        -->
+        <flow-path>/data/input_data/netflow</flow-path>
+        <sensor>$netflowSensorName</sensor> 
+        <flow-type>netflow</flow-type>
     </collection>
+
+    <collection>
+        <flow-path>/data/input_data/sflow</flow-path>
+        <sensor>$sflowSensorName</sensor> 
+        <flow-type>sflow</flow-type>
+    </collection>
+    <!-- If you need further customization, you may add more collections simply copy this file to userConfig and ensures 
+    to override the volume using:
+
+    volumes:
+      - ./data:/data
+      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xm
+
+      You may add as many collections as you like, just make sure the flow-path is unique and ensure the sensor value is either hard coded or exposed via 
+      an ENV variable in your .env
+
+      For example $sflowSensorName expects your .env to contain sflowSensorName=<someValue>
+
+    -->
+
 
   <!-- rabbitmq connection info -->
   <rabbit_input>
