@@ -23,12 +23,12 @@ FROM centos:7
 
 COPY --from=0 /root/rpmbuild/RPMS/noarch/*.rpm /tmp
 
-COPY compose/grnoc7.repo /etc/yum.repos.d/grnoc7.repo 
+COPY compose/importer/grnoc7.repo /etc/yum.repos.d/grnoc7.repo 
 COPY compose/logstash.repo /etc/yum.repos.d/logstash.repo 
-COPY compose/pipeline/docker_init.sh  /tmp/ 
-COPY compose/pipeline/run.sh  /tmp/ 
-COPY compose/netsage_shared.xml /etc/grnoc/netsage/deidentifier/  
-COPY compose/logging.conf /etc/grnoc/netsage/deidentifier/  
+COPY compose/importer/docker_init.sh  /tmp/ 
+COPY compose/importer/run.sh  /tmp/ 
+COPY compose/importer/netsage_shared.xml /etc/grnoc/netsage/deidentifier/  
+COPY compose/importer/logging.conf /etc/grnoc/netsage/deidentifier/  
 
 ## Setup baseline 
 RUN  \
@@ -45,6 +45,7 @@ RUN mkdir /data; chown 777 /data
 
 ## Exposed but likely not needed
 VOLUME /var/cache/netsage/
+VOLUME /etc/grnoc/netsage/deidentifier/ 
 
 #Data volume 
 VOLUME /data

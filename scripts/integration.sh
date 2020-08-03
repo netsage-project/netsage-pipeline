@@ -37,7 +37,7 @@ function sanity_test() {
     ## Get count of contains still up and running
     cnt=$(docker-compose ps | grep "Up" | wc -l)
     ## Validate count is 5, otherwise we fail
-    if [ "$cnt" -ne 5 ]; then
+    if [ "$cnt" -ne 6 ]; then
         failed_containers=$(docker-compose ps | grep -v "Up" | grep "pipeline" | awk '{print $1}' | cut -d '_' -f 2)
         docker-compose logs $failed_containers
         echo "Sanity check failed expected 5 containers running and got $cnt"
