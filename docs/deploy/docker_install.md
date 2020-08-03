@@ -69,9 +69,12 @@ rabbitmq_output_username=guest
 rabbitmq_output_pw=guest
 rabbitmq_output_key=netsage_archive_input
 
-sensorName=bestSensorEver
+sflowSensorName=sflowSensorName
+netflowSensorName=netflowSensorName
 
 ```
+
+Please note, the default is to have one netflow collector and one sflow collector.  If you need more collectors or do no need netflow or sflow simply comment out the collector you wish to ignore.
 
 ### Bringing up the Pipeline
 
@@ -92,6 +95,83 @@ docker-compose logs
 ``` sh
 docker-compose down
 ```
+
+### Advanced Configuration
+
+The pipeline allows to have as many collectors as desired.  You should have a unique sensorName ENV variable for each type and a unique path where data is being delivered.
+
+By convention everything is being written to ./data/input_data/sensorName You may change that behavior but just ensure the path between the colle
+
+1. Copy the compose/importer/netsage_shared.xml to userConfig/ and name it netsage_override.xml
+2. In the docker-compose.yml uncomment the following line from the importer configuration.
+
+``` sh
+
+      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+
+```
+
+This will use the `netsage_override.xml` in the userConfig instead of the container settings.
+
+3. Update collectors.
+
+You may add as many new collectors as you like just ensure the following is unique:
+
+``` yml
+  example-collector:
+    image: netsage/nfdump-collector:1.6.18
+    command: nfcapd -T all -l /data -S 1 -w -z -p 9999
+    ports:
+
+      - "9999:9999/udp"
+
+    restart: always
+    volumes:
+
+      - ./data/input_data/example:/data
+
+```
+
+  + The command call should be updated.  nfcapd for netflow, sfcapd for sflow
+  + The output under volumes needs to be unique. Replace /example with the appropriate value
+  + Make sure to update the port.  The UDP port has to be unique.  Please update the command and port mapping.  
+
+  Technically you don't need to change to port of the command, but make sure you use the correct pattern when mapping the new settings.
+
+Example: 
+
+``` yml
+ports:
+
+      - "9999:4321/udp"
+
+```
+
+The first port is the port on your host, the second port is the port on your local machine. 
+
+4. Update the netsage_override.xml and add a new entry for the collector you're adding under the config section.
+
+``` xml
+    <collection>
+        <flow-path>/data/input_data/example</flow-path>
+        <sensor>$exampleSensorName</sensor> 
+        <flow-type>sflow</flow-type>
+    </collection>
+
+```
+
+5. Update the environment file.
+
+``` ini
+exampleSensorName=example
+```
+
+6. At this point, please update the router configuration to send data to the new port you've defined.  If the new collector is listening on 0.0.0.0:1234/udp then all traffic you wish grouped under 
+
+the new sensor should be send to 1234/udp.  
+
+You will need to repeat steps 3-6 for each collector you're adding.  For each new configuration the path, sensorName and exposed port have to be unique.  Besides that, there is no limit
+outside of the bounds of the host's resources to how many collectors you may run.
 
 ### Kibana and Elastic Search
 
