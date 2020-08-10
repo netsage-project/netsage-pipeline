@@ -12,7 +12,9 @@
     "^.*PacWave.*": "PacWave",
     "^.*pacificwave.*": "PacWave",
     "^.*PennREN.*": "PennREN",
+    "^.*sox.*": "SOX",
     "^.*TACC.*": "TACC",
+    "^.*tacc.*": "TACC",
     "^.*TransPAC.*": "TransPAC",
     "^.*UCAR.*": "UCAR"
 }
