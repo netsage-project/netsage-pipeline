@@ -129,12 +129,17 @@ rm -rf $RPM_BUILD_ROOT
 
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
-%config /etc/logstash/conf.d/50-geoip-tagging.conf
+%config /etc/logstash/conf.d/45-geoip-tagging.conf
+%config /etc/logstash/conf.d/50-asn.conf
+%config /etc/logstash/conf.d/53-caida-org.conf
 %config /etc/logstash/conf.d/55-member-orgs.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
@@ -143,7 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
 %config /etc/logstash/conf.d/98-post-process.conf
-%config /etc/logstash/conf.d/99-output-rabbit.conf
+%config /etc/logstash/conf.d/99-output-stdout.conf.disabled
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 %config /etc/logstash/conf.d/ruby/domestic.rb
 %config /etc/logstash/conf.d/support/sensor_groups.json

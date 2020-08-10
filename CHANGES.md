@@ -1,4 +1,25 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.6 -- 
+------------------------------------------------------
+Features:
+  * Split input and output options into their own .conf files for easy enable/disable. Unused ones have .disabled extension. 
+  * Docker changes to allow more than one sflow/netflow sensor (default is 1 of each but user can edit shared file to set it up how they want)
+  * Split geoip-tagging config into 2 parts to separately get location and ASNs -- new 45-geoip-tagging.conf and 50-asn.conf.
+  * If the flow's original asn is private, 0, etc, try getting an asn from the maxmind ASN db by IP. If one is found, add tag "maxmind src/dst asn"
+  * Get organizations from CAIDA csv file -- added 53-caida-org.conf 
+  * If lat/lon are unknown, don't set the fields at all. Set country and continent to Unknown.
+  * If a public asn is not found, set asn to -1 (instead of 0)
+  * If the org cannot be determined, set it to "Unknown"
+  * Convert the common variations of AARNET org names to "Australian Academic and Research Network (AARNet)", whether redacted or not. (caida changed what they used between April and July)
+  * If dst is Multicast, set no country_scope. 
+  * Don't save empty project fields (but keeping original project field for now for grafana)
+  * Moved @exit_time and @processing_time to 98-post-process.conf
+  * Added replay script given a valid input file.
+  * Started to add Automated Ruby Unit tests. (Next major commit will include more concrete examples)
+  * changed some dir names
+  * Added sox and fixed gpn and tacc in sensor_groups and sensor_types dictionaries
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.5 -- Jul 15 2020     
 ------------------------------------------------------
 SCTASK0055523 (release)
