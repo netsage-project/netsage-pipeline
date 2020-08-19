@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 make pure_install
 
 %{__install} -d -p %{buildroot}/etc/grnoc/netsage/deidentifier/
-%{__install} -d -p %{buildroot}/var/lib/grnoc/netsage/deidentifier/
+%{__install} -d -p %{buildroot}/var/lib/grnoc/netsage/
 %{__install} -d -p %{buildroot}/var/cache/netsage/
 %{__install} -d -p %{buildroot}/usr/bin/
 %{__install} -d -p %{buildroot}/etc/init.d/
@@ -94,9 +94,10 @@ make pure_install
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
 %endif
 
-%{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
-%{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
-%{__install} cron.d/netsage-logstash_restart %{buildroot}/etc/cron.d/netsage-logstash_restart
+%{__install} cron.d/netsage-scireg-update.cron %{buildroot}/etc/cron.d/netsage-scireg-update.cron
+%{__install} cron.d/netsage-maxmind-update.cron %{buildroot}/etc/cron.d/netsage-maxmind-update.cron
+%{__install} cron.d/netsage-caida-update.cron %{buildroot}/etc/cron.d/netsage-caida-update.cron
+%{__install} cron.d/netsage-logstash-restart.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
 
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
@@ -116,9 +117,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644, root, root, 755)
 
 # Don't overwrite cron files. Create .rpmnew files if needed.
-%config(noreplace) /etc/cron.d/netsage-scireg_update
-%config(noreplace) /etc/cron.d/netsage-geoip_update
-%config(noreplace) /etc/cron.d/netsage-logstash_restart
+%config(noreplace) /etc/cron.d/netsage-scireg-update.cron
+%config(noreplace) /etc/cron.d/netsage-maxind-update.cron
+%config(noreplace) /etc/cron.d/netsage-caida-update.cron
+%config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
 # Don't overwrite importer configs. Create .rpmnew files if needed.
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
@@ -180,7 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %defattr(-, root, root, 755)
-/var/lib/grnoc/netsage/deidentifier/
+/var/lib/grnoc/netsage/
 /var/cache/netsage/
 
 %post

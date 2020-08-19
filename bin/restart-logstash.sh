@@ -1,7 +1,7 @@
 #!/bin/bash
 # Logstash restart script
 # Sometimes logstash is slow to stop. Trying twice normally works.
-# We need to make sure logstash has stopped before we try to start it
+# This is a simple way to make sure logstash has stopped before we try to start it
 
 /sbin/service logstash stop
 sleep 7                                                    
@@ -10,8 +10,8 @@ sleep 3
 
 logstash_status=$(/sbin/service logstash status)  
 if [[ $logstash_status =~ .*"active (running)".*|"logstash is running" ]]; then
-    echo "logstash has not stopped. cannot restart."
+    echo "Logstash has not stopped. Cannot restart."
 else
-    echo "logstash has stopped. attempting to restart logstash"
+    echo "Logstash has stopped. Attempting to restart."
     /sbin/service logstash start
 fi
