@@ -4,11 +4,10 @@ MAILTO=root
 
 #  Get updated CAIDA asn-to-org csv file from scienceregistry.grnoc.iu.edu 
 #  It will be updated only quartly but download weekly to be able to monitor its freshness
-#    --no-use-server-timestamps sets the file's time to the download time 
-#      If it is not available in the version of wget on the host, use touch to change the file date.
 #    -q for quiet - so no email if no output.
+#    Instead of touch, if your wget version has it, you can use --no-use-server-timestamps which sets the file's time to the download time 
 #
 
 ## UNCOMMENT AFTER FILLING IN USERNAME AND PW
 # on Wednesdays at 23:40 UTC
-##40 23 * * 3 root /usr/bin/wget --user <username> --password <pw> https://scienceregistry.grnoc.iu.edu/exported/CAIDA-org-lookup.csv --no-use-server-timestamps -q -O /var/lib/grnoc/netsage/newCAIDA.mmdb  &&  mv /var/lib/grnoc/netsage/newCAIDA.mmdb /var/lib/grnoc/netsage/CAIDA-org-lookup.csv
+##40 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/CAIDA-org-lookup.csv -q -O /var/lib/grnoc/netsage/newCAIDA.mmdb  &&  mv /var/lib/grnoc/netsage/newCAIDA.mmdb /var/lib/grnoc/netsage/CAIDA-org-lookup.csv && touch /var/lib/grnoc/netsage/CAIDA-org-lookup.csv
