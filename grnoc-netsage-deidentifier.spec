@@ -132,7 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
-%config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-rabbit-legacy.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-rabbit-netflow.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-rabbit-sflow.conf
 %config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
@@ -141,6 +143,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
+%config /etc/logstash/conf.d/04-extract-label.conf
+%config /etc/logstash/conf.d/05-nfattd-flow-convert.conf
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config /etc/logstash/conf.d/20-add-id.conf

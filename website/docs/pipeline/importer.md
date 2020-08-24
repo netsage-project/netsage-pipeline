@@ -1,6 +1,6 @@
 ---
 id: importer
-title: Importer
+title: Legacy Importer
 sidebar_label: Importer
 ---
 A netsage-netflow-importer reads any new nfcapd files that have come in after a configurable delay and writes the results to the "netsage_deidentifier_raw" RabbitMQ queue.

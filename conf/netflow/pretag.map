@@ -1,0 +1,7 @@
+! see https://github.com/pmacct/pmacct/blob/master/examples/pretag.map.example
+
+! Set the sensor name as the label (arbitrary string tag)
+! TODO: this needs a wrapper to allow ENV configs
+!set_label=sensor_awesomeSensor;type_netflow;instance_InstaneName
+set_label=awesomeSensor;instanceName
+

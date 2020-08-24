@@ -1,5 +1,10 @@
 version: "3.7"
 services:
+  data_volume:
+    image: netsage/data_volume:latest
+    build:
+      context: .
+      dockerfile: compose/data_volume/Dockerfile
   importer:
     image: netsage/pipeline_importer:latest
     build:
@@ -10,3 +15,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/logstash/Dockerfile
+  rabbit:
+    image: netsage/rabbitmq:3-management
+    build:
+      context: .
+      dockerfile: ./compose/rabbit/Dockerfile

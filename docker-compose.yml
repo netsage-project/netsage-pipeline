@@ -1,43 +1,68 @@
 version: "3.7"
 services:
-  rabbit:
-    image: rabbitmq:3.8-management
-    env_file: .env
+  ## The purpose of the data-volume is create a /data partition to be shared
+  ## Between Legacy and new collection patterns.
+  data_volume:
+    image: netsage/data_volume:latest
+    networks:
+      - netsage_pipeline
     volumes:
-      - ./data/rabbit:/var/lib/rabbitmq
-    ports:
-      - "15672:15672"
-      - "5671:5671"
-      - "5672:5672"
+      - ./data:/data
+      - ./conf-logstash:/usr/share/logstash/pipeline/
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.dataUpdate.schedule: "@every 24h"
+      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   importer:
     image: netsage/pipeline_importer:latest
     env_file: .env
+    networks:
+      - netsage_pipeline
     depends_on:
+      - data_volume
       - rabbit
     restart: always
     volumes:
       - ./data:/data
       - ./data/importer_cache:/var/cache/netsage
-      - ./conf-logstash:/usr/share/logstash/pipeline/
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "@weekly"
-      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
     image: netsage/pipeline_logstash:latest
+    networks:
+      - netsage_pipeline
     env_file: .env
     depends_on:
-      - importer
-    ports:
-      - "5044:5044"
+      - data_volume
+      - rabbit
     volumes:
       - ./conf-logstash:/usr/share/logstash/pipeline/
       - ./data:/data
       - ./data/cache:/var/lib/grnoc/netsage/
+  rabbit:
+    image: netsage/rabbitmq:3-management
+    env_file: .env
+    volumes:
+      - ./data/rabbit:/var/lib/rabbitmq
+    networks:
+      - netsage_pipeline
+    ports:
+      - "15672:15672"
+      - "5671:5671"
+      - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:v0.3.0
     command: daemon --docker
     depends_on:
-      - importer
+      - logstash
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  netsage_pipeline:
+    name: netsage_pipeline
+    # use a custom driver, with no options
+    driver: bridge

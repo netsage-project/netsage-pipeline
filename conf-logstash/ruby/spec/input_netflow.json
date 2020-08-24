@@ -1,0 +1,30 @@
+{
+    "@timestamp": "2020-10-22T20:51:04.727Z",
+    "@version": "1",
+    "as_dst": 0,
+    "as_src": 0,
+    "bytes": 10400,
+    "event_type": "purge",
+    "iface_in": 806,
+    "iface_out": 517,
+    "ip_dst": "242.163.85.9",
+    "ip_proto": "tcp",
+    "ip_src": "57.119.203.250",
+    "local_pref": 0,
+    "meta": {
+        "flow_type": "netflow",
+        "sensor_id": "awesomeSensor",
+        "instance_id": "instanceName"
+    },
+    "new_flow": "true",
+    "packets": 200,
+    "peer_as_dst": 0,
+    "peer_as_src": 0,
+    "peer_ip_dst": "",
+    "peer_ip_src": "172.23.0.1",
+    "port_dst": 443,
+    "port_src": 46328,
+    "timestamp_end": "1574664979.000000",
+    "timestamp_start": "1574664977.000000",
+    "writer_id": "default_amqp/12"
+}

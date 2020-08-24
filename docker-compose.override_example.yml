@@ -5,6 +5,7 @@ services:
   ## If you need to allocate more than 1GB (default) override the JMV options
   #    volumes:
   #      - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
+  ## EVERYTHING BELOW THIS LINE IS LEGACY IF YOU'RE USING THE NEW COLLECTORS
   importer:
     image: netsage/pipeline_importer:latest
   ## If you are using custom collectors you need to create this file and specify any addition ENV flags to identify the collector source
@@ -29,3 +30,4 @@ services:
     restart: always
     volumes:
       - ./data/input_data/netflow:/data
+## END LEGACY SECTION

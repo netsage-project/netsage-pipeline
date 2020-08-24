@@ -4,7 +4,9 @@ module.exports = {
       "pipeline/intro",
       "pipeline/tstat",
       "pipeline/nfdump",
+      "pipeline/collectors",
       "pipeline/importer",
+      "pipeline/new_collector",
       "pipeline/logstash",
       "pipeline/elastic",
     ],
@@ -17,5 +19,5 @@ module.exports = {
     ],
     "Deployment Guides": ["devel/dev_dataset", "devel/docker_dev_guide"],
     Documentation: ["docusaurus"],
-  },
+  }
 };

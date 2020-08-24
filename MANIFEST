@@ -4,7 +4,11 @@ bin/restart-logstash.sh
 CHANGES.md
 conf-logstash/01-input-jsonfile.conf.disabled
 conf-logstash/01-input-multiline-json-file.conf.disabled
-conf-logstash/01-input-rabbit.conf
+conf-logstash/01-input-rabbit-legacy.conf
+conf-logstash/01-input-rabbit-netflow.conf
+conf-logstash/01-input-rabbit-sflow.conf
+conf-logstash/04-extract-label.conf
+conf-logstash/05-nfattd-flow-convert.conf
 conf-logstash/10-preliminaries.conf
 conf-logstash/15-sensor-specific-changes.conf
 conf-logstash/20-add-id.conf

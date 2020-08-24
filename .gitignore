@@ -36,3 +36,5 @@ replayData
 userConfig
 docker-compose.override.yml
 node_modules
+conf-logstash/support/FRGP-members-list.rb
+conf-logstash/support/ilight-members-list.rb

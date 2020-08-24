@@ -1,0 +1,31 @@
+{
+    "@timestamp": "2020-12-11T20:36:27.846Z",
+    "@version": "1",
+    "as_dst": 0,
+    "as_path": "",
+    "as_src": 0,
+    "bytes": 580,
+    "event_type": "purge",
+    "iface_in": 7,
+    "iface_out": 0,
+    "ip_dst": "172.17.0.2",
+    "ip_proto": "tcp",
+    "ip_src": "192.168.65.2",
+    "local_pref": 0,
+    "meta": {
+        "flow_type": "sflow",
+        "is_network_testing": "no",
+        "sensor_id": "awesomeSensor",
+        "instance_id": "instanceName"
+    },
+    "packets": 90,
+    "peer_as_dst": 0,
+    "peer_as_src": 0,
+    "peer_ip_dst": "",
+    "peer_ip_src": "192.168.65.3",
+    "port_dst": 57262,
+    "port_src": 5201,
+    "timestamp_end": "0.000",
+    "timestamp_start": "1607710932.127326",
+    "writer_id": "default_amqp/68"
+}

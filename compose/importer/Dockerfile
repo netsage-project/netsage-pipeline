@@ -25,7 +25,7 @@ COPY --from=0 /root/rpmbuild/RPMS/noarch/*.rpm /tmp
 
 COPY compose/importer/grnoc7.repo /etc/yum.repos.d/grnoc7.repo 
 COPY compose/importer/docker_init.sh  /tmp/ 
-COPY compose/importer/run.sh  /tmp/ 
+COPY compose/importer/runner.sh  /tmp/ 
 COPY compose/importer/netsage_shared.xml /etc/grnoc/netsage/deidentifier/  
 COPY compose/importer/logging.conf /etc/grnoc/netsage/deidentifier/  
 
@@ -33,7 +33,7 @@ COPY compose/importer/logging.conf /etc/grnoc/netsage/deidentifier/
 RUN  \
     yum  -y update && \ 
     yum install -y  dnf epel-release  && \
-    yum install -y python-pip nfdump wget && \
+    yum install -y python-pip nfdump nc wget && \
     dnf install -y /tmp/*.rpm  && \
     pip install --upgrade pip pika && \
     yum clean all && \
@@ -51,4 +51,4 @@ VOLUME /data
 ## Config exposed
 VOLUME /etc/grnoc/netsage/
 
-CMD /tmp/run.sh
+CMD /tmp/runner.sh

@@ -1,0 +1,18 @@
+[
+    {
+        "values": {
+            "num_packets": 3250,
+            "num_bits": 838816560,
+            "duration": "9.990",
+            "packets_per_second": "325",
+            "bits_per_second": "83965621"
+        },
+        "end": 1610134474.332,
+        "start": 1610134464.342,
+        "meta": {
+            "dst_asn": "0",
+            "src_asn": "0",
+            "dst_ifindex": "5"
+        }
+    }
+]

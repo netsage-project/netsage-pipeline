@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  ruby_dev:
+    image: netsage/ruby_dev
+    build: .
+    volumes:
+        - ./:/home/app
