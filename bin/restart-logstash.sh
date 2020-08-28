@@ -3,6 +3,7 @@
 # Sometimes logstash is slow to stop. Trying twice normally works.
 # This is a simple way to make sure logstash has stopped before we try to start it
 
+echo "date"
 /sbin/service logstash stop
 sleep 7
 /sbin/service logstash stop
