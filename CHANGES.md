@@ -1,4 +1,34 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.6 -- Sept 1 2020
+------------------------------------------------------
+Features:
+Logstash configs:
+  * Split input and output options into their own .conf files for easy enable/disable. Unused ones have .disabled extension. 
+  * Split maxmind geoip-tagging config into 2 parts to separately get location and ASNs -- new 45-geoip-tagging.conf and 50-asn.conf.
+  * If the flow's original asn is private, 0, etc, try getting an asn from the maxmind ASN db by IP. If one is found, add tag "maxmind src/dst asn"
+  * If a public asn is not found, set asn to -1 (not 0)
+  * Will now get organizations from a CAIDA csv file instead of maxmind -- added 53-caida-org.conf 
+  * If the org cannot be determined, set it to "Unknown"
+  * If lat/lon are unknown, don't set the fields at all. Set country and continent to Unknown.
+  * Convert the common variations of AARNET org names to "Australian Academic and Research Network (AARNet)", whether redacted or not. 
+    (caida is now listing the abbr but redaction uses/has used the longer name)
+  * If dst is Multicast, set no country_scope. 
+  * Moved @exit_time and @processing_time to 98-post-process.conf
+  * Corrected spelling of @injest_time to @ingest_time
+  * Added sox and fixed gpn and tacc in sensor_groups and sensor_types dictionaries
+  * We no longer need to check to see if events are flows so removed the "if [type] == flow" conditionals 
+  * Removed some unnecessary type conversions at the end of the pipeline
+Other:
+  * Docker changes to allow more than one sflow/netflow sensor (default is 1 of each but user can edit shared file to set it up how they want)
+  * Added replay script given a valid input file.
+  * Started to add Automated Ruby Unit tests. 
+  * Changed some dir names
+  * Renamed cron files and changed the times in them. Added netsage-caida-update.cron. 
+  * Moved maxmind, caida, and science registry dbs to /var/lib/grnoc/netsage/ directory.
+Temporary:
+  - Added "caida orgs" tags to all flows 
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.5 -- Jul 15 2020     
 ------------------------------------------------------
 SCTASK0055523 (release)

@@ -1,0 +1,7 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+
+# restart logstash so geoip and scireg db's are reread, in case they've been updated
+# daily at 1:00 UTC
+##00 01 * * * root /usr/bin/restart-logstash.sh > /tmp/restart-logstash-output 2>&1

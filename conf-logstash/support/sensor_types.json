@@ -1,15 +1,17 @@
 {
+    "^.*Tstat$": "Data Archive",
+    "^.*\\.nersc\\.gov$": "Data Archive",
     "^Hawaii.*netflow$": "Circuit",
     "^NEAAR.*": "Circuit",
     "^TransPAC.*": "Circuit",
-    "^.*Tstat$": "Data Archive",
-    "^.*\\.nersc\\.gov$": "Data Archive",
-    "^.*pacificwave\\.net$": "Exchange Point",
     "^AMPATH.*$": "Exchange Point",
+    "^.*pacificwave\\.net$": "Exchange Point",
+    "^.*pacwave\\.net$": "Exchange Point",
     "^.*cenic\\.net$": "Regional Network",
-    "^.*gpn\\.onenet\\.net$": "Regional Network",
+    "^FRGP.*Netflow$": "Regional Network",
+    "^.*gpn.*$": "Regional Network",
     "^GigaPOP.*netflow$": "Regional Network",
     "^i-Light.*netflow$": "Regional Network",
     "^PennREN.*Netflow$": "Regional Network",
-    "^FRGP.*Netflow$": "Regional Network"
+    "^.*sox.*$": "Regional Network"
 }

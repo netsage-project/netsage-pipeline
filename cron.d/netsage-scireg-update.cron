@@ -1,0 +1,16 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+
+# Get Science Registry info from scienceregistry.grnoc.iu.edu
+# This "fake geoip" mmdb file is used by logstash
+#    -q for quiet - no email if no output.
+#    Instead of touch, if your wget version has it, you can use --no-use-server-timestamps which sets the file's time to the download time
+
+## UNCOMMENT AFTER FILLING IN USERNAME AND PW
+# daily at 00:00 UTC
+##00 00 * * * root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/scireg.mmdb -q -O /var/lib/grnoc/netsage/scireg.mmdb.new  &&  mv /var/lib/grnoc/netsage/scireg.mmdb.new /var/lib/grnoc/netsage/scireg.mmdb && touch /var/lib/grnoc/netsage/scireg.mmdb
+
+# get yaml file in case a human wants to view the data. csv and json are also available.
+##05 00 * * * root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/scireg.yaml -q -O /var/lib/grnoc/netsage/scireg.yaml.new && mv /var/lib/grnoc/netsage/scireg.yaml.new /var/lib/grnoc/netsage/scireg.yaml && touch /var/lib/grnoc/netsage/scireg.yaml
+

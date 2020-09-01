@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.5
+Version: 1.2.6
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 make pure_install
 
 %{__install} -d -p %{buildroot}/etc/grnoc/netsage/deidentifier/
-%{__install} -d -p %{buildroot}/var/lib/grnoc/netsage/deidentifier/
+%{__install} -d -p %{buildroot}/var/lib/grnoc/netsage/
 %{__install} -d -p %{buildroot}/var/cache/netsage/
 %{__install} -d -p %{buildroot}/usr/bin/
 %{__install} -d -p %{buildroot}/etc/init.d/
@@ -83,6 +83,7 @@ make pure_install
 %{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
+%{__install} conf-logstash/*.conf.disabled  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 %{__install} conf-logstash/support/*  %{buildroot}/etc/logstash/conf.d/support/
 
@@ -94,9 +95,10 @@ make pure_install
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
 %endif
 
-%{__install} cron.d/netsage-scireg_update %{buildroot}/etc/cron.d/netsage-scireg_update
-%{__install} cron.d/netsage-geoip_update %{buildroot}/etc/cron.d/netsage-geoip_update
-%{__install} cron.d/netsage-logstash_restart %{buildroot}/etc/cron.d/netsage-logstash_restart
+%{__install} cron.d/netsage-scireg-update.cron %{buildroot}/etc/cron.d/netsage-scireg-update.cron
+%{__install} cron.d/netsage-maxmind-update.cron %{buildroot}/etc/cron.d/netsage-maxmind-update.cron
+%{__install} cron.d/netsage-caida-update.cron %{buildroot}/etc/cron.d/netsage-caida-update.cron
+%{__install} cron.d/netsage-logstash-restart.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
 
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
 %{__install} bin/netsage-netflow-importer-daemon %{buildroot}/usr/bin/netsage-netflow-importer-daemon
@@ -116,9 +118,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644, root, root, 755)
 
 # Don't overwrite cron files. Create .rpmnew files if needed.
-%config(noreplace) /etc/cron.d/netsage-scireg_update
-%config(noreplace) /etc/cron.d/netsage-geoip_update
-%config(noreplace) /etc/cron.d/netsage-logstash_restart
+%config(noreplace) /etc/cron.d/netsage-scireg-update.cron
+%config(noreplace) /etc/cron.d/netsage-maxmind-update.cron
+%config(noreplace) /etc/cron.d/netsage-caida-update.cron
+%config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
 # Don't overwrite importer configs. Create .rpmnew files if needed.
 %config(noreplace) /etc/grnoc/netsage/deidentifier/logging.conf
@@ -129,12 +132,19 @@ rm -rf $RPM_BUILD_ROOT
 
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
+%config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
-%config /etc/logstash/conf.d/50-geoip-tagging.conf
+%config /etc/logstash/conf.d/45-geoip-tagging.conf
+%config /etc/logstash/conf.d/50-asn.conf
+%config /etc/logstash/conf.d/53-caida-org.conf
 %config /etc/logstash/conf.d/55-member-orgs.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
@@ -143,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
 %config /etc/logstash/conf.d/98-post-process.conf
-%config /etc/logstash/conf.d/99-output-rabbit.conf
+%config /etc/logstash/conf.d/99-output-stdout.conf.disabled
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 %config /etc/logstash/conf.d/ruby/domestic.rb
 %config /etc/logstash/conf.d/support/sensor_groups.json
@@ -175,7 +185,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %defattr(-, root, root, 755)
-/var/lib/grnoc/netsage/deidentifier/
+/var/lib/grnoc/netsage/
 /var/cache/netsage/
 
 %post
@@ -183,14 +193,15 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Logstash configs 10, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  Logstash configs 01, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
 echo " "
 echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage multiple pipelines in pipelines.yml."
 echo " *  Nor does it manage multiple init.d files for sensor- or network-specific importers."
 echo " "
 echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching (aggregation) won't work right. **"
+echo " *      and be sure logstash configs are specified by *.conf in the right directory."
 echo " "
-echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter for cenic sensors only) "
+echo " *  [Re]start logstash, netsage netflow importers (and netsage flow filters for cenic sensors only) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 

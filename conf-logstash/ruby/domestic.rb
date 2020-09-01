@@ -1,9 +1,9 @@
-##
-# This script checks source and destination countries to see if 
+# This script checks source and destination countries to see if
 # they are in a list of "domestic" countries and tags as follows:
 #  1. If both ends domestic, then tag "Domestic"
 #  2. If only one end is domestic, then tag "Mixed"
 #  3. If neither end is domestic, then tag "International"
+#  4. if source/dest country is missing, 'Unknown,' or 'Multicast,' then don't tag
 
 DOMESTIC_MAP = {
     "United States" => true,
@@ -32,8 +32,8 @@ def filter(event)
     #get countries
     source_country = event.get(@src_country_field)
     dest_country = event.get(@dst_country_field)
-    #if no source/dest country or either is 'Unknown' then don't tag
-    if !source_country or !dest_country or source_country == "Unknown" or dest_country == "Unknown" then
+    #if no source/dest country or either is 'Unknown' or 'Multicast' then don't tag
+    if !source_country or !dest_country or source_country == "Unknown" or dest_country == "Unknown" or dest_country == "Multicast" then
         return [event]
     end
     
