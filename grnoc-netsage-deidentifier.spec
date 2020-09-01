@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.5
+Version: 1.2.6
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -83,6 +83,7 @@ make pure_install
 %{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
 %{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
+%{__install} conf-logstash/*.conf.disabled  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
 %{__install} conf-logstash/support/*  %{buildroot}/etc/logstash/conf.d/support/
 
@@ -118,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # Don't overwrite cron files. Create .rpmnew files if needed.
 %config(noreplace) /etc/cron.d/netsage-scireg-update.cron
-%config(noreplace) /etc/cron.d/netsage-maxind-update.cron
+%config(noreplace) /etc/cron.d/netsage-maxmind-update.cron
 %config(noreplace) /etc/cron.d/netsage-caida-update.cron
 %config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
@@ -132,9 +133,11 @@ rm -rf $RPM_BUILD_ROOT
 # We don't want to overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
@@ -190,14 +193,15 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Logstash configs 10, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  Logstash configs 01, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
 echo " "
 echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage multiple pipelines in pipelines.yml."
 echo " *  Nor does it manage multiple init.d files for sensor- or network-specific importers."
 echo " "
 echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching (aggregation) won't work right. **"
+echo " *      and be sure logstash configs are specified by *.conf in the right directory."
 echo " "
-echo " *  [Re]start logstash, netsage-netflow-importer (and netsage-flow-filter for cenic sensors only) "
+echo " *  [Re]start logstash, netsage netflow importers (and netsage flow filters for cenic sensors only) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
