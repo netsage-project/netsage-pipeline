@@ -31,7 +31,7 @@ services:
     restart: always
     volumes:
       - ./data:/data
-#      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+    #      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.dataUpdate.schedule: "@every 24h"
@@ -46,7 +46,7 @@ services:
     volumes:
       - ./conf-logstash:/usr/share/logstash/pipeline/
       - ./data:/data
-      - ./data/cache:/var/cache/netsage
+      - ./data/cache:/var/lib/grnoc/netsage/
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:v0.3.0
     command: daemon --docker

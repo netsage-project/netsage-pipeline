@@ -46,6 +46,7 @@ RUN mkdir /data; chown 777 /data
 ## Exposed but likely not needed
 VOLUME /var/cache/netsage/
 VOLUME /etc/grnoc/netsage/deidentifier/ 
+VOLUME /var/lib/grnoc/netsage/
 
 #Data volume 
 VOLUME /data

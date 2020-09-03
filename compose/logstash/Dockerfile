@@ -10,3 +10,4 @@ COPY --chown=logstash:root compose/logstash/pipelines.yml  /usr/share/logstash/c
 USER logstash
 
 VOLUME /var/cache/netsage
+VOLUME /var/lib/grnoc/netsage/
