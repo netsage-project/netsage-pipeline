@@ -8,7 +8,7 @@ MAILTO=root
 
 ## UNCOMMENT AFTER FILLING IN USERNAME AND PW
 # on Wednesdays at 23:30 UTC
-## 30 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb - -q -O /var/lib/grnoc/netsage/newASN.mmdb  &&  mv /var/lib/grnoc/netsage/newASN.mmdb /var/lib/grnoc/netsage/GeoLite2-ASN.mmdb && touch /var/lib/grnoc/netsage/GeoLite2-ASN.mmdb
+## 30 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb  -q -O /var/lib/grnoc/netsage/newASN.mmdb  &&  mv /var/lib/grnoc/netsage/newASN.mmdb /var/lib/grnoc/netsage/GeoLite2-ASN.mmdb && touch /var/lib/grnoc/netsage/GeoLite2-ASN.mmdb
 #
 # # on Wednesdays at 23:35 UTC
 ## 35 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-City.mmdb  -q -O /var/lib/grnoc/netsage/newCity.mmdb  &&  mv /var/lib/grnoc/netsage/newCity.mmdb /var/lib/grnoc/netsage/GeoLite2-City.mmdb && touch /var/lib/grnoc/netsage/GeoLite2-City.mmdb
