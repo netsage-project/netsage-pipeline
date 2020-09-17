@@ -17,7 +17,8 @@ Logstash configs:
   * Corrected spelling of @injest_time to @ingest_time
   * Added sox and fixed gpn and tacc in sensor_groups and sensor_types dictionaries
   * We no longer need to check to see if events are flows so removed the "if [type] == flow" conditionals 
-  * Removed some unnecessary type conversions at the end of the pipeline
+  * Removed some unnecessary type conversions at the end of the pipeline [added back manually after upgrade]
+
 Other:
   * Docker changes to allow more than one sflow/netflow sensor (default is 1 of each but user can edit shared file to set it up how they want)
   * Added replay script given a valid input file.
@@ -25,6 +26,7 @@ Other:
   * Changed some dir names
   * Renamed cron files and changed the times in them. Added netsage-caida-update.cron. 
   * Moved maxmind, caida, and science registry dbs to /var/lib/grnoc/netsage/ directory.
+
 Temporary:
   - Added "caida orgs" tags to all flows 
 
