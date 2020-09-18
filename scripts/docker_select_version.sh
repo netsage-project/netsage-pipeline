@@ -18,6 +18,10 @@ function updateDocker() {
   echo "Selecting $version, updating docker configuration"
   sed -i -e "s/:latest/:$version/" docker-compose.build.yml
   sed -i -e "s/:latest/:$version/" docker-compose.yml
+  if test -f "docker-compose.override.yml"; then
+    sed -i -e "s/:latest/:$version/" docker-compose.override.yml
+  fi
+
 }
 
 if [ $# -gt 0 ]; then
