@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  importer:
+    image: netsage/pipeline_importer:latest
+    volumes:
+## If you are using custom collectors you need to create this file and specify any addition ENV flags to identify the collector source
+#      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+
+## Please remove or add any additional collectors here.  Default setup should work fine without any custom config.
+## You may remove any collectors that are not needed.
+  sflow-collector:
+    image: netsage/nfdump-collector:1.6.18
+    restart: always
+    command: sfcapd -T all -l /data -S 1 -w -z -p 9998
+    volumes:
+      - ./data/input_data/sflow:/data
+    ports:
+      - "9998:9998/udp"
+  netflow-collector:
+    image: netsage/nfdump-collector:1.6.18
+    command: nfcapd -T all -l /data -S 1 -w -z -p 9999
+    ports:
+      - "9999:9999/udp"
+    restart: always
+    volumes:
+      - ./data/input_data/netflow:/data
+

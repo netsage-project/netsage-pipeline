@@ -1,21 +1,5 @@
 version: "3.7"
 services:
-  sflow-collector:
-    image: netsage/nfdump-collector:1.6.18
-    restart: always
-    command: sfcapd -T all -l /data -S 1 -w -z -p 9998
-    volumes:
-      - ./data/input_data/sflow:/data
-    ports:
-      - "9998:9998/udp"
-  netflow-collector:
-    image: netsage/nfdump-collector:1.6.18
-    command: nfcapd -T all -l /data -S 1 -w -z -p 9999
-    ports:
-      - "9999:9999/udp"
-    restart: always
-    volumes:
-      - ./data/input_data/netflow:/data
   rabbit:
     image: rabbitmq:3-management
     env_file: .env
@@ -31,7 +15,6 @@ services:
     restart: always
     volumes:
       - ./data:/data
-    #      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.dataUpdate.schedule: "@every 24h"
