@@ -34,3 +34,4 @@ build
 .idea
 replayData
 userConfig
+docker-compose.override.yml

@@ -1,12 +1,16 @@
 module.exports = {
   Pipeline: {
     Pipeline: ["pipeline", "pipeline_importer", "pipeline_logstash"],
-    "Developer Guides": ["devel/docker"],
-    "Deployment Guides": [
-      "deploy/choose_install",
-      "deploy/install",
-      "deploy/docker_install",
-    ],
+    Deployment: ["deploy/choose_install", "deploy/bare_metal_install"],
     Documentation: ["docusaurus"],
+  },
+  Docker: {
+    "Deployment Guides": ["devel/docker"],
+    Deployment: [
+      "deploy/docker_install",
+      "deploy/docker_simple",
+      "deploy/docker_advanced",
+      "deploy/docker_troubleshoot",
+    ],
   },
 };

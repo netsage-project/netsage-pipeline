@@ -11,3 +11,4 @@ USER logstash
 
 VOLUME /var/cache/netsage
 VOLUME /var/lib/grnoc/netsage/
+VOLUME /usr/share/logstash/config/

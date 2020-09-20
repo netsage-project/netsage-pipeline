@@ -21,4 +21,4 @@ If you are simply using the pipeline to deliver the anonymized network stats for
 ## Choose your adventure
 
 - [Docker](docker_install)
-- [BareMetal](install)
+- [BareMetal](bare_metal_install)
