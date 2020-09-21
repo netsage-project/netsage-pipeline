@@ -27,7 +27,16 @@ function Home() {
               )}
               to={useBaseUrl("docs/pipeline")}
             >
-              Get Started
+              Pipeline Documentation
+            </Link>
+            <Link
+              className={classnames(
+                "button button--outline button--secondary button--lg",
+                styles.getStarted
+              )}
+              to={useBaseUrl("docs/devel/docker")}
+            >
+              Docker Guide
             </Link>
           </div>
         </div>
