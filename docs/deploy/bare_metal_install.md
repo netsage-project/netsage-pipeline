@@ -1,7 +1,7 @@
 ---
-id: install
+id: bare_metal_install
 title: NetSage Flow Processing Pipeline Install Guide
-sidebar_label: Installation Guide
+sidebar_label: Hardware Installation Guide
 ---
 
 This document covers installing the NetSage Flow Processing Pipeline on a new machine. Steps should be followed below in order unless you know for sure what you are doing. This document assumes a RedHat Linux environment or one of its derivatives.
@@ -9,26 +9,26 @@ This document covers installing the NetSage Flow Processing Pipeline on a new ma
 ## Components
 
 Minimum components
- - Data Injestion Source (nfdump, tstat or both)
- - RabbitMQ
- - LogStash
- - Importer (If you use nfdump)
- 
+
+- Data Injestion Source (nfdump, tstat or both)
+- RabbitMQ
+- LogStash
+- Importer (If you use nfdump)
 
 ## Prerequirements
 
-The Processing pipeline needs data to injest in order to do anything.  There are two types of data that are consumed.
+The Processing pipeline needs data to injest in order to do anything. There are two types of data that are consumed.
 
-1. nfdump 
+1. nfdump
 2. tstat
 
 You'll need to have at least one of them setup in order to be able to process the data
 
 ### nfdump
 
-The NetFlow Importer daemon requires nfdump. If you are only using tstat, you do not need nfdump. nfdump is *not* listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
+The NetFlow Importer daemon requires nfdump. If you are only using tstat, you do not need nfdump. nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
 
-Once nfdump is setup you'll need to configures your routers to send nfdump to the running process that will save data to a particular location on disk. 
+Once nfdump is setup you'll need to configures your routers to send nfdump to the running process that will save data to a particular location on disk.
 
 ## Installing the Prerequisites
 
@@ -36,15 +36,15 @@ Once nfdump is setup you'll need to configures your routers to send nfdump to th
 
 The pipeline requires a RabbitMQ server. Typically, this runs on the same server as the pipeline itself, but if need be, you can separate them (for this reason, the Rabbit server is not automatically installed with the pipeline package).
 
-```sh 
+```sh
 [root@host ~]# yum install rabbitmq-server
 `
 
-``` 
+```
 
 Typically, the default configuration will work. Perform any desired Rabbit configuration, if any. Then, start RabbitMQ:
 
-```sh 
+```sh
 [root@host ~]# /sbin/service rabbitmq-server start or # systemctl start rabbitmq-server.service
 ```
 
@@ -52,7 +52,7 @@ Typically, the default configuration will work. Perform any desired Rabbit confi
 
 Some of our dependencies come from the EPEL repo. To install this:
 
-``` 
+```
 [root@host ~]# yum install epel-release
 ```
 
@@ -62,7 +62,7 @@ The Pipeline package (and its dependencies that are not in EPEL) are in the Glob
 
 For Red Hat/CentOS 6, create `/etc/yum.repos.d/grnoc6.repo` with the following content.
 
-``` 
+```
 [grnoc6]
 name=GlobalNOC Public el6 Packages - $basearch
 baseurl=https://repo-public.grnoc.iu.edu/repo/6/$basearch
@@ -73,7 +73,7 @@ gpgkey=https://repo-public.grnoc.iu.edu/repo/RPM-GPG-KEY-GRNOC6
 
 For Red Hat/CentOS 7, create `/etc/yum.repos.d/grnoc7.repo` with the following content.
 
-``` 
+```
 [grnoc7]
 name=GlobalNOC Public el7 Packages - $basearch
 baseurl=https://repo-public.grnoc.iu.edu/repo/7/$basearch
@@ -91,9 +91,9 @@ Pipeline components:
 1. Flow Filter - GlobalNOC uses this for Cenic data as we do not want to process all of it. Not needed otherwise.
 2. Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors, have them
 
-send directly to the appropriate rabbit queue. 
+send directly to the appropriate rabbit queue.
 
-3. Logstash configs - These are executed in alphabetical order. They read events from a rabbit queue, aggregate (ie stitch flows 
+3. Logstash configs - These are executed in alphabetical order. They read events from a rabbit queue, aggregate (ie stitch flows
 
 that were split between different nfcapd files), add information from geoIP and Science Registry data, and write to a final rabbit queue.
 The final rabbit queue is read by an independent logstash instance and events are put into elasticsearch. One could also modify the
@@ -101,19 +101,19 @@ last logstash conf here to write to elasticsearch.
 
 Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
 
-``` 
+```
 [root@host ~]# yum install grnoc-netsage-deidentifier
 ```
 
-## Configuration 
+## Configuration
 
 ### Setting up the shared config file
 
-Theshared config file, used by all the non-logstash pipeline components, is read before reading the individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH. We should redo this]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml` 
+Theshared config file, used by all the non-logstash pipeline components, is read before reading the individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH. We should redo this]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
 
 The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
 
-``` 
+```
 <collection>
     <flow-path>/path/to/flow-files</flow-path>
     <sensor>hostname.tld</sensor>
@@ -141,7 +141,7 @@ You can have multiple `collection` stanzas, to import multiple collections on on
 
 The shared config looks like this. Note that RabbitMQ connection information is listed, but not the queue or channel, as these will vary per daemon. If you're running a default RabbitMQ config, which is open only to 'localhost' as guest/guest, you won't need to change anything here. Note that you will need to change the rabbit_output for the Finished Flow Mover Daemon regardless (see below).
 
-``` 
+```
 <config>
   <collection>
     <flow-path>/path/to/flow-files1</flow-path>
@@ -186,14 +186,14 @@ The username/password are both set to "guest" by default, as this is the default
 
 Notice that the only Rabbit connection information that's provided here is that which is not specific in the shared config file. This way if we need to change the credentials throughout the entire pipeline, it's easy to do.
 
-``` xml
+```xml
    <config>
      <!-- rabbitmq connection info -->
      <rabbit_input>
        <queue>netsage_deidentifier_raw</queue>
        <channel>2</channel>
      </rabbit_input>
-   
+
      <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
      <rabbit_output>
        <queue>netsage_deidentifier_cached</queue>
@@ -203,10 +203,10 @@ Notice that the only Rabbit connection information that's provided here is that 
          <!-- How many concurrent workers should perform the necessary operations -->
          <!-- for stitching, we can only use 1 -->
        <num-processes>1</num-processes>
-   
+
        <!-- where should we write the cache worker pid file to -->
        <pid-file>/var/run/netsage-cache-workers.pid</pid-file>
-   
+
      </worker>
    </config>
 ```
@@ -217,7 +217,7 @@ The defaults should work unless the pipeline stages need to be reordered for som
 
 The shared configuration files and logging configuration files are listed below (all of the pipeline components use these):
 
-``` 
+```
 /etc/grnoc/netsage/deidentifier/netsage_shared.xml - Shared config file allowing configuration of collections, and Rabbit connection information
 /etc/grnoc/netsage/deidentifier/logging.conf - logging config
 /etc/grnoc/netsage/deidentifier/logging-debug.conf - logging config with debug enabled
@@ -243,7 +243,7 @@ For more details on each individual daemon, use the `--help` flag.
 
 This is a daemon that reads raw netflow data, reads it, and pushes it to a Rabbit queue for processing.
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml` 
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml`
 
 ## Setup Notes
 
@@ -252,12 +252,12 @@ Standard logstash filter config files are provided with this package. Most shoul
 To use the provided 01-inputs.conf and 99-outputs.conf versions, fill in the IP of the final rabbit host in 99-outputs.conf, and put the rabbitmq usernames and passwords into the logstash keystore.
 Your 01 and 99 conf files should not be overwritten by upgrades.
 
-To set up the keystore:  (note that logstash-keystore takes a minute to come back with a prompt)
-  Be sure /usr/share/logstash/config exists
-  (the full path, in case you need it: /usr/share/logstash/bin/logstash-keystore)
-  Create logstash.keystore in /etc/logstash/: (use the same directory as logstash.yml)
+To set up the keystore: (note that logstash-keystore takes a minute to come back with a prompt)
+Be sure /usr/share/logstash/config exists
+(the full path, in case you need it: /usr/share/logstash/bin/logstash-keystore)
+Create logstash.keystore in /etc/logstash/: (use the same directory as logstash.yml)
 
-``` sh
+````sh
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ create
     You can set a password for the keystore itself if you want to investigate that; otherwise skip it.
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_username     (enter username when prompted)
@@ -266,16 +266,16 @@ To set up the keystore:  (note that logstash-keystore takes a minute to come bac
   $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_pw          (enter password when prompted)
 ```sh
 To list the keys:
-```
+````
 
-  $ sudo -E logstash-keystore list
+\$ sudo -E logstash-keystore list
 
-``` sh
+````sh
 To remove a key-value pair:
 
 ```sh
   $ sudo -E logstash-keystore remove <key name>
-```
+````
 
 FLOW STITCHING - IMPORTANT!
 Flow stitching (ie, aggregation) will NOT work properly with more than ONE logstash pipeline worker!

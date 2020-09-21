@@ -13,7 +13,9 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.54",
     "classnames": "^2.2.6",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "remark-images": "^2.0.0",
+    "remark-import-partial": "^0.0.2"
   },
   "browserslist": {
     "production": [

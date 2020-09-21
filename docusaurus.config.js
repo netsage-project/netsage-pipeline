@@ -1,3 +1,5 @@
+const remarkImages = require("remark-images");
+
 module.exports = {
   title: "Netsage Pipeline Documentation",
   tagline: "Netsage Pipeline Documentation",
@@ -13,17 +15,30 @@ module.exports = {
         alt: "NetSage Logo",
         src: "img/logo.png",
       },
-      links: [
+      items: [
         {
-          to: "docs/pipeline",
-          activeBasePath: "docs",
           label: "Pipeline Documentation",
           position: "left",
+          items: [
+            {
+              label: "Pipeline Documentation",
+              position: "left",
+              activeBasePath: "docs",
+              to: "docs/pipeline",
+            },
+            {
+              label: "Docker Guide",
+              position: "left",
+              activeBasePath: "docs",
+              to: "docs/devel/docker",
+            },
+          ],
         },
         {
           href: "https://netsage-project.github.io/netsage-grafana-configs/",
           label: "Dashboard Documentation",
           position: "left",
+          target: "_self",
         },
         {
           href: "https://github.com/netsage-project/netsage-pipeline/",
@@ -34,52 +49,8 @@ module.exports = {
     },
     footer: {
       style: "dark",
-      links: [
-        {
-          title: "Docs",
-          items: [
-            {
-              label: "Style Guide",
-              to: "docs/doc1",
-            },
-            {
-              label: "Second Doc",
-              to: "docs/doc2",
-            },
-          ],
-        },
-        {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/docusaurus",
-            },
-          ],
-        },
-        {
-          title: "More",
-          items: [
-            {
-              label: "Blog",
-              to: "blog",
-            },
-            {
-              label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      links: [],
+      copyright: `Copyright © ${new Date().getFullYear()} NetSage Built with Docusaurus.`,
     },
   },
   presets: [
@@ -87,6 +58,7 @@ module.exports = {
       "@docusaurus/preset-classic",
       {
         docs: {
+          remarkPlugins: [require("remark-import-partial")],
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl:
