@@ -10,7 +10,7 @@ module.exports = {
   projectName: "netsage-pipeline", // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: "NetSage Pipeline Documentation",
+      title: "NetSage Documentation",
       logo: {
         alt: "NetSage Logo",
         src: "img/logo.png",
