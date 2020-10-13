@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   rabbit:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.8-management
     env_file: .env
     volumes:
       - ./data/rabbit:/var/lib/rabbitmq
