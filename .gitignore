@@ -8,7 +8,7 @@ conf/systemd/deploy
 *.pyc
 data
 # Dependencies
-/node_modules
+/website/node_modules
 
 # Production
 /build

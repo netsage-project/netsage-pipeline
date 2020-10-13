@@ -1,43 +1,42 @@
 language: node_js
 node_js:
-- 12
+  - 12
 services:
-- docker
+  - docker
 env:
   matrix:
-  - DOCKER_COMPOSE_VERSION=1.25.4
+    - DOCKER_COMPOSE_VERSION=1.25.4
   global:
     secure: iclIu1Gazm4xSKFALAuqP4DUD6fH2PS2Hjt2MoZd7w2G+GL07U1khPzBRlO6KcS9j8GvOVu75PnH1iJTdqNyle2xY7qrlhXDUrVnoaSZx/7pAWCyYW62OR8JQpa81liTNTiz2fEKjIKWjb+PNPXEvKZdOr9KBOssjpUW5346Br+FvBPjD0FQQR35ADoEAAeyB3+7cD2MWrgP0chNlhYW0y5DHcrpwiTyIkzLs79FvLqmDxm73fsFpa4On5daQxc3LG7TONLfvLssI10uiURFswz2E0ce+lvqfyP9VHOKWD7BxonNUUgTPPN5WUK53DWxDM4Urd/nCw1rAVWApmutMKH3WdFcjruCDXFefSHGXu0uX5OcXolCqehO5q6NHT8mdwCJEhYy+VNV5fjLWAmNrwqsey61KNr89gxtP1UlvkDAbOt5ftHYyhOdsrtleNsEryMHquLeS4kAk4J/9a7jfGQD8B8m9JZrroUOdLHDZT6cwLBzdqrCuQVsdcNKf175ckg9gPgkQNsxqcMswXT3QY1+ayPRwfqvnZozTAqyBMwrZflLO7HYtkAPIKwOXF2dyCeQb6d8Qoa0z/pCS6JAf9V6elqTbpvEqlwayJ0mAu0HWpEqG2NpGaKsy5QHbvsnDXM+DLJl9SOq//oRzID4Kg89KEZSt6JE+fvUudjwLn0=
 
 before_install:
-- sudo rm /usr/local/bin/docker-compose
-- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
-  -s`-`uname -m` > docker-compose
-- chmod +x docker-compose
-- sudo mv docker-compose /usr/local/bin
-- sudo gem install bundler
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+    -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - sudo gem install bundler
 install:
-- yarn install
+  - yarn install
 jobs:
   fast_finish: true
   include:
     - stage: build docker image
       if: type = pull_request or branch = 'master'
       script:
-      - "./scripts/integration.sh"
+        - "./scripts/integration.sh"
     - stage: Release Tag
       if: tag =~ ^v[0-9]+.[0-9]+.[0-9]+$
       script:
-      - "./scripts/integration.sh"
+        - "./scripts/integration.sh"
     - stage: Ruby Unit Test
       if: type = pull_request or branch = 'master'
       script:
-      - "./scripts/ruby.sh"
+        - "./scripts/ruby.sh"
     - stage: Deploy Docs
       if: type != pull_request and branch = 'master'
       script:
-      - yarn install
-      - git config --global user.email "${GH_EMAIL}"
-      - git config --global user.name "${GH_NAME}"
-      - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
-      - yarn && GIT_USER="${GH_NAME}" yarn deploy
+        - git config --global user.email "${GH_EMAIL}"
+        - git config --global user.name "${GH_NAME}"
+        - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+        - cd website && yarn && GIT_USER="${GH_NAME}" yarn deploy

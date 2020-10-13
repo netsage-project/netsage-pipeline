@@ -9,7 +9,7 @@ Detailed documentation is available [here](https://netsage-project.github.io/net
 
 The Pipeline is available in a yum repo 
 
-(see [INSTALL](https://netsage-project.github.io/netsage-pipeline/docs/install)
+(see [INSTALL](https://netsage-project.github.io/netsage-pipeline/website/docs/install)
 
 
 
