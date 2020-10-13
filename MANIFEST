@@ -41,7 +41,7 @@ cron.d/netsage-logstash-restart.cron
 grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon
-docs/deploy/bare_metal_install.md
+website/docs/deploy/bare_metal_install.md
 lib/GRNOC/NetSage/Deidentifier.pm
 lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
