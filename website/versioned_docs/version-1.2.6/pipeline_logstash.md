@@ -8,89 +8,98 @@ sidebar_label: Logstash
 
 These Logstash config files are in /etc/logstash/conf.d/
 
-## Logstash Procedures 
+## Logstash Sequence
 
 The following steps are defined for logstash:
 
-### 01-inputs.conf 
+### 01-input-rabbit.conf 
 
-reads flows from wherever the user wants to get data; in our case, from the netsage_deidentifer_raw rabbit queue.
+Reads flows from a rabbitmq queue. (".disabled" can be removed from other input configs to get flows from other sources.)
 
 ### 10-preliminaries.conf
 
-drops flows to or from private IP addresses; 	
-adds @injest_time; 
+Drops flows to or from private IP addresses; 	
+adds @ingest_time (this is mainly for developers); 
 converts any timestamps in milliseconds to seconds; 
 drops events with timestamps more than a year in the past or (10 sec) in the future; 
 does some data type conversions
 
 ### 20-add_id.conf
 
-adds a unique id based on the 5-tuple (src and dst ips and ports, and protocol) plus the sensor name. This ends up being called meta.id.
-(30-xxx.conf is not used yet)
+Adds a unique id based on the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. This ends up being called meta.id.
 
 ### 40-aggregation.conf
 
-stitches together flows from different nfcapd files into longer flows, matching them up by meta.id and using a specified inactivity_timeout to decide when to start a new flow.
+Stitches together flows from different nfcapd files into longer flows, matching them up by meta.id and using a specified inactivity_timeout to decide when to start a new flow.
 
 Notes: By default, 5-minute nfcapd files are assumed, and if less than 10.5 min have passed between the start of the current flow and the start of the last matching one, stitch the two together.
 
 Your logstash pipeline can have only 1 worker or aggregation is not going to work! 
 
-### 50-geoip-tagging.conf 
+### 45-geoip-tagging.conf 
 
-if the destination IP is in the multicast range, sets the destination Organization, Country, and Continent to "Multicast"; 
-queries the MaxMind GeoLite2-ASN database by IP to get src and dst Organizations (note that these are the organizations associated with the ASN); 
-if the ASN in the flow header differs from that which MaxMind gives, the flow header's value is saved [we need to not do this if it's a private ASN]; 
+If the destination IP is in the multicast range, sets the destination Organization, Country, and Continent to "Multicast"; 
 queries the MaxMind GeoLite2-City database by IP to get src and dst Countries, Continents, Latitudes, and Longitudes. 
+
+### 50-asn.conf
+
+Normally, flows come in with source and destination ASNs.  If there is no ASN in the input event; or the input ASN is 0, 4294967295, or 23456, or it is a private ASN, try getting an ASN by IP from the MaxMind ASN database.
+Sets ASN to -1 if it is unavailable for any reason.
+
+### 53-caida-org.conf
+
+Uses the ASN determined previously to get the organization name from the prepared CAIDA lookup file.
 
 ### 55-member-orgs.conf
 
-[this part is commented out right now: if a src or dst ASN matches a certain value, search only the corresponding lookup table.]
-Search lookup tables by IP to obtain member or customer organization names and overwrite the GeoIP ASN Organization where applicable.
-This allows us to have entities which don't own their own ASs be listed as the src or dst Organization.
+Search (optional) lookup tables by IP to obtain member or customer organization names and overwrite the Organization determined previously.
+This allows entities which don't own their own ASs to be listed as the src or dst Organization.
 
-**Notes**: Lookup tables are not stored in github.
+Notes: These lookup tables are not stored in github.
 
 ### 60-scireg-tagging-fakegeoip.conf
 
-uses a fake geoip database containing Science Registry information to add, for src and dst, science discipline and role, science registry organization and location, etc; 
-removes scireg fields we don't actually need to save to elasticsearch.
+Uses a fake geoip database containing Science Registry information to tag the flows with source and destination science disciplines and roles, organizations and locations, etc; 
+removes scireg fields we don't need to save to elasticsearch.
 
-**Notes**: The science registry fake geoip database can be downloaded from scienceregistry.grnoc.iu.edu via a cron job. 
-
-### 65-preferred-location-org.conf
-
-copies science registry organization and/or location values, if they exist, to the preferred_organization and/or perferred_location fields.
+Notes: The science registry fake geoip database can be downloaded from scienceregistry.grnoc.iu.edu via wget in a cron job. 
 
 ### 70-deidentify.conf 
 
-replaces the last octet of IPv4 addresses and the last 4 hextets of IPv6 addresses with x's in order to deidentify them. 
+Replaces the last octet of IPv4 addresses and the last 4 hextets of IPv6 addresses with x's in order to deidentify them. 
 
 ### 80-privatize.org.conf
 
-removes information about Australian organizations (or, with modification, any organization that has privacy rules that require us not to identify them).
-If the ASN is one listed, completely replaces the IP with x's, sets the location to central Autralia, sets all organizations to "AARNet", removes all Projects.
+Removes information about Australian organizations (or, with modification, any country that has privacy rules that require us not to identify organizations).
+If the ASN is one of those listed, completely replaces the IP with x's, sets the location to central Autralia, sets all organizations to "AARNet", removes all Projects.
+
+### 88-preferred-location-org.conf
+
+Copies Science Registry organization and location values, if they exist, to the preferred_organization and preferred_location fields.
 
 ### 90-additional-fields.conf
 
-sets additional quick and easy fields. The first 2 use lookup files based on regexes.  Currently we have:
-sensor_group  = TACC, AMPATH, etc
-sensor_type    = Circuit, Archive, Exchange Point, or Regional Network 
-country_scope = Domestic, International, or Mixed
+Sets additional quick and easy fields.  Currently we have:
+*sensor_group  = TACC, AMPATH, etc.  (based on matching sensor names to regexes)
+*sensor_type    = Circuit, Archive, Exchange Point, or Regional Network  (based on matching sensor names to regexes)
+*country_scope = Domestic, International, or Mixed  (based on src and dst countries, where Domestic = US, Puerto Rico, or Guam)
+*is_network_testing = yes, no  (yes if discipline = CS.Network Testing and Monitoring or port = 5001, 5101, or 5201)
 
 ### 95-cleanup.conf
 
-does small misc. tasks at the end like rename, remove, or convert fields
+Does small misc. tasks at the end like rename, remove, or convert fields
 
-### 99-outputs.conf -
+### 98-post-process.conf
 
-adds @exit_time and @processing_time, 
-sends results to whereever the user wants them to go. In our case, it sends them to the netsage_archive_input queue (or netsage_ilight_input, etc) on netsage-elk1.grnoc.iu.edu. 
+Adds @exit_time and @processing_time (these are mainly for developers)
+
+### 99-output-rabbit.conf 
+
+Sends results to a rabbitmq queue (".disabled" can be removed from other output configs to send flows to other places)
 
 ### Final Stage 
 
-In our case, OmniSOC manages the last stage. Their logstash reads flows from the netsage_archive_input queue and sends it into elasticsearch. The indices are named like om-ns-netsage-YYYY.mm.dd-* (or om-ns-ilight-*, etc).  
+In our case, OmniSOC manages the last stage. Their logstash instance reads flows from the netsage_archive_input queue and sends it into elasticsearch. The indices are named like om-ns-netsage-YYYY.mm.dd-* (or om-ns-ilight-*, etc).  
 
 This can be easily replicated with the following configuration though you'll need one for each feed/index.
 
