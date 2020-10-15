@@ -20,7 +20,7 @@ sidebar_label: Troubleshooting
 If you are running a lot of data sometimes docker may need to be allocated more memory. The most
 likely culprit is logstash which is usually only allocated 1GB of RAM. You'll need to update the jvm.options file to grant it more memory.
 
-Please see the [advaned section](/docs/deploy/docker_advanced#customize-logstash-settings) for details on how to customize logstash
+Please see the [advaned section](docker_install_advanced.md#customize-logstash-settings) for details on how to customize logstash
 
 Applying this snippet to logstash may help. Naturally the values will have to change.
 
