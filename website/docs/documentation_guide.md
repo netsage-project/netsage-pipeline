@@ -30,3 +30,35 @@ $ yarn build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Tagging New release
+
+Once the documentation is stable and you don't forsee any new change, please do the following:
+
+```
+yarn run docusaurus docs:version 1.1.0
+```
+
+Where 1.1.0 is the next release version.  Commit the new directories created under 
+
+  * website/versioned_docs
+  * website/versioned_sidebars
+  * versions.json 
+
+Update the docusaurus.config.js
+
+```
+lastVersion: '1.2.6' 
+```
+
+should point to the latest value.
+
+### Removing a version 
+
+To remove version 1.2.6 for example.
+
+we need to: 
+
+  * update versions.json to remove the reference
+  * remove the versioned_docs/version-1.2.6
+  * remove versioned_sidebars/version-1.2.6-sidebars.json

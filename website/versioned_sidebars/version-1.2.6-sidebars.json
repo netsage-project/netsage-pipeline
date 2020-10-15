@@ -1,0 +1,64 @@
+{
+  "version-1.2.6/Pipeline": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Pipeline",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.6/pipeline"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.6/pipeline_importer"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.6/pipeline_logstash"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Developer Guides",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.6/devel/docker"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Deployment Guides",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.6/deploy/choose_install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.6/deploy/install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.6/deploy/docker_install"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Documentation",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.6/docusaurus"
+        }
+      ]
+    }
+  ]
+}

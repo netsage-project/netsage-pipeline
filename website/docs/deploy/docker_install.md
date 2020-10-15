@@ -33,5 +33,5 @@ We'll explore this in a later chapter. Depending on your use case please follow 
 
 At this point, the instruction are going to diverge. To keep the documentation easier to understand we're going to split the advanced instruction into a different set.
 
-- If you only need 1 collector of each type (netflow/sflow) at most, then the default adventure will work. Please click [here](/docs/deploy/docker_simple) to continue
-- If you are an advanced user. You need more then 1 collector or just want an indepth understanding of the pipeline please click [here](/docs/deploy/docker_advanced) to continue on your special adventure.
+- If you only need 1 collector of each type (netflow/sflow) at most, then the default adventure will work. Please click [here](docker_install_simple.md) to continue
+- If you are an advanced user. You need more then 1 collector or just want an indepth understanding of the pipeline please click [here](docker_install_advanced.md) to continue on your special adventure.
