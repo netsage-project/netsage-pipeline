@@ -75,7 +75,7 @@ module.exports = {
             },
           },
           editUrl:
-            "https://github.com/netsage-project/netsage-pipeline/edit/master/",
+            "https://github.com/netsage-project/netsage-pipeline/edit/master/website/",
         },
         blog: {
           showReadingTime: true,
