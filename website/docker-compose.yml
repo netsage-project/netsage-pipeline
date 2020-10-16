@@ -17,7 +17,7 @@ services:
       - ./versioned_sidebars:/app/versioned_sidebars/
       - ./versions.json:/app/versions.json
     working_dir: /app
-  build:
+  build_docs:
     <<: *docs
     build:
       context: .
