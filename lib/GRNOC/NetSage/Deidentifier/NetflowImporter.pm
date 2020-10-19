@@ -117,7 +117,7 @@ sub BUILD {
 
     my $config = $self->config;
     my $sensor_id = &getSensorValue($config->{ 'sensor' } || '');
-   
+
     if ( defined ( $sensor_id ) ) {
         $self->_set_sensor_id( $sensor_id );
     }
@@ -140,6 +140,7 @@ sub BUILD {
     my $flow_path = $self->flow_path;
 
     $flow_path = $config->{'worker'}->{'flow-path'} if not defined $flow_path;
+
     $self->_set_flow_path( $flow_path );
     $self->logger->debug("flow path: " . Dumper $flow_path);
 
@@ -232,38 +233,88 @@ sub _get_flow_data {
     foreach my $collection ( @$collections ) {
 
         my $path = $collection->{'flow-path'}; # || $self->flow_path;
-        my $sensor = &getSensorValue($collection->{'sensor'}  || '');
+        # if path doesn't end with an /, add one. Required for finding @paths_to_check.
+        if ( $path !~ /.+\/$/) {
+            $path = $path."/";
+        }
 
-        $self->logger->info( " Doing collection $sensor "); 
+        my $sensor = &getSensorValue($collection->{'sensor'}  || '');
+        $self->logger->info( " Doing collection $sensor ");
 
         my %params = %{ $self->_get_params( $collection ) };
-
         $params{'flow-path'} = $path;
         $params{'sensor'} = $sensor;
 
-        #my $path = $self->flow_path;
         my $min_bytes = $self->min_bytes;
+
         $self->logger->debug("path: $path");
         $self->logger->debug("min_file_age: " . $self->min_file_age );
 
         $self->_cull_flow_files( $path );
 
+        # We need to compare files to the contents of the cache file to see if they have been imported already.
+        # --- If files are not being culled, we don't want to compare every file ever saved, so
+        # --- first, narrow down the list of dirs to look through to only those with dates more recent than N months ago.
+        my $collection_dir = $path;
+        my @paths_to_check;
+        if ( $self->cull_enable < 1 ) {
+            my $now = DateTime->today;   # UTC (at 00:00:00)
+            my $now_yr  = $now->year();
+            my $now_mo  = $now->month();
+            my $now_day = $now->day();
+            my $too_old_date = $now->subtract( months => 2 );  # HARDCODED THRESHOLD N (must be less than the cache file culling threshold!)
+            my $too_old_yr  = $too_old_date->year();
+            my $too_old_mo  = $too_old_date->month();
+            my $too_old_day = $too_old_date->day();
+
+            for (my $yr = $too_old_yr; $yr <= $now_yr ; $yr++) {
+                for (my $mo = 1; $mo <= 12; $mo++) {
+                    # don't need to continue beyond current month
+                    last  if ( $yr == $now_yr and $mo == $now_mo + 1);
+                    # If first and last day of month are not too old, we want to look at all files in that month
+                    my $first_day = DateTime->new( { year=>$yr, month=>$mo, day=>"01" } );
+                    my $last_day  = DateTime->last_day_of_month( { year=>$yr, month=>$mo } );
+                    if ( $first_day >= $too_old_date and $last_day > $too_old_date ) {
+                        # add dir to list
+                        my $subdir = sprintf("%02d/%02d/", $yr, $mo);
+                        push (@paths_to_check, $collection_dir.$subdir);
+            $self->logger->debug("will check ".$collection_dir.$subdir);
+                    }
+                    elsif ( $first_day <= $too_old_date and $too_old_date <= $last_day ) {
+                        # if $too_old_date is in the middle of the month, go through the day dirs.
+                        for (my $day = 1; $day <= $last_day->day(); $day++) {
+                           my $day_date  = DateTime->new( { year=>$yr, month=>$mo, day=>$day } );
+                           if ( $day_date >= $too_old_date ) {
+                               my $subdir = sprintf("%02d/%02d/%02d/", $yr, $mo, $day);
+                               push (@paths_to_check, $collection_dir.$subdir);
+                   $self->logger->debug("will check ".$collection_dir.$subdir);
+                           }
+                       }
+                   }
+               }
+           }
+        } else {
+           # if culling is enabled, it's shouldn't be a big deal to just examine all existing files
+           @paths_to_check = ( $collection_dir );
+        }
+
+
+        # Get list of files to compare to cache file contents, exclude files that are too new (< min_file_age)
         try {
-            # TODO: don't forget to ignore nfcapd.current.*
-            my @paths = ( $path );
-            #my $ref = $self->can('find_nfcapd');
             @files = ();
-            find({ wanted => sub { find_nfcapd($self, \%params)  }, follow => 1 }, @paths );
+            find({ wanted => sub { find_nfcapd($self, \%params)  }, follow => 1 }, @paths_to_check );
 
         } catch {
             $self->logger->error( "Error retrieving nfcapd file listing: " . Dumper($_) );
             sleep(10);
             return;
         };
+
+        # Get list of files to actually import by comparing to cache file record of what's been done before
         my @filepaths = ();
         for(my $i=0; $i<@files; $i++) {
             my $file = $files[$i];
-#$self->logger->debug("file: $file");
+            #$self->logger->debug("file: $file");
             my $file_path = dir( $path, $file ) . "";
             my $stats = stat($file_path);
             my $abs = file( $file_path );
@@ -305,31 +356,39 @@ sub _get_flow_data {
         }
         @filepaths = sort @filepaths;
 
+        # Read the nfcapd files to import
         if ( @filepaths > 0 ) {
             my $success = $self->_get_nfdump_data(\@filepaths, %params);
+
+            # --- make cache file smaller.  (sub will do nothing if nfcapd file culling is enabled) (if it is enabled, it will cull the cache file itself.)
+            if ($success) {
+                $self->logger->debug( "calling cull_cache_file for $sensor");
+                $self->_cull_cache_file();
+                $self->logger->debug( "done with cull_cache_file for $sensor");
+            }
         }
 
 
-    } # end collections foreach loop
+    } # end loop over collections
 
 
 }
 
+# Loop over files to import, using nfdump to read each. Write cache file after each file is read.
 sub _get_nfdump_data {
     my ( $self, $flowfiles, %params ) = @_;
 
     my $sensor = $params{'sensor'};
     my $instance = $params{'instance'};
 
-my $path = $params{'path'};
-    
+    my $path = $params{'path'};  # flow-path
+
     my $flow_type = $params{'flow_type'};
 
     my $status = $self->status_cache;
 
     my $flow_batch_size = $self->flow_batch_size;
 
-    #my $path = $self->flow_path;
     my $min_bytes = $self->min_bytes;
 
     my $config_path = $self->nfdump_path;
@@ -369,13 +428,13 @@ my $path = $params{'path'};
             next;
         }
 
-       ### $self->logger->info("importing file: $flowfile"); #######
+        $self->logger->info(" importing file: $flowfile");
 
         my $command = "$nfdump -r '$flowfile'";
-	$command .= " -a"; # perform aggregation based on 5 tuples
+    $command .= " -a"; # perform aggregation based on 5 tuples
         $command .= ' -o "fmt:%ts,%te,%td,%sa,%da,%sp,%dp,%pr,%flg,%fwd,%stos,%ipkt,%ibyt,%opkt,%obyt,%in,%out,%sas,%das,%smk,%dmk,%dtos,%dir,%nh,%nhb,%svln,%dvln,%ismc,%odmc,%idmc,%osmc,%mpls1,%mpls2,%mpls3,%mpls4,%mpls5,%mpls6,%mpls7,%mpls8,%mpls9,%mpls10,%ra,%eng,%bps,%pps,%bpp"';
         $command .= ' -6';  # to get full ipv6 addresses
-        $command .= ' -L +' . $min_bytes;   
+        $command .= ' -L +' . $min_bytes;
         $command .= " -N -q";
         $command .= ' |';
         $self->logger->debug(" command:\n$command\n");
@@ -470,9 +529,11 @@ my $path = $params{'path'};
     }
 
     if (!@all_data) {
-        return;
-    } else {
+    # @all_data should be empty. success.
         return 1;
+    } else {
+    # something went wrong
+        return;
     }
 
 
@@ -483,8 +544,10 @@ my $path = $params{'path'};
 sub _write_cache {
     my ( $self ) = @_;
     my $filename = $self->cache_file;
+    $self->logger->debug( "writing cache file $filename" );
     my $status = $self->status_cache;
     store $status, $filename;
+    $self->logger->debug( "done writing cache file $filename" );
 
 }
 
@@ -492,6 +555,7 @@ sub _write_cache {
 sub _read_cache {
     my ( $self ) = @_;
     my $filename = $self->cache_file;
+    $self->logger->debug( "reading cache file $filename" );
     my $status = $self->status_cache;
     if ( not -f $filename ) {
         open my $fh, '>', $filename
@@ -501,8 +565,9 @@ sub _read_cache {
     }
     $status = retrieve $filename;
     $self->_set_status_cache( $status );
-
+    $self->logger->debug( "done reading cache file $filename" );
 }
+
 sub _publish_flows {
     my $self = shift;
     my $flows = $self->json_data;
@@ -516,7 +581,7 @@ sub _publish_flows {
 sub _cull_flow_files {
     my ( $self, $path ) = @_;
     my $status = $self->status_cache;
-#warn "status " . Dumper $status;
+    #warn "status " . Dumper $status;
     #$self->logger->debug( "cache status" . Dumper $status );
 
     if ( $self->cull_enable < 1 ) {
@@ -600,34 +665,62 @@ sub _cull_flow_files {
 
 }
 
+# If culling of nfcapd files is not enabled, the cache file can become huge. This cuts it down to last X months.
+sub _cull_cache_file {
+    my ( $self ) = @_;
+
+    # If file culling is enabled, that will also cull the cache file, so just return.
+    if ( $self->cull_enable == 1 ) {
+        $self->logger->debug("not running cull_cache_file");
+        return;
+    }
+
+    # delete files older than X months (by filename) from the cache file.
+    my $cull_to = DateTime->now->subtract( months => 3 );  # UTC datetime    HARDCODED THRESHOLD = 3 mo.
+                                                           # Make sure this is > hardcoded threshold in _get_flow_data.
+    my $status = $self->status_cache;
+
+    foreach my $key ( keys %$status ) {
+        # Key = full path and filename in cache file. Parse filename for date and time
+        my ($file_yr, $file_mo, $file_day, $file_hr, $file_min) = $key =~ /.*(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})$/;
+        # Make it into a date object
+        my $file_date = DateTime->new( year => $file_yr, month => $file_mo, day => $file_day,
+                                       hour => $file_hr, minute => $file_min, time_zone => "UTC" );
+        # Delete if $file_date < $cull_to
+        if ( DateTime->compare($file_date, $cull_to) == -1 ) {
+            delete $status->{ $key };
+        }
+    }
+
+    $self->_set_status_cache( $status );
+    $self->_write_cache();
+}
+
+
 sub find_nfcapd {
     my ( $self, $params ) = @_;
-    #my $path = $self->flow_path;
-    my $path = $params->{'path'};
-    my $filepath = $File::Find::name;
+    my $path = $params->{'path'};     # flow-path, base dir
+    my $filepath = $File::Find::name; # full path+filename
+    return if not defined $filepath;
     if ( not -f $filepath ) {
         return;
 
     }
-    return if not defined $filepath;
     return if $filepath =~ /nfcapd\.current/;
     return if $filepath =~ /\.nfstat$/;
 
     my $name = 'nfcapd.*';
     my $relative = path( $filepath )->relative( $path );
 
-    # if min_file_age is '0' then we don't care about file age (this is default)
+    # if min_file_age is '0' then we don't care about file age (this is default).
+    # if not, ignore files younger than min_file_age.
     if ( $self->min_file_age ne '0' ) {
-        if ( $self->get_age( "older", $self->min_file_age, $filepath ) ) {
-
-        } else {
+        if ( ! $self->get_age( "older", $self->min_file_age, $filepath ) ) {
             return;
         }
     }
 
     push @files, "$relative";
-
-
 
 }
 
