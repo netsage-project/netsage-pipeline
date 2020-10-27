@@ -1,0 +1,112 @@
+{
+  "config": {
+    "id": "netsage_rollup_24h",
+    "index_pattern": "netsage_flow*",
+    "rollup_index": "rollup_netsage_24h",
+    "cron": "0 0 * * * ?",
+    "groups": {
+      "date_histogram": {
+        "fixed_interval": "24h",
+        "field": "start",
+        "delay": "10m",
+        "time_zone": "UTC"
+      },
+      "histogram": {
+        "interval": 1,
+        "fields": [
+          "meta.src_port",
+          "meta.dst_port"
+        ]
+      },
+      "terms": {
+        "fields": [
+          "meta.sensor_id.keyword",
+          "meta.country_scope.keyword",
+          "meta.is_network_testing.keyword",
+          "meta.src_organization.keyword",
+          "meta.dst_organization.keyword",
+          "meta.src_country_name.keyword",
+          "meta.dst_country_name.keyword",
+          "meta.src_asn",
+          "meta.dst_asn",
+          "meta.scireg.src.discipline.keyword",
+          "meta.scireg.dst.discipline.keyword",
+          "meta.scireg.src.project_names.keyword",
+          "meta.scireg.dst.project_names.keyword",
+          "meta.protocol.keyword"
+        ]
+      }
+    },
+    "metrics": [
+      {
+        "field": "values.bits_per_second",
+        "metrics": [
+          "avg",
+          "max",
+          "min",
+          "value_count"
+        ]
+      },
+      {
+        "field": "values.duration",
+        "metrics": [
+          "avg",
+          "max",
+          "min",
+          "sum",
+          "value_count"
+        ]
+      },
+      {
+        "field": "values.num_bits",
+        "metrics": [
+          "avg",
+          "max",
+          "min",
+          "sum",
+          "value_count"
+        ]
+      },
+      {
+        "field": "values.num_packets",
+        "metrics": [
+          "avg",
+          "max",
+          "min",
+          "sum",
+          "value_count"
+        ]
+      },
+      {
+        "field": "values.packets_per_second",
+        "metrics": [
+          "avg",
+          "max",
+          "min",
+          "value_count"
+        ]
+      }
+    ],
+    "timeout": "20s",
+    "page_size": 1000
+  },
+  "status": {
+    "job_state": "stopped",
+    "upgraded_doc_id": true
+  },
+  "stats": {
+    "pages_processed": 0,
+    "documents_processed": 0,
+    "rollups_indexed": 0,
+    "trigger_count": 0,
+    "index_time_in_ms": 0,
+    "index_total": 0,
+    "index_failures": 0,
+    "search_time_in_ms": 0,
+    "search_total": 0,
+    "search_failures": 0,
+    "processing_time_in_ms": 0,
+    "processing_total": 0
+  }
+}
+
