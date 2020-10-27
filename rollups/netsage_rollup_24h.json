@@ -3,7 +3,7 @@
     "id": "netsage_rollup_24h",
     "index_pattern": "netsage_flow*",
     "rollup_index": "rollup_netsage_24h",
-    "cron": "0 0 * * * ?",
+    "cron": "0 * * * * ?",
     "groups": {
       "date_histogram": {
         "fixed_interval": "24h",
