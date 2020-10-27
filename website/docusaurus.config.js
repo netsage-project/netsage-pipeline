@@ -1,6 +1,5 @@
 const remarkImages = require("remark-images");
-const versions = require('./versions.json');
-
+const versions = require("./versions.json");
 
 module.exports = {
   title: "Netsage Pipeline Documentation",
@@ -21,20 +20,8 @@ module.exports = {
         {
           label: "Pipeline Documentation",
           position: "left",
-          items: [
-            {
-              label: "Pipeline Documentation",
-              position: "left",
-              activeBasePath: "docs",
-              to: "docs/pipeline",
-            },
-            {
-              label: "Docker Guide",
-              position: "left",
-              activeBasePath: "docs",
-              to: "docs/devel/docker",
-            }
-          ],
+          activeBasePath: "docs",
+          to: "docs/pipeline",
         },
         {
           href: "https://netsage-project.github.io/netsage-grafana-configs/",
@@ -44,8 +31,8 @@ module.exports = {
         },
         //right
         {
-          type: 'docsVersionDropdown',
-          position: 'right',
+          type: "docsVersionDropdown",
+          position: "right",
         },
         {
           href: "https://github.com/netsage-project/netsage-pipeline/",
@@ -68,7 +55,7 @@ module.exports = {
           remarkPlugins: [require("remark-import-partial")],
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
-          lastVersion: '1.2.6',
+          lastVersion: "1.2.6",
           versions: {
             current: {
               label: `master (unreleased)`,
