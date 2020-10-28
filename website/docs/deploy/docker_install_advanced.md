@@ -1,5 +1,5 @@
 ---
-id: docker_advanced
+id: docker_install_advanced
 title: Docker Advanced Installation Guide
 sidebar_label: Docker Advanced
 ---
@@ -181,7 +181,7 @@ logstash:
 
 The file docker-compose.develop.yaml can be found in conjunction with docker-compose.yaml to bring up the optional Kibana and Elastic Search components.
 
-This isn't a production pattern but the tools can be useful at times. Please refer to the [Docker Dev Guide](../devel/docker#optional-elasticsearch-and-kibana)
+This isn't a production pattern but the tools can be useful at times. Please refer to the [Docker Dev Guide](../devel/docker_dev_guide#optional-elasticsearch-and-kibana)
 
 ### Bringing up the Pipeline
 

@@ -1,7 +1,7 @@
 ---
-id: docker
-title: Docker Guide
-sidebar_label: Docker Guide
+id: docker_dev_guide
+title: Docker Dev Guide
+sidebar_label: Docker Dev Guide
 ---
 
 # Docker Setup

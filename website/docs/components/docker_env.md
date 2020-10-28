@@ -1,4 +1,4 @@
-Please make a copy of the .env and refer back to the docker [dev guide](../devel/docker) on details on configuring the env. Most of the default value should work just fine.
+Please make a copy of the .env and refer back to the docker [dev guide](../devel/docker_dev_guide) on details on configuring the env. Most of the default value should work just fine.
 
 The only major change you should be aware of are the following values. The output host defines where the final data will land. The sensorName defines what the data will be labeled as.
 

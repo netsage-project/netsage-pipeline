@@ -1,5 +1,5 @@
 ---
-id: docker_simple
+id: docker_install_simple
 title: Docker Default Installation Guide
 sidebar_label: Docker Simple
 ---
