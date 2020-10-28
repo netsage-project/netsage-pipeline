@@ -21,4 +21,5 @@ If you are simply using the pipeline to deliver the anonymized network stats for
 ## Choose your adventure
 
 - [Server Installation](bare_metal_install)
-- [Docker](docker_install)
+- [Simple Docker](docker_install_simple.md) 1 netflow sensor, 1 sflow sensor.
+- [Advanced Docker](docker_install_advanced.md) Allows for Advanced configuration
