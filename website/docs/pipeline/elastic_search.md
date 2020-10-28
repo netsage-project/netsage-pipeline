@@ -1,20 +1,10 @@
 ---
 id: elastic
-title: Elastic Search
-sidebar_label: Elastic Search
+title: Elasticsearch
+sidebar_label: Elasticsearch
 ---
 
-Flow data is ultimately saved to Elasticsearch. Following are the fields that you may see returned by an elasticsearch query.
-
-### Elasticsearch fields
-
-|name                   |example                |description                  |
-|-----------------------|-----------------------|-----------------------------|
-|_index                 | om-ns-netsage-2020.06.14 | name of the index ("database table")  |
-|_type    		        |_doc					|	set by ES                 |
-|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	document id, set by ES    |
-|_score    		        |1						 |set by ES query             |
-|@version               |1				         |		set by ES             |
+Flow data is ultimately saved to Elasticsearch. Following are the fields that are used/created in Logstash and that you may see returned by an elasticsearch query.
 
 ### Flow fields
 
@@ -44,6 +34,7 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that yo
 |meta.src_continent		|North America			|	continent of the IP the MaxMind GeoIP City database|
 
 ### Source Science Registry Fields  (Destination Fields similarly with "dst")
+The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human-curated information about various "resources". Resources are sources and destinations of flows.
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
@@ -51,10 +42,10 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that yo
 |meta.scireg.src.role		|Storage						|Role that the host plays |
 |meta.scireg.src.org_name	|Boston University (BU)			|The organization the manages and/or uses the resource, as listed in the Science Registry|
 |meta.scireg.src.org_abbr	|Boston U						|A shorter name for the organization. May not be the official abbreviation.|
-|meta.scireg.src.resource	|BU - ATLAS				|Resource name from SciReg |
-|meta.scireg.src.resource_abbr	 | - 						|Resource abbreviation (if any)|
+|meta.scireg.src.resource	|BU - ATLAS				|Descriptive resource name from SciReg |
+|meta.scireg.src.resource_abbr	 |  						|Resource abbreviation (if any)|
 |meta.scireg.src.project_namess	|ATLAS 					|A "Project" that the resource is part |
-|meta.scireg.src.projects	|* 					|An object containing project info |
+|meta.scireg.src.projects	|... 					|An object containing project info |
 |meta.scireg.src.latitude	|37.4178						|Resource's latitude, as listed in the Science Registry|
 |meta.scireg.src.longitude	|-122.178						|Resource's longitude, as listed in the Science Registry|
 
@@ -113,6 +104,16 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that yo
 |@ingest_time			|Jun 9, 2020 @ 10:03:20.700	|	Essentially time the flow went into the logstash pipeline or the time stitching of the flow commenced|
 |@timestamp			|Jun 9, 2020 @ 18:03:21.703	|The time the flow went into the logstash pipeline for tstat flows, or the time stitching finished and the event was pushed for other flows.|
 |@exit_time			|Jun 9, 2020 @ 18:03:25.369	|The time the flow exited the pipeline |
-|@processing_time		|688.31						|@exit_time minus @injest_time. Useful for seeing how long stitching took. |
+|@processing_time		|688.31						|@exit_time minus @ingest_time. Useful for seeing how long stitching took. |
 |stitched_flows			|13							|Number of flows that came into logstash that were stitched together to make this final one. 0 for tstat flows, which are always complete. 1 if no flows were stitched together.|
+
+### Elasticsearch fields
+
+|name                   |example                |description                  |
+|-----------------------|-----------------------|-----------------------------|
+|_index                 | om-ns-netsage-2020.06.14 | name of the index ("database table")  |
+|_type    		        |_doc					|	set by ES                 |
+|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	document id, set by ES    |
+|_score    		        |1						 |set by ES query             |
+|@version               |1				         |		set by ES             |
 

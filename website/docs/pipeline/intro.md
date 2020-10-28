@@ -26,10 +26,10 @@ The Pipeline is made of the following components (currently)
 ## Data Collection
 
 Tstat flow data can be sent directly to the ingest RabbitMQ queue using the Netsage [tstat-transport](https://github.com/netsage-project/tstat-transport) tool. This can be installed as usual or via Docker. 
-     - [doc](tstat) 
+ - [doc](tstat) 
 
 Incoming sflow and netflow data from configured routers can be collected and stored into nfcapd files using [nfdump tools](https://github.com/phaag/nfdump). The Netsage project has packaged the nfdump tools into a [Docker container](https://github.com/netsage-project/docker-nfdump-collector) for ease of use.
-     - [doc](nfdump)
+ - [doc](nfdump)
 
 ## Installation
 

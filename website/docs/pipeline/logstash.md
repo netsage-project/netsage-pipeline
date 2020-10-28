@@ -72,7 +72,9 @@ Note: These lookup tables are not stored in github, but an example is provided t
 Uses a fake geoip database containing [Science Registry](http://scienceregistry.grnoc.iu.edu) information to tag the flows with source and destination science disciplines and roles, organizations and locations, etc;
 removes Registry fields we don't need to save to elasticsearch.
 
-Note: The Science Registry "fake geoip database" is updated weekly and can be downloaded from scienceregistry.grnoc.iu.edu via wget in a cron job (provided in the installation).
+Notes: 
+ - The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human-curated information about various "resources". Resources are sources and destinations of flows.
+ - The Science Registry "fake geoip database" is updated weekly and can be downloaded via wget in a cron job (provided in the installation).
 
 ### 70-deidentify.conf
 
@@ -155,6 +157,8 @@ output {
 }
 ```
 
-Once the data is published in elastic, you can use [Grafana dashboards](https://github.com/netsage-project/netsage-grafana-configs) to visualize it.
+## Field names
+
+The fields used/created in Logstash (and saved to Elasticsearch) are listed in the [Elasticsearch doc](elastic).
 
 
