@@ -5,37 +5,33 @@ sidebar_label: Intro
 ---
 # The NetSage Pipeline
 
-# Description 
+## Description 
 
-The Netsage Flow Processing Pipeline includes several components for processing network flow data, including importing, deidentification, metadata tagging, flow stitching, etc.
- 
+The Netsage Flow Processing Pipeline is composed of several components for processing network flow data, including importing, deidentification, metadata tagging, flow stitching, etc.
+There are many ways the components can be combined, configured, and run. These documents will describe the standard "simple" set up and provide information for more complex configurations.
+
 ## Components
 
-The Pipeline is made of the following components (Currently)
+The Pipeline is made of the following components (currently)
 
- - [Importer](https://github.com/netsage-project/netsage-pipeline/blob/master/lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm)  (Collection of perl scripts)
-      - [doc](importer)
- - [Elastic Logstash](https://www.elastic.co/logstash) Performs a variety of transformation on the data
+ - Sensor(s):  Network devices configured to collect flow data ([tstat](http://tstat.polito.it/), [sflow](https://www.rfc-editor.org/info/rfc3176), or [netflow](https://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/ios-netflow/prod_white_paper0900aecd80406232.html)) and send it to a "pipeline host" for processing. 
+ - [Importer](https://github.com/netsage-project/netsage-pipeline/blob/master/lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm):  Perl scripts on the pipeline host that read nfcapd files and send the flow data to a RabbitMQ queue.
+     - [doc](importer)
+ - [RabbitMQ](https://www.rabbitmq.com/): Used for message passing and queuing of tasks.
+ - [Logstash Pipeline](https://www.elastic.co/logstash): Performs a variety of operations on the flow data to transform it and add additional information.
      - [doc](logstash) 
- - [RabbitMQ](https://www.rabbitmq.com/) used for message passing and queing of tasks.
+ - [Elasticsearch](https://www.elastic.co/what-is/elasticsearch): Used for storing the final flow data. 
+ - [Grafana Dashboards](https://github.com/netsage-project/netsage-grafana-configs) are used to visualize the data stored in elasticsearch.
 
-## Sensors and Data Collection
+## Data Collection
 
-- [nfdump](https://github.com/netsage-project/docker-nfdump-collector) Utility used to capture Netflow/Sflow to disk
+Tstat flow data can be sent directly to the ingest RabbitMQ queue using the Netsage [tstat-transport](https://github.com/netsage-project/tstat-transport) tool. This can be installed as usual or via Docker. 
+     - [doc](tstat) 
+
+Incoming sflow and netflow data from configured routers can be collected and stored into nfcapd files using [nfdump tools](https://github.com/phaag/nfdump). The Netsage project has packaged the nfdump tools into a [Docker container](https://github.com/netsage-project/docker-nfdump-collector) for ease of use.
      - [doc](nfdump)
- - [tstat](https://github.com/netsage-project/tstat-transport) Utility used to capture read more on the [official site](http://tstat.polito.it/)
-     - [doc](tstat)
 
+## Installation
 
-
-"Testpoints" or "sensors" collect flow data ([tstat](http://tstat.polito.it/), [sflow](https://www.rfc-editor.org/info/rfc3176), or [netflow](https://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/ios-netflow/prod_white_paper0900aecd80406232.html)) and send it to a "pipeline host" for processing (for globanoc, flow-proc.bldc.grnoc.iu.edu or netsage-probe1.grnoc.iu.edu). 
-
-Tstat data goes directly into the netsage_deidentifier_raw queue rabbit queue. The other data is written to nfcapd files.
-
-
-
-
-### [Importer](importer)
-
-A netsage-netflow-importer-daemon reads any new nfcapd files that have come in after a configurable delay. The importer aggregates flows within each file, and writes the results to the netsage_deidentifier_raw queue rabbit queue.
+The original method to install the pipeline was to install all of the components individually on one or more servers (the "BareMetal" or "Server" Install). We've also added a Docker deployment option. With simple pipelines having just one sflow or netflow sensor, or one of each (and any number of tstat sensors), the "Docker Simple" Install should suffice. The "Docker Advanced" guide will help when there are more sensors and/or other customizations required.
 
