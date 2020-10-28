@@ -11,11 +11,11 @@ module.exports = {
     Deployment: [
       "deploy/choose_install",
       "deploy/bare_metal_install",
-      "deploy/docker_simple",
-      "deploy/docker_advanced",
+      "deploy/docker_install_simple",
+      "deploy/docker_install_advanced",
       "deploy/docker_troubleshoot",
     ],
-    "Deployment Guides": ["devel/docker"],
+    "Deployment Guides": ["devel/dev_dataset", "devel/docker_dev_guide"],
     Documentation: ["docusaurus"],
   },
 };
