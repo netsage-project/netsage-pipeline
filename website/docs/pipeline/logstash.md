@@ -4,14 +4,13 @@ title: Logstash Pipeline
 sidebar_label: Logstash
 ---
 
-The Logstash portion of the Netsage Pipeline reads in flows (normally from a RabbitMQ queue), performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config.  (In principle, with a server installation of logstash, one can create different "logstash pipelines" (these are different that the Netsage pipeline) running in the same logstash instance. We will consider only cases where there is one Logstash pipeline.)
+The Logstash portion of the Netsage Pipeline reads in flows (normally from a RabbitMQ queue), performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config.  (In principle, Logstash can run more than one "logstash pipeline" at a time, but that will not be discussed here.) 
 
 Logstash config files invoke various logstash "filters". These conf files are located in /etc/logstash/conf.d/. See below for a brief description of what each does and check the files for comments.
 
 Notes: 
  - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
  - If actions in a .conf file are not needed in your particular case, it can be removed or disabled, but check carefully for effects on downstream configs.
- - If you are using 40-aggregation.conf, you must have 'pipeline.workers: 1' in /etc/logstash/logstash.yml or stitching will not work. 
 
 ## Logstash Sequence
 
@@ -41,8 +40,8 @@ Notes:
  - By default, 5-minute nfcapd files are assumed and the inactivity_timeout is set to 10.5 minutes. If more than 10.5 min have passed between the start of the current flow and the start of the last matching one, do not stitch them together.
  - If your nfcapd files are written every 15 minutes, change the inactivity_timeout to at least 16 minutes.
  - There is another "timeout" setting which is basically the maximum duration of a stitched flow (default: 24 hr).
- - When logstash shuts down, any flows "in the aggregator" will be written out to aggregate_maps_path (default: /tmp/logstash-aggregation-maps). The file is then read back in when logstash is restarted. Each pipeline, if more than one, should write to a unique filename.
- - Your logstash pipeline can have only 1 worker or aggregation is not going to work!
+ - When logstash shuts down, any flows "in the aggregator" will be written out to aggregate_maps_path (default: /tmp/logstash-aggregation-maps). The file is then read back in when logstash is restarted so aggregation can continue. 
+ - Your logstash pipeline can have only 1 worker or aggregation is not going to work! This is set in the logstash config file.
  - Tstat flows come in already complete, so no aggregation is done on those flows.
 
 ### 45-geoip-tagging.conf
@@ -114,11 +113,13 @@ Sends results to a final RabbitMQ queue. (".disabled" can be removed from other 
 
 ### Final Stage 
 
-In Netsgae's case, the last stage is a separate logstash "pipeline" on a different host. That logstash reads flows from the final RabbitMQ queue and sends it into elasticsearch. 
+In GlobalNOC/Netsage Project's case, the output filter writes the flows to a RabbitMQ queue on another host and the last stage is a separate logstash pipeline on that host. The latter reads flows from the queue and sends it into elasticsearch. 
 
 This can be easily replicated with the following configuration, for example, though you'll need one for each Rabbit queue/sensor/index. A mapping template can be specified here.
 
 Naturally the hosts for rabbit and elastic will need to be updated accordingly.
+
+Note: This should be updated to use a mapping template, for setting field types, and possibly using es_doc_id as the elasticsearch document id. As of Nov 2020, we are moving toward saving all fields as type "keyword", "float", or "long" only. 
 
 ```
 input {
