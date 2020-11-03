@@ -4,9 +4,9 @@ title: Choosing Install
 sidebar_label: Choose Install
 ---
 
-## BareMetal
+## BareMetal or Server Install
 
-The baremetal installation Guide will walk you through installing the pipeline using your own infrastructure and requires you to maintain all the components involved.
+The baremetal installation Guide will walk you through installing the pipeline using your own server infrastructure and requires you to maintain all the components involved.
 
 It will likely be a bit better when it comes to performance, but also has more complexity involved in configuring and setting up.
 
@@ -21,5 +21,5 @@ If you are simply using the pipeline to deliver the anonymized network stats for
 ## Choose your adventure
 
 - [Server Installation](bare_metal_install)
-- [Simple Docker](docker_install_simple.md) 1 netflow sensor, 1 sflow sensor.
-- [Advanced Docker](docker_install_advanced.md) Allows for Advanced configuration
+- [Simple Docker](docker_install_simple.md) - 1 netflow sensor and/or 1 sflow sensor
+- [Advanced Docker](docker_install_advanced.md) - allows for more complex configurations

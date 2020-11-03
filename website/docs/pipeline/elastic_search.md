@@ -49,7 +49,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |meta.scireg.src.latitude	|37.4178						|Resource's latitude, as listed in the Science Registry|
 |meta.scireg.src.longitude	|-122.178						|Resource's longitude, as listed in the Science Registry|
 
-### "Preferred" fields
+### Source "Preferred" Fields (Destination Fields similarly with "dst")
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
@@ -57,7 +57,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |meta.src_preferred_location.lat	|37.417800					| |
 |meta.src_preferred_location.lon	|-122.172000 |   |
 
-### Values
+### Value Fields
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
@@ -67,7 +67,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |values.bits_per_second	|241, 443, 988					|Calculated as num_bits divided by duration |
 |values.packets_per_second	|20, 001						|Calculated as num_packets divided by duration|
 
-### Tstat Values
+### Tstat Value Fields
 
 |name                   |example                |
 |-----------------------|-----------------------|
@@ -97,7 +97,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |values.tcp_win_min		|17|
 |values.tcp_window_scale	|13|
 
-### Developer fields
+### Developer Fields
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
@@ -105,15 +105,15 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |@timestamp			|Jun 9, 2020 @ 18:03:21.703	|The time the flow went into the logstash pipeline for tstat flows, or the time stitching finished and the event was pushed for other flows.|
 |@exit_time			|Jun 9, 2020 @ 18:03:25.369	|The time the flow exited the pipeline |
 |@processing_time		|688.31						|@exit_time minus @ingest_time. Useful for seeing how long stitching took. |
-|stitched_flows			|13							|Number of flows that came into logstash that were stitched together to make this final one. 0 for tstat flows, which are always complete. 1 if no flows were stitched together.|
+|stitched_flows			|13							|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
 
-### Elasticsearch fields
+### Elasticsearch Fields
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
 |_index                 | om-ns-netsage-2020.06.14 | name of the index ("database table")  |
 |_type    		        |_doc					|	set by ES                 |
-|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	document id, set by ES    |
+|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	elasticsearch document id. If es_doc_id is provided, that is used.    |
 |_score    		        |1						 |set by ES query             |
 |@version               |1				         |		set by ES             |
 

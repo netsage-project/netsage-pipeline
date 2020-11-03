@@ -1,6 +1,6 @@
 ---
 id: bare_metal_install
-title: NetSage Flow Processing Pipeline Install Guide
+title: NetSage Flow Processing Pipeline Installation Guide
 sidebar_label: Server Installation Guide
 ---
 
@@ -19,16 +19,20 @@ Minimum components
 
 The Processing pipeline needs data to injest in order to do anything. There are two types of data that are consumed.
 
-1. nfdump
+1. nfdump (sflow or netflow)
 2. tstat
 
-You'll need to have at least one of them setup in order to be able to process the data
+You'll need to have at least one of them set up in order to be able to process the data.
 
 ### nfdump
 
-The NetFlow Importer daemon requires nfdump. If you are only using tstat, you do not need nfdump. nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
+The NetFlow Importer daemon works with nfdump. If you are only collecting tstat data, you do not need nfdump. nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
 
-Once nfdump is setup you'll need to configures your routers to send nfdump to the running process that will save data to a particular location on disk.
+Once nfdump is set up you'll need to configure your routers to send flow data to the running process that will save data to a particular location on disk.
+
+### tstat
+
+Tstat data should be sent directly to a rabbit queue (the same one that the Importer writes to, if it is used). From there, the data will be processed the same as sflow/netflow data.
 
 ## Installing the Prerequisites
 
@@ -38,7 +42,6 @@ The pipeline requires a RabbitMQ server. Typically, this runs on the same server
 
 ```sh
 [root@host ~]# yum install rabbitmq-server
-`
 
 ```
 
@@ -86,134 +89,31 @@ The first time you install packages from the repo, you will have to accept the G
 
 ## Installing the Pipeline
 
-Pipeline components:
-
-1. Flow Filter - GlobalNOC uses this for Cenic data as we do not want to process all of it. Not needed otherwise.
-2. Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors, have them
-
-send directly to the appropriate rabbit queue.
-
-3. Logstash configs - These are executed in alphabetical order. They read events from a rabbit queue, aggregate (ie stitch flows
-
-that were split between different nfcapd files), add information from geoIP and Science Registry data, and write to a final rabbit queue.
-The final rabbit queue is read by an independent logstash instance and events are put into elasticsearch. One could also modify the
-last logstash conf here to write to elasticsearch.
-
-Nothing will automatically start after installation as we need to move on to configuration. Install it like this:
+Install it like this:
 
 ```
 [root@host ~]# yum install grnoc-netsage-deidentifier
 ```
 
+This will install Logstash and other dependencies. Make sure the number of logstash pipeline workers is set to 1 if you are using the aggregate filter!  (See note at bottom of this page.)  Start logstash, eg,
+
+```sh
+[root@host ~]# /sbin/service logstash start or # systemctl start logstash.service
+```
+
+Pipeline components:
+
+1. Flow Filter - GlobalNOC uses this for Cenic data to filter out some flows. Not needed otherwise.
+2. Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors only, this is not needed.)
+3. Logstash configs - These are executed in alphabetical order. They read events from a rabbit queue, aggregate (i.e., stitch flows 
+that were split between different nfcapd files), add information from geoIP and Science Registry databases, and write to a final rabbit queue.  The final rabbit queue is read by an independent logstash instance and events are put into elasticsearch. One could also modify the last logstash conf here to write to directly to elasticsearch.
+
+Nothing will automatically start after installation as we need to move on to configuration. 
+
+
 ## Configuration
 
 ### Setting up the shared config file
-
-Theshared config file, used by all the non-logstash pipeline components, is read before reading the individual config files [THERE USED TO BE MANY DAEMONS INSTEAD OF LOGSTASH. We should redo this]. This allows you to easily configure values that apply to all stages, while allowing you to override them in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
-
-The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
-
-```
-<collection>
-    <flow-path>/path/to/flow-files</flow-path>
-    <sensor>hostname.tld</sensor>
-<!--  "instance" goes along with sensor
-       This is to identify various instances if a sensor has more than one "stream" / data collection
-       Defaults to 0.
-    <instance>1</instance>
--->
-  <!--
-       Defaults to sensor, but you can set it to something else here
-      <router-address></router-address>
-  -->
- <!--
-    Flow type: type of flow data (defaults to netflow)
- -->
- <!--
-    <flow-type>sflow</flow-type>
- -->
-</collection>
-```
-
-Notice that `instance` , `router-address` , and `flow-type` are commented out. You only need these if you need an something other than the default values, as described in the comments in the default shared config file.
-
-You can have multiple `collection` stanzas, to import multiple collections on one host.
-
-The shared config looks like this. Note that RabbitMQ connection information is listed, but not the queue or channel, as these will vary per daemon. If you're running a default RabbitMQ config, which is open only to 'localhost' as guest/guest, you won't need to change anything here. Note that you will need to change the rabbit_output for the Finished Flow Mover Daemon regardless (see below).
-
-```
-<config>
-  <collection>
-    <flow-path>/path/to/flow-files1</flow-path>
-    <sensor>hostname1.tld</sensor>
-  </collection>
-  <collection>
-    <flow-path>/path/to/flow-files2</flow-path>
-    <sensor>hostname2.tld</sensor>
-  </collection>
-
-  <!-- rabbitmq connection info -->
-  <rabbit_input>
-    <host>127.0.0.1</host>
-    <port>5671</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
-  </rabbit_input>
-
-  <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
-  <rabbit_output>
-    <host>127.0.0.1</host>
-    <port>5671</port>
-    <username>guest</username>
-    <password>guest</password>
-    <batch_size>100</batch_size>
-    <vhost>netsage</vhost>
-    <ssl>0</ssl>
-    <cacert>/path/to/cert.crt</cacert> <!-- required if ssl is 1 -->
-  </rabbit_output>
-</config>
-```
-
-### Configuring the Pipeline Stages
-
-Each stage must be configured with Rabbit input and output queue information. The intention here is that flows should be deidentified before they leave the original node the flow data is collected on. If flows that have not be deidentified need to be pushed to another node for some reason, the Rabbit connection must be encrypted with SSL.
-
-The username/password are both set to "guest" by default, as this is the default provided by RabbitMQ. This works fine if the localhost is processing all the data. The configs look something like this (some have additional sections).
-
-Notice that the only Rabbit connection information that's provided here is that which is not specific in the shared config file. This way if we need to change the credentials throughout the entire pipeline, it's easy to do.
-
-```xml
-   <config>
-     <!-- rabbitmq connection info -->
-     <rabbit_input>
-       <queue>netsage_deidentifier_raw</queue>
-       <channel>2</channel>
-     </rabbit_input>
-
-     <!-- The cache does not output to a rabbit queue (shared memory instead) but we still need something here -->
-     <rabbit_output>
-       <queue>netsage_deidentifier_cached</queue>
-       <channel>3</channel>
-     </rabbit_output>
-     <worker>
-         <!-- How many concurrent workers should perform the necessary operations -->
-         <!-- for stitching, we can only use 1 -->
-       <num-processes>1</num-processes>
-
-       <!-- where should we write the cache worker pid file to -->
-       <pid-file>/var/run/netsage-cache-workers.pid</pid-file>
-
-     </worker>
-   </config>
-```
-
-The defaults should work unless the pipeline stages need to be reordered for some reason, or if SSL or different hosts/credentials are needed. However, the very endpoints should be checked. At the moment that means the flow cache (which is the first stage in the pipeline) and the flow mover (the last stage).
-
-### Shared config file listing
 
 The shared configuration files and logging configuration files are listed below (all of the pipeline components use these):
 
@@ -221,6 +121,130 @@ The shared configuration files and logging configuration files are listed below 
 /etc/grnoc/netsage/deidentifier/netsage_shared.xml - Shared config file allowing configuration of collections, and Rabbit connection information
 /etc/grnoc/netsage/deidentifier/logging.conf - logging config
 /etc/grnoc/netsage/deidentifier/logging-debug.conf - logging config with debug enabled
+```
+
+The shared config file, used by all the non-logstash pipeline components, is read before reading the individual component config files [there used to be many perl-based components and daemons, though only the importer is left, the rest having been replaced by logstash].
+This allowed one to easily configure values that applied to all stages, while allowing them to be overriden in the individual config files, if desired. A default shared config file is included: `/etc/grnoc/netsage/deidentifier/netsage_shared.xml`
+
+The first, and most important, part of the configuration is the collection(s) this host will import. These are defined as follows:
+
+```
+<collection>
+<!--    Top level directory of the nfcapd files for this sensor (within this dir are normally year directories, etc.) -->
+     <flow-path>/path/to/flow-files/</flow-path>
+
+<!--    Sensor name - can be the hostname or any string you like -->
+     <sensor>hostname.tld</sensor>
+
+<!--    Flow type - sflow or netflow (defaults to netflow) -->
+    <flow-type>netflow</flow-type>
+
+<!--    "instance" goes along with sensor.  This is to identify various instances if a sensor has -->
+<!--    more than one "stream" / data collection.  Defaults to 0. -->
+<!-- <instance>1</instance> -->
+
+<!--    Defaults to sensor, but you can set it to something else here -->
+<!-- <router-address></router-address> -->
+
+</collection>
+```
+
+Note that `instance` and `router-address` can be left commented out. It's a good idea to set flow-type even if it is the default, just to be clear.
+
+You can have multiple `collection` stanzas (each with its own <collection>...</collection>), to import from multiple sensors with one Importer process. You can also set up multiple Importers. Having multiple collections in one importer can sometimes cause issues for aggregation, as looping through the collections one at a time adds to the time between the matching flows it is looking for.
+
+There is also RabbitMQ connection information in the shared config, but not the queue or channel, as these will vary per daemon. The Importer does not read from a rabbit queue but, eg, the flow filter daemon does, so both input and output are set. If you're running a default RabbitMQ config, which is open only to 'localhost' as guest/guest, you won't need to change anything here. Note that you will need to change the rabbit_output for the Finished Flow Mover Daemon regardless (see below).
+
+```
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <host>127.0.0.1</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_input>
+
+  <rabbit_output>
+    <host>127.0.0.1</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_output>
+```
+
+### Setting up the Importer config file
+
+Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml`
+
+Each stage [of the old perl pipeline] must be configured with Rabbit input and output queue information. The intention here is that flows should be deidentified before they leave the original node the flow data is collected on. If flows that have not be deidentified need to be pushed to another node for some reason, the Rabbit connection must be encrypted with SSL.
+
+Notice that the only Rabbit connection information that's provided here is that which is not specific in the shared config file. This way if we need to change the credentials throughout the entire pipeline, it's easy to do. The Importer does not actually use any input rabbit queue,but we make a "fake" one as something is required here.
+
+Note the name of the output queue, as it should match up to the logstash input queue name.  Keep num-processes ast 1. Set min-bytes to the threshold you want. This threshold is applied to flows aggregated within one nfcapd file. 
+
+```xml
+<config>
+<!--  NOTE: Values here override those in the shared config -->
+
+  <!-- rabbitmq queues -->
+  <rabbit_input>
+    <queue>netsage_deidentifier_netflow_fake</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <channel>3</channel>
+    <queue>netsage_deidentifier_raw</queue>
+  </rabbit_output>
+
+  <worker>
+    <!-- How many flows to process at once -->
+        <flow-batch-size>100</flow-batch-size>
+
+    <!-- How many concurrent workers should perform the necessary operations -->
+        <num-processes>1</num-processes>
+
+    <!-- path to nfdump executable (defaults to /usr/bin/nfdump) -->
+    <!--   <nfdump-path>/path/to/nfdump</nfdump-path>  -->
+
+    <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
+        <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
+
+    <!-- The minium flow size threshold - will not  import any flows smaller than this -->
+    <!-- Defaults to 500M  -->
+        <min-bytes>100000000</min-bytes> 
+
+    <!-- Do not import nfcapd files younger than min-file-age
+        The value must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
+        "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
+        See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
+        Default: 0 (no minimum age) 
+    -->
+        <min-file-age>10m</min-file-age> 
+
+    <!-- cull-enable: whether to cull processed flow data files -->
+    <!-- default: no culling; set to 1 to turn culling on -->
+    <!--    <cull-enable>1</cull-enable>  -->
+
+    <!-- cull-tty: cull time to live, in days -->
+    <!-- number of days to retain imported data files before deleting them; default: 3 -->
+    <!--    <cull-ttl>5</cull-ttl>  -->
+
+  </worker>
+
+  <master>
+    <!-- where should we write the daemon pid file to -->
+        <pid-file>/var/run/netsage-netflow-importer-daemon.pid</pid-file>
+  </master>
+
+</config>
 ```
 
 ## Running the daemons
@@ -235,50 +259,24 @@ Typically, the daemons are started and stopped via init script (CentOS 6) or sys
 
 `--nofork` - run in foreground (do not daemonize)
 
-For more details on each individual daemon, use the `--help` flag.
+When run as a service, the Importer will have a deamon process and a worker process. When stopping the service, the worker process might take a few minutes to quit. If it does not quit, kill it by hand. 
 
-### Daemon Listing
 
-#### netsage-netflow-importer-daemon
+## Logstash Setup Notes
 
-This is a daemon that reads raw netflow data, reads it, and pushes it to a Rabbit queue for processing.
+Standard logstash filter config files are provided with this package. Most should be used as-is, but the input and output configs may be modified for your use.
 
-Config file: `/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml`
+The aggregation filter has settings that may be changed as well. Check the two timeouts and the aggregation maps path. 
 
-## Setup Notes
+When upgrading, these logstash configs will not be overwritten. Be sure any changes get copied into the production configs.
 
-INPUT AND OUTPUT LOGSTASH FILTERS
-Standard logstash filter config files are provided with this package. Most should be used as-is, but the input and output configs (01-inputs.conf and 99-outputs.conf) may be modified for your use.
-To use the provided 01-inputs.conf and 99-outputs.conf versions, fill in the IP of the final rabbit host in 99-outputs.conf, and put the rabbitmq usernames and passwords into the logstash keystore.
-Your 01 and 99 conf files should not be overwritten by upgrades.
-
-To set up the keystore: (note that logstash-keystore takes a minute to come back with a prompt)
-Be sure /usr/share/logstash/config exists
-(the full path, in case you need it: /usr/share/logstash/bin/logstash-keystore)
-Create logstash.keystore in /etc/logstash/: (use the same directory as logstash.yml)
-
-````sh
-  $ sudo -E logstash-keystore --path.settings /etc/logstash/ create
-    You can set a password for the keystore itself if you want to investigate that; otherwise skip it.
-  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_username     (enter username when prompted)
-  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_input_pw           (enter password when prompted)
-  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_username    (enter username when prompted)
-  $ sudo -E logstash-keystore --path.settings /etc/logstash/ add rabbitmq_output_pw          (enter password when prompted)
-```sh
-To list the keys:
-````
-
-\$ sudo -E logstash-keystore list
-
-````sh
-To remove a key-value pair:
-
-```sh
-  $ sudo -E logstash-keystore remove <key name>
-````
-
-FLOW STITCHING - IMPORTANT!
+FOR FLOW STITCHING/AGGREGATION - IMPORTANT!
 Flow stitching (ie, aggregation) will NOT work properly with more than ONE logstash pipeline worker!
 Be sure to set "pipeline.workers: 1" in /etc/logstash/logstash.yml (default settingss) and/or /etc/logstash/pipelines.yml (settings take precedence). When running logstash on the command line, use "-w 1".
 
-See the comments in 04-stitching.conf to learn more about how complete flows are defined.
+## Cron jobs
+
+Sample cron files are provided. Please review and uncomment their contents. These periodically download MaxMind, CAIDA, and Science Registry files, and also restart logstash daily. Logstash needs to be restarted in order for any updated files to be read in. 
+
+
+

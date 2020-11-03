@@ -4,13 +4,13 @@ title: Logstash Pipeline
 sidebar_label: Logstash
 ---
 
-The Logstash portion of the Netsage Pipeline reads in flows (normally from a RabbitMQ queue), performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config.  (In principle, with a server installation of logstash, one can create different logstash "pipelines" running in the same logstash instance. We will consider only cases where there is one Logstash pipeline.)
+The Logstash portion of the Netsage Pipeline reads in flows (normally from a RabbitMQ queue), performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config.  (In principle, with a server installation of logstash, one can create different "logstash pipelines" (these are different that the Netsage pipeline) running in the same logstash instance. We will consider only cases where there is one Logstash pipeline.)
 
-Logstash config files invoke various logstash "filters". They are located in /etc/logstash/conf.d/ (in the simple default case).
+Logstash config files invoke various logstash "filters". These conf files are located in /etc/logstash/conf.d/. See below for a brief description of what each does and check the files for comments.
 
 Notes: 
- - All *.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
- - If actions in a .conf file are not needed, it can be removed or disabled, but check carefully for effects on downstream configs.
+ - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
+ - If actions in a .conf file are not needed in your particular case, it can be removed or disabled, but check carefully for effects on downstream configs.
  - If you are using 40-aggregation.conf, you must have 'pipeline.workers: 1' in /etc/logstash/logstash.yml or stitching will not work. 
 
 ## Logstash Sequence
@@ -29,7 +29,9 @@ adds @ingest_time (this is mainly for developers).
 
 ### 20-add_id.conf
 
-Adds a unique id based on the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. This ends up being called meta.id.
+Adds a unique id (evenutally called meta.id) which is a hash of the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. This id is used for aggregating (stitching) in the next step. 
+
+Also adds a unique id (es_doc_id) based on meta.id plus the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates.
 
 ### 40-aggregation.conf
 
@@ -38,7 +40,8 @@ Stitches together flows from different nfcapd files into longer flows, matching 
 Notes: 
  - By default, 5-minute nfcapd files are assumed and the inactivity_timeout is set to 10.5 minutes. If more than 10.5 min have passed between the start of the current flow and the start of the last matching one, do not stitch them together.
  - If your nfcapd files are written every 15 minutes, change the inactivity_timeout to at least 16 minutes.
- - When logstash shuts down, any flows "in the aggregator" will be written out to /tmp/logstash-aggregation-maps. The file is then read back in when logstash is restarted. Each pipeline, if more than one, should write to a unique filename.
+ - There is another "timeout" setting which is basically the maximum duration of a stitched flow (default: 24 hr).
+ - When logstash shuts down, any flows "in the aggregator" will be written out to aggregate_maps_path (default: /tmp/logstash-aggregation-maps). The file is then read back in when logstash is restarted. Each pipeline, if more than one, should write to a unique filename.
  - Your logstash pipeline can have only 1 worker or aggregation is not going to work!
  - Tstat flows come in already complete, so no aggregation is done on those flows.
 
@@ -91,11 +94,11 @@ Copies Science Registry organization and location values, if they exist, to the 
 
 ### 90-additional-fields.conf
 
-Sets additional quick and easy fields.  Currently we have (for Netsage's use):
+Sets additional quick and easy fields.  Supporting mapping or ruby files are used - see support/ and ruby/ in conf.d/. Currently we have (for Netsage's use):
  - sensor_group  = TACC, AMPATH, etc.  (based on matching sensor names to regexes)
  - sensor_type   = Circuit, Archive, Exchange Point, or Regional Network  (based on matching sensor names to regexes)
  - country_scope = Domestic, International, or Mixed  (based on src and dst countries, where Domestic = US, Puerto Rico, or Guam)
- - is_network_testing = yes, no  (yes if discipline = 'CS.Network Testing and Monitoring' or port = 5001, 5101, or 5201)
+ - is_network_testing = yes, no  (yes if discipline from the science registry is 'CS.Network Testing and Monitoring' or port = 5001, 5101, or 5201)
 
 ### 95-cleanup.conf
 
@@ -113,7 +116,7 @@ Sends results to a final RabbitMQ queue. (".disabled" can be removed from other 
 
 In Netsgae's case, the last stage is a separate logstash "pipeline" on a different host. That logstash reads flows from the final RabbitMQ queue and sends it into elasticsearch. 
 
-This can be easily replicated with the following configuration though you'll need one for each Rabbit queue/sensor/index.
+This can be easily replicated with the following configuration, for example, though you'll need one for each Rabbit queue/sensor/index. A mapping template can be specified here.
 
 Naturally the hosts for rabbit and elastic will need to be updated accordingly.
 
