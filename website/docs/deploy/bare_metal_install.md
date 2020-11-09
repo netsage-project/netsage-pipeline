@@ -92,7 +92,7 @@ Pipeline components:
 
 1. Flow Filter - GlobalNOC uses this for Cenic data to filter out some flows. Not needed otherwise.
 2. Netsage Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors only, this is not needed.)
-3. Logstash - be sure the number of logstash pipeline workers is set to 1 (if you have removed the aggregation logstash conf).!
+3. Logstash - be sure the number of logstash pipeline workers is set to 1 (unless you have removed the aggregation logstash conf).
 4. Logstash configs - these are executed in alphabetical order.  See the Logstash doc.
 
 Nothing will automatically start after installation as we need to move on to configuration. 

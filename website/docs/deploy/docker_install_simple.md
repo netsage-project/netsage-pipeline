@@ -3,19 +3,21 @@ id: docker_install_simple
 title: Docker Default Installation Guide
 sidebar_label: Docker Simple
 ---
+The default Docker installation can bring up 2 nfdump collectors and the Netsage Pipeline (Importer plus logstash pipeline). It can work with one sflow and/or one netflow and/or any number of tstat data sources.
 
-## Dockerized Nfdump
+### To begin 
 
-If you wish to use dockerized version of the collectors, then there are three components to be aware of.
+Install Docker/compose and clone this project (netsage-pipeline) from github.
 
-- collector docker container needs to run listening for sflow, or netflow traffic.
-- an ENV value needs to be set that tags the sensor name.
+There are four things that need to be done to make the nfdump sflow and netflow collectors (sfcapd and nfcapd processes that listen for incoming flow data) work with the Netsage Pipeline.
+
+- an ENV value needs to be set that sets the sensor name.
 - a unique data output path should be set.
 - importer needs to be updated to be aware of the filepath and the sensor name.
 
-### Step 1 Create a config
+### Docker-compose.override.yml
 
-The default pattern is defined in the docker-compose.override_example.yml. By default we bring up a single netflow collector and a single sflow collector. For most people this is more than enough. You may wish to delete collectors you're not using.
+The default pattern for running the Pipeline is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. By default we bring up a single netflow collector and a single sflow collector. For most people this is more than enough. You may wish to delete collectors you're not using.
 
 ```sh
 cp docker-compose.override_example.yml docker-compose.override.yml
@@ -28,47 +30,49 @@ You may need to remove all the comments in the override file as they may conflic
 :::
 
 :::note
-If you are only interested in netflow or sflow data, you may want to remove the collector configuration that is not used.
+If you are only interested in netflow OR sflow data, you should remove the section for the collector that is not used.
 :::
 
-### Step 2 Create an unique environment variable
-
-default value are set in the .env default to
-
-```sh
-sflowSensorName=sflowSensorName
-netflowSensorName=netflowSensorName
-```
-
-simply change the names to a unique identifier and you're good to go.
-
-These names uniquely identify the source of the data. If you're not using the netflow or sflow collector, then simply disregard the env settings.
-
-### Running the collectors
-
-After selecting the docker version to run, you can start the collectors by running the following line
-
-```sh
-docker-compose up -d sflow-collector netflow-collector
-```
-
-By default the container comes up and will write data to `./data/input_data` . Each collector is namespaced by its type so sflow collector will write data to `./data/input_data/slow` , it's sensor name is: sflowSensorName and listen to udp traffic on localhost:9999.
-
-## Running the Pipeline
+### Pipeline Version
 
 Once you've created the docker-compose.override.xml and finished adjusting it for any customizations, then you're ready to select your version.
 
 - Select Release version
   - `git fetch; git checkout <tag name>` replace "tag name" with v1.2.5 or the version you intend to use.
-  - Please select the version you wish to use using `./scripts/docker_select_version.sh`
+  - Then also please select the version you wish to use by running `./scripts/docker_select_version.sh`
 
-### Environment file
+### Environment File
 
 {@import ../components/docker_env.md}
 
-### Bringing up the Pipeline
+### Running the Collectors
+
+After selecting the version to run, you can start the two collectors by running the following line
+
+```sh
+docker-compose up -d sflow-collector netflow-collector
+```
+
+By default the container comes up and will write data (as nfcapd files) to `/data/input_data/` . Each collector is namespaced by its type so sflow collector will write data to `/data/input_data/sflow/` and the netflow collector will write data to `/data/input_data/netflow/`.
+
+By default, the sflow collector will listen to udp traffic on localhost:9998, while the netflow collector will listen on port 9999.
+
+These are set in the docker-compose.override.yml file.
+
+### Running the Pipeline
 
 {@import ../components/docker_pipeline.md}
+
+## Data sources
+The data processing pipeline needs data to ingest in order to do anything, of course. There are two types of data that can be consumed.
+
+sflow or netflow
+tstat
+At least one of these must be set up on a sensor to provide the incoming flow data.
+
+Sflow and netflow data should be sent to ports on the pipeline host where nfcapd and/or sfcapd are ready to receive it.
+
+Tstat data should be sent directly to the logstash input RabbitMQ queue (the same one that the Importer writes to, if it is used). From there, the data will be processed the same as sflow/netflow data.
 
 ## Upgrading
 
