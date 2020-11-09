@@ -1,37 +1,44 @@
-Please make a copy of the .env and refer back to the docker [dev guide](../devel/docker_dev_guide) on details on configuring the env. Most of the default value should work just fine.
-
-The only major change you should be aware of are the following values. The output host defines where the final data will land. The sensorName defines what the data will be labeled as.
-
-If you don't send a sensor name it'll use the default docker hostname which changes each time you run the pipeline.
-
-```ini
-rabbitmq_output_host=rabbit
-rabbitmq_output_username=guest
-rabbitmq_output_pw=guest
-rabbitmq_output_key=netsage_archive_input
-
-sflowSensorName=sflowSensorName
-netflowSensorName=netflowSensorName
-
-## Optional configurations
-## Not required, but these are exposed if you wish to use a different
-## value 
-aggregation_maps_path=/data/logstash-aggregation-maps ## this is configurable, but /data is required.  
-inactivity_timeout=630 ##  See below
-max_flow_timeout=86400 ## cut off flows that are longer the N seconds.  Default is 24 hours
+Please copy `env.example` to `.env`  
+```sh
+cp env.example .env 
 ```
 
-Please note, the default is to have one netflow collector and one sflow collector. If you need more collectors or do no need netflow or sflow simply comment out the collector you wish to ignore.  If you are following the advanced guide, you'll naturally have a more complex setup for each additional collector you've configured.
-
-
-### inactivity_timeout
+Then edit the .env file and look for the sensor name settings
+```sh
+sflowSensorName= sflow sensor name
+netflowSensorName= netflow ensor name
+```
+Simply change the names to unique identifiers and you're good to go.  ???? Do these need quotes ????
 
 :::note
-If more than inactivity_timeout seconds have passed between the 'start' of this event and the 'start'
-of the LAST matching event, OR if no matching flow has coming in for inactivity_timeout seconds
-on the clock, assume the flow has ended.
-Use 630 sec = 10.5 min for 5-min files,  960 sec = 16 min for AMPATH which has has 15-min files.
-(For 5-min files, this allows one 5 min gap or period during which the no. of bits transferred don't meet the cutoff)
+These names uniquely identify the source of the data. Choose names that are meaningful and unique.
+For example, your your sensor names might be "RNDNet Sflow" and "RNDNet Netflow" or "rtr.one.rndnet.edu" and "rtr.two.nrdnet.edu".
 :::
 
+ - If you don't send a sensor name it'll use the default docker hostname which changes each time you run the pipeline (not good!).
+ - If you have only one collector, comment out the line for the one you are not using.
+ - If you have more than one of the same type of collector, see the "Docker Advanced" documentation.
+ - If you're not using a netflow or an sflow collector (you are getting only tstat data), then simply disregard the env settings.
+
+
+Other settings of note in this file includes the following. You will not normally need to change these, but be aware.
+
+*rabbit_output_host*: this defines where the final data will land.  ??? Need more info about what to set this for internal or external rabbit hosts???
+
+*rabbit_output_key*: the name of the queue Netsage uses as the last stop before insertion into elasticsearch
+
+The Logstash Aggregation Filter settings are exposed in case you wish to use different values.
+(See comments in the \*-aggregation.conf file.) This config stitches together long-lasting flows that are seen in multiple nfcapd files, matching by the 5-tuple (source and destination IPs, ports, and protocol) plus sensor name. 
+
+*Aggregation_maps_path*: the name of the file to which logstash will write in-progress aggregation data when logstash shuts down. When logstash starts up again, it will read this file in and resume aggregating. The filename is configurable, but /data/ is required.  
+
+*Inactivity_timeout*: If more than inactivity_timeout seconds have passed between the 'start' of this event and the 'start'
+of the LAST matching event, OR if no matching flow has coming in for inactivity_timeout seconds
+on the clock, assume the flow has ended.
+
+:::Note
+Nfcapd files are typically written every 5 minutes. Use 630 sec = 10.5 min for 5-min files,  960 sec = 16 min for if you have 15-min files.  (For 5-min files, this allows one 5 min gap or period during which the no. of bits transferred don't meet the cutoff)
+:::
+
+*max_flow_timeout*: If a flow is still aggregating when this timeout is reached, arbitrarily cut it off and start a new flow.  The default is 24 hours.
 

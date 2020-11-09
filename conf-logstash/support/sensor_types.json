@@ -3,7 +3,7 @@
     "^.*nersc\\.gov$": "Data Archive",
     "^Hawaii.*netflow$": "Circuit",
     "^NEAAR.*": "Circuit",
-    "^neaar.*": "Circuit",
+    "^.*neaar.*": "Circuit",
     "^TransPAC.*": "Circuit",
     "^AMPATH.*$": "Exchange Point",
     "^.*pacificwave\\.net$": "Exchange Point",
