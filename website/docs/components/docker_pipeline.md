@@ -1,4 +1,4 @@
-Start up the pipeline using:
+Start up the pipeline (importers and logstash) using:
 
 ```sh
 docker-compose up -d

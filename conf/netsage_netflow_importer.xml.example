@@ -26,7 +26,7 @@
 
     <!-- The minium flow size threshold - will not  import any flows smaller than this -->
     <!-- Defaults to 500M  -->
-    <!--    <min-bytes>500000000</min-bytes> -->
+        <min-bytes>100000000</min-bytes> 
 
     <!-- Do not import nfcapd files younger than min-file-age
         The value must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
@@ -34,7 +34,7 @@
         See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
         Default: 0 (no minimum age) 
     -->
-    <!--    <min-file-age>1h</min-file-age> -->
+        <min-file-age>10m</min-file-age> 
 
     <!-- cull-enable: whether to cull processed flow data files -->
     <!-- default: no culling; set to 1 to turn culling on -->
