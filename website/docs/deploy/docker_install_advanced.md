@@ -80,11 +80,11 @@ Warning! it is HIGHLY recommended to not use the :latest as that is intended to 
 
 ```sh
   git fetch 
-  git checkout <tag name>
+  git checkout "tag name"
   ./scripts/docker_select_version.sh
 ```
 
-Replace "<tag name>" with the version you intend to use, eg, "v1.2.5".  When prompted by the script, select the same version.
+Replace "tag name" with the version you intend to use, eg, "v1.2.5".  When prompted by the script, select the same version.
 
 
 ### Running the new collector
