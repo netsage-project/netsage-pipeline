@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.6
+Version: 1.2.7
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
