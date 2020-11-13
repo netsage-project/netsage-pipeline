@@ -1,4 +1,3 @@
-[%%%% Do you need to stop anything? Go to a particular directory?  do docker-compose up at some point?? %%%]
 
 ### Update Source Code
 
