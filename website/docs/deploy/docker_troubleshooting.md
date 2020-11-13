@@ -45,17 +45,3 @@ deploy:
 
 Reference: https://docs.docker.com/compose/compose-file/#resources
 
-
-### Export Data NFS Volume
-
-By default most of the data that is exported will be relative to the ./data directory.  If you would like to use an NFS mount instead you will need to 
-either 
-
-1. export the NFS volume as ${PROJECT_DIR}/data (which is the idea scenario and least intrusive)
-1. update the path to the NFS export path in all locations in docker-compose.yml and docker-compose.override.yml
-
-
-:::warning
-If you choose to update the docker-compose file, keep in mind that those changes will cause a merge conflict on upgrade. 
-You'll have to manage the volumes exported and ensure to update all the paths correctly for the next release manually.
-:::
