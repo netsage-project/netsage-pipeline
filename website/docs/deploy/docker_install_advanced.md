@@ -4,16 +4,11 @@ title: Docker Advanced Installation Guide
 sidebar_label: Docker Advanced
 ---
 
-## Dockerized Nfdump
+If the Docker Simple installation does not meet your needs, the following customizations will allow for more complex situations.
 
-If you wish to use dockerized version of the collectors, then there are three components to be aware of.
+Please first read the Docker Simple installation guide in detail. This guide will build on top of that.
 
-- collector docker container needs to run listening for sflow, or netflow traffic.
-- an ENV value needs to be set that tags the sensor name.
-- a unique data output path should be set.
-- importer needs to be updated to be aware of the filepath and the sensor name.
-
-### Step 1 Create a config
+### Docker-compose.override.yml
 
 If you need to create more collectors the pattern is always the same. Simply add
 
