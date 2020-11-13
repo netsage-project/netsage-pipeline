@@ -1,4 +1,31 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.7 -- Nov 13 2020
+------------------------------------------------------
+Features:
+  * Documentation updates
+  * Updated importer cache file handling so that if culling of nfcapd files is not enabled, only files in 
+    directories newer than 2 months (by dir name) will be compared to those in the cache file to determine which have 
+    not yet been imported, and files older than 3 months (by filename) will be removed from the cache file. 
+    (If culling is enabled, these are not needed.)
+  * Aggregation timouts and the aggregation map filename were added to the .env file for Docker, so they can be changed by the user.
+  * Added field es_doc_id (hash of meta.id and start time). 
+    This field can be used as the elasticsearch doc id in order to do upserts instead of add duplicates.
+    That works for sflow, but for netflow, behavior is being investigated.
+  * Added "replay" dataset for testing
+  * Added versioned documentation
+
+Bugs:
+  * Added some type conversions back as they are needed for now
+  * Exposed rabbitmq data volume to ensure data persists if pipeline is shutdown (Docker)
+  * Exposed the importer cache file to the local data volume, so data is not reprocessed and duplicate flows created on restart (Docker)
+  * Fixed an issue where the aggregation map file was not saved to a proper location in Docker deployments
+
+Changes:
+  * Uncommented and set  min-bytes=100 MB and min-file-age=10 min  in example importer config file so these values will be used 
+    by default for Docker deployments.
+  * Added SANReN and tacc_sflows to sensor_types and/or sensor_group regexes.
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.6 -- Sept 1 2020
 ------------------------------------------------------
 Features:

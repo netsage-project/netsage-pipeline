@@ -9,14 +9,14 @@ echo "stopping logstash"
 /sbin/service logstash stop
 sleep 30
     echo "(after 30s) ls /tmp/:"
-    ls /tmp
+    ls -l /tmp
 
 echo "$(date)"
 echo "stopping logstash"
 /sbin/service logstash stop
 sleep 30
     echo "(after 30s) ls /tmp/:"
-    ls /tmp
+    ls -l /tmp
 
 logstash_status=$(/sbin/service logstash status)
 if [[ $logstash_status =~ .*"active (running)".*|"logstash is running" ]]; then
