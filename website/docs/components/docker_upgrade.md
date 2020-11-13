@@ -14,10 +14,10 @@ Since the collectors live outside of version control, please check the docker-co
 
 ### Select Release Version
 
-Run these two commands to select the new release you want to run. In the first, replace <tag_value> by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
+Run these two commands to select the new release you want to run. In the first, replace "tag_value" by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
 
 ````sh
-git checkout <tag_value> 
+git checkout "tag_value" 
 ./scripts/docker_select_version.sh
 ```
 

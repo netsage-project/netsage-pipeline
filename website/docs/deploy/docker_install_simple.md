@@ -42,10 +42,10 @@ Once you've created the docker-compose.override.xml and finished adjusting it fo
 
 ```sh
 git fetch
-git checkout <tag name>
+git checkout "tag name"
 ./scripts/docker_select_version.sh
 ```
-Replace "<tag name>" with the version you intend to use, e.g., "v1.2.5". Select the same version when prompted by docker_select_version.sh.
+Replace "tag name" with the version you intend to use, e.g., "v1.2.5". Select the same version when prompted by docker_select_version.sh.
 
 ### Running the Collectors
 
