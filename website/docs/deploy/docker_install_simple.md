@@ -3,18 +3,15 @@ id: docker_install_simple
 title: Docker Default Installation Guide
 sidebar_label: Docker Simple
 ---
-The default Docker installation can bring up 2 nfdump collectors and the Netsage Pipeline (Importer plus logstash pipeline). It can work with one sflow and/or one netflow and/or any number of tstat data sources.
+In this deployment guide, you will learn how to deploy docker-based sflow and netflow collectors (see https://github.com/netsage-project/docker-nfdump-collector) and a basic docker flow processing pipeline. The collectors will save incoming flow data to disk, while the pipeline Importer will read it and pipeline Lostash filters will process it. Without any modification, 1 sflow collector, 1 netflow collector, and a flow processing pipeline will run. If you have only 1 collector, this guide will show you how to disable the unnecessary one.  If you need 2 or more collectors of the same type, please read "Docker Advanced" after reading through this guide.
 
 ### First
 
-Install Docker/compose and clone this project (netsage-pipeline) from github.
-
-Install nfdump, which will provide the sflow and netflow collectors (see the Server Installation Guide), and is also used by the pipeline Importer.
-Nfdump's sfcapd and nfcapd processes will listen for incoming flow data from the flow exporters.
+Install Docker/compose and clone this project from github (https://github.com/netsage-project/netsage-pipeline.git).
 
 ### Docker-compose.override.yml
 
-The default pattern for running the Pipeline is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. 
+The pattern for running the Pipeline, with collectors, is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. 
 
 ```sh
 cp docker-compose.override_example.yml docker-compose.override.yml
@@ -70,7 +67,7 @@ At least one of these must be set up on a sensor to provide the incoming flow da
 
 Sflow and netflow data should be exported to the pipeline host where nfcapd and/or sfcapd collectors are ready to receive it.
 
-Tstat data should be sent directly to the logstash input RabbitMQ queue (the same one that the Importer writes to, if it is used). From there, the data will be processed the same as sflow/netflow data.
+Tstat data should be sent directly to the logstash input RabbitMQ queue (the same one that the Importer writes to, if it is used). From there, the data will be processed the same as sflow/netflow data. (See the Docker Advanced guide.)
 
 ## Upgrading
 

@@ -11,12 +11,14 @@ Logstash config files invoke various logstash "filters". These conf files are lo
 Notes: 
  - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
  - If actions in a .conf file are not needed in your particular case, it can be removed or disabled, but check carefully for effects on downstream configs.
+ - MaxMind, CAIDA, and Science Registry Database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs weekly or daily. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also, though it's not running in Docker deployments. Similarly for other support files, eg, those used in 90-additional-fields.conf.
+ - Lookup tables for 55-member-orgs.conf are not saved in github. You will need to provide these yourself or ask us for any we may have compliled. 
 
 ## Logstash Sequence
 
 ### 01-input-rabbit.conf
 
-Reads flows from a rabbitmq queue. (".disabled" can be removed from other 01-input configs to get flows from other sources.)
+Reads flows from a rabbitmq queue. (The ".disabled" extenstion can be removed from other 01-input configs available in conf.d/ to get flows from other sources.)
 
 ### 10-preliminaries.conf
 
