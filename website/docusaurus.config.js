@@ -21,7 +21,7 @@ module.exports = {
           label: "Pipeline Documentation",
           position: "left",
           activeBasePath: "docs",
-          to: "docs/pipeline",
+          to: "docs/pipeline/intro",
         },
         {
           href: "https://netsage-project.github.io/netsage-grafana-configs/",

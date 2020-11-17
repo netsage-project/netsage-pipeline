@@ -8,7 +8,7 @@ sidebar_label: Docker Dev Guide
 
 ## Configure Collectors
 
-Before you start if you haven't already done so, please make a copy of docker-compose.override_example.yml this is used to setup your collectors.  The default should work out of the box with the env.example provided.  If you wish you add customizations, please see the [Docker Install Guide](/docs/deploy/docker_install)
+Before you start if you haven't already done so, please make a copy of docker-compose.override_example.yml this is used to setup your collectors.  The default should work out of the box with the env.example provided.  If you wish you add customizations, please see the [Docker Advanced Install Guide](../deploy/docker_install_advanced.md)
 
 ``` sh
 cp docker-compose.override_example.yml docker-compose.override.yml
