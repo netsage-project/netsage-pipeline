@@ -11,7 +11,7 @@ netflowSensorName="my netflow sensor name"
 Simply change the names to unique identifiers and you're good to go. (Use quotes if the names have spaces.) 
 
 :::note
-These names uniquely identify the source of the data. Choose names that are meaningful and unique.
+These names uniquely identify the source of the data. In elasticsearch, they are saved in the `meta.sensor_id` field and can be used in visualizations. Choose names that are meaningful and unique.
 For example, your sensor names might be "RNDNet Sflow" and "RNDNet Netflow" or "rtr.one.rndnet.edu" and "rtr.two.nrdnet.edu". Whatever makes sense in your situation.
 :::
 

@@ -7,11 +7,11 @@ In this deployment guide, you will learn how to deploy docker-based sflow and ne
 
 ### First
 
-Install Docker/compose and clone this project from github (https://github.com/netsage-project/netsage-pipeline.git).
+If you haven't already, install Docker/compose and clone this project from github (https://github.com/netsage-project/netsage-pipeline.git).
 
 ### Docker-compose.override.yml
 
-The pattern for running the Pipeline, with collectors, is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. 
+The pattern for running the Pipeline, with docker-based collectors, is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. 
 
 ```sh
 cp docker-compose.override_example.yml docker-compose.override.yml
