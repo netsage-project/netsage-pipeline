@@ -25,7 +25,7 @@ function Home() {
                 "button button--outline button--secondary button--lg",
                 styles.getStarted
               )}
-              to={useBaseUrl("docs/pipeline")}
+              to={useBaseUrl("docs/pipeline/intro")}
             >
               Pipeline Documentation
             </Link>
