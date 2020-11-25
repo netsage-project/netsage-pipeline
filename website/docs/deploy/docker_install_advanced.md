@@ -8,6 +8,9 @@ If the Docker Simple installation does not meet your needs, the following custom
 
 Please first read the Docker Simple installation guide in detail. This guide will build on top of that.
 
+
+{@import ../components/docker_first_steps.md}
+
 ## To Add an Additional Sflow or Netflow Collector
 
 If you have more than 1 sflow and/or 1 netflow sensor, you will need to create more collectors and modify the importer config file. The following instructions describe the steps needed to add one additional sensor.

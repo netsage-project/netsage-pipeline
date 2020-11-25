@@ -5,10 +5,9 @@ sidebar_label: Docker Simple
 ---
 In this deployment guide, you will learn how to deploy docker-based sflow and netflow collectors (see https://github.com/netsage-project/docker-nfdump-collector) and a basic docker flow processing pipeline. The collectors will save incoming flow data to disk, while the pipeline Importer will read it and pipeline Lostash filters will process it. Without any modification, 1 sflow collector, 1 netflow collector, and a flow processing pipeline will run. If you have only 1 collector, this guide will show you how to disable the unnecessary one.  If you need 2 or more collectors of the same type, please read "Docker Advanced" after reading through this guide.
 
-### First
 
-If you haven't already, install Docker/compose and clone this project from github (https://github.com/netsage-project/netsage-pipeline.git).
 
+{@import ../components/docker_first_steps.md}
 ### Docker-compose.override.yml
 
 The pattern for running the Pipeline, with docker-based collectors, is defined in the docker-compose.override_example.yml. Copy this to docker-compose.override.yml. 
