@@ -19,7 +19,8 @@ function updateDocker() {
   sed -i -e "s/:latest/:$version/" docker-compose.build.yml
   sed -i -e "s/:latest/:$version/" docker-compose.yml
   if test -f "docker-compose.override.yml"; then
-    sed -i -e "s/:latest/:$version/" docker-compose.override.yml
+    sed -i -e "s/pipeline_importer:.*/pipeline_importer:$version/" docker-compose.override.yml
+    sed -i -e "s/pipeline_logstash:.*/pipeline_logstash:$version/" docker-compose.override.yml
   fi
 
 }
