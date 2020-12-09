@@ -133,15 +133,16 @@ The file docker-compose.develop.yaml can be used in conjunction with docker-comp
 
 This isn't a production pattern but the tools can be useful at times. Please refer to the [Docker Dev Guide](../devel/docker_dev_guide#optional-elasticsearch-and-kibana)
 
-## To Export Data to an NFS Volume
+## For Data Saved to an NFS Volume
 
 By default, data is saved to subdirectories in the ./data directory.  If you would like to use an NFS mount instead you will need to either
 
 1. export the NFS volume as ${PROJECT_DIR}/data (which is the idea scenario and least intrusive)
 2. update the path to the NFS export path in all locations in docker-compose.yml and docker-compose.override.yml
 
+Note: modifying all the paths in the two files should work, but may not. In one case, it worked to modify only the paths for the collector volumes (eg, - /mnt/nfs/netsagedata/netflow:/data), leaving all others with their default values.
 
 :::warning
 If you choose to update the docker-compose file, keep in mind that those changes will cause a merge conflict on upgrade.
-You'll have to manage the volumes exported and ensure to update all the paths correctly for the next release manually.
+You'll have to manage the volumes exported and ensure all the paths are updated correctly for the next release manually.
 :::
