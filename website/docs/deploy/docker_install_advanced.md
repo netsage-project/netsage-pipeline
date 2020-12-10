@@ -9,13 +9,11 @@ If the Docker Simple installation does not meet your needs, the following custom
 Please first read the Docker Simple installation guide in detail. This guide will build on top of that.
 
 
-{@import ../components/docker_first_steps.md}
-
 ## To Add an Additional Sflow or Netflow Collector
 
 If you have more than 1 sflow and/or 1 netflow sensor, you will need to create more collectors and modify the importer config file. The following instructions describe the steps needed to add one additional sensor.
 
-Any number of sensors can be accomodated, although if there are more than a few being processed by the same Importer, you may run into issues where long-lasting flows from sensosr A time out while waiting for flows from sensors B-D to be processed. (Another option might be be to run more than one Docker deployment.) 
+Any number of sensors can be accomodated, although if there are more than a few being processed by the same Importer, you may run into issues where long-lasting flows from sensosr A time out in the aggregation step while waiting for flows from sensors B to D to be processed. (Another option might be be to run more than one Docker deployment.) 
 
 
 ### 1. docker-compose.override.yml
@@ -73,26 +71,10 @@ Then, in the .env file, add a line that sets a value for the "variable" you refe
 exampleSensorName="Example New York sFlow"
 ```
 
-### Select which version to run
-
-Before continuing you need to choose if you are going to be use the 'Develop' version which has the latest changes but might be a bit less stable (or have code not ready for use) or a 'Released' version. If you're opting to use the Develop version, then simply skip the version selection step.
-
-:::caution
-Warning! it is HIGHLY recommended to not use the :latest as that is intended to be a developer release. You may still use it but be aware that you may have some instability each time you update.
-:::
-
-```sh
-  git fetch 
-  git checkout "tag name"
-  ./scripts/docker_select_version.sh
-```
-
-Replace "tag name" with the version you intend to use, eg, "v1.2.5".  When prompted by the script, select the same version.
-
 
 ### Running the new collector
 
-After selecting the docker version to run, you can start the new collector by running the following line, using the collector name:
+After doing the setup above and selecting the docker version to run, you can start the new collector by running the following line, using the collector name (or by running `docker-compose up -d` to start up all containers):
 
 ```sh
 docker-compose up -d example-collector

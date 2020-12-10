@@ -20,12 +20,12 @@ For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Bost
  - If you have more than one of the same type of collector, see the "Docker Advanced" documentation.
 
 
-Other settings of note in this file includes the following. You will not necessarily need to change these, but be aware.
+Other settings of note in this file include the following. You will not necessarily need to change these, but be aware.
 
 **rabbit_output_host**: this defines where the final data will land after going through the pipeline.  By default, the last rabbit queue will be on `rabbit`, ie, the local rabbitMQ server running in its docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name).
 
-The Logstash Aggregation Filter settings are exposed in case you wish to use different values.
-(See comments in the \*-aggregation.conf file.) This config stitches together long-lasting flows that are seen in multiple nfcapd files, matching by the 5-tuple (source and destination IPs, ports, and protocol) plus sensor name. 
+The following Logstash Aggregation Filter settings are exposed in case you wish to use different values.
+(See comments in the \*-aggregation.conf file.) The aggregation filter stitches together long-lasting flows that are seen in multiple nfcapd files, matching by the 5-tuple (source and destination IPs, ports, and protocol) plus sensor name. 
 
 **Aggregation_maps_path**: the name of the file to which logstash will write in-progress aggregation data when logstash shuts down. When logstash starts up again, it will read this file in and resume aggregating. The filename is configurable for complex situations, but /data/ is required.  
 

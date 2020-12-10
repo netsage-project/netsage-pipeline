@@ -17,9 +17,9 @@ To check the logs for each of the containers, run
 docker-compose logs
 ```
 
-Add "-f" or, e.g., `-f logstash` to see new log messages as they arrive.  `--timestamps`, `--tail <n>`,  and `--since <datetime>` are also useful - see docker documentation.
+Add "-f" or, e.g., "-f logstash" to see new log messages as they arrive.  "--timestamps", "--tail $n",  and "--since $datetime" are also useful -- look up Docker documentation.
 
-Shut down the pipeline (all containers) using:
+To shut down the pipeline (all containers) use
 
 ```sh
 docker-compose down

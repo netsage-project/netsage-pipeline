@@ -15,7 +15,7 @@ sidebar_label: Troubleshooting
 - Use `docker-compose ps` to be sure the collectors (and other containers) are running.
 - Check to see if nfcapd files are being written. There should be a directory for the year, month, day and files should be larger than a few hundred bytes. If the files exist but are too small, the collector is running but there are no incoming flows.  "nfdump -r filename" will show the flows in a file.
 - Make sure you created .env and docker-compose.override.yml files and updated the settings accordingly,  sensorName especially since that identifies the source of the data.
-- Check the logs of the various containers to see if anything jumps out as being invalid.  docker-compose logs -f <service_label>
+- Check the logs of the various containers to see if anything jumps out as being invalid.  `docker-compose logs -f $service_label`
 - Check the logs to see if logstash is starting successfully. 
 - If the final rabbit queue is on an external host, check iptables on that host to be sure incoming traffic from your pipeline host is allowed.
 
