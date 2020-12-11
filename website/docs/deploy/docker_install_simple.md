@@ -16,7 +16,7 @@ The Docker containers included in the installation are
 The code and configs for the importer and logstash pipeline can be viewed in this github repo (netsage-project/netsage-pipeline). See netsage-project/docker-nfdump-collector for code related to the collectors.
 
 
-### Set up Data Sources 
+### 1. Set up Data Sources 
 The data processing pipeline needs data to ingest in order to do anything, of course. There are three types of data that can be consumed.
 
  - sflow 
@@ -24,12 +24,28 @@ The data processing pipeline needs data to ingest in order to do anything, of co
  - tstat
 
 At least one of these must be set up on a sensor to provide the incoming flow data. 
+You can do this step later, but it will helpful to have it working first. 
 
 Sflow and netflow data should be exported to the pipeline host where there are collectors (nfcapd and/or sfcapd processes) ready to receive it (see below). To use the default settings, send sflow to port 9998 and netflow to port 9999. On the pipeline host, allow incoming traffic from the flow exporters, of course.
 
 Tstat data should be sent directly to the logstash input RabbitMQ queue on the pipeline host. No collector is needed for tstat data. From there, logstash will grab the data and process it the same way as it processes sflow/netflow data. (See the Docker Advanced guide.)
 
-### Create Docker-compose.override.yml
+### 2. Clone the Netsage Pipeline Project
+
+If you haven't already, install [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) and clone this project
+```sh
+git clone https://github.com/netsage-project/netsage-pipeline.git
+```
+(If you are upgrading to a new release, see the Upgrade section below!)
+
+Then checkout the right version of the code.
+```sh
+git checkout tag_name
+```
+Replace "tag_name" with the release version you intend to use, e.g., "v1.2.8".  ("Master" is the development version and is not intended for general use!)
+`git status` will confirm which branch you are on, e.g., master or v1.2.8.
+
+### 3. Create Docker-compose.override.yml
 
 Information in the `docker-compose.yml` file tells docker which containers (processes) to run and sets various parameters for them. 
 Settings in the `docker-compose.override.yml` file will overrule and add to those. Note that docker-compose.yml should not be edited since upgrades will replace it. Put all customizations in the override file, since override files will not be overwritten.
@@ -53,40 +69,35 @@ Other lines in this file you can ignore for now.
 You may need to remove all the comments in the override file as they may conflict with the parsing done by docker-compose
 :::
 
-### Clone the Netsage Pipeline Project
 
-If you haven't already, install [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) and clone this project
-```sh
-git clone https://github.com/netsage-project/netsage-pipeline.git
-```
-(If you are upgrading to a new release, see the Upgrade section below!)
-
-### Create Environment File
+### 4. Create Environment File
 
 {@import ../components/docker_env.md}
 
-### Choose Pipeline Version
+### 5. Choose Pipeline Version
 
-Once you've created the docker-compose.override.xml file and finished adjusting it for any customizations, you're ready to select which version to run.
+Once you've created the docker-compose.override.xml file and finished adjusting it for any customizations, you're ready to select which version Docker should run.
 
 ```sh
-git fetch
-git checkout tag_name
 ./scripts/docker_select_version.sh
 ```
-Replace "tag_name" with the version you intend to use, e.g., "v1.2.8". Select the same version when prompted by docker_select_version.sh.
-
-This process will ensure that your are using the correct version of the code and logstash configs and replace the version numbers of docker images in the docker-compose files.
+When prompted, select the **same version** you checked out earlier. 
+This script will replace the version numbers of docker images in the docker-compose files with the correct values.
 
 ## Running the Collectors
 
-After selecting the version to run, you can start the two flow collectors by themselves by running the following line. If you only need one of the collectors, remove the other from this command. (Or see the next section for how to start all the containers, including the collectors.)
+After selecting the version to run, you can start the two flow collectors by themselves by running the following line. If you only need one of the collectors, remove the other from this command. 
+
+(Or see the next section for how to start all the containers, including the collectors.)
 
 ```sh
 docker-compose up -d sflow-collector netflow-collector
 ```
 
-## Running the Pipeline
+If the collector(s) are running properly, you should see nfcapd files in subdirectories of data/input_data/, and they should have sizes of more than a few hundred bytes. (See Troubleshooting if you have problems.)
+
+
+### Running the Collectors and Pipeline
 
 {@import ../components/docker_pipeline.md}
 
