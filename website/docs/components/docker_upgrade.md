@@ -8,12 +8,19 @@ This will stop all the docker containers, including the importer, logstash, and 
 
 ### Update Source Code
 
-To do a Pipeline upgrade, just reset and pull changes, including the new release, from github. Your customized (non-example) env and override files will not be overwritten.
+To upgrade to a new release, just reset and pull changes including the new release from github. Your customized .env and override files will not be overwritten.
 
 ```sh
 git reset --hard
 git pull origin master
 ```
+
+:::warning
+git reset --hard will obliterate any changes you have made to non-override files.  If necessary, please make sure you commit and save to a feature branch before continuing.
+
+Example:
+```git commit -a -m "Saving local state"; git checkout -b feature/backup; git checkout master```
+:::
 
 ### Check/Update Files
 - Compare the new docker-compose.override_example.yml file to your docker-compose.override.yml to see if a new version of Docker is required. Look for, eg, version: "3.7" at the top. If the version number is different, change it in your docker-compose.override.yml file and upgrade Docker manually.
@@ -28,13 +35,11 @@ Note that you do not need to update the versions of the importer or logstash ima
 ### Select Release Version
 
 Run these two commands to select the new release you want to run. In the first, replace "tag_value" by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
-
-Check to be sure docker-compose.yml and docker-compose.override.yml now both have the version number you selected.  
-
 ```sh
 git checkout tag_value 
 ./scripts/docker_select_version.sh
 ```
+Check to be sure docker-compose.yml and docker-compose.override.yml both now have the version number you selected.  
 
 ### Update Docker Containers
 

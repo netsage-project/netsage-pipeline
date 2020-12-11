@@ -26,11 +26,9 @@ To see if flows are getting into and being read from the rabbit queue on the pip
 If you are running a lot of data sometimes docker may need to be allocated more memory. The most
 likely culprit is logstash which is usually only allocated 2GB of RAM. You'll need to update the jvm.options file to grant it more memory. 
 
-Please see the [advaned section](docker_install_advanced.md#customize-logstash-settings) for details on how to customize logstash
+Please see the [Docker Advanced guide](docker_install_advanced.md#customize-logstash-settings) for details on how to customize logstash.
 
-Applying this snippet to logstash may help. Naturally the values will have to change.
-
-You may also try the pattern below, if that still isn't enough.
+Applying this snippet to logstash may help. For example, to give logstash (java) 3GB,
 
 ```yaml
 environment: + LS_JAVA_OPTS=-Xmx3g

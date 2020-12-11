@@ -15,7 +15,6 @@ The Docker containers included in the installation are
 
 The code and configs for the importer and logstash pipeline can be viewed in this github repo (netsage-project/netsage-pipeline). See netsage-project/docker-nfdump-collector for code related to the collectors.
 
-{@import ../components/docker_first_steps.md}
 
 ### Set up Data Sources 
 The data processing pipeline needs data to ingest in order to do anything, of course. There are three types of data that can be consumed.
@@ -54,6 +53,14 @@ Other lines in this file you can ignore for now.
 You may need to remove all the comments in the override file as they may conflict with the parsing done by docker-compose
 :::
 
+### Clone the Netsage Pipeline Project
+
+If you haven't already, install [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) and clone this project
+```sh
+git clone https://github.com/netsage-project/netsage-pipeline.git
+```
+(If you are upgrading to a new release, see the Upgrade section below!)
+
 ### Create Environment File
 
 {@import ../components/docker_env.md}
@@ -69,7 +76,7 @@ git checkout tag_name
 ```
 Replace "tag_name" with the version you intend to use, e.g., "v1.2.8". Select the same version when prompted by docker_select_version.sh.
 
-This process will grab the most recent code and logstash configs from github and replace the version numbers of docker images in the docker-compose files.
+This process will ensure that your are using the correct version of the code and logstash configs and replace the version numbers of docker images in the docker-compose files.
 
 ## Running the Collectors
 

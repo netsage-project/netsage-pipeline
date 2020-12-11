@@ -5,10 +5,10 @@ cp env.example .env
 
 then edit the .env file to set the sensor names
 ```sh
-sflowSensorName="my sflow sensor name"
-netflowSensorName="my netflow sensor name"
+sflowSensorName=my sflow sensor name
+netflowSensorName=my netflow sensor name
 ```
-Simply change the names to unique identifiers and you're good to go. (Use quotes if the names have spaces, not needed otherwise.) 
+Simply change the names to unique identifiers (with spaces or not, no quotes) and you're good to go. 
 
 :::note
 These names uniquely identify the source of the data. In elasticsearch, they are saved in the `meta.sensor_id` field and will be shown in Grafana dashboards. Choose names that are meaningful and unique.

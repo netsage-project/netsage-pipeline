@@ -119,7 +119,7 @@ The most important part of the shared configuration file is the definition of co
          <flow-path>/path/to/netflow-files/</flow-path>
 
      <!-- Sensor name - can be the hostname or any string you like -->
-         <sensor>Netflow Sensor 1d</sensor>
+         <sensor>Netflow Sensor 1</sensor>
 
      <!-- Flow type - sflow or netflow (defaults to netflow) -->
          <flow-type>netflow</flow-type>
@@ -280,7 +280,7 @@ The Importer will create a deamon process and a worker process. When stopping th
 
 ## Cron jobs
 
-Sample cron files are provided. Please review and uncomment their contents. These periodically download MaxMind, CAIDA, and Science Registry files, and also restart logstash daily. Logstash needs to be restarted in order for any updated files to be read in. 
+Sample cron files are provided. Please review and uncomment their contents. These periodically download MaxMind, CAIDA, and Science Registry files, and also restart logstash. Logstash needs to be restarted in order for any updated files to be read in. 
 
 
 

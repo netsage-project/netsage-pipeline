@@ -6,7 +6,7 @@ sidebar_label: Docker Advanced
 
 If the Docker Simple installation does not meet your needs, the following customizations will allow for more complex situations.
 
-Please first read the Docker Simple installation guide in detail. This guide will build on top of that.
+*Please first read the Docker Simple installation guide in detail. This guide will build on top of that.*
 
 
 ## To Add an Additional Sflow or Netflow Collector
@@ -16,7 +16,7 @@ If you have more than 1 sflow and/or 1 netflow sensor, you will need to create m
 Any number of sensors can be accomodated, although if there are more than a few being processed by the same Importer, you may run into issues where long-lasting flows from sensosr A time out in the aggregation step while waiting for flows from sensors B to D to be processed. (Another option might be be to run more than one Docker deployment.) 
 
 
-### 1. docker-compose.override.yml
+### 1. Edit docker-compose.override.yml
 
 The pattern to add a flow collector is always the same. To add an sflow collector called example-collector, edit the docker-compose.override.yml file and add
 
@@ -45,7 +45,7 @@ You will also need to uncomment these lines:
 ```
 
 
-### 2.  netsage_override.xml
+### 2.  Edit netsage_override.xml
 
 To make the Pipeline Importer aware of the new data to process, you will need to create a custom Importer configuration: netsage_override.xml.  This will replace the usual config file netsage_shared.xml. 
 
@@ -63,12 +63,12 @@ Edit netsage_override.xml and add a "collection" section for the new sensor as i
     </collection>
 ```
 
-### 3. Environment file
+### 3. Edit environment file
 
 Then, in the .env file, add a line that sets a value for the "variable" you referenced above, $exampleSensorName. The value is the name of the sensor which will be saved to elasticsearch and which appears in Netsage Dashboards. Set it to something meaningful and unique.
 
 ```ini
-exampleSensorName="Example New York sFlow"
+exampleSensorName=Example New York sFlow
 ```
 
 
@@ -85,13 +85,37 @@ The default version of the collector is 1.6.18. There are other versions release
 :::
 
 
+## To Change the Culling of Nfcapd Files
+The importer will automatically delete older nfcapd files for you, so that your disk don't fill up. By default, 3 days worth of files will be kept. This can be adjusted by making a netsage_override.xml file:
+
+```sh
+cp compose/importer/netsage_shared.xml userConfig/netsage_override.xml
+```
+
+At the bottom of the file, edit this section. Set cull-enable to 0 for no culling. Eg, to save 7 days worth of data:
+````xml
+  <worker>
+    <cull-enable>1</cull-enable>
+    <cull-ttl>7</cull-ttl>
+  </worker>
+````
+
+You will also need to uncomment these lines in docker-compose.override.yml: 
+
+```yaml
+  volumes:
+     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+```
+
+
+
 ## For Tstat Data
 Tstat data is not collected by nfdump/sfcapd/nfcapd or read by an Importer. Instead, the flow data is sent directly from the router or switch to the logstash pipeline's ingest rabbit queue (named "netsage_deidentifier_raw").  So, when following the Docker Simple guide, the sections related to configuring and starting up the collectors and Importer will not pertain to the tstat sensors. The .env file still needs to be set up though.
 
 Setting up Tstat is outside the scope of this document, but see the Netsage project Tstat-Transport which contains client programs that can send tstat data to a rabbit queue. See [https://github.com/netsage-project/tstat-transport.git](https://github.com/netsage-project/tstat-transport.git).
 
 
-## To Customize Logstash Java Settings
+## To Customize Java Settings / Increase Memory Available for Lostash 
 
 If you need to modify the amount of memory logstash can use or any other java settings,
 rename the provided example for JVM Options and tweak the settings as desired.

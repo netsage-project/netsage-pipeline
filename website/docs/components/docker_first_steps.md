@@ -1,6 +1,4 @@
-### First
-
-If you haven't already, install [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) and clone this [project](https://github.com/netsage-project/netsage-pipeline.git) from github.
+#### saving this for now in case I need to put it back #######
 
 Then checkout the latest version of the code.  If you are a developer you'll want the latest version from master, otherwise please use make sure
 you've checked out the latest tagged version.
