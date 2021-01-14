@@ -24,7 +24,7 @@ FROM centos:7
 COPY --from=0 /root/rpmbuild/RPMS/noarch/*.rpm /tmp
 
 COPY compose/importer/grnoc7.repo /etc/yum.repos.d/grnoc7.repo 
-COPY compose/logstash.repo /etc/yum.repos.d/logstash.repo 
+#COPY compose/logstash.repo /etc/yum.repos.d/logstash.repo 
 COPY compose/importer/docker_init.sh  /tmp/ 
 COPY compose/importer/run.sh  /tmp/ 
 COPY compose/importer/netsage_shared.xml /etc/grnoc/netsage/deidentifier/  
@@ -32,7 +32,7 @@ COPY compose/importer/logging.conf /etc/grnoc/netsage/deidentifier/
 
 ## Setup baseline 
 RUN  \
-    rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch  && \
+    #rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch  && \
     yum  -y update && \ 
     yum install -y  dnf epel-release  && \
     yum install -y python-pip nfdump wget && \
