@@ -188,6 +188,7 @@ rm -rf $RPM_BUILD_ROOT
 /var/cache/netsage/
 
 %post
+echo " "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
@@ -203,4 +204,5 @@ echo " *      and be sure logstash configs are specified by *.conf in the right 
 echo " "
 echo " *  [Re]start logstash, netsage netflow importers (and netsage flow filters for cenic sensors only) "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+echo " "
 
