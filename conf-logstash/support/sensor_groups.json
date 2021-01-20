@@ -20,5 +20,6 @@
     "^.*TACC.*": "TACC",
     "^.*tacc.*": "TACC",
     "^.*TransPAC.*": "TransPAC",
-    "^.*UCAR.*": "UCAR"
+    "^.*UCAR.*": "UCAR",
+    "^Sun Corridor.*": "Sun Corridor"
 }

@@ -18,5 +18,6 @@
     "^i-Light.*$": "Regional Network",
     "^PennREN.*$": "Regional Network",
     "^tacc_sflows$": "Regional Network",
-    "^SANReN.*$": "Regional Network"
+    "^SANReN.*$": "Regional Network",
+    "^Sun Corridor.*$": "Regional Network"
 }
