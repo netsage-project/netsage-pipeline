@@ -43,8 +43,7 @@ Requires: perl-Time-HiRes
 Requires: perl-Try-Tiny
 Requires: perl-Type-Tiny
 Requires: wget 
-# logstash 7.4.1 includes a needed fix to the aggregate filter. 
-Requires: logstash >= 7.4.2
+
 Requires: rubygem-ipaddress
 
 %description
