@@ -30,7 +30,5 @@ nfreplay -H 127.0.0.1 -p 9999  -r nfcapd-ilight-anon-20200114 -v 9 -d 1000
 
 ### Sflow
 
-```
-nfreplay -H 127.0.0.1 -p 9998 -r sflow_anon.nfcapd -v 9 -d 1000
-```
+Coming soon.  nfreplay will not work with sflow data type.
 

@@ -20,7 +20,7 @@ services:
       - ./data/importer_cache:/var/cache/netsage
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "@every 24h"
+      ofelia.job-exec.dataUpdate.schedule: "@weekly"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
     image: netsage/pipeline_logstash:latest
