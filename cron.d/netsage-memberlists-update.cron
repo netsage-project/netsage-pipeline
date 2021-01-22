@@ -1,0 +1,16 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+
+#  Get updated member-org lists from scienceregistry.grnoc.iu.edu 
+#  These will be updated randomly and rarely, but can be downloaded weekly to be able to monitor their freshness
+#    -q for quiet - so no email if no output.
+#    Instead of touch, if your wget version has it, you can use --no-use-server-timestamps which sets the file's time to the download time 
+#
+
+## UNCOMMENT AFTER FILLING IN USERNAME AND PW
+# on Wednesdays at 23:45 UTC
+##45 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/FRGP-members-list.rb -q -O /etc/logstash/conf.d/support/newFRGP.rb  &&  mv /etc/logstash/conf.d/support/newFRGP.rb /etc/logstash/conf.d/support/FRGP-members-list.rb && touch /etc/logstash/conf.d/support/FRGP-members-list.rb
+
+# on Wednesdays at 23:50 UTC
+##50 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/ilight-members-list.rb -q -O /etc/logstash/conf.d/support/newilight.rb  &&  mv /etc/logstash/conf.d/support/newilight.rb /etc/logstash/conf.d/support/ilight-members-list.rb && touch /etc/logstash/conf.d/support/ilight-members-list.rb

@@ -44,6 +44,10 @@ Typically, the default configuration will work. Perform any desired Rabbit confi
           or # systemctl start rabbitmq-server.service
 ```
 
+### Installing Logstash
+
+See the logstash documentation. We are currently using Version 7.10.
+
 ### Installing the EPEL repo
 
 Some of our dependencies come from the EPEL repo. To install this:
@@ -80,7 +84,7 @@ gpgkey=https://repo-public.grnoc.iu.edu/repo/RPM-GPG-KEY-GRNOC7
 
 The first time you install packages from the repo, you will have to accept the GlobalNOC repo key.
 
-## Installing the Pipeline (Importer and Logstash)
+## Installing the Pipeline (Importer and Logstash configs)
 
 Install it like this:
 
@@ -92,8 +96,8 @@ Pipeline components:
 
 1. Flow Filter - GlobalNOC uses this for Cenic data to filter out some flows. Not needed otherwise.
 2. Netsage Netflow Importer - required to read nfcapd files from sflow and netflow importers. (If using tstat flow sensors only, this is not needed.)
-3. Logstash - be sure the number of logstash pipeline workers is set to 1 (unless you have removed the aggregation logstash conf).
-4. Logstash configs - these are executed in alphabetical order.  See the Logstash doc.
+3. Logstash - be sure the number of logstash pipeline workers in /etc/logstash/logstash.yml is set to 1 or flow stitching/aggregation will not work right!  
+4. Logstash configs - these are executed in alphabetical order.  See the Logstash doc. At a minimum, the input, output, and aggregation configs have parameters that you will need to update or confirm.
 
 Nothing will automatically start after installation as we need to move on to configuration. 
 
@@ -118,11 +122,11 @@ The most important part of the shared configuration file is the definition of co
      <!-- Top level directory of the nfcapd files for this sensor (within this dir are normally year directories, etc.) -->
          <flow-path>/path/to/netflow-files/</flow-path>
 
-     <!-- Sensor name - can be the hostname or any string you like -->
+     <!-- Sensor name - can be the hostname or any string you like. Shows up in grafana dashboards.  -->
          <sensor>Netflow Sensor 1</sensor>
 
      <!-- Flow type - sflow or netflow (defaults to netflow) -->
-         <flow-type>netflow</flow-type>
+         <flow-type>sflow</flow-type>
 
      <!-- "instance" goes along with sensor.  This is to identify various instances if a sensor has -->
      <!-- more than one "stream" / data collection.  Defaults to 0. -->
