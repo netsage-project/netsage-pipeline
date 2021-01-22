@@ -97,6 +97,7 @@ make pure_install
 %{__install} cron.d/netsage-scireg-update.cron %{buildroot}/etc/cron.d/netsage-scireg-update.cron
 %{__install} cron.d/netsage-maxmind-update.cron %{buildroot}/etc/cron.d/netsage-maxmind-update.cron
 %{__install} cron.d/netsage-caida-update.cron %{buildroot}/etc/cron.d/netsage-caida-update.cron
+%{__install} cron.d/netsage-memberlists-update.cron %{buildroot}/etc/cron.d/netsage-memberlists-update.cron
 %{__install} cron.d/netsage-logstash-restart.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
 
 %{__install} bin/netsage-flow-filter-daemon %{buildroot}/usr/bin/netsage-flow-filter-daemon
@@ -120,6 +121,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/cron.d/netsage-scireg-update.cron
 %config(noreplace) /etc/cron.d/netsage-maxmind-update.cron
 %config(noreplace) /etc/cron.d/netsage-caida-update.cron
+%config(noreplace) /etc/cron.d/netsage-memberlists-update.cron
 %config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
 # Don't overwrite importer configs. Create .rpmnew files if needed.

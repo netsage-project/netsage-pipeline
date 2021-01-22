@@ -12,13 +12,14 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that ar
 |-----------------------|-----------------------|-----------------------------|
 |start					|Jun 9, 2020 @ 17:39:53.808	|	Start time of the flow (first packet seen)|
 |end					|Jun 9, 2020 @ 17:39:57.699	|End time of the flow   (last packet seen)|
-|meta.protocol			|tcp							|Protocol used|
 |meta.id			| a17c4f05420d7ded9eb151ccd293a633 ff226d1752b24e0f4139a87a8b26d779    |Id of the flow (hash of 5-tuple + Sensor name)|
-|meta.flow_type			|sflow							|sflow, netflow, or tstat|
+|meta.flow_type			|sflow							|'sflow', 'netflow', or 'tstat'|
+|meta.protocol			|tcp							|Protocol used|
 |meta.sensor_id			| snvl2-pw-sw-1-mgmt-2.cenic.net|Sensor name (set in importer config, may not always be a hostname) |
 |meta.sensor_group		|CENIC						|Sensor group, usually the network |
-|meta.sensor_type		|Regional Network				|Sensor type (Circuit, Regional Network, etc) |
-|meta.country_scope		|Domestic						|Domestic, International, or Mixed, depending on countries of src and dst|
+|meta.sensor_type		|Regional Network				|Sensor type ('Circuit', 'Regional Network', etc) |
+|meta.country_scope		|Domestic						|'Domestic', 'International', or 'Mixed', depending on countries of src and dst|
+|meta.is_network_testing	| no	|    'yes' if discipline is 'CS.Network Testing and Monitoring' or port is one used for PerfSonar: 5001, 5101, or 5201|
 
 ### Source Fields (Destination Fields similarly with "dst")
 
@@ -32,6 +33,7 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that ar
 |meta.src_location.lon	|-122.164				|	longitude of the IP from the MaxMind GeoIP City database|
 |meta.src_country_name	|United States			|	country of the IP from the MaxMind GeoIP City database|
 |meta.src_continent		|North America			|	continent of the IP the MaxMind GeoIP City database|
+|meta.src_ifindex			|166						|the index of the interface the flow came into|
 
 ### Source Science Registry Fields  (Destination Fields similarly with "dst")
 The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human-curated information about various "resources". Resources are sources and destinations of flows.
@@ -44,8 +46,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |meta.scireg.src.org_abbr	|Boston U						|A shorter name for the organization. May not be the official abbreviation.|
 |meta.scireg.src.resource	|BU - ATLAS				|Descriptive resource name from SciReg |
 |meta.scireg.src.resource_abbr	 |  						|Resource abbreviation (if any)|
-|meta.scireg.src.project_namess	|ATLAS 					|A "Project" that the resource is part |
-|meta.scireg.src.projects	|... 					|An object containing project info |
+|meta.scireg.src.project_names	|ATLAS 					|"Projects" that the resource is part of|
 |meta.scireg.src.latitude	|37.4178						|Resource's latitude, as listed in the Science Registry|
 |meta.scireg.src.longitude	|-122.178						|Resource's longitude, as listed in the Science Registry|
 
@@ -53,9 +54,9 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
-|meta.src_preferred_org		|Stanford University			|If the IP was found in the Science Registry, these are the SciReg values, otherwise they are the CAIDA or MaxMind GeoIP values..|
-|meta.src_preferred_location.lat	|37.417800					| |
-|meta.src_preferred_location.lon	|-122.172000 |   |
+|meta.src_preferred_org		|Stanford University			|If the IP was found in the Science Registry, this is the SciReg organization, otherwise it is the CAIDA organization|
+|meta.src_preferred_location.lat	|37.417800					| Science Registry value if available, otherwise the MaxMind City DB value|
+|meta.src_preferred_location.lon	|-122.172000i	|  Science Registry value if available, otherwise the MaxMind City DB value  |
 
 ### Value Fields
 
@@ -106,6 +107,9 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |@exit_time			|Jun 9, 2020 @ 18:03:25.369	|The time the flow exited the pipeline |
 |@processing_time		|688.31						|@exit_time minus @ingest_time. Useful for seeing how long stitching took. |
 |stitched_flows			|13							|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
+|es_doc_id	|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
+|tags	|maxmind src asn	|Various info and error messages|
+|trial	| 5	|Can be set in 40-aggregation.conf if desired|
 
 ### Elasticsearch Fields
 

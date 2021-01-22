@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 MAILTO=root
 
 #  Get updated CAIDA asn-to-org csv file from scienceregistry.grnoc.iu.edu 
-#  It will be updated only quartly but download weekly to be able to monitor its freshness
+#  It will be updated only quartly but can be downloaded weekly to be able to monitor its freshness
 #    -q for quiet - so no email if no output.
 #    Instead of touch, if your wget version has it, you can use --no-use-server-timestamps which sets the file's time to the download time 
 #

@@ -12,7 +12,7 @@ Notes:
  - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
  - If actions in a .conf file are not needed in your particular case, it can be removed or disabled, but check carefully for effects on downstream configs.
  - MaxMind, CAIDA, and Science Registry Database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs weekly or daily. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also, though it's not running in Docker deployments. Similarly for other support files, eg, those used in 90-additional-fields.conf.
- - Lookup tables for 55-member-orgs.conf are not saved in github. You will need to provide these yourself or ask us for any we may have compliled. 
+ - Lookup tables for 55-member-orgs.conf that we have compiled are available from sciencregistry.grnoc.iu.edu. See the cron files provided. These will not be updated often, so you may run the cron jobs or not. You will need to provide lists for other networks yourself or ask us.
 
 ## Logstash Sequence
 
@@ -28,11 +28,13 @@ drops events with timestamps more than a year in the past or (10 sec) in the fut
 does some data type conversions;
 adds @ingest_time (this is mainly for developers).
 
+### 15-sensor-specific-changes.conf
+
+Makes any changes to fields needed for specific sensors. It currently contains an adjustment to the number of bytes and packets for a pacificwave sensor with a complicated setup, and a change in sensor name for certain flows from the NEAAR sensor.  
+
 ### 20-add_id.conf
 
 Adds a unique id (evenutally called meta.id) which is a hash of the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. This id is used for aggregating (stitching) in the next step. 
-
-Also adds a unique id (es_doc_id) based on meta.id plus the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates.
 
 ### 40-aggregation.conf
 
@@ -98,8 +100,9 @@ Copies Science Registry organization and location values, if they exist, to the 
 Sets additional quick and easy fields.  Supporting mapping or ruby files are used - see support/ and ruby/ in conf.d/. Currently we have (for Netsage's use):
  - sensor_group  = TACC, AMPATH, etc.  (based on matching sensor names to regexes)
  - sensor_type   = Circuit, Archive, Exchange Point, or Regional Network  (based on matching sensor names to regexes)
- - country_scope = Domestic, International, or Mixed  (based on src and dst countries, where Domestic = US, Puerto Rico, or Guam)
+ - country_scope = Domestic, International, or Mixed  (based on src and dst countries and possibly continents, where Domestic = US, Puerto Rico, or Guam)
  - is_network_testing = yes, no  (yes if discipline from the science registry is 'CS.Network Testing and Monitoring' or port = 5001, 5101, or 5201)
+ - es_doc_id = hash of meta.id and the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates. (NOTE: due to how netflow works, use es_doc_id as the ES document id only for sflow!)
 
 ### 95-cleanup.conf
 
@@ -115,53 +118,7 @@ Sends results to a final RabbitMQ queue. (".disabled" can be removed from other 
 
 ### Final Stage 
 
-In GlobalNOC/Netsage Project's case, the output filter writes the flows to a RabbitMQ queue on another host and the last stage is a separate logstash pipeline on that host. The latter reads flows from the queue and sends it into elasticsearch. 
-
-This can be easily replicated with the following configuration, for example, though you'll need one for each Rabbit queue/sensor/index. A mapping template can be specified here.
-
-Naturally the hosts for rabbit and elastic will need to be updated accordingly.
-
-Note: This should be updated to use a mapping template, for setting field types, and possibly using es_doc_id as the elasticsearch document id. As of Nov 2020, we are moving toward saving all fields as type "keyword", "float", or "long" only. 
-
-```
-input {
-  rabbitmq {
-    host => 'localhost'
-    user => 'guest'
-    password => "${rabbitmq_pass}"
-    exchange => 'netsage.direct'
-    key =>   XXXXXXX'
-    queue => 'netsage'
-    durable => true
-    subscription_retry_interval_seconds => 5
-    connection_timeout => 10000
-  }
-}
-filter {
-  if [@metadata][rabbitmq_properties][timestamp] {
-    date {
-      match => ["[@metadata][rabbitmq_properties][timestamp]", "UNIX"]
-    }
-  }
-}
-
-output {
-    elasticsearch {
-      hosts => [
-          "https://CHANGEME1",
-          "https://CHANGEME2"
-      ]
-      user => "logstash"
-      password => "${logstash_elasticsearch_password}"
-      cacert => "/etc/logstash/ca.crt"
-      index => "om-ns-netsage"
-      template_overwrite => true
-      failure_type_logging_whitelist => []
-      action => index
-      #ssl_certificate_verification => false
-    }
-}
-```
+In the GlobalNOC-Netsage case, the output filter writes the flows to a network-specific RabbitMQ queue on another host and the last stage is a separate logstash pipeline on a 3rd host. The latter reads flows from the final queue using a rabbitmq input filter and sends it into elasticsearch using an elasticsearch output filter with a mapping template which sets data types for the fields. 
 
 ## Field names
 
