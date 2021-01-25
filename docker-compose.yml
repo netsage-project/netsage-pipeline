@@ -18,6 +18,7 @@ services:
     volumes:
       - ./data:/data
       - ./data/importer_cache:/var/cache/netsage
+      - ./conf-logstash:/usr/share/logstash/pipeline/
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.dataUpdate.schedule: "@weekly"
