@@ -1,4 +1,25 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.8 -- Jan 28 2021
+------------------------------------------------------
+Features:
+  * Added 15-sensor-specific-changes.conf with multiplication by mirroring-sampling rate for a pacificwave sensor and changing of the sensor name for NEAAR flows using a certain ifindex.
+  * Started saving ifindexes to ES (at least for now)
+  * Added consideration of continents to possibly get a country_scope value when a country is missing.
+  * Stopped saving old 'projects' array field to ES
+  * Added example cron file to get member-org lists and made Docker download them (and maxmind db's, etc) weekly.
+  * Documentation updates
+  * Misc. minor changes
+
+Bugs
+  * Fixed a typo that affected src org when dst was Multicast or missing an asn or org
+  * Moved the es_doc_id calculation to after aggregation, so it would be saved to ES.
+
+Changes
+  * Removed explicit logstash dependency in the spec file
+  * Added Sun Corridor sensors to regexes for sensor type and group.
+  * Upgraded logstash to logstash.x86_64 version 7.10.2-1 (outside of pipeline upgrade)
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.7 -- Nov 17 2020
 ------------------------------------------------------
 Features:
