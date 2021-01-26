@@ -13,6 +13,8 @@ function integration_test() {
 
     fi
 
+    docker_login
+
     docker-compose -f docker-compose.build.yml build
 
     if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
@@ -20,9 +22,13 @@ function integration_test() {
     fi
 }
 
+function docker_login() {
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+}
 ## Publish image to our docker hub repository
 function publish_image() {
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    docker_login
     docker-compose -f docker-compose.build.yml push
 }
 

@@ -2,10 +2,12 @@
 
 #DATA_DIR=/var/lib/grnoc/netsage/
 DATA_DIR=/data/cache/
+LOGSTASH_DIR=/usr/share/logstash/pipeline/support
 mkdir -p $DATA_DIR && echo "Cache directory ${DATA_DIR} created" || echo "cache dir ${DATA_DIR} already exists"
 
 FILES="GeoLite2-ASN scireg GeoLite2-City"
 CAIDA_FILES="CAIDA-org-lookup"
+RUBY_DATA="FRGP-members-list ilight-members-list"
 
 function downloadFiles() {
     ext=$1
@@ -26,3 +28,6 @@ echo "Download ScienceRegistry and maxmind"
 downloadFiles mmdb $FILES
 echo "Download Caida Files"
 downloadFiles csv $CAIDA_FILES
+echo "Download Ruby files"
+DATA_DIR=$LOGSTASH_DIR
+downloadFiles rb $RUBY_DATA

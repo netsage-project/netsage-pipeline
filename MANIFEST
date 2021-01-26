@@ -38,6 +38,7 @@ cron.d/netsage-maxmind-update.cron
 cron.d/netsage-caida-update.cron
 cron.d/netsage-scireg-update.cron
 cron.d/netsage-logstash-restart.cron
+cron.d/netsage-memberlists-update.cron 
 grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon
