@@ -6,6 +6,7 @@ conf-logstash/01-input-jsonfile.conf.disabled
 conf-logstash/01-input-multiline-json-file.conf.disabled
 conf-logstash/01-input-rabbit.conf
 conf-logstash/10-preliminaries.conf
+conf-logstash/15-sensor-specific-changes.conf
 conf-logstash/20-add-id.conf
 conf-logstash/40-aggregation.conf
 conf-logstash/45-geoip-tagging.conf

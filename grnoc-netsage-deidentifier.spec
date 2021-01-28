@@ -142,6 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
+%config /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config /etc/logstash/conf.d/20-add-id.conf
 %config /etc/logstash/conf.d/45-geoip-tagging.conf
 %config /etc/logstash/conf.d/50-asn.conf
