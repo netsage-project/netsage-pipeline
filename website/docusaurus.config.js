@@ -55,7 +55,7 @@ module.exports = {
           remarkPlugins: [require("remark-import-partial")],
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
-          lastVersion: "1.2.7",
+          lastVersion: "1.2.8",
           versions: {
             current: {
               label: `master (unreleased)`,
