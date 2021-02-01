@@ -2,7 +2,8 @@
 ### Shut things down
 
 ```sh
-docker_compose down
+cd {netsage-pipeline directory}
+docker-compose down
 ```
 This will stop all the docker containers, including the importer, logstash, and any collectors. Note that incoming flow data will not be saved during the time the collectors are down.
 
@@ -36,14 +37,15 @@ Note that you do not need to update the versions of the importer or logstash ima
 
 Run these two commands to select the new release you want to run. In the first, replace "tag_value" by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
 ```sh
-git checkout tag_value 
+git checkout -b tag_value 
+git pull
 ./scripts/docker_select_version.sh
 ```
 Check to be sure docker-compose.yml and docker-compose.override.yml both now have the version number you selected.  
 
 ### Update Docker Containers
 
-Do not forget this stop!  This applies for both development and release versions.
+Do not forget this step!  This applies for both development and release versions.
 
 ```
 docker-compose pull
