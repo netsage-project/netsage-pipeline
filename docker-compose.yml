@@ -3,6 +3,7 @@ services:
   rabbit:
     image: rabbitmq:3.8-management
     env_file: .env
+    hostname: rabbit
     volumes:
       - ./data/rabbit:/var/lib/rabbitmq
     ports:
