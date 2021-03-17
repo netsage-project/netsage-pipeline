@@ -99,6 +99,8 @@ ifindex_sensor_rename_ifindex=10032
 
 In this case, any flows through interface 10032 (src_ifindex = 10032 or dst_ifindex = 10032) will have the sensor name (sensor_id) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
 
+:::note
+Please notify the devs at IU in advance, if you need to modify a sensor name, because the regexes used for determining sensor_group and sensor_type may have to be updated.
 
 ## To Change How Long Nfcapd Files Are Kept
 The importer will automatically delete older nfcapd files for you, so that your disk don't fill up. By default, 3 days worth of files will be kept. This can be adjusted by making a netsage_override.xml file:
