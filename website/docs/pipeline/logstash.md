@@ -30,7 +30,7 @@ adds @ingest_time (this is mainly for developers).
 
 ### 15-sensor-specific-changes.conf
 
-Makes any changes to fields needed for specific sensors. It currently contains an adjustment to the number of bytes and packets for a pacificwave sensor with a complicated setup, and a change in sensor name for certain flows from the NEAAR sensor.  
+Makes any changes to fields needed for specific sensors. It currently provides the ability to change the sensor name for flows from a specified sensor which go through a certain interface. You may edit the file in a bare-metal installation, or use the .env file for Docker installations, to specifiy the parameters. By default, it will do nothing.
 
 ### 20-add_id.conf
 
@@ -71,7 +71,7 @@ Uses the current source and destination ASNs to get organization names from the 
 Searches any provided lookup tables by IP to obtain member or customer organization names and overwrite the Organization determined previously.
 This allows entities which don't own their own ASs to be listed as the src or dst Organization.
 
-Note: These lookup tables are not stored in github, but an example is provided to show the layout.
+Note: These lookup tables are not stored in github, but an example is provided to show the layout and tables we have can be downloaded via a cron job.
 
 ### 60-scireg-tagging-fakegeoip.conf
 

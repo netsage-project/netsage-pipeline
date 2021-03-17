@@ -27,6 +27,9 @@ Sflow and netflow data and the NetFlow Importer use nfdump tools. If you are onl
 
 nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
 
+The nfdump package provides nfcapd and sfcapd processes which recieve flow data and write nfcapd files. 
+
+If desired, you can also install nfsen, which has a UI for viewing flow data and can manage starting and stopping all the nfcapd/sfcapd processes for you.The nfsen.conf file has a section in which to configure all the sources. 
 
 ### Installing RabbitMQ
 

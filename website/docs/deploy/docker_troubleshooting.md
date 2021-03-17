@@ -6,7 +6,7 @@ sidebar_label: Troubleshooting
 
 ## Troubleshooting
 
-### Data Flow issues:
+### If you are not seeing flows after installation
 
 **Troubleshooting checklist:**
 
@@ -21,9 +21,18 @@ sidebar_label: Troubleshooting
 
 To see if flows are getting into and being read from the rabbit queue on the pipeline host, you can go to  `http://localhost:15672` in your favorite web browser. Login as guest with password guest. Look for accumulating messages and/or messages being acknowledged and published.
 
-### Resource Limitations
+### If flow collection stops
 
-If you are running a lot of data sometimes docker may need to be allocated more memory. The most
+**Logstash or Importer errors:**
+- Make sure all containers are running.
+- Check the logs of the various containers to see if anything jumps out as being invalid.  `docker-compose logs -f $service_label`
+- Check the logs to see if logstash is starting successfully.
+
+**Disk space:**
+- If the containers are running but nothing is happening and the disk is full, you probably need more disk space. You could try saving fewer days of nfcapd files (see Docker Advanced). 
+
+**Memory:**
+- If you are running a lot of data, sometimes docker may need to be allocated more memory. The most
 likely culprit is logstash which is usually only allocated 2GB of RAM. You'll need to update the jvm.options file to grant it more memory. 
 
 Please see the [Docker Advanced guide](docker_install_advanced.md#customize-logstash-settings) for details on how to customize logstash.

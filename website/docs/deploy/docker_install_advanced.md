@@ -85,7 +85,22 @@ The default version of the collector is 1.6.18. There are other versions release
 :::
 
 
-## To Change the Culling of Nfcapd Files
+## To Change a Sensor Name Depending on the Interface Used
+In some cases, users want to differentiate between flows that enter or exit through specific sensor interfaces. This can be done by editing the env file.
+
+In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 4 fields are set properly! For example,
+
+```sh
+ifindex_sensor_rename=True
+ifindex_sensor_rename_old_name=IU Sflow 
+ifindex_sensor_rename_new_name=IU Bloomington Sflow
+ifindex_sensor_rename_ifindex=10032
+```
+
+In this case, any flows through interface 10032 (src_ifindex = 10032 or dst_ifindex = 10032) will have the sensor name (sensor_id) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
+
+
+## To Change How Long Nfcapd Files Are Kept
 The importer will automatically delete older nfcapd files for you, so that your disk don't fill up. By default, 3 days worth of files will be kept. This can be adjusted by making a netsage_override.xml file:
 
 ```sh
@@ -109,10 +124,10 @@ You will also need to uncomment these lines in docker-compose.override.yml:
 
 
 
-## For Tstat Data
+## To Process Tstat Data
 Tstat data is not collected by nfdump/sfcapd/nfcapd or read by an Importer. Instead, the flow data is sent directly from the router or switch to the logstash pipeline's ingest rabbit queue (named "netsage_deidentifier_raw").  So, when following the Docker Simple guide, the sections related to configuring and starting up the collectors and Importer will not pertain to the tstat sensors. The .env file still needs to be set up though.
 
-Setting up Tstat is outside the scope of this document, but see the Netsage project Tstat-Transport which contains client programs that can send tstat data to a rabbit queue. See [https://github.com/netsage-project/tstat-transport.git](https://github.com/netsage-project/tstat-transport.git).
+Setting up Tstat is outside the scope of this document, but see the Netsage project Tstat-Transport which contains client programs that can send tstat data to a rabbit queue. See [https://github.com/netsage-project/tstat-transport.git](https://github.com/netsage-project/tstat-transport.git). Basically, you need to have Tstat send data directly to the same rabbit queue that the importers write sflow and netflow data to and that the logstash pipeline reads from.
 
 
 ## To Customize Java Settings / Increase Memory Available for Lostash 

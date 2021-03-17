@@ -58,3 +58,7 @@ docker-compose up -d
 ```
 
 This will start all the services/containers listed in the docker-compose.yml and docker-compose.override.yml files, including the importer, logstash pipeline, and collectors.
+
+### Delete old images
+
+To save space, delete any old images that are not needed. 
