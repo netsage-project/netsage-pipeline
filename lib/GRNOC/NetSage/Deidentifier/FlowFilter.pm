@@ -170,7 +170,8 @@ sub get_router_details {
         #my $router = $self->router;
         my $sensor = $collection->{'sensor'};
         my $router = $collection->{'sensor'};
-        $router = $collection->{'router-address'} if $collection->{'router-address'};
+       # 3/22/21 - simp on netsage-simp is not returning anything by IP (ie router-address), so only use sensor name
+       # $router = $collection->{'router-address'} if $collection->{'router-address'};
 
         my $row = {};
 
@@ -189,10 +190,12 @@ sub get_router_details {
 
         my $results = $client->get( %query );
 
-        if ( exists( $results->{'results'} ) && %{ $results->{'results'} }  ) {
+# as of simp 1.6.0, node results are wrapped in the port used to query the data on the node
+# 161 is the port used for traditional SNMP
+        if ( exists( $results->{'results'}->{'161'} ) && %{ $results->{'results'}->{'161'} }  ) {
             $self->logger->debug( "router found: $router" );
-            $row->{'results'} = $results->{'results'};
-            $self->logger->debug( "router found in simp: " . Dumper $results->{'results'} );
+            $row->{'results'} = $results->{'results'}->{'161'};
+            $self->logger->debug( "router found in simp: "); ## . Dumper $results->{'results'} );
         } else {
             $self->logger->warn( "router NOT found in simp: " . Dumper $router );
             $row->{'results'} = undef;
