@@ -139,10 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
-%config /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config /etc/logstash/conf.d/20-add-id.conf
 %config /etc/logstash/conf.d/45-geoip-tagging.conf
 %config /etc/logstash/conf.d/50-asn.conf
@@ -196,7 +196,7 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Logstash configs 01, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
+echo " *  Logstash configs 01, 15, 40, and 99 are not replaced by updated versions, so check to see if there are changes. "
 echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
 echo " "
 echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage multiple pipelines in pipelines.yml."

@@ -91,16 +91,27 @@ In some cases, users want to differentiate between flows that enter or exit thro
 In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 4 fields are set properly! For example,
 
 ```sh
-ifindex_sensor_rename=True
+ifindex_sensor_rename_flag=True
 ifindex_sensor_rename_old_name=IU Sflow 
 ifindex_sensor_rename_new_name=IU Bloomington Sflow
 ifindex_sensor_rename_ifindex=10032
 ```
 
-In this case, any flows through interface 10032 (src_ifindex = 10032 or dst_ifindex = 10032) will have the sensor name (sensor_id) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
+In this case, any flows through interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name (sensor_id) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
 
 :::note
 Please notify the devs at IU in advance, if you need to modify a sensor name, because the regexes used for determining sensor_group and sensor_type may have to be updated.
+
+## To Do Sampling Rate Corrections in Logstash
+When flow sampling is done, the number of bits needs to be corrected for the sampling rate. For example, if you are sampling 1 out of 100 flows and a sample has 55 MB, it is assumed that in reality there would be 100 flows of that size (with that src and dst), so the number of bits is multiplied by 100. Usually the collector (nfcapd or sfcapd process) gets the sampling rate from the incoming data and applies the correction, but in some cases, the sensor may not send the sampling rate, or there may be a complex set-up that requires a manual correction. With netflow, a manual correction can be applied using the '-s' option in the nfsen config or the nfcapd command. For sflow, there is no such option. In either case, the correction can be made in logstash as follows.
+
+In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 3 fields are set properly! The same correction can be applied to multiple sensors by using a comma-separed list. For example,
+
+```sh
+sampling_correction_flag=True
+sampling_correction_sensors=IU Bloomington Sflow, IU Sflow
+sampling_correction_factor=512
+```
 
 ## To Change How Long Nfcapd Files Are Kept
 The importer will automatically delete older nfcapd files for you, so that your disk don't fill up. By default, 3 days worth of files will be kept. This can be adjusted by making a netsage_override.xml file:
@@ -109,7 +120,7 @@ The importer will automatically delete older nfcapd files for you, so that your 
 cp compose/importer/netsage_shared.xml userConfig/netsage_override.xml
 ```
 
-At the bottom of the file, edit this section. Set cull-enable to 0 for no culling. Eg, to save 7 days worth of data:
+At the bottom of the file, edit this section to set the number of days worth of files to keep. Set cull-enable to 0 for no culling. Eg, to save 7 days worth of data:
 ````xml
   <worker>
     <cull-enable>1</cull-enable>
