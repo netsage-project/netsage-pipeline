@@ -14,7 +14,7 @@ services:
   ## Please remove or add any additional collectors here.  Default setup should work fine without any custom config.
   ## You may remove any collectors that are not needed.
   sflow-collector:
-    image: netsage/nfdump-collector:1.6.18
+    image: netsage/nfdump-collector:alpine-nightly
     restart: always
     command: sfcapd -T all -l /data -S 1 -w -z -p 9998
     volumes:
@@ -22,7 +22,7 @@ services:
     ports:
       - "9998:9998/udp"
   netflow-collector:
-    image: netsage/nfdump-collector:1.6.18
+    image: netsage/nfdump-collector:alpine-nightly
     command: nfcapd -T all -l /data -S 1 -w -z -p 9999
     ports:
       - "9999:9999/udp"
