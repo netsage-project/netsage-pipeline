@@ -1,17 +1,16 @@
 [Unit]
-Description=NetSage Flow Filter (NetSage pipeline)
+Description=NetSage Pipeline Flow Filter  
 After=rabbitmq-server.service
 Requires=rabbitmq-server.service
 
 [Service]
-Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
-Environment=SHAREDCONFIG=/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+User=root
+Group=root
+Environment=CONFIG=/etc/grnoc/netsage/netsage_flow_filter A.xml
+Environment=SHAREDCONFIG=/etc/grnoc/netsage/netsage_shared .xml
 ExecStart=/usr/bin/netsage-flow-filter-daemon --config ${CONFIG} --sharedconfig ${SHAREDCONFIG} --nofork
-ExecStop=/bin/kill $MAINPID
 
 # We don't have HUP capability yet
-# ExecReload=/bin/kill -s SIGHUP $MAINPID
-
 # We might want to try restarting automatically, but not now
 # Restart=on-failure
 # RestartSec=30s

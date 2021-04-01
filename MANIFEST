@@ -43,7 +43,9 @@ cron.d/netsage-memberlists-update.cron
 grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon
-website/docs/deploy/bare_metal_install.md
+systemd/netsage-flow-filter.service
+systemd/netsage-importer.service
+systemd/logstash.service
 lib/GRNOC/NetSage/Deidentifier.pm
 lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
 lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm
@@ -52,13 +54,12 @@ lib/GRNOC/NetSage/Deidentifier/WorkerManager.pm
 Makefile.PL
 MANIFEST
 README.md
+website/docs/deploy/bare_metal_install.md
 reporting/flow-mongo-stats.pl
 reporting/getdata-cron.pl
 reporting/getdata.pl
 reporting/queues.txt
 reporting/queuestats.pl
-systemd/netsage-flow-filter.service
-systemd/netsage-netflow-importer.service
 test-data/data1.json
 test-data/data2.json
 test-data/scireg2.json

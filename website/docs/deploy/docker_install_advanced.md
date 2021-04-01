@@ -161,6 +161,13 @@ logstash:
     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
 ```
 
+Here are some tips for adjusting the JVM heap size (https://www.elastic.co/guide/en/logstash/current/jvm-settings.html):
+
+- The recommended heap size for typical ingestion scenarios should be no less than 4GB and no more than 8GB.
+- CPU utilization can increase unnecessarily if the heap size is too low, resulting in the JVM constantly garbage collecting. You can check for this issue by doubling the heap size to see if performance improves.
+- Do not increase the heap size past the amount of physical memory. Some memory must be left to run the OS and other processes. As a general guideline for most installations, don’t exceed 50-75% of physical memory. The more memory you have, the higher percentage you can use.
+- Set the minimum (Xms) and maximum (Xmx) heap allocation size to the same value to prevent the heap from resizing at runtime, which is a very costly process.
+
 ## To Bring up Kibana and Elasticsearch Containers
 
 The file docker-compose.develop.yaml can be used in conjunction with docker-compose.yaml to bring up the optional Kibana and Elastic Search components.

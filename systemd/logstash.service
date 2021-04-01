@@ -1,0 +1,23 @@
+[Unit]
+Description=logstash
+
+[Service]
+Type=simple
+User=logstash
+Group=logstash
+
+# Load environment vars that may be used in conf files.   
+# (Prefixing the path with '-' makes it try to load, but if the file doesn't exist, it continues.)
+EnvironmentFile=-/etc/logstash/logstash-env-vars
+
+ExecStart=/usr/share/logstash/bin/logstash "--path.settings" "/etc/logstash"
+WorkingDirectory=/
+Nice=19
+LimitNOFILE=16384
+
+# When stopping, how long to wait before giving up and sending SIGKILL?
+# Keep in mind that SIGKILL on a process can cause data loss.
+TimeoutStopSec=infinity
+
+[Install]
+WantedBy=multi-user.target

@@ -87,8 +87,9 @@ make pure_install
 %{__install} conf-logstash/support/*  %{buildroot}/etc/logstash/conf.d/support/
 
 %if 0%{?rhel} >= 7
+%{__install} systemd/netsage-importer.service %{buildroot}/etc/systemd/system/netsage-importer.service
 %{__install} systemd/netsage-flow-filter.service %{buildroot}/etc/systemd/system/netsage-flow-filter.service
-%{__install} systemd/netsage-netflow-importer.service %{buildroot}/etc/systemd/system/netsage-netflow-importer.service
+%{__install} systemd/logstash.service %{buildroot}/etc/systemd/system/logstash.service
 %else
 %{__install} init.d/netsage-flow-filter-daemon %{buildroot}/etc/init.d/netsage-flow-filter-daemon
 %{__install} init.d/netsage-netflow-importer-daemon %{buildroot}/etc/init.d/netsage-netflow-importer-daemon
@@ -179,7 +180,8 @@ rm -rf $RPM_BUILD_ROOT
 %if 0%{?rhel} >= 7
 %defattr(644, root, root, -)
 /etc/systemd/system/netsage-flow-filter.service
-/etc/systemd/system/netsage-netflow-importer.service
+/etc/systemd/system/netsage-importer.service
+/etc/systemd/system/logstash.service
 %else
 %defattr(754, root, root, -)
 /etc/init.d/netsage-flow-filter-daemon
