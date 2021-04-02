@@ -44,7 +44,7 @@ grnoc-netsage-deidentifier.spec
 init.d/netsage-flow-filter-daemon
 init.d/netsage-netflow-importer-daemon
 systemd/netsage-flow-filter.service
-systemd/netsage-importer.service
+systemd/netsage-netflow-importer.service
 systemd/logstash.service
 lib/GRNOC/NetSage/Deidentifier.pm
 lib/GRNOC/NetSage/Deidentifier/FlowFilter.pm
