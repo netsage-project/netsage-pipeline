@@ -6,8 +6,8 @@ Requires=rabbitmq-server.service
 [Service]
 User=root
 Group=root
-Environment=CONFIG=/etc/grnoc/netsage/netsage_netflow_importer.xml
-Environment=SHAREDCONFIG=/etc/grnoc/netsage/netsage_shared.xml
+Environment=CONFIG=/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
+Environment=SHAREDCONFIG=/etc/grnoc/netsage/deidentifier/netsage_shared.xml
 ExecStart=/usr/bin/netsage-netflow-importer-daemon --config ${CONFIG} --sharedconfig ${SHAREDCONFIG} --nofork
 ExecStopPost=/bin/echo "Use ps to be sure the daemon and worker both stopped"
 
