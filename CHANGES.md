@@ -1,4 +1,25 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.9 -- Apr 7 2021
+------------------------------------------------------
+Usage note: With this release, we are also moving to using a version of nfdump built from github master which includes commits through Feb 20, 2021. This includes a fix for incorrect ASNs being added to flows when the ASN data is actually missing.
+  * To go along with this, docker-compose.override_example.yml refers to a "nightly" tag of nfdump (this is not updated nightly!)
+
+Features:
+  * The installed version of 15-sensor-specific-changes.conf now accomodates environment variables for 
+    renaming sensors according to ifindex, and doing sampling corrections based on sensor name.
+    Env values are taken from the Docker .env file or from /etc/logstash/logstash-env-vars (filename is set in a new logstash systemd file).
+  * For Docker installs, the flow-size threshold will now be 10 MB, down from 100 MB (changed the setting in the installed importer config)
+  * Added some new regexes to sensor_group and sensor_type lists
+  * For Docker installs, added support for alpine containers, set logging level to INFO
+  * Documentation updates
+  
+Bugs
+  * Flow-filter changes have been made to accomodate changes to simp
+  * Flows with IPs of 0.0.0.0 are dropped
+  * For Docker installs, rabbit host name will be fixed 
+  * Docusaurus and some packages flagged by depndabot were upgraded
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.8 -- Jan 28 2021
 ------------------------------------------------------
 Features:

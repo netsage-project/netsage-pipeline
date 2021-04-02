@@ -3,7 +3,7 @@ package GRNOC::NetSage::Deidentifier;
 use strict;
 use warnings;
 
-our $VERSION = "1.2.8";
+our $VERSION = "1.2.9";
 
 1;
 
