@@ -25,8 +25,8 @@
         <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
 
     <!-- The minium flow size threshold - will not  import any flows smaller than this -->
-    <!-- Defaults to 500M  -->
-        <min-bytes>100000000</min-bytes> 
+    <!-- Defaults to 500M if not set. (Docker users will get whatever is set here)  -->
+        <min-bytes>10000000</min-bytes> 
 
     <!-- Do not import nfcapd files younger than min-file-age
         The value must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are

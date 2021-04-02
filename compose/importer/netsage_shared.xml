@@ -34,6 +34,12 @@
          For example, $sflowSensorName2 would expect your .env to contain sflowSensorName2=<someValue>
     -->
 
+  <!-- for culling of nfcapd files, set enable=1 and ttl to the no. of days worth of files to keep  -->
+  <worker>
+    <cull-enable>1</cull-enable>
+    <cull-ttl>3</cull-ttl>
+  </worker>
+
   <!-- docker localhost rabbitmq connection info -->
   <rabbit_input>
     <host>rabbit</host>
@@ -56,10 +62,4 @@
     <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
   </rabbit_output>
   
-  <!-- worker settings -->
-  <worker>
-    <cull-enable>1</cull-enable>
-    <cull-ttl>3</cull-ttl>
-  </worker>
-
 </config>

@@ -4,6 +4,7 @@
     components. Those components also have their own config; if a variable is set in
     both places, the value in the individual config overrides the shared one.
 -->
+<!-- IN DOCKER INSTALLATIONS, THIS FILE COMES IS REPLACED BY compose/netsage_shared.xml -->
 
 <config>
     <!-- NOTE: you may have multiple <collection> stanzas -->

@@ -76,11 +76,11 @@ make pure_install
 %{__install} CHANGES.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/CHANGES.md
 %{__install} website/docs/deploy/bare_metal_install.md %{buildroot}/usr/share/doc/grnoc/netsage-deidentifier/INSTALL.md
 
-%{__install} conf/logging.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
-%{__install} conf/logging-debug.conf.example %{buildroot}/etc/grnoc/netsage/deidentifier/logging-debug.conf
-%{__install} conf/netsage_shared.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_shared.xml
-%{__install} conf/netsage_flow_filter.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
-%{__install} conf/netsage_netflow_importer.xml.example %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
+%{__install} conf/logging.conf %{buildroot}/etc/grnoc/netsage/deidentifier/logging.conf
+%{__install} conf/logging-debug.conf %{buildroot}/etc/grnoc/netsage/deidentifier/logging-debug.conf
+%{__install} conf/netsage_shared.xml %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+%{__install} conf/netsage_flow_filter.xml %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_flow_filter.xml
+%{__install} conf/netsage_netflow_importer.xml %{buildroot}/etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml
 %{__install} conf-logstash/*.conf  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/*.conf.disabled  %{buildroot}/etc/logstash/conf.d/
 %{__install} conf-logstash/ruby/*  %{buildroot}/etc/logstash/conf.d/ruby/
