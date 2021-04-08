@@ -16,8 +16,8 @@ Nice=19
 LimitNOFILE=16384
 
 # When stopping, how long to wait before giving up and sending SIGKILL?
-# Keep in mind that SIGKILL on a process can cause data loss.
-TimeoutStopSec=infinity
+# Keep in mind that SIGKILL on a process can cause data loss, but logstash won't be killed unless you allow it with --pipeline.unsafe_shutdown.
+TimeoutStopSec=5min
 
 [Install]
 WantedBy=multi-user.target
