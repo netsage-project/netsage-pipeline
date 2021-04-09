@@ -15,7 +15,7 @@ at the [docusaurus 2](https://v2.docusaurus.io/) project website.
 ## Installation
 
 ```
-$ yarn
+$ yarn install
 ```
 
 ## Local Development
@@ -42,7 +42,9 @@ This command generates static content into the `build` directory and can be serv
 docker-compose build build_docs
 ```
 
-## Local Development
+## Deployments
+
+### Local Development
 
 ```
 docker-compopse up -d docs
@@ -51,8 +53,18 @@ docker-compopse up -d docs
 The docs will be visible at http://localhost:8000/netsage-pipeline/
 
 
+### Manual Deployment
 
-# Tagging New release
+This should be handled by the CI (Continuous Integration) currently setup via Travis for each commit merged into master.  If you need to do this manually, you can force a deployment
+assuming you have write access to the git repo by running the following command.
+
+```sh
+USE_SSH="true" GITHUB_USER="<youruser>" yarn deploy
+```
+
+
+
+## Tagging New release
 
 Once the documentation is stable and you don't forsee any new change, please do the following:
 
