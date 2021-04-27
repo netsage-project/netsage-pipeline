@@ -30,7 +30,7 @@ adds @ingest_time (this is mainly for developers).
 
 ### 15-sensor-specific-changes.conf
 
-Makes any changes to fields needed for specific sensors. It currently provides the ability to change the sensor name for flows from a specified sensor which go through a certain interface, and the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags are set to False by default.
+Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in the specfied list, 2) the ability to change the sensor name for flows from a specified sensor which go through a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
 
 ### 20-add_id.conf
 

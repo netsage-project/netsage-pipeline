@@ -1,7 +1,7 @@
 ---
 id: docker_install_simple
-title: Docker Default Installation Guide
-sidebar_label: Docker Simple
+title:  NetSage Flow Processing Pipeline - Docker Installation Guide
+sidebar_label: Docker Installation
 ---
 In this deployment guide, you will learn how to deploy a basic Netsage setup that includes one sflow and/or one netflow collector.  If you have more than one collector of either type, or other special situations, see the Docker Advanced guide.
 
@@ -66,7 +66,7 @@ This file also specifies port numbers, and directories for nfcapd files.  By def
 Other lines in this file you can ignore for now. 
 
 :::note
-You may need to remove all the comments in the override file as they may conflict with the parsing done by docker-compose
+If you run into issues, try removing all the comments in the override file as they may conflict with the parsing done by docker-compose
 :::
 
 
@@ -86,7 +86,7 @@ This script will replace the version numbers of docker images in the docker-comp
 
 ## Running the Collectors
 
-After selecting the version to run, you can start the two flow collectors by themselves by running the following line. If you only need one of the collectors, remove the other from this command. 
+After selecting the version to run, you could start the two flow collectors by themselves by running the following line. If you only need one of the collectors, remove the other from this command. 
 
 (Or see the next section for how to start all the containers, including the collectors.)
 

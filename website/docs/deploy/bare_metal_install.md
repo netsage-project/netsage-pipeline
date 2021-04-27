@@ -1,10 +1,10 @@
 ---
 id: bare_metal_install
-title: NetSage Flow Processing Pipeline Installation Guide
-sidebar_label: Server Installation Guide
+title: NetSage Flow Processing Pipeline - Manual Installation Guide
+sidebar_label: Manual Installation 
 ---
 
-This document covers installing the NetSage Flow Processing Pipeline on a new machine. Steps should be followed below in order unless you know for sure what you are doing. This document assumes a RedHat Linux environment or one of its derivatives.
+This document covers installing the NetSage Flow Processing Pipeline manually on a new machine (without using Docker). Steps should be followed below in order unless you know for sure what you are doing. This document assumes a RedHat Linux environment or one of its derivatives.
 
 ## Data sources
 
@@ -25,7 +25,7 @@ Tstat data should be sent directly to the logstash input RabbitMQ queue (the sam
 
 Sflow and netflow data and the NetFlow Importer use nfdump tools. If you are only collecting tstat data, you do not need nfdump. 
 
-nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump.
+nfdump is _not_ listed as a dependency of the Pipeline RPM package, as in a lot cases people are running special builds of nfdump -- but make sure you install it before you try running the Netflow Importer. If in doubt, `yum install nfdump` should work. Flow data exported by some routers require a newer version of nfdump than the one in the CentOS repos; in these cases, it may be necessary to manually compile and install the lastest nfdump. It is recommended to check the version of nfdump used in the Docker installation and use the same or newer in order to be sure any fixes for issues we have noticed are included.
 
 The nfdump package provides nfcapd and sfcapd processes which recieve flow data and write nfcapd files. 
 

@@ -35,9 +35,9 @@ Note that you do not need to update the versions of the importer or logstash ima
 
 ### Select Release Version
 
-Run these two commands to select the new release you want to run. In the first, replace "tag_value" by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
+Run these two commands to select the new release you want to run. In the first, replace "{tag}" by the version to run (eg, v1.2.8). When asked by the second, select the same version as the tag you checked out.
 ```sh
-git checkout -b tag_value 
+git checkout -b {tag} 
 git pull
 ./scripts/docker_select_version.sh
 ```
@@ -45,13 +45,13 @@ Check to be sure docker-compose.yml and docker-compose.override.yml both now hav
 
 ### Update Docker Containers
 
-Do not forget this step!  This applies for both development and release versions.
+Do not forget this step!  Pull new images from Docker Hub. This applies for both development and release versions.
 
 ```
 docker-compose pull
 ```
 
-### Restart Docker Containers
+### Restart all the Docker Containers
 
 ```
 docker-compose up -d
@@ -59,6 +59,12 @@ docker-compose up -d
 
 This will start all the services/containers listed in the docker-compose.yml and docker-compose.override.yml files, including the importer, logstash pipeline, and collectors.
 
-### Delete old images
+### Delete old images and containers
 
-To save space, delete any old images that are not needed. 
+To save space, delete any old images and containers that are not being used.
+
+```
+docker image prune -a
+docker container prune
+```
+

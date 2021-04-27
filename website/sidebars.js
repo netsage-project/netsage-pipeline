@@ -15,7 +15,10 @@ module.exports = {
       "deploy/docker_install_advanced",
       "deploy/docker_troubleshoot",
     ],
-    "Deployment Guides": ["devel/dev_dataset", "devel/docker_dev_guide"],
-    Documentation: ["docusaurus"],
+    Development: [
+      "devel/dev_dataset", 
+      "devel/docker_dev_guide",
+      "devel/docusaurus",
+    ]
   },
 };

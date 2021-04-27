@@ -1,7 +1,7 @@
 ---
 id: docusaurus
-title: Documentation Guide
-sidebar_label: Documentation Guide
+title: Docusaurus
+sidebar_label: Docusaurus
 ---
 
 
@@ -73,6 +73,9 @@ yarn run docusaurus docs:version 1.1.0
 ```
 
 Where 1.1.0 is the next release version.  Commit the new directories created under 
+  * website/versioned_docs
+  * website/versioned_sidebars
+  * versions.json 
 
 :::note
 Alternatively, if you have docker setup, you may run this command and avoid installing all of the required javascript dependencies.
@@ -84,9 +87,6 @@ docker-compose run  docs yarn run docusaurus docs:version  1.1.0
 
 (note if image is not built yet, please run: `docker-compose build build_docs`)
 
-  * website/versioned_docs
-  * website/versioned_sidebars
-  * versions.json 
 
 Update the docusaurus.config.js
 
