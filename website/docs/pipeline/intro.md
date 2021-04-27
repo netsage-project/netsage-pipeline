@@ -20,7 +20,7 @@ Sflow and netflow data from configured routers should be sent to the pipeline ho
 
 ## Pipeline Components
 
-The Netsage Flow Processing Pipeline is made of the following components (currently)
+The Netsage Flow Processing Pipeline is made of the following components
 
  - Importer:  Perl scripts on the pipeline host that read nfcapd flow files and send the flow data to a RabbitMQ queue.   ([Doc](importer.md), [in github](https://github.com/netsage-project/netsage-pipeline/blob/master/lib/GRNOC/NetSage/Deidentifier/NetflowImporter.pm))
  - [RabbitMQ](https://www.rabbitmq.com/): Used for message passing and queuing of tasks.
@@ -33,5 +33,5 @@ The Netsage Flow Processing Pipeline is made of the following components (curren
 
 ## Pipeline Installation
 
-Originally, the pipeline was deployed by installing all of the components individually on one or more servers (the "BareMetal" or "Server" Install). More recently, we've also added a Docker deployment option. With simple pipelines having just one sflow and/or one netflow sensor (and any number of tstat sensors), the "Docker Simple" Install should suffice. The "Docker Advanced" guide will help when there are more sensors and/or other customizations required.
+Originally, the pipeline was deployed by installing all of the components individually on one or more servers (the "BareMetal" or "Manual" Install). More recently, we've also added a Docker deployment option. With simple pipelines having just one sflow and/or one netflow sensor (and any number of tstat sensors), the basic "Docker Installation" should suffice. The "Docker Advanced Options" guide will help when there are more sensors and/or other customizations required.
 

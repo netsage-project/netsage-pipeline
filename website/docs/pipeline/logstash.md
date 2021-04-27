@@ -4,14 +4,14 @@ title: Logstash Pipeline
 sidebar_label: Logstash
 ---
 
-The Logstash portion of the Netsage Pipeline reads in flows (normally from a RabbitMQ queue), performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config.  (In principle, Logstash can run more than one "logstash pipeline" at a time, but that will not be discussed here.) 
+The Logstash portion of the Netsage Pipeline reads in flows from a RabbitMQ queue, performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config, eventually ending up in an Elasticsearch instance. 
 
-Logstash config files invoke various logstash "filters". These conf files are located in /etc/logstash/conf.d/. See below for a brief description of what each does and check the files for comments.
+Logstash config files invoke various logstash "filters" and actions. These conf files are located in /etc/logstash/conf.d/. See below for a brief description of what each does and check the files for comments.
 
 Notes: 
  - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
- - If actions in a .conf file are not needed in your particular case, it can be removed or disabled, but check carefully for effects on downstream configs.
- - MaxMind, CAIDA, and Science Registry Database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs weekly or daily. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also, though it's not running in Docker deployments. Similarly for other support files, eg, those used in 90-additional-fields.conf.
+ - If actions in a particular .conf file are not needed in your particular case, they can be removed or the file disabled, but check carefully for effects on downstream configs.
+ - MaxMind, CAIDA, and Science Registry database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs weekly or daily. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also, though it's not running in Docker deployments. Similarly for other support files, eg, those used in 90-additional-fields.conf.
  - Lookup tables for 55-member-orgs.conf that we have compiled are available from sciencregistry.grnoc.iu.edu. See the cron files provided. These will not be updated often, so you may run the cron jobs or not. You will need to provide lists for other networks yourself or ask us.
 
 ## Logstash Sequence
@@ -30,7 +30,7 @@ adds @ingest_time (this is mainly for developers).
 
 ### 15-sensor-specific-changes.conf
 
-Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in the specfied list, 2) the ability to change the sensor name for flows from a specified sensor which go through a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
+Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in a specfied list, 2) the ability to change the sensor name for flows from a specified sensor which go through a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
 
 ### 20-add_id.conf
 
@@ -64,7 +64,7 @@ Sets ASN to -1 if it is unavailable for any reason.
 
 Uses the current source and destination ASNs to get organization names from the prepared CAIDA ASN-to-Organization lookup file.
 
-*This product uses a lookup table constructed from the CAIDA AS Organizations Dataset [www.caida.org](http://www.caida.org/data/as-organizations).* 
+*This product uses a lookup table constructed from the CAIDA AS Organizations Dataset - see [www.caida.org](http://www.caida.org/data/as-organizations).* 
 
 ### 55-member-orgs.conf
 

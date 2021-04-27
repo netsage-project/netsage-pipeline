@@ -33,7 +33,6 @@ module.exports = {
         {
           type: "docsVersionDropdown",
           position: "right",
-          label: "pipeline version"
         },
         {
           href: "https://github.com/netsage-project/netsage-pipeline/",

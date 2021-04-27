@@ -4,8 +4,6 @@ title: Docker Dev Guide
 sidebar_label: Docker Dev Guide
 ---
 
-# Docker Setup
-
 ## Configure Collectors
 
 Before you start if you haven't already done so, please make a copy of docker-compose.override_example.yml this is used to setup your collectors.  The default should work out of the box with the env.example provided.  If you wish you add customizations, please see the [Docker Advanced Install Guide](../deploy/docker_install_advanced.md)
@@ -16,34 +14,25 @@ cp docker-compose.override_example.yml docker-compose.override.yml
 
 ## Selecting a Version
 
-We currently release a development version and a tagged version.  The first version to support will be. v1.2.5 once release.  
-
-### Stable Release Version
+You can use the "master" version or a tagged version.  
 
 To select a released version please do the following.
+Replace "{tag}" with the version to use, eg, "v1.2.5".
 
 ``` sh
- scripts/docker_select_version.sh tagValue 
+ scripts/docker_select_version.sh {tag}
  ```
 
-Example:
-
-``` sh 
-scripts/docker_select_version.sh v1.2.5 
-
-``` 
 If you run the script without any version specified it'll list all the current tags and prompt you to select a version.
-
 Once that's complete, all the instructions below are still applicable. 
 
-### Development Version
 
-If you wish to use the development version you are free to do so.  It is the default behavior on 
+If you wish to use the development version (master branch) you are free to do so.  It is the default behavior on 
 any git checkout.  Simply follow the directions below and setup your pipeline as instructed.
 
 ## Build Base Images 
 
-This is optional.  The image are published on docker hub, but if you'd like to incorporate local changes please follow the process below.
+This is optional.  The images are published on docker hub, but if you'd like to incorporate local changes please follow the process below.
 
 ### Build Using Source Code
 
@@ -81,7 +70,7 @@ Note the hostname will follow the docker-compose label.  You can rename it if yo
 
 ### Importer 
 
-The importer config is defined in compose/netsage_shared.xml.  If you use different values then the defaults you may want to change them/ **NOTE: Changes will require you to rebuild the container**
+The importer config is defined in compose/netsage_shared.xml.  If you use different values then the defaults you may want to change them. **NOTE: Changes will require you to rebuild the container**
 
 ### Logstash 
 
@@ -91,7 +80,6 @@ Define the input rabbit queue.  This should match the importer output queue
 rabbitmq_input_host=rabbit
 rabbitmq_input_username=guest
 rabbitmq_input_pw=guest
-
 ```
 
 Define the output rabbit queue.  This can be the docker container or any valid RabbitMQ server.

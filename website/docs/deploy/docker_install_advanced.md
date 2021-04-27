@@ -86,7 +86,7 @@ The default version of the collector is 1.6.18. There are other versions release
 
 
 ## To Keep Only Flows From Certain Interfaces
-If your sensors are exporting all flows, but you only want to send some of them to NetSage, use this option. The collectors and importer will process all flows, but in the logstash pipeline, those that do not have src_ifindex or dst_inindex equal to one of the listed interfaces will be dropped. 
+If your sensors are exporting all flows, but you only want to keep some of them (eg, only send some of them to NetSage), use this option. The collectors and importer will process all flows, but in the logstash pipeline, those that do not have src_ifindex or dst_inindex equal to one of the listed interfaces will be dropped. 
 
 In the .env file, uncomment the apprpriate section and enter the information required. Be sure "True" is capitalized as shown and list all the ifindex values of flows that should be kept and passed on to NetSage. You may enter one or more ifindex values. For example,
 
@@ -110,7 +110,7 @@ ifindex_sensor_rename_new_name=IU Bloomington Sflow
 ifindex_sensor_rename_ifindex=10032
 ```
 
-In this case, any flows through interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name (sensor_id in ElasticSearch) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
+In this case, any flows from the "IU Sflow" sensor that come through interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name (sensor_id in ElasticSearch) changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker.
 
 :::note
 Please notify the devs at IU in advance, if you need to modify a sensor name, because the regexes used for determining sensor_group and sensor_type may have to be updated.

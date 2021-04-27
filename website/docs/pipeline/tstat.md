@@ -1,7 +1,7 @@
 ---
 id: tstat
 title: Tstat Data Collection
-sidebar_label: Tstat Data Collection
+sidebar_label: Tstat Data
 ---
 
 ## Netsage GitHub Project

@@ -24,12 +24,13 @@ To see if flows are getting into and being read from the rabbit queue on the pip
 ### If flow collection stops
 
 **Logstash or Importer errors:**
-- Make sure all containers are running.
+- Make sure all containers are running.  `docker ps`
 - Check the logs of the various containers to see if anything jumps out as being invalid.  `docker-compose logs -f $service_label`
 - Check the logs to see if logstash is starting successfully.
 
 **Disk space:**
-- If the containers are running but nothing is happening and the disk is full, you probably need more disk space. You could try saving fewer days of nfcapd files (see Docker Advanced). 
+- If the pipeline suddenly fails, check to see if the disk is full. If it is, first try getting rid of old docker images and containers to free up space: `docker image prune -a` and `docker container prune`.
+- Also check to see how much space the nfcapd files are comsuming. You need to add more disk space. You could try saving fewer days of nfcapd files (see Docker Advanced). 
 
 **Memory:**
 - If you are running a lot of data, sometimes docker may need to be allocated more memory. The most

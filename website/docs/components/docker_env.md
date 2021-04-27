@@ -12,7 +12,7 @@ Simply change the names to unique identifiers (with spaces or not, no quotes) an
 
 :::note
 These names uniquely identify the source of the data. In elasticsearch, they are saved in the `meta.sensor_id` field and will be shown in Grafana dashboards. Choose names that are meaningful and unique.
-For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Boston Netflow" or "rtr.one.rndnet.edu" and "rtr.two.nrdnet.edu". Whatever makes sense in your situation.
+For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Boston Netflow" or "RNDNet NY-London 1" and "RNDNet NY-London 2". Whatever makes sense in your situation.
 :::
 
  - If you don't set a sensor name, the default docker hostname, which changes each time you run the pipeline, will be used. 

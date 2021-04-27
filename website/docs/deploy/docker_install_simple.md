@@ -1,6 +1,6 @@
 ---
 id: docker_install_simple
-title:  NetSage Flow Processing Pipeline - Docker Installation Guide
+title:  Docker Installation Guide
 sidebar_label: Docker Installation
 ---
 In this deployment guide, you will learn how to deploy a basic Netsage setup that includes one sflow and/or one netflow collector.  If you have more than one collector of either type, or other special situations, see the Docker Advanced guide.
@@ -40,9 +40,9 @@ git clone https://github.com/netsage-project/netsage-pipeline.git
 
 Then checkout the right version of the code.
 ```sh
-git checkout tag_name
+git checkout {tag}
 ```
-Replace "tag_name" with the release version you intend to use, e.g., "v1.2.8".  ("Master" is the development version and is not intended for general use!)
+Replace "{tag}" with the release version you intend to use, e.g., "v1.2.8".  ("Master" is the development version and is not intended for general use!)
 `git status` will confirm which branch you are on, e.g., master or v1.2.8.
 
 ### 3. Create Docker-compose.override.yml
