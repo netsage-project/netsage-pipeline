@@ -13,6 +13,8 @@ Yarn is a package manager for JavaScript and replaces the npm client. It is no
 To extend the docs simply create a markdown file and reference the ID in the side bar config. Please see the related documentation
 at the [docusaurus 2](https://v2.docusaurus.io/) project website.
 
+*THE FOLLOWING INSTRUCTIONS ARE NOT CONFIRMED TO WORK. PLEASE UPDATE WITH CORRECTIONS.*
+
 ## If Not Using Docker
 These are instructions for editing and releasing docs without using Docker.
 
@@ -67,15 +69,26 @@ Finally, commit and push the following to github:
   * docusaurus.config.js
 
 
-### Deploying Tagged Docs to github.io
+### Deploying Docs to github.io
+Whether you have created a new set of versioned tags or just want to update the docs in "master", to make changes appear at https://netsage-project.github.io/netsage-pipeline, do the following.
+
 If Travis or some other CI is working, it will run yarn install and yarn deploy to do this automatically.
 
 If it is not, do it manually:
 ```
-$ USE_SSH="true" GITHUB_USER="your-username" yarn deploy   
+$ USE_SSH="true" GIT_USER="your-username" yarn deploy   
 ```
 replacing your-username.  This sets a couple env vars then runs 'yarn deploy' which runs 'docusaurus deploy' (see package.json) which pushes the static website created to url: "https://netsage-project.github.io" (see docusaurus.config.js) 
 
+### Removing a version 
+
+To remove version 1.2.6 for example.
+
+we need to: 
+
+  * update versions.json to remove the reference
+  * remove the versioned_docs/version-1.2.6
+  * remove versioned_sidebars/version-1.2.6-sidebars.json
 
 ## If Using Docker
 
@@ -119,21 +132,9 @@ Finally, commit and push the following to github:
   * docusaurus.config.js
 
 
-### Deploying Tagged Docs to github.io
-If Travis or some other CI is working, it will do this automatically.
+### Deploying Docs to github.io
+How to do this when using Docker ??? Get into the container ???
 
-If it is not, do it manually:
+For now, go a linux server that has yarn installed and
+follow the instructions under If Not Using Docker.
 
-```sh
-$ USE_SSH="true" GITHUB_USER="your-username" yarn deploy   
-```
-
-### Removing a version 
-
-To remove version 1.2.6 for example.
-
-we need to: 
-
-  * update versions.json to remove the reference
-  * remove the versioned_docs/version-1.2.6
-  * remove versioned_sidebars/version-1.2.6-sidebars.json
