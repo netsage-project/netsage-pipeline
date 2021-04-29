@@ -80,6 +80,8 @@ $ USE_SSH="true" GIT_USER="your-username" yarn deploy
 ```
 replacing your-username.  This sets a couple env vars then runs 'yarn deploy' which runs 'docusaurus deploy' (see package.json) which pushes the static website created to url: "https://netsage-project.github.io" (see docusaurus.config.js) 
 
+NOTE: You need to have created ssh keys on the host you are running this on and added them to your github account. 
+
 ### Removing a version 
 
 To remove version 1.2.6 for example.

@@ -97,7 +97,7 @@ docker-compose up -d sflow-collector netflow-collector
 If the collector(s) are running properly, you should see nfcapd files in subdirectories of data/input_data/, and they should have sizes of more than a few hundred bytes. (See Troubleshooting if you have problems.)
 
 
-### Running the Collectors and Pipeline
+## Running the Collectors and Pipeline
 
 {@import ../components/docker_pipeline.md}
 
