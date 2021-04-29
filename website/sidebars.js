@@ -19,6 +19,7 @@ module.exports = {
       "devel/dev_dataset", 
       "devel/docker_dev_guide",
       "devel/docusaurus",
+      "devel/docker_dev_tag",
     ]
   },
 };

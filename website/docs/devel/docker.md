@@ -4,94 +4,37 @@ title: Docker Dev Guide
 sidebar_label: Docker Dev Guide
 ---
 
-## Configure Collectors
-
-Before you start if you haven't already done so, please make a copy of docker-compose.override_example.yml this is used to setup your collectors.  The default should work out of the box with the env.example provided.  If you wish you add customizations, please see the [Docker Advanced Install Guide](../deploy/docker_install_advanced.md)
-
-``` sh
-cp docker-compose.override_example.yml docker-compose.override.yml
-```
-
 ## Selecting a Version
 
 You can use the "master" version or a tagged version.  
+To select a released version use the docker_select_version.sh script (see the Deployment Guide).
+If you wish to use the development version (master branch) simply scip the docker_select_version.sh step.
 
-To select a released version please do the following.
-Replace "{tag}" with the version to use, eg, "v1.2.5".
+## Installing
 
-``` sh
- scripts/docker_select_version.sh {tag}
- ```
+See the Deployment Guide to learn how to set up collectors, your environment and override files, etc.
 
-If you run the script without any version specified it'll list all the current tags and prompt you to select a version.
-Once that's complete, all the instructions below are still applicable. 
+## Importer 
 
+The importer "shared" config that Docker uses is defined in compose/netsage_shared.xml.  ** NOTE: If you want to make changes to this file, you will need to rebuild the container**
 
-If you wish to use the development version (master branch) you are free to do so.  It is the default behavior on 
-any git checkout.  Simply follow the directions below and setup your pipeline as instructed.
+## Build Images 
 
-## Build Base Images 
-
-This is optional.  The images are published on docker hub, but if you'd like to incorporate local changes please follow the process below.
+The images are published on Docker Hub, but if you'd like to incorporate local changes please follow the process below.
 
 ### Build Using Source Code
 
-If you would like to build the *importer* container using the version of the pipeline scripts found in this GitHub repo then run the following:
+If you would like to build the *importer* container using the version of the pipeline scripts found in the GitHub repo then run the following:
 
 ```sh 
 docker-compose -f docker-compose.build.yml build
 
 ```
 
-## Configuring the Containers
+NOTE: The importer container includes the config files for the logstash pipeline. 
 
-### Environment File
 
-If you haven't done so already, copy env.example and update it to match your own settings:
-
-``` sh
-cp env.example .env
-```
-
-### Rabbit 
-
-This portion is primarily to set the Rabbit MQ server.  Most of the default settings work but whatever values you set
-here should be consistent with the config for the logstash and importer 
-
-``` sh
-RABBITMQ_ERLANG_COOKIE='secret cookie'
-RABBIT_HOST=rabbit
-RABBITMQ_DEFAULT_USER=guest
-RABBITMQ_DEFAULT_PASS=guest
-discovery.type=single-node
-```
-
-Note the hostname will follow the docker-compose label.  You can rename it if you like but by default it's set to rabbit
-
-### Importer 
-
-The importer config is defined in compose/netsage_shared.xml.  If you use different values then the defaults you may want to change them. **NOTE: Changes will require you to rebuild the container**
-
-### Logstash 
-
-Define the input rabbit queue.  This should match the importer output queue
-
-``` sh
-rabbitmq_input_host=rabbit
-rabbitmq_input_username=guest
-rabbitmq_input_pw=guest
-```
-
-Define the output rabbit queue.  This can be the docker container or any valid RabbitMQ server.
-
-``` sh
-rabbitmq_output_host=rabbit
-rabbitmq_output_username=guest
-rabbitmq_output_pw=guest
-rabbitmq_output_key=netsage_archive_input
-```
-
-### Optional: ElasticSearch and Kibana
+## Optional: ElasticSearch and Kibana
 
 You can optionally store flow data locally in an ElasticSearch container and view the data with Kibana. Local storage can be enabled with the following steps:
 
@@ -108,7 +51,7 @@ elasticsearch {
 
 3.  Run the containers using the following line: ` `  ` docker-compose -f docker-compose.yml  -f docker-compose.develop.yml up  -d `  ` `
 
-## Running the Containers
+## Handy Docker Commands
 
 ### Start the Containers
 
