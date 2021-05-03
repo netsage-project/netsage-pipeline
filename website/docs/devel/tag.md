@@ -1,7 +1,7 @@
 ---
 id: docker_dev_tag
-title: Tagging a Release
-sidebar_label: How to Tag a New Release
+title: How to Tag a New Release
+sidebar_label: Taggin a Release
 ---
 
 To tag a new release, first updated the version number and Changes file, build the rpm, etc.  and upgrade on bare-metal hosts using yum. If all works fine, do the following steps to create new Docker images.
