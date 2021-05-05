@@ -10,10 +10,10 @@ The Docker containers included in the installation are
  - sflow-collector   (receives sflow data and writes nfcapd files)
  - netflow-collector   (receives netflow data and writes nfcapd files)
  - importer   (reads nfcapd files and puts flows into a local rabbit queue)
- - logstash   (logstash pipeline that processes flows and sends them to, by default, netsage-elk1.grnoc.iu.edu)
+ - logstash   (logstash pipeline that processes flows and sends them to their final destination, by default a local rabbit queue)
  - ofelia   (cron-like downloading of files used by the logstash pipeline)
 
-The code and configs for the importer and logstash pipeline can be viewed in this github repo (netsage-project/netsage-pipeline). See netsage-project/docker-nfdump-collector for code related to the collectors.
+The code and configs for the importer and logstash pipeline can be viewed in the netsage-project/netsage-pipeline github repo. See netsage-project/docker-nfdump-collector for code related to the collectors.
 
 
 ### 1. Set up Data Sources 
@@ -23,12 +23,12 @@ The data processing pipeline needs data to ingest in order to do anything, of co
  - netflow
  - tstat
 
-At least one of these must be set up on a sensor to provide the incoming flow data. 
+At least one of these must be set up on a sensor (flow exporter/router), to provide the incoming flow data. 
 You can do this step later, but it will helpful to have it working first. 
 
 Sflow and netflow data should be exported to the pipeline host where there are collectors (nfcapd and/or sfcapd processes) ready to receive it (see below). To use the default settings, send sflow to port 9998 and netflow to port 9999. On the pipeline host, allow incoming traffic from the flow exporters, of course.
 
-Tstat data should be sent directly to the logstash input RabbitMQ queue on the pipeline host. No collector is needed for tstat data. From there, logstash will grab the data and process it the same way as it processes sflow/netflow data. (See the Docker Advanced guide.)
+Tstat data should be sent directly to the logstash input rabbit queue "netsage_deidentifier_raw" on the pipeline host. No collector is needed for tstat data. See the netsage-project/tstat-transport repo.  (From there, logstash will grab the data and process it the same way as it processes sflow/netflow data. (See the Docker Advanced guide.)
 
 ### 2. Clone the Netsage Pipeline Project
 
@@ -58,10 +58,10 @@ cp docker-compose.override_example.yml docker-compose.override.yml
 
 By default docker will bring up a single netflow collector and a single sflow collector. If this matches your case, you don't need to make any changes to the docker-compose.override_example.yml. If you have only one collector, remove or comment out the section for the one not needed so the collector doesn't run and simply create empty nfcapd files.
 :::note
-If you only have one collector, you should remove or comment out the section for the collector that is not used.
+If you only have one collector, you should remove or comment out the section for the collector that is not used, so it doesn't run and just create empty files.
 :::
 
-This file also specifies port numbers, and directories for nfcapd files.  By default, the sflow collector will listen to udp traffic on localhost:9998, while the netflow collector will listen on port 9999,  and data will be written to `/data/input_data/`. Each collector is namespaced by its type so the sflow collector will write data to `/data/input_data/sflow/` and the netflow collector will write data to `/data/input_data/netflow/`.  
+This file also specifies port numbers, and directories for nfcapd files.  By default, the sflow collector will listen to udp traffic on localhost:9998, while the netflow collector will listen on port 9999,  and data will be written to `/data/input_data/`. Each collector is namespaced by its type so the sflow collector will write data to `/data/input_data/sflow/` and the netflow collector will write data to `/data/input_data/netflow/`.  Change these only if required.
 
 Other lines in this file you can ignore for now. 
 
@@ -101,7 +101,3 @@ If the collector(s) are running properly, you should see nfcapd files in subdire
 
 {@import ../components/docker_pipeline.md}
 
-
-## Upgrading
-
-{@import ../components/docker_upgrade.md}

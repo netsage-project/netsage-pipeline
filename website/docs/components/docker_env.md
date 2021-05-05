@@ -11,8 +11,8 @@ netflowSensorName=my netflow sensor name
 Simply change the names to unique identifiers (with spaces or not, no quotes) and you're good to go. 
 
 :::note
-These names uniquely identify the source of the data. In elasticsearch, they are saved in the `meta.sensor_id` field and will be shown in Grafana dashboards. Choose names that are meaningful and unique.
-For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Boston Netflow" or "RNDNet NY-London 1" and "RNDNet NY-London 2". Whatever makes sense in your situation.
+These names uniquely identify the source of the data and will be shown in the Grafana dashboards. In elasticsearch, they are saved in the `meta.sensor_id` field. Choose names that are meaningful and unique.
+For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Boston Netflow" or "RNDNet New York - London 1" and "RNDNet New York - London 2". Whatever makes sense in your situation.
 :::
 
  - If you don't set a sensor name, the default docker hostname, which changes each time you run the pipeline, will be used. 
@@ -22,7 +22,7 @@ For example, your sensor names might be "RNDNet New York Sflow" and "RNDNet Bost
 
 Other settings of note in this file include the following. You will not necessarily need to change these, but be aware.
 
-**rabbit_output_host**: this defines where the final data will land after going through the pipeline.  By default, the last rabbit queue will be on `rabbit`, ie, the local rabbitMQ server running in its docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name).
+**rabbit_output_host**: this defines where the final data will land after going through the pipeline.  By default, the last rabbit queue will be on `rabbit`, ie, the local rabbitMQ server running in its docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name). (For NetSage, another logstash pipeline on a remote server moves flows from this final rabbit queue into Elasticsearch.)
 
 The following Logstash Aggregation Filter settings are exposed in case you wish to use different values.
 (See comments in the \*-aggregation.conf file.) The aggregation filter stitches together long-lasting flows that are seen in multiple nfcapd files, matching by the 5-tuple (source and destination IPs, ports, and protocol) plus sensor name. 

@@ -150,13 +150,6 @@ You will also need to uncomment these lines in docker-compose.override.yml:
 ```
 
 
-
-## To Process Tstat Data
-Tstat data is not collected by nfdump/sfcapd/nfcapd or read by an Importer. Instead, the flow data is sent directly from the router or switch to the logstash pipeline's ingest rabbit queue (named "netsage_deidentifier_raw").  So, when following the Docker Simple guide, the sections related to configuring and starting up the collectors and Importer will not pertain to the tstat sensors. The .env file still needs to be set up though.
-
-Setting up Tstat is outside the scope of this document, but see the Netsage project Tstat-Transport which contains client programs that can send tstat data to a rabbit queue. See [https://github.com/netsage-project/tstat-transport.git](https://github.com/netsage-project/tstat-transport.git). Basically, you need to have Tstat send data directly to the same rabbit queue that the importers write sflow and netflow data to and that the logstash pipeline reads from.
-
-
 ## To Customize Java Settings / Increase Memory Available for Lostash 
 
 If you need to modify the amount of memory logstash can use or any other java settings,

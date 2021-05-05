@@ -1,3 +1,10 @@
+---
+id: docker_upgrade
+title: Upgrading
+sidebar_label: Docker Pipeline Upgrades
+---
+
+To upgrade a previous installment of the Dockerized pipeline, perform the following steps.
 
 ### Shut things down
 
