@@ -1,7 +1,7 @@
 ---
 id: docker_upgrade
 title: Upgrading
-sidebar_label: Docker Pipeline Upgrades
+sidebar_label: Docker Upgrading
 ---
 
 To upgrade a previous installment of the Dockerized pipeline, perform the following steps.
