@@ -1,8 +1,23 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.10 -- May 10 2021
+------------------------------------------------------
+Usage note: With this release, we will move to using nfdump v1.6.23. 
+This includes a fix for IPs not being parsed in MPLS flows, as well as the fix for missing ASNs from April. 
+  * docker-compose.override_example.yml has been updated to refer to this version.
+
+Features:
+  * 15-sensor-specific-changes.conf can now be used to drop all flows from a certain sensor except those from listed ifindexes.
+  * 0.0.0.0 flows are no longer dropped
+  * Will now tag flows with the pipeline version number (@pipeline_ver)
+  * Added a sript (to util/) that can be used to process as-org files from CAIDA into the ASN lookup files that we need.
+  * Documentation updates
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.9 -- Apr 7 2021
 ------------------------------------------------------
-Usage note: With this release, we are also moving to using a version of nfdump built from github master which includes commits through Feb 20, 2021. This includes a fix for incorrect ASNs being added to flows when the ASN data is actually missing.
-  * To go along with this, docker-compose.override_example.yml refers to a "nightly" tag of nfdump (this is not updated nightly!)
+Usage note: With this release, we are also moving to using a version of nfdump built from github master which includes
+commits through Feb 20, 2021. This includes a fix for incorrect ASNs being added to flows when the ASN data is actually missing.
+  * To go along with this, docker-compose.override_example.yml refers to a "nightly" tag of nfdump (this is not actually updated nightly!)
 
 Features:
   * The installed version of 15-sensor-specific-changes.conf now accomodates environment variables for 
@@ -17,13 +32,14 @@ Bugs
   * Flow-filter changes have been made to accomodate changes to simp
   * Flows with IPs of 0.0.0.0 are dropped
   * For Docker installs, rabbit host name will be fixed 
-  * Docusaurus and some packages flagged by depndabot were upgraded
+  * Docusaurus and some packages flagged by dependabot were upgraded
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.8 -- Jan 28 2021
 ------------------------------------------------------
 Features:
-  * Added 15-sensor-specific-changes.conf with multiplication by mirroring-sampling rate for a pacificwave sensor and changing of the sensor name for NEAAR flows using a certain ifindex.
+  * Added 15-sensor-specific-changes.conf with multiplication by mirroring-sampling rate for a pacificwave sensor and changing of 
+    the sensor name for NEAAR flows using a certain ifindex.
   * Started saving ifindexes to ES (at least for now)
   * Added consideration of continents to possibly get a country_scope value when a country is missing.
   * Stopped saving old 'projects' array field to ES
