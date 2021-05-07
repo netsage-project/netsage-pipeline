@@ -1,5 +1,4 @@
 {
-    "^AMPATH.*": "AMPATH",
     "^.*cenic.*": "CENIC",
     "^FRGP.*": "FRGP",
     "^GEANT.*": "GEANT",

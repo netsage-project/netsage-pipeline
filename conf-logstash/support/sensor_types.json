@@ -6,7 +6,6 @@
     "^NEAAR.*": "Circuit",
     "^NEA3R.*": "Circuit",
     "^TransPAC.*": "Circuit",
-    "^AMPATH.*$": "Exchange Point",
     "^SingAREN.*$": "Exchange Point",
     "^.*pacificwave\\.net$": "Exchange Point",
     "^.*pnw-gigapop\\.net$": "Exchange Point",
