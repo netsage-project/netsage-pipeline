@@ -1,11 +1,12 @@
 {
     "^.*Tstat$": "Data Archive",
     "^.*nersc\\.gov$": "Data Archive",
-    "^GEANT.*$": "Circuit",
     "^Hawaii.*netflow$": "Circuit",
     "^NEAAR.*": "Circuit",
     "^NEA3R.*": "Circuit",
     "^TransPAC.*": "Circuit",
+    "^GEANT.*$": "Circuit",
+    "^NORDUnet.*$": "Circuit",
     "^SingAREN.*$": "Exchange Point",
     "^.*pacificwave\\.net$": "Exchange Point",
     "^.*pnw-gigapop\\.net$": "Exchange Point",
@@ -21,5 +22,5 @@
     "^.*sox.*$": "Regional Network",
     "^.*SoX.*$": "Regional Network",
     "^Sun Corridor.*$": "Regional Network",
-    "^tacc_sflows$": "Regional Network"
+    "^tacc_netflows$": "Regional Network"
 }

@@ -10,6 +10,7 @@
     "^GigaPOP.*": "I-Light",
     "^NEAAR.*": "NEAAR",
     "^NEA3R.*": "NEAAR",
+    "^NORDUnet.*": "NORDUnet",
     "^.*nersc.*": "NERSC",
     "^.*pacificwave.*": "PacWave",
     "^.*pnw-gigapop\\.net$": "PacWave",
