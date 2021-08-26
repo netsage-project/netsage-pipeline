@@ -1,7 +1,7 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
   # update Version here, in conf-logstash/98-post-process.conf, lib/GRNOC/NetSage/Deidentifier.pm
-Version: 1.2.10
+Version: 1.2.11
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
@@ -137,12 +137,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
+%config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
-%config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
-%config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf

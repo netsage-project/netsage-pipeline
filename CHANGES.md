@@ -1,4 +1,17 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.11 -- Aug 2021
+------------------------------------------------------
+Features:
+  * Made filtering by ifindex (optionally) sensor-specific
+  * Added tags to flows with src and dst IPs = 0.0.0.x 
+  * When duration <= 0.002 sec, set duration, bits/s, and packets/s to 0 as rates are inaccurate for small durations
+  * Added NORDUnet* and tacc_netflows to sensor group and type regexes
+  * Added onenet-members-list.rb to the members-list files to download
+  
+Bugs:
+  * Fixed the es_doc_id hash to always include meta.id and the start time. It was missing meta.id previously.
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.10 -- May 10 2021
 ------------------------------------------------------
 Usage note: With this release, we will move to using nfdump v1.6.23. 
