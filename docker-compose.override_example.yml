@@ -3,17 +3,19 @@ services:
 
   logstash:
     image: netsage/pipeline_logstash:latest
-  ## If you need to allocate more than 1GB (default) override the JMV options
-  #    volumes:
-  #      - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
+    ## If you need to override JVM options, uncomment these lines
+    #   volumes:
+    #     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
 
   importer:
     image: netsage/pipeline_importer:latest
-  ## If you add additional collectors, you need to uncomment the following line and modify the file to add additional collections
-  #   volumes:
-  #      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+    ## If you add additional collectors or need to make other changes in the importer "shared" config, 
+    ## use the netsage_override.xml file and uncomment the following lines 
+    #   volumes:
+    #     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
 
-  ## Add any additional collectors here.  You may remove any collectors that are not needed.
+  ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
+  ## Remove any collectors that do not need to be running.
   sflow-collector:
     image: netsage/nfdump-collector:alpine-1.6.23
     restart: always
