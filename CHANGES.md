@@ -8,6 +8,7 @@ Features:
   * Added NORDUnet* and tacc_netflows to sensor group and type regexes
   * Added onenet-members-list.rb to the members-list files to download
   * At the beginning, set missing IPs to 0.0.0.0, missing ifindexes to -10, missing durations to 0.
+  * Increased version numbers for some website-related packages at Dependabot's request.
   
 Bugs:
   * Fixed es_doc_id. The hash was missing meta.id previously due to a bug.

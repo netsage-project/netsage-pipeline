@@ -158,8 +158,19 @@ You will also need to uncomment these lines in docker-compose.override.yml:
 
 By default, data is saved to subdirectories in the ./data/ directory (ie, the data/ directory in the git checkout).  If you would like to use a different location, there are two options.
 
-1. The best solution is to create a sym link between ./data/ and the preferred location, or, for an NFS volume, export it as ${PROJECT_DIR}/data 
-2. Alternatively, update the path to the in all locations in docker-compose.yml and docker-compose.override.yml Eg, to save nfcapd files to subdirs in /var, set the collector volumes to "- /var/input_data/netflow:/data" (similarly for sflow) and set the importer volumes to "- /var:/data". 
+1. The best solution is to create a symlink between ./data/ and the preferred location, or, for an NFS volume, export it as ${PROJECT_DIR}/data.
+
+During installation, delete the data/ directory (it should only contain .placeholder), then create your symlink. Eg, to use /var/netsage/ instead of data/, 
+```sh
+cd {netsage-pipeline dir}
+mkdir /var/netsage
+rm data/.placeholder
+rmdir data
+ln -s /var/netsage {netsage-pipeline dir}/data
+```
+(Check the permissions of the directory.)
+
+2. Alternatively, update volumes in docker-compose.yml and docker-compose.override.yml Eg, to save nfcapd files to subdirs in /mydir, set the collector volumes to `- /mydir/input_data/netflow:/data` (similarly for sflow) and set the importer and logstash volumes to `- /mydir:/data`. 
 
 :::warning
 If you choose to update the docker-compose file, keep in mind that those changes will cause a merge conflict or be wiped out on upgrade.
