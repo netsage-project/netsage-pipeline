@@ -23,39 +23,17 @@ To see if flows are getting into and being read from the rabbit queue on the pip
 
 ### If flow collection stops
 
-**Logstash or Importer errors:**
-- Make sure all containers are running.  `docker ps`
-- Check the logs of the various containers to see if anything jumps out as being invalid.  `docker-compose logs -f $service_label`
-- Check the logs to see if logstash is starting successfully.
+*Errors:**
+- See if any of the containers has died.  `docker ps`
+- Check the logs of the various containers to see if anything jumps out as being invalid. Eg, `docker-compose logs logstash`.
 
 **Disk space:**
 - If the pipeline suddenly fails, check to see if the disk is full. If it is, first try getting rid of old docker images and containers to free up space: `docker image prune -a` and `docker container prune`.
-- Also check to see how much space the nfcapd files are comsuming. You need to add more disk space. You could try saving fewer days of nfcapd files (see Docker Advanced). 
+- Also check to see how much space the nfcapd files are consuming. You may need to add more disk space. You could also try deleting nfcapd files after a fewer number of days (see Docker Advanced). 
 
 **Memory:**
 - If you are running a lot of data, sometimes docker may need to be allocated more memory. The most
-likely culprit is logstash which is usually only allocated 2GB of RAM. You'll need to update the jvm.options file to grant it more memory. 
+likely culprit is logstash which is only allocated 2GB of RAM by default. 
 
-Please see the [Docker Advanced guide](docker_install_advanced.md#customize-logstash-settings) for details on how to customize logstash.
-
-Applying this snippet to logstash may help. For example, to give logstash (java) 3GB,
-
-```yaml
-environment: + LS_JAVA_OPTS=-Xmx3g
-```
-
-Alternatively you may also try doing this:
-
-```yaml
-deploy:
-  resources:
-    limits:
-      cpus: "0.50"
-      memory: 50M
-    reservations:
-      cpus: "0.25"
-      memory: 20M
-```
-
-Reference: https://docs.docker.com/compose/compose-file/#resources
+Please see the Docker Advanced guide.
 

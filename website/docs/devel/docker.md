@@ -8,7 +8,7 @@ sidebar_label: Docker Dev Guide
 
 You can use the "master" version or a tagged version.  
 To select a released version use the docker_select_version.sh script (see the Deployment Guide).
-If you wish to use the development version (master branch) simply scip the docker_select_version.sh step.
+If you wish to use the development version (master branch) simply skip the docker_select_version.sh step.
 
 ## Installing
 

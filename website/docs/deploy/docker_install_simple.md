@@ -35,7 +35,7 @@ Decide where to run the Docker Pipeline and get it set up. Adjust iptables to al
 
 Install Docker Engine (docker-ce, docker-ce-cli, containerd.io) - see instructions at [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/).
 
-Install Docker Compose from Docker's GitHub repository - see [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/).  You need to specify version 1.29.2 (or newer) in the curl command. 
+Install Docker Compose from Docker's GitHub repository - see [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/).  You need to **specify version 1.29.2** (or newer) in the curl command. 
 
 Check default file permissions. If the *logstash* user is not able to access the logstash config files in the git checkout, you'll get an error from logstash saying there are no .conf files found even though they are there. Various components also need to be able to read and write to the data/ directory in the checkout. Defaults of 775 (u=rwx, g=rwx, o=rx) should work.
 
@@ -66,7 +66,7 @@ Collector settings may need to be edited by the user, so the information that do
 cp docker-compose.override_example.yml docker-compose.override.yml
 ```
 
-By default docker will bring up a single slow collector and a single netflow collector that listen to udp traffic on ports localhost:9998 and 9999. If this matches your case, you don't need to make any changes to the docker-compose.override_example.yml. 
+By default docker will bring up a single sflow collector and a single netflow collector that listen to udp traffic on ports localhost:9998 and 9999. If this matches your case, you don't need to make any changes to the docker-compose.override_example.yml. 
 
 - If you have only one collector, remove or comment out the section for the one not needed so the collector doesn't run and simply create empty nfcapd files.
 - If the collectors need to listen to different ports, make the appropriate changes here in both the "command:" and "ports:" lines. 
@@ -87,7 +87,7 @@ Once you've created the docker-compose.override.xml file and finished adjusting 
 ```
 When prompted, select the **same version** you checked out earlier. 
 
-This script will replace the version numbers of docker images in docker-compose.override.yml with the correct values.
+This script will replace the version numbers of docker images in docker-compose.override.yml and docker-compose.yml with the correct values.
 
 ### 6. Create Environment File
 

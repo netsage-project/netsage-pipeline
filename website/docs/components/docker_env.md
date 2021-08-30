@@ -18,18 +18,19 @@ These names uniquely identify the source of the data and will be shown in the Gr
 For example, your sensor names might be "MyNet New York Sflow" and "MyNet Boston Netflow" or "MyNet New York - London" and "MyNet New York - Paris". Whatever makes sense in your situation.
 :::
 
-Other things you may need to edit in this file...
+You will also likely want to change where the data is sent at the end of the logstash pipeline.
 
 **Logstash output rabbit queue**: This section defines where the final data will land after going through the pipeline.  By default, it will end in a rabbitmq queue on `rabbit`, ie, the local rabbitMQ server running in its docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name). 
 
-::: NOTE
+:::note
 To send processed flow data to GlobalNOC at Indiana University, you will need to obtain settings for this section from your contact. At IU, data from the this final rabbit queue will be moved into an Elasticsearch instance for storage. 
 :::
 
-**To drop all flows except those using the specfied interfaces**: If only some flows from a router are of interest and those can be identified by interface, set the flag variable to "True" and uncomment and set the other fields. If a flow's src OR dst ifindex is in the list specified, keep it. A list of ifindexes may be scoped to a specific sensor name (which traces back to a specific port). 
+The following options are described in the Docker Advanced section:
 
-**To change the sensor name for flows using a certain interface**: If you want to break out some flows coming into a port and give them a different sensor name, set the flag variable to "True" and uncomment and set the other fields. 
+**To drop all flows except those using the specfied interfaces**: Use if only some flows from a router are of interest and those can be identified by interface.
 
-**To "manually" correct flow sizes and rates for sampling for specified sensors**: Once in a while, sampling corrections need to be applied by the logstash pipeline. Normally this is done automatically by nfdump in the importer. If required, set the flag variable to "True", specify which sensors need the correction, and enter N where the sampling rate is 1 out of N.
+**To change the sensor name for flows using a certain interface**: Use if you want to break out some flows coming into a port and give them a different sensor name.
 
-See Docker Advanced for more information about the last options.
+**To "manually" correct flow sizes and rates for sampling for specified sensors**: Use if sampling corrections are not being done automatically (which is normally the case). 
+
