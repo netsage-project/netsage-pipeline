@@ -20,7 +20,13 @@ For example, your sensor names might be "MyNet New York Sflow" and "MyNet Boston
 
 You will also want to edit the **Logstash output rabbit queue** section. This section defines where the final data will land after going through the pipeline.  By default, it will be written to a rabbitmq queue on `rabbit`, ie, the local rabbitMQ server running in the docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name). 
 
-:::for pipelines sending to GlobalNOC
+```sh
+rabbitmq_output_host=rabbit@mynet.edu
+rabbitmq_output_username=guest
+rabbitmq_output_pw=guest
+rabbitmq_output_key=netsage_archive_input
+```
+:::note
 To send processed flow data to GlobalNOC at Indiana University, you will need to obtain settings for this section from your contact. A new queue may need to be set up at IU, as well as allowing traffic from your pipeline host. (At IU, data from the this final rabbit queue will be moved into an Elasticsearch instance for storage and viewing.)
 :::
 
@@ -30,5 +36,5 @@ The following options are described in the Docker Advanced section:
 
 **To change the sensor name for flows using a certain interface**: Use if you want to break out some flows coming into a port and give them a different sensor name.
 
-**To "manually" correct flow sizes and rates for sampling for specified sensors**: Use if sampling corrections are not being done automatically (which is normally the case). 
+**To "manually" correct flow sizes and rates for sampling for specified sensors**: Use if sampling corrections are not being done automatically. Normally you do not need to use this, but check flows to be sure results are reasonable.
 

@@ -12,8 +12,8 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that ar
 |-----------------------|-----------------------|-----------------------------|
 |start					|Jun 9, 2020 @ 17:39:53.808	|	Start time of the flow (first packet seen)|
 |end					|Jun 9, 2020 @ 17:39:57.699	|End time of the flow   (last packet seen)|
-|meta.id			| a17c4f05420d7ded9eb151ccd293a633 ff226d1752b24e0f4139a87a8b26d779    |Id of the flow (hash of 5-tuple + Sensor name)|
-|es_doc_id	|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
+|meta.id			|a17c4f0542...  |Id of the flow (hash of 5-tuple + Sensor name)|
+|es_doc_id			|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
 |meta.flow_type			|sflow							|'sflow', 'netflow', or 'tstat'|
 |meta.protocol			|tcp							|Protocol used|
 |meta.sensor_id			| snvl2-pw-sw-1-mgmt-2.cenic.net|Sensor name (set in importer config, may not always be a hostname) |

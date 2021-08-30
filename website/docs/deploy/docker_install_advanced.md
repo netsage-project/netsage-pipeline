@@ -172,6 +172,9 @@ You'll have to manage the volumes exported and ensure all the paths are updated 
 If cpu or memory seems to be a problem, try increasing the JVM heap size for logstash from 2GB to 3 or 4, no more than 8.
 
 To do this, edit LS_JAVA_OPTS in the .env file. [is this working??]
+```yaml
+LS_JAVA_OPTS=-Xmx4g -Xms4g
+```
 
 Here are some tips for adjusting the JVM heap size (https://www.elastic.co/guide/en/logstash/current/jvm-settings.html):
 
