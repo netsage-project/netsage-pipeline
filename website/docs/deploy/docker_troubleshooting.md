@@ -26,6 +26,7 @@ To see if flows are getting into and being read from the rabbit queue on the pip
 *Errors:**
 - See if any of the containers has died.  `docker ps`
 - Check the logs of the various containers to see if anything jumps out as being invalid. Eg, `docker-compose logs logstash`.
+- If logstash dies with an error about not finding \*.conf files, make sure conf-logstash/ and directories and files within are readable by everyone (and directories are executable by everyone). The data/ directory and subdirectories need to be readable and writable by everyone, as well.
 
 **Disk space:**
 - If the pipeline suddenly fails, check to see if the disk is full. If it is, first try getting rid of old docker images and containers to free up space: `docker image prune -a` and `docker container prune`.

@@ -18,12 +18,10 @@ These names uniquely identify the source of the data and will be shown in the Gr
 For example, your sensor names might be "MyNet New York Sflow" and "MyNet Boston Netflow" or "MyNet New York - London" and "MyNet New York - Paris". Whatever makes sense in your situation.
 :::
 
-You will also likely want to change where the data is sent at the end of the logstash pipeline.
+You will also want to edit the **Logstash output rabbit queue** section. This section defines where the final data will land after going through the pipeline.  By default, it will be written to a rabbitmq queue on `rabbit`, ie, the local rabbitMQ server running in the docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name). 
 
-**Logstash output rabbit queue**: This section defines where the final data will land after going through the pipeline.  By default, it will end in a rabbitmq queue on `rabbit`, ie, the local rabbitMQ server running in its docker container. Enter a hostname to send to a remote rabbitMQ server (also the correct username, password, and queue key/name). 
-
-:::note
-To send processed flow data to GlobalNOC at Indiana University, you will need to obtain settings for this section from your contact. At IU, data from the this final rabbit queue will be moved into an Elasticsearch instance for storage. 
+:::for pipelines sending to GlobalNOC
+To send processed flow data to GlobalNOC at Indiana University, you will need to obtain settings for this section from your contact. A new queue may need to be set up at IU, as well as allowing traffic from your pipeline host. (At IU, data from the this final rabbit queue will be moved into an Elasticsearch instance for storage and viewing.)
 :::
 
 The following options are described in the Docker Advanced section:

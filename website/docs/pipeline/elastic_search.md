@@ -13,6 +13,7 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that ar
 |start					|Jun 9, 2020 @ 17:39:53.808	|	Start time of the flow (first packet seen)|
 |end					|Jun 9, 2020 @ 17:39:57.699	|End time of the flow   (last packet seen)|
 |meta.id			| a17c4f05420d7ded9eb151ccd293a633 ff226d1752b24e0f4139a87a8b26d779    |Id of the flow (hash of 5-tuple + Sensor name)|
+|es_doc_id	|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
 |meta.flow_type			|sflow							|'sflow', 'netflow', or 'tstat'|
 |meta.protocol			|tcp							|Protocol used|
 |meta.sensor_id			| snvl2-pw-sw-1-mgmt-2.cenic.net|Sensor name (set in importer config, may not always be a hostname) |
@@ -102,12 +103,12 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 
 |name                   |example                |description                  |
 |-----------------------|-----------------------|-----------------------------|
-|@ingest_time			|Jun 9, 2020 @ 10:03:20.700	|	Essentially time the flow went into the logstash pipeline or the time stitching of the flow commenced|
-|@timestamp			|Jun 9, 2020 @ 18:03:21.703	|The time the flow went into the logstash pipeline for tstat flows, or the time stitching finished and the event was pushed for other flows.|
+|@pipeline_ver			|1.2.11				| Version number of the pipeline used to process this flow |
+|@ingest_time			|Jun 9, 2020 @ 10:03:20.700	| The time the flow entered the logstash pipeline |
+|@timestamp			|Jun 9, 2020 @ 18:03:21.703	|The time the flow entered the logstash pipeline for tstat flows, or the time stitching finished and the event exited the aggregation filter for other flows.|
 |@exit_time			|Jun 9, 2020 @ 18:03:25.369	|The time the flow exited the pipeline |
 |@processing_time		|688.31						|@exit_time minus @ingest_time. Useful for seeing how long stitching took. |
-|stitched_flows			|13							|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
-|es_doc_id	|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
+|stitched_flows			|13				|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
 |tags	|maxmind src asn	|Various info and error messages|
 |trial	| 5	|Can be set in 40-aggregation.conf if desired|
 
@@ -117,7 +118,7 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |-----------------------|-----------------------|-----------------------------|
 |_index                 | om-ns-netsage-2020.06.14 | name of the index ("database table")  |
 |_type    		        |_doc					|	set by ES                 |
-|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	elasticsearch document id. If es_doc_id is provided, that is used.    |
+|_id    		        |HRkcm3IByJ9fEnbnCpaY	|	elasticsearch document id. |
 |_score    		        |1						 |set by ES query             |
 |@version               |1				         |		set by ES             |
 

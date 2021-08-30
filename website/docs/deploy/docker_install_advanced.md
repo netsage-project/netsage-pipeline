@@ -36,6 +36,9 @@ The pattern to add a flow collector is always the same. To add an sflow collecto
 - command: choose between "sfcapd" for sflow and "nfcapd" for netflow, and at the end of the command, specify the port to watch for incoming flow data.  
 - volumes: specify where to write the nfcapd files. Make sure the path is unique and in ./data/. In this case, we're writing to ./data/input_data/example. Change "example" to something meaningful.
 - ports: make sure the port here matches the port you've set in the command. Naturally all ports have to be unique for this host and the router should be configured to export data to the same port. (?? If the port on your docker container is different than the port on your host/local machine, use container_port:host_port.) 
+
+Make sure the indentation is right or you'll get an error about yaml parsing.
+
 You will also need to uncomment these lines: 
 
 ```yaml
