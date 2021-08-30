@@ -7,9 +7,10 @@ Features:
   * When duration <= 0.002 sec, set duration, bits/s, and packets/s to 0 as rates are inaccurate for small durations
   * Added NORDUnet* and tacc_netflows to sensor group and type regexes
   * Added onenet-members-list.rb to the members-list files to download
+  * At the beginning, set missing IPs to 0.0.0.0, missing ifindexes to -10, missing durations to 0.
   
 Bugs:
-  * Fixed the es_doc_id hash to always include meta.id and the start time. It was missing meta.id previously.
+  * Fixed es_doc_id. The hash was missing meta.id previously due to a bug.
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.10 -- May 10 2021
