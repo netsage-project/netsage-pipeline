@@ -1,17 +1,18 @@
 ------------------------------------------------------
-## GRNOC NetSage Deidentfier 1.2.11 -- Aug 2021
+## GRNOC NetSage Deidentfier 1.2.11 -- Sept 3, 2021
 ------------------------------------------------------
 Features:
   * Made filtering by ifindex (optionally) sensor-specific
-  * Added tags to flows with src and dst IPs = 0.0.0.x 
+  * Added tags to flows with src and dst IPs = 0.0.0.x  (user can set outputs filter to do something based on tags)
   * When duration <= 0.002 sec, set duration, bits/s, and packets/s to 0 as rates are inaccurate for small durations
   * Added NORDUnet* and tacc_netflows to sensor group and type regexes
   * Added onenet-members-list.rb to the members-list files to download
-  * At the beginning, set missing IPs to 0.0.0.0, missing ifindexes to -10, missing durations to 0.
-  * Increased version numbers for some website-related packages at Dependabot's request.
+  * Increased version numbers for some website-related packages is response to Dependabot
+  * Documentation improvements
   
 Bugs:
-  * Fixed es_doc_id. The hash was missing meta.id previously due to a bug.
+  * Fixed es_doc_id. The hash had been missing meta.id due to a bug.
+  * At the beginning of the pipeline, set missing IPs to 0.0.0.0, missing ifindexes to -10, missing durations to 0.
 
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.10 -- May 10 2021
