@@ -16,6 +16,8 @@ Notes:
 
 ## Logstash Sequence
 
+The main things done in each conf file are as follows.
+
 ### 01-input-rabbit.conf
 
 Reads flows from a rabbitmq queue. (The ".disabled" extenstion can be removed from other 01-input configs available in conf.d/ to get flows from other sources.)
@@ -25,12 +27,11 @@ Reads flows from a rabbitmq queue. (The ".disabled" extenstion can be removed fr
 Drops flows to or from private IP addresses;
 converts any timestamps in milliseconds to seconds;
 drops events with timestamps more than a year in the past or (10 sec) in the future;
-does some data type conversions;
-adds @ingest_time (this is mainly for developers).
+sets duration and rates to 0 if duration is <= 0.002 sec (because tiny durations/few samples lead to inaccurate rates)
 
 ### 15-sensor-specific-changes.conf
 
-Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in a specfied list, 2) the ability to change the sensor name for flows from a specified sensor which go through a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
+Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in a specfied list; lists can be sensor-specific, 2) the ability to change the sensor name for flows from a specified sensor which use a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
 
 ### 20-add_id.conf
 
@@ -53,7 +54,7 @@ Notes:
 Queries the MaxMind GeoLite2-City database by IP to get src and dst Countries, Continents, Latitudes, and Longitudes;
 if the destination IP is in the multicast range, sets the destination Organization, Country, and Continent to "Multicast".
 
-*This product includes GeoLite2 data created by MaxMind, available from [www.maxmind.com](http://www.maxmind.com).*
+*This product uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](http://www.maxmind.com).*
 
 ### 50-asn.conf
 

@@ -16,7 +16,7 @@ If you have more than 1 sflow and/or 1 netflow sensor, you will need to create m
 Any number of sensors can be accomodated, although if there are more than a few being processed by the same Importer, you may run into issues where long-lasting flows from sensosr A time out in the aggregation step while waiting for flows from sensors B to D to be processed. (Another option might be be to run more than one Docker deployment.) 
 
 
-### a. Edit docker-compose.override.yml
+#### a. Edit docker-compose.override.yml
 
 The pattern to add a flow collector is always the same. To add an sflow collector called example-collector, edit the docker-compose.override.yml file and add something like
 
@@ -47,7 +47,7 @@ You will also need to uncomment these lines:
 ```
 
 
-### b.  Edit netsage_override.xml
+#### b.  Edit netsage_override.xml
 
 To make the Pipeline Importer aware of the new data to process, you will need to create a custom Importer configuration: netsage_override.xml.  This will replace the usual config file netsage_shared.xml. 
 
@@ -65,7 +65,7 @@ Edit netsage_override.xml and add a new "collection" section for the new sensor 
     </collection>
 ```
 
-### c. Edit environment file
+#### c. Edit environment file
 
 Then, in the .env file, add a line that sets a value for the "variable" you referenced above, $exampleSensorName. The value is the name of the sensor which will be saved to elasticsearch and which appears in Netsage Dashboards. Set it to something meaningful and unique. E.g.,
 
@@ -74,7 +74,7 @@ exampleSensorName=MyNet Los Angeles sFlow
 ```
 
 
-### d. Running the new collector
+#### d. Running the new collector
 
 After doing the setup above and selecting the docker version to run, you can start the new collector by running the following line, using the collector name (or by running `docker-compose up -d` to start up all containers):
 
@@ -85,7 +85,7 @@ docker-compose up -d example-collector
 ## To Keep Only Flows From Certain Interfaces
 If your sensors are exporting all flows, but only those using a particular interface are relevant, use this option in the .env file. The collectors and importer will save/read all incoming flows, but the logstash pipeline will drop those that do not have src_ifindex OR dst_inindex equal to one of those listed. 
 
-In the .env file, uncomment lines in the appropriate section and enter the information required. Be sure `ifindex_filter_flag=True` with "True" capitalized as shown, any sensor names are spelled exactly right, and list all the ifindex values of flows that should be kept and processed. Some examples:
+In the .env file, uncomment lines in the appropriate section and enter the information required. Be sure `ifindex_filter_flag=True` with "True" capitalized as shown, any sensor names are spelled exactly right, and list all the ifindex values of flows that should be kept and processed. Some examples (use just one!):
 
 ```sh
 ifindex_filter_keep=123
