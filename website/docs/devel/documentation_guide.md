@@ -32,9 +32,9 @@ $ cd netsage-pipeline/website
 $ yarn install
 ```
 
-### Local Development
+### If Local Development
 
-If you are working on your local machine, you can view changes to the docs in a browser as you work. Use the following commands to generate the static website content (gets written into the build directory), then start a local development server and open up a browser window in which to view the docs. Most changes you make will be reflected live without having to restart the server.
+If you are working on your local machine, rather than sshing into a host, you can view changes to the docs in a browser as you work. Use the following commands to generate the static website content (gets written into the build directory), then start a local development server and open up a browser window in which to view the docs. Most changes you make will be reflected live without having to restart the server.
 ```
 $ yarn build  
 $ yarn start
@@ -46,6 +46,7 @@ Whether on a local machine or a linux host, to make changes, edit the files in w
 When finished, git add, git commit, git push, as usual.
 Repeat as needed.
 
+To view the changes you've made with some formatting, just go to the file on github in a browser. To see all of the formatting, read the "Deploying Docs to github.io" section below.
 
 ### Tagging a New release
 
@@ -84,7 +85,7 @@ NOTE: You need to have created ssh keys on the host you are running this on and 
 
 ### Removing a version 
 
-To remove version 1.2.6 for example.
+To remove version 1.2.6 of the docs, for example,
 
 we need to: 
 
