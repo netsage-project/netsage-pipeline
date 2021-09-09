@@ -50,7 +50,7 @@ Occasionally, something may change which will necessitate editing your override 
 
 ### Update Docker Containers
 
-This should be done automatically when you start up the conctainers, but you can also pull new images from Docker Hub now.
+This should be done automatically when you start up the containers, but you can also pull new images from Docker Hub now.
 
 ```
 docker-compose pull

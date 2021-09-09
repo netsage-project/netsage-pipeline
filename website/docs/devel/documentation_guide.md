@@ -92,6 +92,9 @@ we need to:
   * update versions.json to remove the reference
   * remove the versioned_docs/version-1.2.6
   * remove versioned_sidebars/version-1.2.6-sidebars.json
+  * change 1.2.6 in docusaurus.config.js back to 1.2.5
+
+Then git add, commit, and push
 
 ## If Using Docker
 
