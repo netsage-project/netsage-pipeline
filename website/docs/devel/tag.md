@@ -15,11 +15,13 @@ Use standard procedures to create an rpm of the new version of the pipeline. Upd
 Create a new Tag or Release in Github, eg, v1.2.11.
 Be sure to copy info from the CHANGES file into the Release description.
 
-## To Build and Push Pipeline_Importer and Pipeline_Logstash Images Manually
+## To Build and Push Images Manually
+
+Below is the procedure to build pipeline_importer and pipeline_logstash images manually.
 
 Install docker-compose if not done already. See the Docker Installation instructions.
 
-Git clone (or git pull) the pipeline project and check out the tag branch, then set the version number in docker-compose.build.yml using the script. Eg, for v1.2.11,
+Git clone (or git pull) the pipeline project and check out the tag you want to build, then set the version number in docker-compose.build.yml using the script. Eg, for v1.2.11,
 ```
 git clone https://github.com/netsage-project/netsage-pipeline.git
 cd netsage-pipeline
@@ -38,32 +40,32 @@ $ sudo docker-compose -f docker-compose.build.yml push    (will push images ment
 $ sudo systemctl stop docker
 ```
 If you run into an error about retrieving a mirrorlist and could not find a valid baseurl for repo, restart docker and try again.
-If that doesn't work, try adding this to /etc/hosts: `67.219.148.138  mirrorlist.centos.org`, and/or try `yum install net-tools bridge-utils`, and/or restart network.service. 
+If that doesn't work, try adding this to /etc/hosts: `67.219.148.138  mirrorlist.centos.org`, and/or try `yum install net-tools bridge-utils`, and/or restart network.service then docker. 
 
 The person pushing to Docker Hub must have a Docker Hub account and belong to the Netsage team (3 users are allowed, for the free level).
 
 It might be a good idea to test the images before pushing them. See "Test Docker Images" below.
 
 
-## With Automation
+## Building With Automation
 
 ???
 
 ## Test Docker Images 
 
-See the Docker installation instructions... 
+See the Docker installation instructions for details... 
 
-In the git checkout of the correct version, make a .env file and a docker-compose.override.yml file in the git checkout. Use samplicate or some other method to have data sent to the dev host. You probably want to send the processed data to a dev Elasticsearch instance. 
+In the git checkout of the correct version, make an .env file and a docker-compose.override.yml file. You probably want to send the processed data to a dev Elasticsearch instance. Use samplicate or some other method to have data sent to the dev host. 
 
-Run docker_select_version.sh if you haven't already, then start it up `$ sudo docker-compsoe up -d`! If there are local images, they'll be used, otherwise they'll be pulled from Docker Hub.
+Run docker_select_version.sh if you haven't already, then start it up `$ sudo docker-compose up -d`. If there are local images, they'll be used, otherwise they'll be pulled from Docker Hub.
 
 After about 30 minutes, you should see flows in elasticsearch.
 
-### Versioned Docs
+## Make Versioned Docs
 
-A new set of versioned docs also has to be tagged once you are done making changes for the latest pipeline version. See the Docusaurus guide. 
+A new set of versioned docs also has to be tagged once you are done making changes for the latest pipeline version. See the **Docusaurus guide**. 
 
-### New Nfdump-Collector Images
+## TO Make New Nfdump-Collector Images
 
 If a new version of nfdump has been released that we need, new nfdump-collector images need to be made.
 
