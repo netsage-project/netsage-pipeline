@@ -65,7 +65,7 @@ After about 30 minutes, you should see flows in elasticsearch.
 
 A new set of versioned docs also has to be tagged once you are done making changes for the latest pipeline version. See the **Docusaurus guide**. 
 
-## TO Make New Nfdump-Collector Images
+## To Make New Nfdump-Collector Images
 
 If a new version of nfdump has been released that we need, new nfdump-collector images need to be made.
 
