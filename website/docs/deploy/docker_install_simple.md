@@ -48,7 +48,7 @@ git clone https://github.com/netsage-project/netsage-pipeline.git
 
 When the pipeline runs, it uses the logstash conf files that are in the git checkout (in conf-logstash/), as well as a couple other files like docker-compose.yml, so it is important to checkout the correct version.
 
-Move into the netsage-pipeline/ directory (**all git and docker commands must be run from inside this directory!**), then checkout the most recent version of the code. It will say you are in 'detached HEAD' state.
+Move into the netsage-pipeline/ directory (**all git and docker commands must be run from inside this directory!**), then checkout the most recent version of the code. It will say you are in 'detached HEAD' state if you don't include -b.
 ```sh
 git checkout {tag}
 ```
