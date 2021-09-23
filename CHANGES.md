@@ -1,3 +1,8 @@
+## GRNOC NetSage Deidentifier 1.2.TACC 
+Feautres:
+  * Added sensor-specific filtering by subnet 
+  * Added flag to turn de-identification off
+
 ------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.11 -- Sept 3, 2021
 ------------------------------------------------------

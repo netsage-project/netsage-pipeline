@@ -1,6 +1,6 @@
 Summary: GRNOC NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.11
+Version: 1.2.TACC
   # update Version here, in conf-logstash/98-post-process.conf, lib/GRNOC/NetSage/Deidentifier.pm
 Release: 1%{?dist}
 License: GRNOC
