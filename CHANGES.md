@@ -1,4 +1,14 @@
 ------------------------------------------------------
+## GRNOC NetSage Deidentfier 1.2.12 -- Dec 14, 2021
+------------------------------------------------------
+Usage note: With this release, we will move to using logstash 7.16.1 to fix a Log4j vulnerability.
+Bare-metal installations will need to upgrade logstash manually.
+
+Features:
+  * In the dockerfile, increased the version on which the logstash docker container is based 
+  * Added LEARN to the regexes in the sensor groups and types support files
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.11 -- Sept 3, 2021
 ------------------------------------------------------
 Features:

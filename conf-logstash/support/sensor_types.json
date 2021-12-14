@@ -17,6 +17,7 @@
     "^FRGP.*$": "Regional Network",
     "^GigaPOP.*$": "Regional Network",
     "^i-Light.*$": "Regional Network",
+    "^LEARN.*$": "Regional Network",
     "^PennREN.*$": "Regional Network",
     "^SANReN.*$": "Regional Network",
     "^.*sox.*$": "Regional Network",

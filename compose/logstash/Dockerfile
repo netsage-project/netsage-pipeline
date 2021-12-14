@@ -1,4 +1,4 @@
-FROM docker.elastic.co/logstash/logstash:7.10.1
+FROM docker.elastic.co/logstash/logstash:7.16.1
 
 #Create symlink so can use paths from production with logstash docker defaults
 USER root
