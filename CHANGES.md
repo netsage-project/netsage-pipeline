@@ -1,5 +1,5 @@
-## GRNOC NetSage Deidentifier 1.2.TACC 
-Feautres:
+## GRNOC NetSage Deidentifier 1.2.CAMPUS
+Features:
   * Added sensor-specific filtering by subnet 
   * Added flag to turn de-identification off
 
