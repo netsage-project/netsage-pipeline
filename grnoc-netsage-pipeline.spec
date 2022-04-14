@@ -46,7 +46,7 @@ BuildArch: noarch
 Requires: wget 
 Requires: logstash >= 7.16.2
 Requires: rubygem-ipaddress
-Requires: pmaccct >= 1.7.7
+#Requires: pmacct >= 1.7.7
 
 %description
 GRNOC NetSage Flow-Processing Pipeline

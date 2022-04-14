@@ -36,3 +36,10 @@ replayData
 userConfig
 docker-compose.override.yml
 node_modules
+
+Makefile
+blib
+blib/*
+grnoc-netsage-pipeline-2.0.0.tar.gz
+pm_to_blib
+
