@@ -117,15 +117,15 @@ rm -rf $RPM_BUILD_ROOT
 
 # Don't overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
-%config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf
-%config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf
 %config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
-%config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf
-%config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf
-%config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
+%config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
 %config /etc/logstash/conf.d/45-geoip-tagging.conf
@@ -147,7 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/support/networkA-members-list.rb.example
 
 /usr/share/doc/grnoc/netsage-pipeline/CHANGES.md
-#/usr/share/doc/grnoc/netsage-pipeline/INSTALL.md
+/usr/share/doc/grnoc/netsage-pipeline/INSTALL.md
 
 %defattr(754, root, root, -)
 /usr/bin/restart-logstash.sh
@@ -157,7 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(-, root, root, 755)
 /var/lib/grnoc/netsage/
-/var/cache/netsage/
+#/var/cache/netsage/
 
 %post
 echo " "
