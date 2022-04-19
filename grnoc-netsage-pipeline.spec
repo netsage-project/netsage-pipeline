@@ -46,7 +46,7 @@ BuildArch: noarch
 Requires: wget 
 Requires: logstash >= 7.16.2
 Requires: rubygem-ipaddress
-#Requires: pmacct >= 1.7.7
+#Requires: pmacct = 1.7.7 (Not installed by rpm; see post section below for a check. Update ver num there!)
 
 %description
 GRNOC NetSage Flow-Processing Pipeline
@@ -160,6 +160,21 @@ rm -rf $RPM_BUILD_ROOT
 #/var/cache/netsage/
 
 %post
+# make sure pmacct is installed (no rpm so can't just require it)
+echo " "
+echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+if [ -f /usr/local/sbin/nfacctd ]; then
+    echo "PLEASE CHECK: "
+    echo "It looks like pmacct has been installed."
+    echo "Check the version with  sfacctd -V  and  nfacctd -V."
+    echo "The Netage Pipeline has been tested with version 1.7.7."
+else
+    echo "WARNING: "
+    echo "Required package pmacct does not appear to have been installed. "
+    echo "See the NDCA doc or pmacct on github for instructions."
+    echo "The Netage Pipeline has been tested with version 1.7.7."
+fi
+
 echo " "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
