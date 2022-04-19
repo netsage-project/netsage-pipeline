@@ -1,0 +1,5 @@
+! This file is used to set sensor names according to the ports the flows came in on.
+! Label should be "sfacct--" or "nfacct--" (whichever is appropriate) followed by the sensor name with spaces replaced by #'s
+
+set_label=sfacct--Sflow#Sensor    filter='(port 9998)'
+set_label=nfacct--Netflow#Sensor  filter='(port 9999)'
