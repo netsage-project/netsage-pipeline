@@ -3,7 +3,8 @@ CHANGES.md
 bin/restart-logstash.sh
 conf-pmacct/sfacctd.conf
 conf-pmacct/nfacctd.conf
-conf-pmacct/pretag.map
+conf-pmacct/sfacct-pretag.map
+conf-pmacct/nfacct-pretag.map
 conf-logstash/01-input-jsonfile.conf.disabled
 conf-logstash/01-input-multiline-json-file.conf.disabled
 conf-logstash/01-input-rabbit.conf

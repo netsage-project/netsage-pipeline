@@ -123,7 +123,8 @@ rm -rf $RPM_BUILD_ROOT
 # Don't overwrite these .confs. Create .rpmnew files if needed.
 %config(noreplace) /etc/pmacct/sfacctd.conf
 %config(noreplace) /etc/pmacct/nfacctd.conf
-%config(noreplace) /etc/pmacct/pretag.map
+%config(noreplace) /etc/pmacct/sfacct-pretag.map
+%config(noreplace) /etc/pmacct/nfacct-pretag.map
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
