@@ -13,7 +13,7 @@ conf-logstash/10-preliminaries.conf
 conf-logstash/15-sensor-specific-changes.conf
 conf-logstash/20-add-id.conf
 conf-logstash/40-aggregation.conf
-conf-lonstash/41-thresholds.conf
+conf-logstash/41-thresholds.conf
 conf-logstash/45-geoip-tagging.conf
 conf-logstash/50-asn.conf
 conf-logstash/53-caida-org.conf
