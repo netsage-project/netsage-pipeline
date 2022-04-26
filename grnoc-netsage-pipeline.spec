@@ -138,6 +138,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/05-translate-pmacct.conf
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
+%config /etc/logstash/conf.d/41-thresholds.conf
 %config /etc/logstash/conf.d/45-geoip-tagging.conf
 %config /etc/logstash/conf.d/50-asn.conf
 %config /etc/logstash/conf.d/53-caida-org.conf
