@@ -135,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
+%config /etc/logstash/conf.d/05-translate-pmacct.conf
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
 %config /etc/logstash/conf.d/45-geoip-tagging.conf
