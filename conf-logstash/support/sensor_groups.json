@@ -1,5 +1,6 @@
 {
     "^.*cenic.*": "CENIC",
+    "^CERN.*": "CERN",
     "^FRGP.*": "FRGP",
     "^GEANT.*": "GEANT",
     "^gpn-.*": "GPN",
