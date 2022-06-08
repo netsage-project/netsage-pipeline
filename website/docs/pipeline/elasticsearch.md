@@ -108,8 +108,8 @@ The [Science Registry](https://scienceregistry.netsage.global/rdb/) stores human
 |@timestamp			|Jun 9, 2020 @ 18:03:21.703	|The time the flow entered the logstash pipeline for tstat flows, or the time stitching finished and the event exited the aggregation filter for other flows.|
 |@exit_time			|Jun 9, 2020 @ 18:03:25.369	|The time the flow exited the pipeline |
 |@processing_time		|688.31						|@exit_time minus @ingest_time. Useful for seeing how long stitching took. |
-|stitched_flows			|13				|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
 |@sampling_corrected    |yes |'yes' if sampling corrections have been done; 'no' otherwise, eg, for netflows before a template has been seen that includes the sampling rate. |
+|stitched_flows			|13				|Number of flows that came into logstash that were stitched together to make this final one. 1 if no flows were stitched together. 0 for tstat flows, which are never stitched. |
 |tags	|maxmind src asn	|Various info and error messages|
 |trial	| 5	|Can be set in 40-aggregation.conf if desired|
 
