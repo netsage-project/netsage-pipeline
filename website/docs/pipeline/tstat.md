@@ -1,6 +1,6 @@
 ---
 id: tstat
-title: Tstat Data Collection
+title: Tstat Data Export
 sidebar_label: Tstat Data
 ---
 

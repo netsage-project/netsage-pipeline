@@ -3,8 +3,8 @@ module.exports = {
     Pipeline: [
       "pipeline/intro",
       "pipeline/tstat",
-      "pipeline/nfdump",
-      "pipeline/importer",
+      "pipeline/sensors",
+      "pipeline/pmacct",
       "pipeline/logstash",
       "pipeline/elastic",
     ],

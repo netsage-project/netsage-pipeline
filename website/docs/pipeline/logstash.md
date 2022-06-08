@@ -4,12 +4,12 @@ title: Logstash Pipeline
 sidebar_label: Logstash
 ---
 
-The Logstash portion of the Netsage Pipeline reads in flows from a RabbitMQ queue, performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config, eventually ending up in an Elasticsearch instance. 
+The Logstash portion of the Netsage Pipeline reads flows from a RabbitMQ queue, performs various transformations and adds additional information to them, then sends them to a location specified in the output logstash config, eventually ending up in an Elasticsearch instance. 
 
-Logstash config files invoke various logstash "filters" and actions. These conf files are located in /etc/logstash/conf.d/. See below for a brief description of what each does and check the files for comments.
+Logstash config files invoke various logstash "filters" and actions. In the bare metal installation, these conf files are located in /etc/logstash/conf.d/. In a docker installation, the *.conf files in the git checkout, in conf-logstash/, are used. See below for a brief description of what each does and check the files for comments.
 
 Notes: 
- - All \*.conf files in conf.d/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
+ - All \*.conf files in conf.d/ or conf-logstash/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"' in /etc/logstash/pipelines.yml).
  - If actions in a particular .conf file are not needed in your particular case, they can be removed or the file disabled, but check carefully for effects on downstream configs.
  - MaxMind, CAIDA, and Science Registry database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs weekly or daily. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also, though it's not running in Docker deployments. Similarly for other support files, eg, those used in 90-additional-fields.conf.
  - Lookup tables for 55-member-orgs.conf that we have compiled are available from sciencregistry.grnoc.iu.edu. See the cron files provided. These will not be updated often, so you may run the cron jobs or not. You will need to provide lists for other networks yourself or ask us.
@@ -20,7 +20,11 @@ The main things done in each conf file are as follows.
 
 ### 01-input-rabbit.conf
 
-Reads flows from a rabbitmq queue. (The ".disabled" extenstion can be removed from other 01-input configs available in conf.d/ to get flows from other sources.)
+Reads flows from a rabbitmq queue. (The ".disabled" extention can be removed from other 01-input configs available in conf.d/ to get flows from other sources, probably for testing.)
+
+### 05-translate-pmacct.conf
+
+Renames fields provided by pmacct processes to match what the pipeline uses (from before we used pmacct). 
 
 ### 10-preliminaries.conf
 
@@ -31,23 +35,30 @@ sets duration and rates to 0 if duration is <= 0.002 sec (because tiny durations
 
 ### 15-sensor-specific-changes.conf
 
-Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in a specfied list; lists can be sensor-specific, 2) the ability to change the sensor name for flows from a specified sensor which use a certain interface, and 3) the ability to apply a sampling rate correction manually for named sensors. You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
+Makes any changes to fields needed for specific sensors. This config currently provides 1) the ability to drop all flows that do not use interfaces (ifindexes) in a specfied list; lists can be sensor-specific, 2) the ability to change the sensor name for flows from a specified sensor which use a certain interface, 3) the ability to apply a sampling rate correction manually for named sensors, and 4) the ability to add subnet filtering for flows from specified sensors. 
+
+You may edit the file in a bare-metal installation and specify everything explicitly (upgrades will not overwrite this config) or you may use the environment file specified in the systemd unit file. For Docker installations, use the .env file to specifiy the parameters. By default, this config will do nothing since the flags will be set to False.
 
 ### 20-add_id.conf
 
-Adds a unique id (evenutally called meta.id) which is a hash of the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. This id is used for aggregating (stitching) in the next step. 
+Adds a unique id (evenutally called meta.id) which is a hash of the 5-tuple of the flow (src and dst ips and ports, and protocol) plus the sensor name. 
 
 ### 40-aggregation.conf
 
-Stitches together flows from different nfcapd files into longer flows, matching them up by meta.id and using a specified inactivity_timeout to decide when to start a new flow.
+Stitches incoming flows into longer flows. The inactive timeout is 6 minutes, by default. So, if the time from the start of the current flow to the start time of the last matching flow is over 6 minutes, declare the previous aggregated flow ended and start a new one with the current incoming flow. The default active timeout is 1 hour, meaning any flows over 1 hour in length will be split up into 1 hour chunks. This may require the start time to be adjusted, to cut off previous whole hours.
 
-Notes: 
- - By default, 5-minute nfcapd files are assumed and the inactivity_timeout is set to 10.5 minutes. If more than 10.5 min have passed between the start of the current flow and the start of the last matching one, do not stitch them together.
- - If your nfcapd files are written every 15 minutes, change the inactivity_timeout to at least 16 minutes.
- - There is another "timeout" setting which is basically the maximum duration of a stitched flow (default: 24 hr).
+For sflow, aggregation uses the 5-tuple plus sensor name.
+For netflow, aggregation uses the 5-tuple plus sensor name plus start time. This means that when there's a timeout at the router (default inactive timeout is usually 15 sec), the flows will stay separate. (In certain grafana dashboards, they will be added together.) Start times of incoming flows are adjusted. See comments in file.
+
+Notes
  - When logstash shuts down, any flows "in the aggregator" will be written out to aggregate_maps_path (default: /tmp/logstash-aggregation-maps). The file is then read back in when logstash is restarted so aggregation can continue. 
  - Your logstash pipeline can have only 1 worker or aggregation is not going to work! This is set in the logstash config file.
  - Tstat flows come in already complete, so no aggregation is done on those flows.
+
+### 41-thresholds.conf
+
+Drops flows that are too small - under 10 MB, by default.
+For flows with small durations, sets rates to 0 because sampling makes them too inaccurate.
 
 ### 45-geoip-tagging.conf
 
@@ -87,6 +98,8 @@ Notes:
 
 Replaces the last octet of IPv4 addresses and the last 4 hextets of IPv6 addresses with x's in order to deidentify them.
 
+Deidentfication can be skipped by using an option in the environment file.
+
 ### 80-privatize.org.conf
 
 Removes information about Australian organizations (or, with modification, any country that has privacy rules that require us not to identify organizations).
@@ -99,19 +112,19 @@ Copies Science Registry organization and location values, if they exist, to the 
 ### 90-additional-fields.conf
 
 Sets additional quick and easy fields.  Supporting mapping or ruby files are used - see support/ and ruby/ in conf.d/. Currently we have (for Netsage's use):
- - sensor_group  = TACC, AMPATH, etc.  (based on matching sensor names to regexes)
- - sensor_type   = Circuit, Archive, Exchange Point, or Regional Network  (based on matching sensor names to regexes)
+ - sensor_group  = TACC, NEAAR, I-Light, etc.  (based on matching sensor names to regexes)
+ - sensor_type   = Circuit, Archive, Exchange Point, Regional Network, Facility Edge, Campus  (based on matching sensor names to regexes)
  - country_scope = Domestic, International, or Mixed  (based on src and dst countries and possibly continents, where Domestic = US, Puerto Rico, or Guam)
- - is_network_testing = yes, no  (yes if discipline from the science registry is 'CS.Network Testing and Monitoring' or port = 5001, 5101, or 5201)
+ - is_network_testing = yes, no  (yes if discipline from the science registry is 'CS.Network Testing and Monitoring' or if port = 5001, 5101, or 5201)
  - es_doc_id = hash of meta.id and the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates. (NOTE: due to how netflow works, use es_doc_id as the ES document id only for sflow!)
 
 ### 95-cleanup.conf
 
-Does small misc. tasks at the end like rename, remove, or convert fields
+Does small miscellaneous tasks at the end like rename, remove, or convert fields
 
 ### 98-post-process.conf
 
-Adds @exit_time and @processing_time (these are mainly for developers)
+Adds @exit_time, @processing_time, and @pipeline_ver (these are mainly for developers)
 
 ### 99-output-rabbit.conf
 
@@ -119,7 +132,7 @@ Sends results to a final RabbitMQ queue. (".disabled" can be removed from other 
 
 ### Final Stage 
 
-In the GlobalNOC-Netsage case, the output filter writes the flows to a network-specific RabbitMQ queue on another host and the last stage is a separate logstash pipeline on a 3rd host. The latter reads flows from the final queue using a rabbitmq input filter and sends it into elasticsearch using an elasticsearch output filter with a mapping template which sets data types for the fields. 
+In the GlobalNOC-Netsage case, the output filter writes the flows to a network-specific RabbitMQ queue at Indiana University and the last stage is a separate logstash pipeline. The latter reads flows from the final queue using a rabbitmq input filter and sends it into elasticsearch using an elasticsearch output filter with a mapping template which sets data types for the fields. 
 
 ## Field names
 
