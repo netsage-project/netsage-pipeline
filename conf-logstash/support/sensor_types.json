@@ -24,5 +24,6 @@
     "^.*SoX.*$": "Regional Network",
     "^Sun Corridor.*$": "Regional Network",
     "^tacc_netflows$": "Regional Network",
-    "^CERN.*$": "Facility Edge"
+    "^CERN.*$": "Facility Edge",
+    "^Utah.*$": "Campus"
 }

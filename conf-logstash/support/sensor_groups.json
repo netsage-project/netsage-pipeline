@@ -25,5 +25,6 @@
     "^TACC.*": "TACC",
     "^tacc.*": "TACC",
     "^TransPAC.*": "TransPAC",
-    "^.*UCAR.*": "UCAR"
+    "^.*UCAR.*": "UCAR",
+    "^Utah.*": "Utah"
 }
