@@ -21,6 +21,7 @@ Features:
  * Added env file option to skip de-identification.
  * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
  * 0.0.0.x and 0.0.0.0 flows are tagged, and dropped by default. Unadvertised option to keep them is available in the env file.
+ * When cutting start times for netflow updates in 40-aggregation.conf, use the inactive timeout variable from the env file instead of harding 1 hour.
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)
