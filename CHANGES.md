@@ -1,4 +1,33 @@
 ------------------------------------------------------
+## GRNOC NetSage Pipeline 2.0.0 --
+------------------------------------------------------
+NEW PACKAGE NAME, PMACCT INSTEAD OF NFDUMP AND IMPORTER
+
+Features:
+ * Renamed package to grnoc-netsage-pipeline
+ * Got rid of importer references, requirements, files, etc. 
+ * Used the %post section in the spec file to check to see if pmacct is installed.
+ * Added systemd unit files for sfacctd and nfacctd  (default will be 1 sflow, 1 netflow source, for docker installs)
+ * Added default sfacct and nfacct config files in conf-pmacct/ (/etc/pmacct/).
+ * Added default pre_tag_map files for the default ports and sensor names.
+ * Added 05-translate-pmacct.conf logstash config.
+ * Revised 40-aggregation.conf to deal with pmacct; separate sections for sflow and netflow. 
+ * For netflow, in 40-aggregation.conf, adjust start time of incoming flows if duration is over the active timeout. ("updates" to long lasting flows)
+ * Added 41-thresholds.conf - applies size threshold of 10 MB (otherwise drop) and duration threshold of 0.1 sec (otherwise set rates to 0)
+ * Sampling rate corrections will be done in logstash only if requested in the env file AND a correction has not yet been applied by pmacct. * Sensor list for sampling rate corrections in the env file is now semicolon-delimited.
+ * New field: @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
+ * If a sampling rate correction is applied by logstash, add a tag with the rate. 
+ * Added CERN and Utah regexes to sensor type and group files.
+ * Added env file option to skip de-identification.
+ * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
+
+ * Documentation updates
+ * Dependabot automatic remediations of vulnerabilites (for docusaurus)
+
+Bugs:
+ * Fixed ifindex filtering to be able to filter only specified sensors and keep all flows for other sensors; allow "ALL" for sensor names or interfaces.
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.12 -- Jan 4, 2022
 ------------------------------------------------------
 Usage note: With this release, we will move to using logstash 7.16.2 to fix a Log4j vulnerability.
