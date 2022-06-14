@@ -14,8 +14,11 @@ Features:
  * Revised 40-aggregation.conf to deal with pmacct; separate sections for sflow and netflow. 
  * For netflow, in 40-aggregation.conf, adjust start time of incoming flows if duration is over the active timeout. ("updates" to long lasting flows)
  * Added 41-thresholds.conf - applies size threshold of 10 MB (otherwise drop) and duration threshold of 0.1 sec (otherwise set rates to 0)
- * Sampling rate corrections will be done in logstash only if requested in the env file AND a correction has not yet been applied by pmacct. * Sensor list for sampling rate corrections in the env file is now semicolon-delimited.
- * New field: @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
+ * Sampling rate corrections will be done in logstash when requested (flag is set) in the env file but 
+   ONLY IF a correction has not yet been applied (by pmacct). 
+ * Sensor list for sampling rate corrections in the env file is now semicolon-delimited.
+ * Allowed "ALL" when specifying sensors for sampling rate corrections.
+ * Added new field  @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
  * If a sampling rate correction is applied by logstash, add a tag with the rate. 
  * Added CERN and Utah regexes to sensor type and group files.
  * Added env file option to skip de-identification.
