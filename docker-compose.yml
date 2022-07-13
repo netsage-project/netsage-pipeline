@@ -69,24 +69,16 @@ services:
     # Explicitly specify *.conf to be sure logstash doesn't use *.disabled configs. 
     command: logstash -f /etc/logstash/conf.d/*.conf
     volumes:
-      # location of our configs : default location : read-only
+      # location of logstash configs on host : location within container : read-only
       - ./conf-logstash/:/etc/logstash/conf.d/:ro
-      # location on host of downloaded maxmind and other files : default location : read-only 
-      - /var/lib/grnoc/netsage/:/var/lib/grnoc/netsage/:ro  ######
+      # location of downloaded maxmind and caida files on host : location within container : read-only 
+      - ./downloads/:/var/lib/grnoc/netsage/:ro  
     networks: 
       - netsage-network
     depends_on:
       - rabbit
     # restart is not included since if logstash dies, there may be an error and we dont' want it to keep restarting over and over
   
-#  ofelia: ## Scheduler Task
-#    image: mcuadros/ofelia:v0.3.0
-#    command: daemon --docker
-#    depends_on:
-#      - importer
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-
 # named volumes 
 volumes:
     rabbit_vol:
