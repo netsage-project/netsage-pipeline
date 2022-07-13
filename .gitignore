@@ -3,10 +3,12 @@
 .*.swp
 conf/systemd/deploy
 ~
+
 .env
-.DS_Store
-*.pyc
+docker-compose.override.yml
+userConfig
 data
+
 # Dependencies
 /website/node_modules
 
@@ -29,17 +31,16 @@ yarn-debug.log*
 yarn-error.log*
 build
 
+*.pyc
 .vscode
 .history
 .idea
 replayData
-userConfig
-docker-compose.override.yml
 node_modules
 
 Makefile
+grnoc-netsage-pipeline-2.0.0.tar.gz
 blib
 blib/*
-grnoc-netsage-pipeline-2.0.0.tar.gz
 pm_to_blib
 

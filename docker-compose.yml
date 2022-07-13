@@ -1,44 +1,93 @@
 version: "3.7"
+
+# Default docker services and settings. 
+# Do not make changes here; use the override file.
+
+# Shared network for the containers. They will be able to communicate over default ports.
+networks:
+    netsage-network:
+
 services:
-  rabbit:
-    image: rabbitmq:3.8-management
+  sfacctd_1:
+    container_name: sfacctd_1
+    image: sfacctd:7Jun2022
     env_file: .env
-    hostname: rabbit
-    volumes:
-      - ./data/rabbit:/var/lib/rabbitmq
     ports:
-      - "15672:15672"
-      - "5671:5671"
-      - "5672:5672"
-  importer:
-    image: netsage/pipeline_importer:latest
-    env_file: .env
+      # port on host for incoming flow data : port in the container
+      - "8000:8000/udp"
+    volumes:
+      # location of our configs : default location : read-only
+      - ./conf-pmacct:/etc/pmacct:ro
+    command:
+      # override the default parameters (entrypoint is the actual command)
+      - -f 
+      - /etc/pmacct/sfacctd_1.conf
+    networks:
+      - netsage-network
     depends_on:
       - rabbit
-    restart: always
-    volumes:
-      - ./data:/data
-      - ./data/importer_cache:/var/cache/netsage
-      - ./conf-logstash:/usr/share/logstash/pipeline/
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "@weekly"
-      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
-  logstash:
-    image: netsage/pipeline_logstash:latest
+ 
+  nfacctd_1:
+    container_name: nfacctd_1
+    image: nfacctd:7Jun2022
     env_file: .env
-    depends_on:
-      - importer
     ports:
-      - "5044:5044"
+      # port on host for incoming flow data : port in the container
+      - "9000:9000/udp"
     volumes:
-      - ./conf-logstash:/usr/share/logstash/pipeline/
-      - ./data:/data
-      - ./data/cache:/var/lib/grnoc/netsage/
-  ofelia: ## Scheduler Task
-    image: mcuadros/ofelia:v0.3.0
-    command: daemon --docker
+      # location of our configs : default location : read-only
+      - ./conf-pmacct:/etc/pmacct:ro
+    command:
+      # override the default parameters (entrypoint is the actual command)
+      - -f 
+      - /etc/pmacct/nfacctd_1.conf
+    networks:
+      - netsage-network
     depends_on:
-      - importer
+      - rabbit
+ 
+  rabbit:
+    container_name: rabbit
+    hostname: rabbit
+    image: rabbitmq:3.9-management
+    env_file: .env
+    ports:
+      # The port for the UI needs to be mapped to that on the host
+      # To view, go to https://<host>/rabbit
+      - "15672:15672"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Used a name Volume for the rabbitmq config and files for its own use. 
+      # We want data to persist but don't need to see it.
+      - rabbit_vol:/var/lib/rabbitmq
+    networks: 
+      - netsage-network
+
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:7.16.2
+    env_file: .env
+    # Explicitly specify *.conf to be sure logstash doesn't use *.disabled configs. 
+    command: logstash -f /etc/logstash/conf.d/*.conf
+    volumes:
+      # location of our configs : default location : read-only
+      - ./conf-logstash/:/etc/logstash/conf.d/:ro
+      # location on host of downloaded maxmind and other files : default location : read-only 
+      - /var/lib/grnoc/netsage/:/var/lib/grnoc/netsage/:ro  ######
+    networks: 
+      - netsage-network
+    depends_on:
+      - rabbit
+    # restart is not included since if logstash dies, there may be an error and we dont' want it to keep restarting over and over
+  
+#  ofelia: ## Scheduler Task
+#    image: mcuadros/ofelia:v0.3.0
+#    command: daemon --docker
+#    depends_on:
+#      - importer
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+# named volumes 
+volumes:
+    rabbit_vol:
+

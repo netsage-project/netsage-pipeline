@@ -1,14 +1,14 @@
 ! PMACCT CONFIG FOR NETFLOW 
-! Settings most likely to need changes: NFACCTD_PORT, PRE_TAG_MAP, and AMQP_ROUTING_KEY
+! Settings most likely to need changes: NFACCTD_PORT, PRE_TAG_MAP, and possibly AMQP_ROUTING_KEY
 
 !# debug: true
 
 ! Port nfacctd should listen to
-nfacctd_port: 9999
+nfacctd_port: ${netflowContainerPort_1}
 
 ! Get a value for 'label' from the pre_tag_map file.
 ! We use this to encode the sensor name for each port.
-pre_tag_map: /etc/pmacct/nfacct-pretag.map
+pre_tag_map: /etc/pmacct/nfacctd-pretag_1.map
 
 ! FOR PRINTING TO FILES instead of writing to rabbit queue (comment out amqp_* lines)
 ! Default is tab-separated output. If 'label' or any variable length field is in the aggregation list, you have to use csv format.
@@ -20,9 +20,9 @@ pre_tag_map: /etc/pmacct/nfacct-pretag.map
 
 ! FOR SENDING FLOWS TO THE LOCAL RABBIT QUEUE
     plugins: amqp
-    amqp_host: localhost
-    amqp_user: guest
-    amqp_passwd: guest
+    amqp_host: ${rabbitmq_input_host}
+    amqp_user: ${rabbitmq_input_username}
+    amqp_passwd: ${rabbitmq_input_pw}
     amqp_exchange_type: direct
     amqp_exchange: amq.direct
     amqp_persistent_msg: true
