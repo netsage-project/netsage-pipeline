@@ -2,12 +2,11 @@ SHELL=/bin/sh
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 MAILTO=root
 
-# Download possibly-updated files required by the Netsage Pipeline
+# Download possibly-updated files required by the Netsage Pipeline from scienceregistry.grnoc.iu.edu
+# This cron file is to be used for bare-metal installations
+DOWNLOAD_PATH="/var/lib/grnoc/netsage"
+SUPPORT_PATH="/etc/logstash/conf.d/support"
 
-## -- SET THE DOWNLOAD LOCATIONS (DOWNLOAD_PATH and SUPPORT_PATH) AS DESIRED THEN COPY TO /etc/cron.d/netsage-downloads.cron. 
-#     For docker installations, --PATH-- should be replaced by the absolute location of the git checkout.
-DOWNLOAD_PATH = "--PATH--/netsage-pipeline/downloads"
-SUPPORT_PATH =  "--PATH--/netsage-pipeline/conf-logstash/support"
 
 # MAXMIND ASN on Saturdays at 23:30 UTC
 30 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb  -q -O $DOWNLOAD_PATH/newASN.mmdb  &&  mv $DOWNLOAD_PATH/newASN.mmdb $DOWNLOAD_PATH/GeoLite2-ASN.mmdb && touch $DOWNLOAD_PATH/GeoLite2-ASN.mmdb
@@ -29,6 +28,12 @@ SUPPORT_PATH =  "--PATH--/netsage-pipeline/conf-logstash/support"
 
 # ONENET MEMBER LIST on Saturdays at 23:54 UTC
 54 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/onenet-members-list.rb -q -O $SUPPORT_PATH/newonenet.rb  &&  mv $SUPPORT_PATH/newonenet.rb $SUPPORT_PATH/onenet-members-list.rb && touch $SUPPORT_PATH/onenet-members-list.rb
+
+# SENSOR_GROUPS on Saturdays at 23:15 UTC
+15 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/sensor_groups.json -q -O $SUPPORT_PATH/newsensor_groups.json  &&  mv $SUPPORT_PATH/newsensor_groups.json $SUPPORT_PATH/sensor_groups.json && touch $SUPPORT_PATH/sensor_groups.json
+
+# SENSOR_TYPES on Saturdays at 23:20 UTC
+20 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/sensor_types.json -q -O $SUPPORT_PATH/newsensor_types.json  &&  mv $SUPPORT_PATH/newsensor_types.json $SUPPORT_PATH/sensor_types.json && touch $SUPPORT_PATH/sensor_types.json
 
 
 

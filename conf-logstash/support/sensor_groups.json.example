@@ -1,0 +1,4 @@
+{
+    "^A.*$": "sensor group A",
+    "^B.*$": "sensor group B"
+}

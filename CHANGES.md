@@ -29,6 +29,9 @@ Features:
  * Added CERN and Utah regexes to sensor type and group files.
  * Added env file option to skip de-identification.
  * 0.0.0.x and 0.0.0.0 flows are tagged, and dropped by default. Unadvertised option to keep them is available in the env file.
+ * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular regexes will be downloaded from scienceregistry.grnoc.
+ * Cron file runs script to download all files from scienceregistry.grnoc once/wk
+ * setup-cron.sh script copies ORIG .cron and .sh files and plugs in username and location of git checkout.
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)

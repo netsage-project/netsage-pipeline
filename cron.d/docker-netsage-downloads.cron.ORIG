@@ -1,0 +1,9 @@
+SHELL=/bin/sh
+
+# This cron file is to be used with Docker installations. Fill in missing info manually or use the setup-cron.sh script.
+
+# Use wget to download possibly-updated files required for the Netsage Pipeline from scienceregistry.grnoc.iu.edu.
+# Put them in directories in the git checkout of the pipeline code.
+
+# Get all on Saturdays at 23:00 UTC
+00 23 * * 6 -USER- -PATH-TO-GIT-CHECKOUT-/bin/docker-netsage-downloads.sh > /dev/null 2>&1
