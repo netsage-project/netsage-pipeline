@@ -7,7 +7,10 @@ conf/systemd/deploy
 .env
 docker-compose.override.yml
 userConfig
-data
+bin/docker-netsage-downloads.sh
+cron.d/docker-netsage-downloads.cron
+conf-pmacct/*_1*
+conf-pmacct/*_2*
 
 # Dependencies
 /website/node_modules
