@@ -35,11 +35,8 @@ conf-logstash/ruby/domestic.rb
 conf-logstash/support/sensor_groups.json  
 conf-logstash/support/sensor_types.json  
 conf-logstash/support/networkA-members-list.rb.example
-cron.d/netsage-maxmind-update.cron
-cron.d/netsage-caida-update.cron
-cron.d/netsage-scireg-update.cron
+cron.d/bm-netsage-downloads.cron
 cron.d/netsage-logstash-restart.cron
-cron.d/netsage-memberlists-update.cron 
 systemd/logstash.service
 systemd/sfacctd.service
 systemd/nfacctd.service

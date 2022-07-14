@@ -80,10 +80,7 @@ make pure_install
 
 %{__install} bin/restart-logstash.sh %{buildroot}/usr/bin/restart-logstash.sh
 
-%{__install} cron.d/netsage-scireg-update.cron %{buildroot}/etc/cron.d/netsage-scireg-update.cron
-%{__install} cron.d/netsage-maxmind-update.cron %{buildroot}/etc/cron.d/netsage-maxmind-update.cron
-%{__install} cron.d/netsage-caida-update.cron %{buildroot}/etc/cron.d/netsage-caida-update.cron
-%{__install} cron.d/netsage-memberlists-update.cron %{buildroot}/etc/cron.d/netsage-memberlists-update.cron
+%{__install} cron.d/bm-netsage-downloads.cron %{buildroot}/etc/cron.d/netsage-downloads.cron
 %{__install} cron.d/netsage-logstash-restart.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
 
 %{__install} systemd/logstash.service %{buildroot}/etc/systemd/system/logstash.service
@@ -114,10 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644, root, root, 755)
 
 # Don't overwrite cron files. Create .rpmnew files if needed.
-%config(noreplace) /etc/cron.d/netsage-scireg-update.cron
-%config(noreplace) /etc/cron.d/netsage-maxmind-update.cron
-%config(noreplace) /etc/cron.d/netsage-caida-update.cron
-%config(noreplace) /etc/cron.d/netsage-memberlists-update.cron
+%config(noreplace) /etc/cron.d/netsage-downloads.cron
 %config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
 # Don't overwrite these .confs. Create .rpmnew files if needed.
