@@ -65,6 +65,7 @@ services:
   logstash:
     container_name: logstash
     image: docker.elastic.co/logstash/logstash:7.16.2
+    user: 1000:1000
     env_file: .env
     # Explicitly specify *.conf to be sure logstash doesn't use *.disabled configs. 
     command: logstash -f /etc/logstash/conf.d/*.conf

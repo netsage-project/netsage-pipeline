@@ -105,7 +105,8 @@ fi
 envsubst < docker-compose.override.yml > docker-compose.override.yml.temp
 mv docker-compose.override.yml.temp  docker-compose.override.yml
 
-
-echo "Pmacct config files have been created, based on the .env file."
-echo "Please check the docker-compose.override.yml file to be sure it matches the .env file!"
+echo "    Pmacct config files have been created, based on the .env file."
+echo "    Please check the docker-compose.override.yml file to be sure it matches the .env file!"
 echo ""
+
+
