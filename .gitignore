@@ -9,6 +9,8 @@ docker-compose.override.yml
 userConfig
 bin/docker-netsage-downloads.sh
 cron.d/docker-netsage-downloads.cron
+bin/restart-logstash-container.sh
+cron.d/restart-logstash-container.cron
 conf-pmacct/*_1*
 conf-pmacct/*_2*
 

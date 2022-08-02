@@ -10,7 +10,7 @@ Features:
  * Revised docker-compose.yml file, etc. to work with pmacct containers.
  * Revised parts of the .env file, including adding variables for number of sflow and netflow sensors. 
  * Added default sfacct and nfacct config files in conf-pmacct/ (.ORIG files to be copied)
- * Added a setup script (setup-pmacct.sh) which the user runs to create pmacct config files and create or modify docker-compose.override.yml, 
+ * Added setup-pmacct.sh script which the user runs to create pmacct config files and create or modify docker-compose.override.yml, 
    filling in environment variables set in the .env file. (pmacct configs cannot use env vars directly.)
  * The number of sflow or netflow sensors can be 0. In this case, the setup script makes the container just run an echo command 
    after which it shuts down.
@@ -31,8 +31,10 @@ Features:
  * 0.0.0.x and 0.0.0.0 flows are tagged and dropped by default. (Unadvertised option to keep them is available in the env file.)
  * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular files/regexes will be downloaded from 
    scienceregistry.grnoc.
- * Setup-cron.sh script copies .ORIG .cron and .sh files and plugs in username and location of git checkout. User copies to /etc/cron.d/.
- * The cron file runs the script to download all files from scienceregistry.grnoc once/wk.
+ * Added setup-cron.sh script which copies .ORIG .cron and .sh files and writes in username and the location of the git checkout. 
+   The user must copy cron files to /etc/cron.d/.
+ * One cron file runs a script to download all files from scienceregistry.grnoc once/wk.
+ * Another cron file restarts the logstash container each day.
  * Docker-compose.yml ensures logstash runs with uid 1000, while setup-cron.sh sets the owner of logstash-temp/ to 1000, 
    so logstash can write and read aggregation map files when it stops and starts. (User 1000 could be anyone on the host; name doesn't matter.)
 

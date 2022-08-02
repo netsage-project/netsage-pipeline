@@ -1,6 +1,6 @@
 grnoc-netsage-pipeline.spec
 CHANGES.md
-bin/restart-logstash.sh
+bin/restart-logstash-service.sh
 conf-pmacct/sfacctd.conf
 conf-pmacct/nfacctd.conf
 conf-pmacct/sfacct-pretag.map
@@ -35,8 +35,8 @@ conf-logstash/ruby/domestic.rb
 conf-logstash/support/sensor_groups.json  
 conf-logstash/support/sensor_types.json  
 conf-logstash/support/networkA-members-list.rb.example
-cron.d/bm-netsage-downloads.cron
-cron.d/netsage-logstash-restart.cron
+cron.d/baremetal-netsage-downloads.cron
+cron.d/restart-logstash-service.cron
 systemd/logstash.service
 systemd/sfacctd.service
 systemd/nfacctd.service

@@ -78,10 +78,10 @@ make pure_install
 %{__install} -d -p %{buildroot}/usr/share/logstash/config/
 %{__install} -d -p %{buildroot}/usr/share/doc/grnoc/netsage-pipeline/
 
-%{__install} bin/restart-logstash.sh %{buildroot}/usr/bin/restart-logstash.sh
+%{__install} bin/restart-logstash-service.sh %{buildroot}/usr/bin/restart-logstash.sh
 
-%{__install} cron.d/bm-netsage-downloads.cron %{buildroot}/etc/cron.d/netsage-downloads.cron
-%{__install} cron.d/netsage-logstash-restart.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
+%{__install} cron.d/restart-logstash-service.cron %{buildroot}/etc/cron.d/netsage-logstash-restart.cron
+%{__install} cron.d/baremetal-netsage-downloads.cron %{buildroot}/etc/cron.d/netsage-downloads.cron
 
 %{__install} systemd/logstash.service %{buildroot}/etc/systemd/system/logstash.service
 %{__install} systemd/sfacctd.service %{buildroot}/etc/systemd/system/sfacctd.service

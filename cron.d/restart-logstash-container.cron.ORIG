@@ -1,0 +1,7 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+
+# restart logstash so caida, geoip, and scireg db's are reread, in case they've been updated
+# daily at 11:00 UTC
+00 11 * * * root -PATH-TO-GIT-CHECKOUT-/bin/restart-logstash-container.sh > -PATH-TO-GIT-CHECKOUT-/logstash-temp/restart-output.txt 2>&1
