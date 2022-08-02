@@ -1,37 +1,40 @@
 ------------------------------------------------------
-## GRNOC NetSage Pipeline 2.0.0 --
-NEW PACKAGE NAME; PMACCT INSTEAD OF NFDUMP AND IMPORTER
+## GRNOC NetSage Pipeline 2.0.0 --, 2022
+NEW PACKAGE NAME; USING PMACCT INSTEAD OF NFDUMP AND IMPORTER
 ------------------------------------------------------
 Features:
  * Renamed package to grnoc-netsage-pipeline
- * Got rid of importer references, requirements, files, etc. 
+ * Got rid of old importer references, requirements, files, etc. 
  * Used the %post section in the spec file to check to see if pmacct is installed.
  * Added systemd unit files for sfacctd and nfacctd  (default will be 1 sflow, 1 netflow source, for docker installs)
  * Revised docker-compose.yml file, etc. to work with pmacct containers.
  * Revised parts of the .env file, including adding variables for number of sflow and netflow sensors. 
- * Added default sfacct and nfacct config files in conf-pmacct/ (ORIG files to be copied)
- * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
+ * Added default sfacct and nfacct config files in conf-pmacct/ (.ORIG files to be copied)
  * Added a setup script (setup-pmacct.sh) which the user runs to create pmacct config files and create or modify docker-compose.override.yml, 
    filling in environment variables set in the .env file. (pmacct configs cannot use env vars directly.)
- * The number of sflow or netflow sensors can be 0. In this case, the setup script makes the container run an echo command after which it shuts down.
+ * The number of sflow or netflow sensors can be 0. In this case, the setup script makes the container just run an echo command 
+   after which it shuts down.
  * Added 05-translate-pmacct.conf logstash config to translate pmacct fields to ones the pipeline uses.
  * Revised 40-aggregation.conf to deal with pmacct; there are separate sections for sflow and netflow. 
- * For netflow, in 40-aggregation.conf, adjust start time of incoming flows if duration is over the active timeout. ("updates" to long lasting flows)
- * When cutting start times for netflow updates in 40-aggregation.conf, use the inactive timeout variable from the env file instead of hard coding 1 hour.
+ * For netflow, in 40-aggregation.conf, the start time of incoming flows will be adjusted if duration is greater than the active timeout 
+   (ie, for "updates" to long lasting flows)
  * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
- * Added 41-thresholds.conf - applies size threshold of 10 MB (otherwise drop) and duration threshold of 0.1 sec (otherwise set rates to 0)
- * Added new field  @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
- * Sampling rate corrections will be done in logstash when requested (flag is set) in the env file but 
+ * Added 41-thresholds.conf - applies size threshold of 10 MB (drop smaller flows) and duration threshold of 0.1 sec (set rates to 0 if shorter)
+ * Added new field: @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
+ * Sampling rate corrections will be done in logstash when requested (ie, flag is set in the env file) but 
    ONLY IF a correction has not yet been applied (by pmacct). 
  * Sensor list for sampling rate corrections in the env file is now semicolon-delimited.
  * Allowed "ALL" when specifying sensors for sampling rate corrections.
  * When a sampling rate correction is applied by logstash, add a tag with the rate. 
  * Added CERN and Utah regexes to sensor type and group files.
- * Added env file option to skip de-identification.
- * 0.0.0.x and 0.0.0.0 flows are tagged, and dropped by default. Unadvertised option to keep them is available in the env file.
- * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular regexes will be downloaded from scienceregistry.grnoc.
- * Cron file runs script to download all files from scienceregistry.grnoc once/wk
- * setup-cron.sh script copies ORIG .cron and .sh files and plugs in username and location of git checkout.
+ * Added an env file option to skip de-identification.
+ * 0.0.0.x and 0.0.0.0 flows are tagged and dropped by default. (Unadvertised option to keep them is available in the env file.)
+ * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular files/regexes will be downloaded from 
+   scienceregistry.grnoc.
+ * Setup-cron.sh script copies .ORIG .cron and .sh files and plugs in username and location of git checkout. User copies to /etc/cron.d/.
+ * The cron file runs the script to download all files from scienceregistry.grnoc once/wk.
+ * Docker-compose.yml ensures logstash runs with uid 1000, while setup-cron.sh sets the owner of logstash-temp/ to 1000, 
+   so logstash can write and read aggregation map files when it stops and starts. (User 1000 could be anyone on the host; name doesn't matter.)
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)

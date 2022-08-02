@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# This script modifies docker-netsage-downloads.cron and docker-netsage-downloads.sh
-# to fill in user and path info. 
+# This script copies and modifies docker-netsage-downloads.cron.ORIG and docker-netsage-downloads.sh.ORIG
+# to make non-example vesions and fill in user and path info. 
 
 # USER and PWD env vars are assumed to be already set
 cp cron.d/docker-netsage-downloads.cron.ORIG  cron.d/docker-netsage-downloads.cron
