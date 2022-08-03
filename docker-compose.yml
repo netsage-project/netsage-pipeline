@@ -56,8 +56,8 @@ services:
       # To view, go to https://<host>/rabbit
       - "15672:15672"
     volumes:
-      # Used a name Volume for the rabbitmq config and files for its own use. 
-      # We want data to persist but don't need to see it.
+      # Use a named Volume for the rabbitmq config and files for its own use. 
+      # We want data (msgs in the queue) to persist but don't need to see it.
       - rabbit_vol:/var/lib/rabbitmq
     networks: 
       - netsage-network
@@ -65,8 +65,9 @@ services:
   logstash:
     container_name: logstash
     image: docker.elastic.co/logstash/logstash:7.16.2
-    user: 1000:1000
     env_file: .env
+    # user uid
+    user: 1000:1000
     # Explicitly specify *.conf to be sure logstash doesn't use *.disabled configs. 
     command: logstash -f /etc/logstash/conf.d/*.conf
     volumes:
@@ -76,7 +77,6 @@ services:
       - ./logstash-downloads/:/var/lib/grnoc/netsage/:ro  
       # location for aggregation map files, which save flows being aggregated when logstash shuts down
       - ./logstash-temp/:/logstash-temp/
-
     networks: 
       - netsage-network
     depends_on:
