@@ -1,0 +1,5 @@
+{
+    "^.*Tstat$": "Data Archive",
+    "^Network A -.*$":  "Circuit",
+    "^Network B -.*$": "Regional Network"
+}

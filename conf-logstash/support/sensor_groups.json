@@ -1,5 +1,6 @@
 {
     "^.*cenic.*": "CENIC",
+    "^CERN.*": "CERN",
     "^FRGP.*": "FRGP",
     "^GEANT.*": "GEANT",
     "^gpn-.*": "GPN",
@@ -24,5 +25,6 @@
     "^TACC.*": "TACC",
     "^tacc.*": "TACC",
     "^TransPAC.*": "TransPAC",
-    "^.*UCAR.*": "UCAR"
+    "^.*UCAR.*": "UCAR",
+    "^Utah.*": "Utah"
 }

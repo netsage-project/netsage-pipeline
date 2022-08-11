@@ -1,12 +1,14 @@
-# This is an example of how to set up member or customer netblock mappings
-# The name of the file must be networkA-members-list.rb 
-# (replace networkA with the name of the network in the filename and below)
+# This is an example of how to set up member or customer netblock mappings.
+# The name of the file must be networkA-members-list.rb.
+# (replace "networkA" with the name of the actual network in the filename and 2 places below)
 
 # List of ASNs that include all the member netblocks (integers)
+# An IP will be looked up only if the ASN is in this list.
 @asn_list['networkA']  = [1234, 4567]
 
 # List of netblocks and the desired organization name for each
-# Best to put the biggest blocks/those with most flows at top
+# The first match is returned, so it'll be fastest if you put the biggest blocks/those with most flows at top,
+# but it is vital to put the most specific netblocks first. Put any "catch alls" at the bottom.
 @members['networkA'] = {
      "111.22.33.0/24" => "Member A",
      "444.55.66.0/32" => "Customer B",

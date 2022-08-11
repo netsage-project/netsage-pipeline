@@ -1,34 +1,34 @@
 version: "3.7"
+
+# Settings in this file override or add to those in docker-compose.yml. Copy in anything that needs to be changed.
+# It will not be overwritten on upgrade.
+
+# setup_pmacct.sh creates docker_compose.override.yml from docker-compose.override_example.yml, if it does not yet exist, and fills in env vars.
+# (It also creates or re-creates pmacct config files, filling in env vars.)
+
+# For ports: In the final docker_compose.override.yml, the 'port on host' should match what is listed in the .env file, while
+# the 'port in the container' should match what is in the *facctd_n conf file (the latter is port number is determined by the setup script).
+
 services:
 
-  logstash:
-    image: netsage/pipeline_logstash:latest
-    ## If you need to override JVM options, uncomment these lines
-    #   volumes:
-    #     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
-
-  importer:
-    image: netsage/pipeline_importer:latest
-    ## If you add additional collectors or need to make other changes in the importer "shared" config, 
-    ## use the netsage_override.xml file and uncomment the following lines 
-    #   volumes:
-    #     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
-
-  ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
-  ## Remove any collectors that do not need to be running.
-  sflow-collector:
-    image: netsage/nfdump-collector:alpine-1.6.23
-    restart: always
-    command: sfcapd -T all -l /data -S 1 -w -z -p 9998
-    volumes:
-      - ./data/input_data/sflow:/data
+  sfacctd_1:
     ports:
-      - "9998:9998/udp"
-  netflow-collector:
-    image: netsage/nfdump-collector:alpine-1.6.23
-    command: nfcapd -T all -l /data -S 1 -w -z -p 9999
+      # port on host receiving flow data : port in the container
+      - "${sflowPort_1}:${sflowContainerPort_1}/udp"
+
+  nfacctd_1:
     ports:
-      - "9999:9999/udp"
-    restart: always
-    volumes:
-      - ./data/input_data/netflow:/data
+      # port on host receiving flow data : port in the container
+      - "${netflowPort_1}:${netflowContainerPort_1}/udp"
+ 
+# TO ADD A SECOND SENSOR OF THE SAME TYPE: 
+# add a section to the .env file that uses *_2 variable names 
+# and increase the number of sflowSensors or netflowSensors;
+# copy the whole nfacctd_1 or sfacctd_1 service section from docker-compose.yml to docker-compose.override.yml; 
+# change the ports to reference env variables instead of specifying example values: 
+#       - "@{sflowPort_1}:@{sflowContainerPort_1}/udp"
+# or    - "@{netflowPort_1}:@{netflowContainerPort_1}/udp"
+# change the @'s to $'s in the above lines! (can't show $'s here or env var values will get stuck into the comment);
+# change all _1's to _2's (or _3's for third sensor of one type, etc) in the new section; 
+# then run the setup_pmacct.sh script [again]. 
+# Double check the changes made to the override file! 

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# restart logstash container only if it's already running
+
+cd -PATH-TO-GIT-CHECKOUT-
+date
+echo " "
+
+nlogstash=`docker-compose ps | grep logstash | grep " Up " | wc -l`
+if [[ $nlogstash -eq 1 ]]
+then
+  docker-compose stop logstash
+  echo "Contents of logstash-temp/ after stopping:"
+  ls -l logstash-temp
+  echo " "
+
+  nlogstash=`docker-compose ps | grep logstash | grep " Up " | wc -l`
+  if [[ $nlogstash -eq 0 ]]
+  then
+    docker-compose start logstash
+    sleep 30    # give it plenty of time
+    echo "Contents of logstash-temp/ after starting:"
+    ls -l logstash-temp
+
+    nlogstash=`docker-compose ps | grep logstash | grep " Up " | wc -l`
+    if [[ $nlogstash -eq 0 ]]
+    then
+      echo " "
+      echo "Logstash restart failed?! Check on it! "
+    fi
+  fi
+else
+  echo "Logstash is not running so no restart."
+fi
+

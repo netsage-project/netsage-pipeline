@@ -1,0 +1,74 @@
+! PMACCT CONFIG FOR NETFLOW 
+! Settings most likely to need changes: NFACCTD_PORT, PRE_TAG_MAP, and possibly AMQP_ROUTING_KEY
+
+!# debug: true
+
+! Port nfacctd should listen to
+nfacctd_port: ${netflowContainerPort_1}
+
+! Get a value for 'label' from the pre_tag_map file.
+! We use this to encode the sensor name for each port.
+pre_tag_map: /etc/pmacct/nfacctd-pretag_1.map
+
+! FOR PRINTING TO FILES instead of writing to rabbit queue (comment out amqp_* lines)
+! Default is tab-separated output. If 'label' or any variable length field is in the aggregation list, you have to use csv format.
+!#     plugins: print
+!#     print_output_file: /tmp/nfacct/%Y/%m/%d/nfacct.%Y%m%d-%H%M
+!#     print_output: csv
+! How often to write to file (default is 60 sec)
+!#     print_refresh_time: 60
+
+! FOR SENDING FLOWS TO THE LOCAL RABBIT QUEUE
+    plugins: amqp
+    amqp_host: ${rabbitmq_input_host}
+    amqp_user: ${rabbitmq_input_username}
+    amqp_passwd: ${rabbitmq_input_pw}
+    amqp_exchange_type: direct
+    amqp_exchange: amq.direct
+    amqp_persistent_msg: true
+    amqp_routing_key: netsage_deidentifier_raw
+    amqp_vhost: /
+! How often to write to the rabbit queue (default is 60 sec)
+    amqp_refresh_time: 60
+
+! To aggregate flows over time (x sec)-
+!   1. Set print_refresh_time or amqp_refresh_time to x sec. This is the period over which it will aggregate / how often to output.
+!   2. Do not include times (timestamp_start and timestamp_end) in aggregate list.
+!   3. Set nfacctd_stitching: true
+! FOR NETSAGE, DO NOT AGGREGATE NETFLOW OVER TIME WITH PMACCT!
+
+! Fields to aggregate on - include all fields we want in the ouput. See pmacct docs for field meanings.
+! For netflow, the available timestamps are timestamp_start and timestamp_end (since the netflow exporter itself aggregates over time).
+!! Note: Sampling_rate is just a flag to say whether it is known and applied.
+!! Before a netflow template arrives, sampling_rate = 0 and no correction is applied! 
+!! There may be a logstash conf that drops flows with sampling_rate = 0. This should be removed if there really IS no sampling!
+    aggregate: src_host, dst_host, src_port, dst_port, proto, src_as, dst_as, in_iface, out_iface, sampling_rate, timestamp_start, timestamp_end, label
+
+! Stitching - determine and add timestamp_min and timestamp_max fields
+    nfacctd_stitching: false
+
+! Output timestamps as epochs rather than strings that we need to parse
+    timestamps_since_epoch: true
+! Don't round off to whole seconds
+    timestamps_secs: false
+
+! Gets the sampling rate from flow packet and automatically applies it
+!  Example: If sample_rate is 1000 (meaning 1/1000) then it multiplies
+!  packets and bytes by 1000.
+    nfacctd_renormalize: true
+
+! Get AS info from the netflow datagrams
+    nfacctd_as: netflow
+
+! write to /var/log/messages
+    syslog: local0
+
+! save template file for netflow to use on next startup
+!## nfacctd_templates_file:  /path/file
+
+! Increase buffer size for larger numbers of flows.
+! I'M NOT SURE WHAT THIS SHOULD BE!
+    plugin_buffer_size: 10240
+    plugin_pipe_size:   10240000
+
+! additional aggregate_primitives fields for netflow ?

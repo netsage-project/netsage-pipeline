@@ -1,0 +1,6 @@
+! This file is referenced in a config file and used to set the "label" field to a sensor name.
+! Label should be "sfacct--" or "nfacct--" (for sflow or netflow, respectively) 
+! followed by the sensor name with spaces replaced by #'s
+! eg, set_label=sfacct--Sflow#Sensor
+
+set_label=${sflowSensorName_1}

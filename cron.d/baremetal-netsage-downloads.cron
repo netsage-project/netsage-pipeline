@@ -1,0 +1,40 @@
+SHELL=/bin/sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+MAILTO=root
+
+# Download possibly-updated files required by the Netsage Pipeline from scienceregistry.grnoc.iu.edu
+# This cron file is to be used for bare-metal installations
+DOWNLOAD_PATH="/var/lib/grnoc/netsage"
+SUPPORT_PATH="/etc/logstash/conf.d/support"
+
+
+# MAXMIND ASN on Saturdays at 23:30 UTC
+30 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-ASN.mmdb  -q -O $DOWNLOAD_PATH/newASN.mmdb  &&  mv $DOWNLOAD_PATH/newASN.mmdb $DOWNLOAD_PATH/GeoLite2-ASN.mmdb && touch $DOWNLOAD_PATH/GeoLite2-ASN.mmdb
+
+# MAXMIND CITY on Saturdays at 23:35 UTC
+35 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/GeoLite2-City.mmdb  -q -O $DOWNLOAD_PATH/newCity.mmdb  &&  mv $DOWNLOAD_PATH/newCity.mmdb $DOWNLOAD_PATH/GeoLite2-City.mmdb && touch $DOWNLOAD_PATH/GeoLite2-City.mmdb
+
+# CAIDA file on Saturdays at 23:40 UTC
+40 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/CAIDA-org-lookup.csv -q -O $DOWNLOAD_PATH/newCAIDA.mmdb  &&  mv $DOWNLOAD_PATH/newCAIDA.mmdb $DOWNLOAD_PATH/CAIDA-org-lookup.csv && touch $DOWNLOAD_PATH//CAIDA-org-lookup.csv
+
+# SCIENCE REGISTRY Saturdays at 23:45 UTC
+45 23 * * 6 root /usr/bin/wget  https://scienceregistry.netsage.global/exported/scireg.mmdb -q -O $DOWNLOAD_PATH/scireg.mmdb.new  &&  mv $DOWNLOAD_PATH/scireg.mmdb.new $DOWNLOAD_PATH/scireg.mmdb && touch $DOWNLOAD_PATH/scireg.mmdb
+
+# FRGP MEMBER LIST on Saturdays at 23:50 UTC
+50 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/FRGP-members-list.rb -q -O $SUPPORT_PATH/newFRGP.rb  &&  mv $SUPPORT_PATH/newFRGP.rb $SUPPORT_PATH/FRGP-members-list.rb && touch $SUPPORT_PATH/FRGP-members-list.rb
+
+# ILIGHT MEMBER LIST on Saturdays at 23:52 UTC
+52 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/ilight-members-list.rb -q -O $SUPPORT_PATH/newilight.rb  &&  mv $SUPPORT_PATH/newilight.rb $SUPPORT_PATH/ilight-members-list.rb && touch $SUPPORT_PATH/ilight-members-list.rb
+
+# ONENET MEMBER LIST on Saturdays at 23:54 UTC
+54 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/onenet-members-list.rb -q -O $SUPPORT_PATH/newonenet.rb  &&  mv $SUPPORT_PATH/newonenet.rb $SUPPORT_PATH/onenet-members-list.rb && touch $SUPPORT_PATH/onenet-members-list.rb
+
+# SENSOR_GROUPS on Saturdays at 23:15 UTC
+15 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/sensor_groups.json -q -O $SUPPORT_PATH/newsensor_groups.json  &&  mv $SUPPORT_PATH/newsensor_groups.json $SUPPORT_PATH/sensor_groups.json && touch $SUPPORT_PATH/sensor_groups.json
+
+# SENSOR_TYPES on Saturdays at 23:20 UTC
+20 23 * * 6 root /usr/bin/wget https://scienceregistry.grnoc.iu.edu/exported/sensor_types.json -q -O $SUPPORT_PATH/newsensor_types.json  &&  mv $SUPPORT_PATH/newsensor_types.json $SUPPORT_PATH/sensor_types.json && touch $SUPPORT_PATH/sensor_types.json
+
+
+
+
