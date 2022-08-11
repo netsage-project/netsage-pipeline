@@ -4,114 +4,113 @@ title: Docker Advanced Options Guide
 sidebar_label: Docker Advanced Options
 ---
 
-If the basic Docker Installation does not meet your needs, the following customizations will allow for more complex situations. Find the section(s) which apply to you.
+The following customizations will allow for more complex situations than described in the Docker Installation guide. Find the section(s) which apply to you.
 
 *Please first read the Docker Installation guide in detail. This guide will build on top of that.*
 
 
-## To Add an Additional Sflow or Netflow Collector
+## To Add Additional Sflow or Netflow Collectors
 
-If you have more than 1 sflow and/or 1 netflow sensor, you will need to create more collectors and modify the importer config file. The following instructions describe the steps needed to add one additional sensor.
-
-Any number of sensors can be accomodated, although if there are more than a few being processed by the same Importer, you may run into issues where long-lasting flows from sensosr A time out in the aggregation step while waiting for flows from sensors B to D to be processed. (Another option might be be to run more than one Docker deployment.) 
+Any number of sensors can be accomodated, although if there are more than a few being processed by the same pipeline, you may run into scaling issues. 
 
 
-#### a. Edit docker-compose.override.yml
+#### a. Edit environment file
 
-The pattern to add a flow collector is always the same. To add an sflow collector called example-collector, edit the docker-compose.override.yml file and add something like
+As an example, say we have three netflow sensors. In the .env file, first set `netflowSensors=3`. Then, in the next section, add the names and ports for the additional sensors using variable names ending with _2 and _3. Set the port numbers to those you have used.
 
-```yaml
-  example-collector:
-    image: netsage/nfdump-collector:alpine-1.6.23
-    restart: always
-    command: sfcapd -T all -l /data -S 1 -w -z -p 9997
-    volumes:
-      - ./data/input_data/example:/data
+```
+netflowSensorName_1=The 1st Netflow Sensor Name
+netflowPort_1=9000
+
+netflowSensorName_2=The 2nd Netflow Sensor Name
+netflowPort_2=9001
+
+netflowSensorName_3=The 3rd Netflow Sensor Name
+netflowPort_3=9002
+```
+
+#### b. Edit docker-composeoverride_example.yml
+
+Add more nfacctd services to the example override file. When copying and pasting, replace _1 with _2 or _3 in three places!
+
+```
+nfacctd_1:
     ports:
-      - "9997:9997/udp"
+      # port on host receiving flow data : port in the container
+      - "${netflowPort_1}:${netflowContainerPort_1}/udp"
+
+nfacctd_2:
+    ports:
+      # port on host receiving flow data : port in the container
+      - "${netflowPort_2}:${netflowContainerPort_2}/udp"
+
+nfacctd_3:
+    ports:
+      # port on host receiving flow data : port in the container
+      - "${netflowPort_3}:${netflowContainerPort_3}/udp"
 ```
 
-- collector name: should be updated to something that has some meaning, in our example "example-collector".
-- image: copy from the default collector sections already in the file. 
-- command: choose between "sfcapd" for sflow and "nfcapd" for netflow, and at the end of the command, specify the port to watch for incoming flow data.  
-- volumes: specify where to write the nfcapd files. Make sure the path is unique and in ./data/. In this case, we're writing to ./data/input_data/example. Change "example" to something meaningful.
-- ports: make sure the port here matches the port you've set in the command. Naturally all ports have to be unique for this host and the router should be configured to export data to the same port. (?? If the port on your docker container is different than the port on your host/local machine, use container_port:host_port.) 
+#### c. Rerun setup-pmacct.sh
 
-Make sure the indentation is right or you'll get an error about yaml parsing.
+Delete (after backing up) docker-compose.override.yml so the pmacct setup script can recreate it along with creating additional nfacctd config files. 
 
-You will also need to uncomment these lines: 
-
-```yaml
-  volumes:
-     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+```
+rm docker-compose.override.yml
+./pmacct-setup.sh
 ```
 
+Check docker-compose.override.yml and files in conf-pmacct/ for consistency.
 
-#### b.  Edit netsage_override.xml
+#### d. Start new containers
 
-To make the Pipeline Importer aware of the new data to process, you will need to create a custom Importer configuration: netsage_override.xml.  This will replace the usual config file netsage_shared.xml. 
+If you are simply adding new collectors nfacctd_2 and nfacctd_3, and there are no changes to nfacctd_1, you can simply start up the new containers with
 
 ```sh
-cp compose/importer/netsage_shared.xml userConfig/netsage_override.xml
+docker-compose up -d 
 ```
 
-Edit netsage_override.xml and add a new "collection" section for the new sensor as in the following example. The flow-path should match the path set above in docker-compose.override.yml. $exampleSensorName is a new "variable"; don't replace it here, it will be replaced with a value that you set in the .env file. For the flow-type, enter "sflow" or "netflow" as appropriate. (Enter "netflow" if you're running IPFIX.)
+Otherwise, or to be safe, bring everything down first, then back up.
 
-```xml
-    <collection>
-        <flow-path>/data/input_data/example/</flow-path>
-        <sensor>$exampleSensorName</sensor>
-        <flow-type>sflow</flow-type>
-    </collection>
-```
+## To Filter Flows by Interface
+If your sensors are exporting all flows, but only those using particular interfaces are relevant, use this option in the .env file. All incoming flows will be read in, but the logstash pipeline will drop those that do not have src_ifindex OR dst_inindex equal to one of those listed.  (This may create a lot of extra work and overwhelm logstash, so if at all possible, try to limit the flows at the router level or using iptables.) 
 
-#### c. Edit environment file
-
-Then, in the .env file, add a line that sets a value for the "variable" you referenced above, $exampleSensorName. The value is the name of the sensor which will be saved to elasticsearch and which appears in Netsage Dashboards. Set it to something meaningful and unique. E.g.,
-
-```ini
-exampleSensorName=MyNet Los Angeles sFlow
-```
-
-
-#### d. Running the new collector
-
-After doing the setup above and selecting the docker version to run, you can start the new collector by running the following line, using the collector name (or by running `docker-compose up -d` to start up all containers):
+In the .env file, uncomment lines in the appropriate section and enter the information required. "ALL" can refer to all sensors or all interfaces of a sensor. If a sensor is not referenced at all, all of its flows will be kept. Be sure `ifindex_filter_flag=True` with "True" capitalized as shown, any sensor names are spelled exactly right, and list all the ifindex values of flows that should be kept and processed. Use semicolons to separate sensors. Some examples (use just one!):
 
 ```sh
-docker-compose up -d example-collector
+ifindex_filter_keep=ALL:123
+ifindex_filter_keep=Sensor 1: 123
+ifindex_filter_keep=Sensor 1: 456, 789
+ifindex_filter_keep=Sensor 1: ALL; Sensor 2: 800, 900
 ```
 
-## To Keep Only Flows From Certain Interfaces
-If your sensors are exporting all flows, but only those using a particular interface are relevant, use this option in the .env file. The collectors and importer will save/read all incoming flows, but the logstash pipeline will drop those that do not have src_ifindex OR dst_inindex equal to one of those listed. 
-
-In the .env file, uncomment lines in the appropriate section and enter the information required. Be sure `ifindex_filter_flag=True` with "True" capitalized as shown, any sensor names are spelled exactly right, and list all the ifindex values of flows that should be kept and processed. Some examples (use just one!):
-
-```sh
-ifindex_filter_keep=123
-ifindex_filter_keep=123,456
-ifindex_filter_keep=Sensor 1: 789
-ifindex_filter_keep=123; Sensor 1: 789; Sensor 2: 800, 900
-```
-
-In the first case, all flows that have src_ifindex = 123 or dst_ifindex = 123 will be kept, regardless of sensor name. (Note that this may be a problem if you have more than 1 sensor with the same ifindex values!) 
-In the 2nd case, if src or dst ifindex is 123 or 456, the flow will be processed. 
-In the 3rd case, only flows from Sensor 1 will be filtered, with flows using ifindex 789 kept. 
-In the last example, any flow with ifindex 123 will be kept. Sensor 1 flows with ifindex 789 (or 123) will be kept, and those from Sensor 2 having ifindex 800 or 900 (or 123) will be kept.  
+- In the first example, all flows that have src_ifindex = 123 or dst_ifindex = 123 will be kept, regardless of sensor name. All other flows will be discarded.
+- In the 2nd case, if src or dst ifindex is 123 and the sensor name is "Sensor 1", the flow will be kept. If there are flows from "Sensor 2", all of them will be kept.
+- In the 3rd case, flows from Sensor 1 having ifindex 456 or 789 will be kept.
+- In the last example, all Sensor 1 flows will be kept, and those from Sensor 2 having ifindex 800 or 900 will be kept.  
 
 Spaces don't matter except within the sensor names. Punctuation is required as shown.
 
+## To Filter Flows by Subnet
+
+With this option, flows from specified sensors will be dropped unless src or dst is in the list of subnets to keep.
+"ALL" can refer to all sensors.
+If a sensor is not referenced at all, all of its flows will be kept.
+
+```
+subnet_filter_flag=True
+subnet_filter_keep=Sensor A Name: 123.45.6.0/16; Sensor B Name: 123.33.33.0/24, 456.66.66.0/24
+```
 
 ## To Change a Sensor Name Depending on the Interface Used
-In some cases, users want to keep all flows from a certain sensor but differentiate between those that enter or exit through specific sensor interfaces. This can be done by using this option in the .env file.
+In some cases, users want to keep all flows from a certain sensor but differentiate between those that enter or exit through a specific interface by using a different sensor name.
 
 In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 4 fields are set properly! For example,
 
 ```sh
 ifindex_sensor_rename_flag=True
+ifindex_sensor_rename_ifindex=10032
 ifindex_sensor_rename_old_name=IU Sflow 
 ifindex_sensor_rename_new_name=IU Bloomington Sflow
-ifindex_sensor_rename_ifindex=10032
 ```
 
 In this case, any flows from the "IU Sflow" sensor that use interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker and only 1 ifindex is allowed.
@@ -121,70 +120,37 @@ Please notify the devs at IU in advance, if you need to modify a sensor name, be
 :::
 
 ## To Do Sampling Rate Corrections in Logstash
-When flow sampling is done, corrections have to be applied. For example, if you are sampling 1 out of 100 flows, for each flow measured, it is assumed that in reality there would be 100 flows of that size with that src and dst, so the number of bits (and the number of packets, bits/s and packets/s) is multiplied by 100. Usually the collector (nfcapd or sfcapd process) gets the sampling rate from the incoming data and applies the correction, but in some cases, the sensor may not send the sampling rate, or there may be a complex set-up that requires a manual correction. With netflow, a manual correction can be applied using the '-s' option in the nfsen config, if nfsen is being used, or the nfcapd command, but this is not convenient when using Docker. For sflow, there is no such option. In either case, the correction can be made in logstash as follows.
+When flow sampling is done, corrections have to be applied to the number of packets and bytes. For example, if you are sampling 1 out of 100 flows, for each flow measured, it is assumed that in reality there would be 100 flows of that size with that src and dst, so the number of bits (and the number of packets, bits/s and packets/s) is multiplied by 100. Usually the collector (nfacctd or sfacctd process) gets the sampling rate from the incoming data and applies the correction, but in some cases, the sensor may not send the sampling rate, or there may be a complex set-up that requires a manual correction. 
 
 In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 3 fields are set properly! The same correction can be applied to multiple sensors by using a comma-separed list. The same correction applies to all listed sensors. For example,
 
 ```sh
 sampling_correction_flag=True
-sampling_correction_sensors=IU Bloomington Sflow, IU Sflow
+sampling_correction_sensors=IU Bloomington Sflow, IU Indy Sflow
 sampling_correction_factor=512
 ```
 
-## To Change How Long Nfcapd Files Are Kept
-The importer will automatically delete older nfcapd files for you, so that your disk doesn't fill up. By default, 3 days worth of files will be kept. This can be adjusted by making a netsage_override.xml file:
+In this example, all flows from sensors "IU Bloomington Sflow" and "IU Indy Sflow" will have a correction factor of 512 applied by logstash. Any other sensors will not have a correction applied by logstash (presumably pmacct would apply the correction automatically).
 
-```sh
-cp compose/importer/netsage_shared.xml userConfig/netsage_override.xml
+Note that if pmacct has made a sampling correction already, no additional manual correction will be applied, even if these options are set, 
+so this can be used *to be sure* a sampling correction is applied.
+
+## To NOT deidentify flows
+
+Normally all flows are deidentified before being saved to elasticsearch by dropping by truncating the src and dst IP addresses. If you do NOT want to do this, set full_IPs_flag to True. (You will most likely want to request access control on the grafana portal, as well.)
+
 ```
-
-At the bottom of the file, edit this section to set the number of days worth of files to keep. Set cull-enable to 0 for no culling. Eg, to save 1 days worth of data:
-````xml
-  <worker>
-    <cull-enable>1</cull-enable>
-    <cull-ttl>1</cull-ttl>
-  </worker>
-````
-
-You will also need to uncomment these lines in docker-compose.override.yml: 
-
-```yaml
-  volumes:
-     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+# To keep full IP addresses, set this parameter to True.
+full_IPs_flag=True
 ```
-
-
-## To Save Flow Data to a Different Location
-
-By default, data is saved to subdirectories in the ./data/ directory (ie, the data/ directory in the git checkout).  If you would like to use a different location, there are two options.
-
-1. The best solution is to create a symlink between ./data/ and the preferred location, or, for an NFS volume, export it as ${PROJECT_DIR}/data.
-
-During installation, delete the data/ directory (it should only contain .placeholder), then create your symlink. Eg, to use /var/netsage/ instead of data/, 
-```sh
-cd {netsage-pipeline dir}
-mkdir /var/netsage
-rm data/.placeholder
-rmdir data
-ln -s /var/netsage {netsage-pipeline dir}/data
-```
-(Check the permissions of the directory.)
-
-2. Alternatively, update volumes in docker-compose.yml and docker-compose.override.yml Eg, to save nfcapd files to subdirs in /mydir, set the collector volumes to `- /mydir/input_data/netflow:/data` (similarly for sflow) and set the importer and logstash volumes to `- /mydir:/data`. 
-
-:::warning
-If you choose to update the docker-compose file, keep in mind that those changes will cause a merge conflict or be wiped out on upgrade.
-You'll have to manage the volumes exported and ensure all the paths are updated correctly for the next release manually.
-:::
 
 ## To Customize Java Settings / Increase Memory Available for Lostash 
 
-
-If cpu or memory seems to be a problem, try increasing the JVM heap size for logstash from 2GB to 3 or 4, no more than 8.
+If cpu or memory use seems to be a problem, try increasing the java JVM heap size for logstash from 4GB to no more than 8.
 
 To do this, edit LS_JAVA_OPTS in the .env file. 
 ```yaml
-LS_JAVA_OPTS=-Xmx4g -Xms4g
+LS_JAVA_OPTS=-Xmx8g -Xms8g
 ```
 
 Here are some tips for adjusting the JVM heap size (https://www.elastic.co/guide/en/logstash/current/jvm-settings.html):
@@ -193,20 +159,6 @@ Here are some tips for adjusting the JVM heap size (https://www.elastic.co/guide
 - CPU utilization can increase unnecessarily if the heap size is too low, resulting in the JVM constantly garbage collecting. You can check for this issue by doubling the heap size to see if performance improves.
 - Do not increase the heap size past the amount of physical memory. Some memory must be left to run the OS and other processes. As a general guideline for most installations, don’t exceed 50-75% of physical memory. The more memory you have, the higher percentage you can use.
 
-To modify other logstash settings, rename the provided example file for JVM Options and tweak the settings as desired:
-
-```sh
-cp userConfig/jvm.options_example userConfig/jvm.options
-```
-
-Also update the docker-compose.override.xml file to uncomment lines in the logstash section. It should look something like this: 
-
-```yaml
-logstash:
-  image: netsage/pipeline_logstash:latest
-  volumes:
-    - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
-```
 
 ## To Bring up Kibana and Elasticsearch Containers
 

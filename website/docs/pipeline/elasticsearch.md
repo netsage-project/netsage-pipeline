@@ -16,10 +16,10 @@ Flow data is ultimately saved to Elasticsearch. Following are the fields that ar
 |es_doc_id			|4f46bef884...	|Hash of meta.id and start time. May be used as doc id in ES to prevent duplicates, but see Notes elsewhere.|
 |meta.flow_type			|sflow							|'sflow', 'netflow', or 'tstat'|
 |meta.protocol			|tcp							|Protocol used|
-|meta.sensor_id			|snvl2-pw-sw-1-mgmt-2.cenic.net|Sensor name (set in importer config, may not always be a hostname) |
-|meta.sensor_group		|CENIC						|Sensor group, usually the network |
-|meta.sensor_type		|Regional Network				|Sensor type ('Circuit', 'Regional Network', etc) |
-|meta.country_scope		|Domestic						|'Domestic', 'International', or 'Mixed', depending on countries of src and dst|
+|meta.sensor_id			|GEANT NY to Paris |Assigned sensor name |
+|meta.sensor_group		|GEANT						|Sensor group, usually the network |
+|meta.sensor_type		|Circuit  |Sensor type ('Circuit', 'Regional Network', etc) |
+|meta.country_scope		|International |'Domestic', 'International', or 'Mixed', depending on countries of src and dst (Domestic = src and dst in USA)|
 |meta.is_network_testing	|no	|'yes' if discipline is 'CS.Network Testing and Monitoring' or port is one used for PerfSonar: 5001, 5101, or 5201|
 
 ### Source Fields (Destination Fields similarly with "dst")
