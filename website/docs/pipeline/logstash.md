@@ -4,19 +4,19 @@ title: Logstash Pipeline
 sidebar_label: Logstash
 ---
 
-The Logstash portion of the Netsage Pipeline reads flows from a RabbitMQ queue, performs various transformations and adds additional information to them, then sends them to a rabbitMQ queue on a different host, and eventually the data ends up in an Elasticsearch instance. 
+The Logstash portion of the Netsage Pipeline reads flows from a RabbitMQ queue, performs various transformations and adds additional information, then sends them to a rabbitMQ queue on a different host. Eventually the data ends up in an Elasticsearch data store.
 
-Logstash .conf files invoke various "filters" and actions. In the bare metal installation, these conf files are located in /etc/logstash/conf.d/. In a docker installation, the *.conf files in the git checkout, in conf-logstash/, are used. See below for a brief description of what each does and check the files for comments.
+Logstash .conf files invoke various "filters" and actions. In the bare metal installation, these conf files are located in /etc/logstash/conf.d/. In a docker installation, they are located in the conf-logstash/ directory of the git checkout of the pipeline. See below for a brief description of what each does and check the files for comments.
 
 >Notes: 
 > - All \*.conf files in conf.d/ or conf-logstash/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"').
 > - If you are not running a standard Netsage pipeline and actions in a particular .conf file are not needed in your particular case, they or the whole .conf file can be removed, but check carefully for downstream effects.
 > - MaxMind, CAIDA, and Science Registry database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs on a weekly or daily basis. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also. Similarly for other support files, eg, those used in 90-additional-fields.conf.
-> - Lookup tables for 55-member-orgs.conf that we have compiled are available from sciencregistry.grnoc.iu.edu. See the cron files provided. These will not be updated often, so you may run the cron jobs or not. You will need to provide lists for other networks yourself or ask us.
+> - "Member organization" lists that we have stored are available to download from sciencregistry.grnoc.iu.edu. See the cron files provided. These will not be updated often. You will need to provide lists for other networks yourself or ask us. (See Docker Advanced Options.)
 
 ## Logstash Sequence
 
-The main things done in each conf file are as follows.
+The main things done in each conf file are as follows. (Please double check the comments in the files themselves, as well, in case this documentation fails to keep up with changes.)
 
 ### 01-input-rabbit.conf
 

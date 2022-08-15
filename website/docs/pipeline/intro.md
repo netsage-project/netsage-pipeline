@@ -13,7 +13,7 @@ As is well known, communication between two computers is accomplished by breakin
 
 Network devices such as routers can function as **flow exporters** by simply configuring and enabling flow collection. All or nearly all come with this capability. 
 
-There are three main types of flow exporters: **[sflow](https://www.rfc-editor.org/info/rfc3176)**, **[netflow/IPFIX](https://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/ios-netflow/prod_white_paper0900aecd80406232.html))** and **[tstat](http://tstat.polito.it/)**. Sflow data is composed of sampled packets, while netflow (the newest version of which is IPFIX) and tstat consist of information about series of packets. These are described further in the following sections. 
+There are three main types of flow exporters: **[sflow](https://www.rfc-editor.org/info/rfc3176)**, **[netflow/IPFIX](https://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/ios-netflow/prod_white_paper0900aecd80406232.html))** and **[tstat](http://tstat.polito.it/)**. Sflow data is composed of sampled packets, while netflow (the newest version of which is IPFIX) and tstat data consists of information about series of packets (ie whole flows, or what they consider whole flows). These are described further in the following sections. 
 
 For Netsage, flow exporters, also referred to as **sensors**, are configured to send the flow data to a **Netsage Pipeline host** for processing. 
 
@@ -25,14 +25,10 @@ The **Netsage Flow Processing Pipeline** processes network flow data. It is comp
 
 The Netsage Flow Processing Pipeline is made of the following components
 
- - **[Pmacct](https://github.com/pmacct/pmacct)**: The pmacct ("p-m-account") package includes sfacctd and nfacctd daemons which receive sflow and netflow/IPFIX flows, respectively. They can also do some processing and filtering, but we use these options very minimally. (Pmacct includes other daemons, as well, but we do not use them. Here, "pmacct" will refer to sfacctd and nfacctd in general.) These daemons send the flows to a rabbitmq queue.
+ - **[Pmacct](https://github.com/pmacct/pmacct)**: The pmacct package includes sfacctd and nfacctd daemons which receive sflow and netflow/IPFIX flows, respectively, and send them to a rabbitmq queue.
  - **[RabbitMQ](https://www.rabbitmq.com/)**: Rabbitmq is used for message queueing and passing at a couple of points in the full pipeline.
- - **[Logstash](https://www.elastic.co/logstash)**: A logstash pipeline performs a variety of operations on the flow data to transform it and add additional information.  ([Doc](logstash.md))
+ - **[Logstash](https://www.elastic.co/logstash)**: A logstash pipeline pulls flow data from a rabbit queue and performs a variety of operations to transform it and add additional information.  
  - **[Elasticsearch](https://www.elastic.co/what-is/elasticsearch)**: Elasticsearch is used for storing the final flow data. 
-
-> Sflow and netflow exporters should be configured to send data to ports on the pipeline host (a different port for each sensor). Pmacct processes will be configured to listen on those ports.
-> 
-> Tstat flow data can be sent directly to the ingest RabbitMQ queue on the pipeline host using the Netsage [tstat-transport](https://github.com/netsage-project/tstat-transport) tool. This can be installed as an rpm or via Docker. 
 
 ### Pipeline Installation
 
@@ -40,6 +36,6 @@ Originally, the pipeline was deployed by installing all of the components indivi
 
 ## Visualization
 
-[Grafana](https://grafana.com/oss/grafana/) or [Kibana](https://www.elastic.co/kibana) (with appropriate credentials) can be used to visualize the data stored in elasticsearch.  Netsage grafana dashboards or **portals** are set up by the IU team.  These are saved in github [here](https://github.com/netsage-project/netsage-grafana-configs).
+[Grafana](https://grafana.com/oss/grafana/) or [Kibana](https://www.elastic.co/kibana) (with appropriate credentials) can be used to visualize the data stored in elasticsearch.  Netsage grafana dashboards or **portals** are set up by the IU team.  The dashboards are saved in github [HERE](https://github.com/netsage-project/netsage-grafana-configs).
 
 

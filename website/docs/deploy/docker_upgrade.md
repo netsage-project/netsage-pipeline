@@ -12,11 +12,11 @@ To upgrade a previous installment of the Dockerized pipeline, perform the follow
 cd {netsage-pipeline directory}
 docker-compose down
 ```
-This will stop and remove all the docker containers. Note that incoming flow data will not be saved during the time the collectors are down.
+This will stop and remove all the docker containers. Note that incoming flow data will be lost during the time the collector and rabbit containers are down.
 
 ### 2. Update source code
 
-To upgrade to a new release, first pull new code/tags from github. Your customized .env and override files will not be overwritten, nor will files created by startup scripts, cache files, or downloaded support files, though it's always good to make backup copies. 
+To upgrade to a new release, first pull updates from github. Your customized .env and override files will not be overwritten, nor will files created by startup scripts, cache files, or downloaded support files, though it's always good to make backup copies. 
 
 ```sh
 git reset --hard
@@ -35,17 +35,24 @@ git pull
 
 ### 3. Recreate and check custom files
 
-Compare .env and docker-compose.override.yml to their example files to see if any changes have been made. (Expect the example files to have environment variables that have gotten filled in in the non-example files.) Copy in any updates, particularly any relevant ones or just recreate them as you did during installation. 
+- Compare the .env to env.example to see if any changes have been made. 
+    Copy in any updates, particularly any relevant ones, or just recreate the .env file as you did during installation. 
 
-Run the pmacct setup script to recreate the pmacct config files, in case there have been any changes. This might also update the override file.
+- Run the pmacct setup script to recreate the pmacct config files, in case there have been any changes. This might also update the override file.
+
 ```sh
 ./setup-pmacct.sh
 ```
 
-Rerun the cron setup script to recreate the non-ORIG files in bin/ and cron.d/. Compare the resulting .cron files in the cron.d/ directory to those in /etc/cron.d/. If any have changed, copy them to /etc/cron.d/.
+- Compare the docker-compose.override.yml file to the example. (Expect the example file to have environment variables that have gotten filled in in the non-example file.) If there are new lines or sections that are missing, copy them in. The setup script is not able to handle much in the way of changes.
+
+- Rerun the cron setup script to recreate the non-ORIG files in bin/ and cron.d/. 
+
 ```sh
 ./setup-cron.sh
 ```
+
+- Compare the resulting .cron files in the cron.d/ directory to those in /etc/cron.d/. If any have changed, copy them to /etc/cron.d/.
 
 ### 4. Restart all the Docker Containers
 

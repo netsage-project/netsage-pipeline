@@ -14,13 +14,9 @@ You can download the files from [here](https://drive.google.com/drive/folders/19
 
 Please take note of which ports the collectors are listing on.  Check your docker-compose.override.yml file. If you are using default ports, they should match this [example](https://github.com/netsage-project/netsage-pipeline/blob/master/docker-compose.override_example.yml). 
 
-Currently the default ports are:
-  - 9998/udp for sflow 
-  - 9999/udp for netflow
-
 Naturally the collectors have to be running in order for any of this to be usable.  You can read more on how to get them running in the [Docker Simple Deployment Guide](../deploy/docker_install_simple.md#running-the-collectors)  
 
-In order to replay the data, use the following commands for netflow and sflow respectively:
+In order to replay the data, use nfreplay which is part of the nfdump package. Eg,
 
 ### Netflow
 
@@ -30,5 +26,5 @@ nfreplay -H 127.0.0.1 -p 9999  -r nfcapd-ilight-anon-20200114 -v 9 -d 1000
 
 ### Sflow
 
-Coming soon.  nfreplay will not work with sflow data type.
+nfreplay will not work with sflow data type.
 
