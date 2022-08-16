@@ -8,7 +8,6 @@ The Logstash portion of the Netsage Pipeline reads flows from a RabbitMQ queue, 
 
 Logstash .conf files invoke various "filters" and actions. In the bare metal installation, these conf files are located in /etc/logstash/conf.d/. In a docker installation, they are located in the conf-logstash/ directory of the git checkout of the pipeline. See below for a brief description of what each does and check the files for comments.
 
->Notes: 
 > - All \*.conf files in conf.d/ or conf-logstash/ are executed in alphabetical order, as if they were one huge file. Those ending in .disabled will not be executed (assuming 'path.config: "/etc/logstash/conf.d/*.conf"').
 > - If you are not running a standard Netsage pipeline and actions in a particular .conf file are not needed in your particular case, they or the whole .conf file can be removed, but check carefully for downstream effects.
 > - MaxMind, CAIDA, and Science Registry database files required by the geoip and aggregate filters are downloaded from scienceregistry.netsage.global via cron jobs on a weekly or daily basis. (MaxMind data can change weekly, CAIDA quarterly, Science Registry information randomly.) **NOTE that new versions won't be used in the pipeline until logstash is restarted.** There is a cron file to do this also. Similarly for other support files, eg, those used in 90-additional-fields.conf.
@@ -30,7 +29,7 @@ Renames fields provided by pmacct processes to match what the pipeline uses (fro
 
 Drops flows to or from private IP addresses;
 converts any timestamps in milliseconds to seconds;
-drops events with timestamps more than a year in the past or (10 sec) in the future;
+drops strange events with timestamps more than a year in the past or (10 sec) in the future;
 sets duration and rates to 0 if duration is <= 0.002 sec (because tiny durations/few samples lead to inaccurate rates)
 
 ### 15-sensor-specific-changes.conf
@@ -116,7 +115,7 @@ Sets additional quick and easy fields.  Supporting mapping or ruby files are use
  - sensor_type   = Circuit, Archive, Exchange Point, Regional Network, Facility Edge, Campus  (based on matching sensor names to regexes)
  - country_scope = Domestic, International, or Mixed  (based on src and dst countries and possibly continents, where Domestic = US, Puerto Rico, or Guam)
  - is_network_testing = yes, no  (yes if discipline from the science registry is 'CS.Network Testing and Monitoring' or if port = 5001, 5101, or 5201)
- - es_doc_id = hash of meta.id and the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates. (NOTE: due to how netflow works, use es_doc_id as the ES document id only for sflow!)
+ - es_doc_id = hash of meta.id and the start time of the flow. If this id is used as the document id in elasticsearch, flows that are mistakenly input more than once will update existing documents rather than be added as duplicates. (NOTE: due to how netflow works, use es_doc_id as the ES document id only for sflow!) This id may or may not be used for the document id in Elasticsearch. It may be used for other purposes in grafana dashboards, as well.
 
 ### 95-cleanup.conf
 

@@ -29,7 +29,7 @@ git reset --hard will obliterate any changes you have made to non-override files
 
 Checkout the version of the pipeline you want to run (replace "{tag}" by the version number, eg, v1.2.11) and make sure it's up to date. 
 ```sh
-git checkout -b {tag} 
+git checkout {tag} 
 git pull
 ```
 
@@ -38,19 +38,19 @@ git pull
 - Compare the .env to env.example to see if any changes have been made. 
     Copy in any updates, particularly any relevant ones, or just recreate the .env file as you did during installation. 
 
-- Run the pmacct setup script to recreate the pmacct config files, in case there have been any changes. This might also update the override file.
+- Rerun the pmacct setup script to recreate the pmacct config files, in case there have been any changes. This might also update the override file.
 
-```sh
-./setup-pmacct.sh
-```
+    ```sh
+    ./setup-pmacct.sh
+    ```
 
 - Compare the docker-compose.override.yml file to the example. (Expect the example file to have environment variables that have gotten filled in in the non-example file.) If there are new lines or sections that are missing, copy them in. The setup script is not able to handle much in the way of changes.
 
-- Rerun the cron setup script to recreate the non-ORIG files in bin/ and cron.d/. 
+- Rerun the cron setup script to recreate the non-ORIG files in bin/ and cron.d/: 
 
-```sh
-./setup-cron.sh
-```
+    ```sh
+    ./setup-cron.sh
+    ```
 
 - Compare the resulting .cron files in the cron.d/ directory to those in /etc/cron.d/. If any have changed, copy them to /etc/cron.d/.
 

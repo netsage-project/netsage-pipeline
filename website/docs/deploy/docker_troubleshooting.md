@@ -8,8 +8,6 @@ sidebar_label: Troubleshooting
 
 - Be sure allow time for the first flows to timeout in the logstash aggregation - wait at least 10-15 minutes after starting up containers.
 - Use `docker-compose ps` to see if all the containers are (still) running.
-      (If there are no sflow/netflow sensors, the command should be "echo No Sflow/Netflow sensor" and the container state should be Exit 0.)
-
 - Check the logs of the various containers to see if anything jumps out as being a problem.
 - If logstash logs say things like *OutOfMemoryError: Java heap space* or *An unexpected connection driver error occured (Exception message: Connection reset)*  and the rabbit container is also down...  We've seen this before, but are not sure why it occurs. Try stopping everything, restarting docker for good measure, and starting all the containers up again. (If problems are continuing, it might be a memory issue.)
     ```
@@ -17,9 +15,8 @@ sidebar_label: Troubleshooting
     sudo systemctl restart docker
     docker-compose up -d
     ```
-
+- If there is only an *OutOfMemoryError* for java, perhaps you need to increase the java heap size.
 - Check flow export on the network device to be sure it is (still) configured and running correctly.
-
 - Make sure there really is traffic to be detected (with flows over 10 MB). A circuit outage or simple lack of large flows might be occurring.
 
 
@@ -44,11 +41,12 @@ sidebar_label: Troubleshooting
 - In docker-compose.override.yml, make sure the ports are set correctly. You will see *port on host : port in container*. (Docker uses its own port numbers internally.) *Port on host* should match what is in .env (the port the router is sending to on the pipeline host). *Port in container* should match what is in the corresponding pmacct config.  
 - In pmacct config files, make sure amqp_host is set to rabbit (for docker installs) or localhost (for bare metal)
 - In 'docker-compose ps' output, be sure the command for the sfacctd_1 container is /usr/local/sbin/sfacctd, similarly for nfacctd.
-- In docker-compose.yml and docker-compose.override.yml, make sure "command:"s specify config files with the right _n's (these are actually just the parameters for the commands).
+      (If there are 0 Xflow sensors, the command should be *echo No Xflow sensor* and the container state should be Exit 0.)
+- In docker-compose.yml and docker-compose.override.yml, make sure *command:*s specify config files with the right _n's (these are actually just the parameters for the commands).
 
 
-##Memory:
-- If you are running a lot of data, sometimes docker may need to be allocated more memory. The most likely culprit is logstash (java) which is only allocated 4GB of RAM by default. Please see the Docker Advanced Options guide for how to change.
+## Memory:
+- If you are processing a lot of flows and encountering Out of Memory erros, docker may need to be allocated more memory. The most likely culprit is logstash (java) which is only allocated 4GB of RAM by default (in previous versions, only 2GB). Please see the Docker Advanced Options guide for how to change.
 
 ### If there are too few flows and flow sizes and rates are smaller than expected:
 

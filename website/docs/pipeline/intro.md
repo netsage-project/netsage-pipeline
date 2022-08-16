@@ -25,9 +25,9 @@ The **Netsage Flow Processing Pipeline** processes network flow data. It is comp
 
 The Netsage Flow Processing Pipeline is made of the following components
 
- - **[Pmacct](https://github.com/pmacct/pmacct)**: The pmacct package includes sfacctd and nfacctd daemons which receive sflow and netflow/IPFIX flows, respectively, and send them to a rabbitmq queue.
- - **[RabbitMQ](https://www.rabbitmq.com/)**: Rabbitmq is used for message queueing and passing at a couple of points in the full pipeline.
- - **[Logstash](https://www.elastic.co/logstash)**: A logstash pipeline pulls flow data from a rabbit queue and performs a variety of operations to transform it and add additional information.  
+ - **[Pmacct](https://github.com/pmacct/pmacct)**: The pmacct package includes sfacctd and nfacctd daemons which receive sflow and netflow/IPFIX flows, respectively. They are configured to send the flows to a rabbitMQ queue.
+ - **[RabbitMQ](https://www.rabbitmq.com/)**: RabbitMQ is used for message queueing and passing at a couple of points in the full pipeline.
+ - **[Logstash](https://www.elastic.co/logstash)**: Our logstash pipeline pulls flow data from a rabbitMQ queue and performs a variety of operations to transform it and add additional information.  
  - **[Elasticsearch](https://www.elastic.co/what-is/elasticsearch)**: Elasticsearch is used for storing the final flow data. 
 
 ### Pipeline Installation

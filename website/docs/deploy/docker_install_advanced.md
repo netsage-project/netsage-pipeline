@@ -31,7 +31,7 @@ netflowPort_3=9002
 
 #### b. Edit docker-composeoverride_example.yml
 
-Add more nfacctd services to the example override file. When copying and pasting, replace _1 with _2 or _3 in three places! Your file should look look something like this (remember you'll need to do this again after an upgrade! We need to fix the script to do this automatically):
+Add more nfacctd services to the **example** override file. When copying and pasting, replace _1 with _2 or _3 in three places! Your file should look look something like this (remember you'll need to do this again after an upgrade! We need to fix the script to do this automatically):
 
 ```
 nfacctd_1:
@@ -78,7 +78,7 @@ In the .env file, uncomment lines in the appropriate section and enter the infor
 
 ```sh
 ifindex_filter_flag=True
-*examples:*
+## examples (include only 1 such line):
 ifindex_filter_keep=ALL:123
 ifindex_filter_keep=Sensor 1: 123
 ifindex_filter_keep=Sensor 1: 456, 789
@@ -94,9 +94,10 @@ Spaces don't matter except within the sensor names. Punctuation is required as s
 
 ## To Filter Flows by Subnet
 
-With this option, flows from specified sensors will be dropped unless src or dst is in the list of subnets to keep.
-"ALL" can refer to all sensors.
-If a sensor is not referenced at all, all of its flows will be kept.
+With this option, flows from specified sensors will be dropped unless src or dst is in the list of subnets to keep. It works similarly to the option to filter by interface.  "ALL" can refer to all sensors. 
+If a sensor is not referenced at all, all of its flows will be kept. 
+
+For example,
 
 ```
 subnet_filter_flag=True
@@ -124,11 +125,11 @@ Please notify the devs at IU in advance, if you need to modify a sensor name, be
 ## To Do Sampling Rate Corrections in Logstash
 When flow sampling is done, corrections have to be applied to the number of packets and bytes. For example, if you are sampling 1 out of 100 flows, for each flow measured, it is assumed that in reality there would be 100 flows of that size with that src and dst, so the number of bits (and the number of packets, bits/s and packets/s) is multiplied by 100. Usually the collector (nfacctd or sfacctd process) gets the sampling rate from the incoming data and applies the correction, but in some cases, the sensor may not send the sampling rate, or there may be a complex set-up that requires a manual correction. 
 
-In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 3 fields are set properly! The same correction can be applied to multiple sensors by using a comma-separed list. The same correction applies to all listed sensors. For example,
+In the .env file, uncomment the appropriate section and enter the information required. Be sure "True" is capitalized as shown and all 3 fields are set properly! The same correction can be applied to multiple sensors by using a semicolon-separated list. The same correction applies to all listed sensors. For example,
 
 ```sh
 sampling_correction_flag=True
-sampling_correction_sensors=IU Bloomington Sflow, IU Indy Sflow
+sampling_correction_sensors=IU Bloomington Sflow; IU Indy Sflow
 sampling_correction_factor=512
 ```
 
@@ -148,7 +149,7 @@ full_IPs_flag=True
 
 ## To Increase Memory Available for Lostash 
 
-If cpu or memory usage seems to be a problem, try increasing the java JVM heap size for logstash from 4GB to no more than 8.
+If cpu or memory usage seems to be a problem, try increasing the java JVM heap size for logstash from 4GB to 8GB.
 
 To do this, edit LS_JAVA_OPTS in the .env file. E.g.,
 ```yaml
@@ -165,7 +166,7 @@ Here are some tips for adjusting the JVM heap size (see https://www.elastic.co/g
 
 Source and destination organization names come from lookups by ASN or IP in databases provided by CAIDA or MaxMind. (The former is preferred, the latter acts as a backup.) 
 Sometimes an organization that owns an AS and a large block of IPs will allow members or subentities to use certain IP ranges within the same AS. 
-In this case, all flows to and from the members will have src or dst organization set to the parent organization's name. If desired, the member organizations' names can be substituted. To do requires the use of a "member list" which specifies the ASN(s) that is being shared and the IP ranges for each member. 
+In this case, all flows to and from the members will have src or dst organization set to the parent organization's name. If desired, the member organizations' names can be substituted. To do so requires the use of a "member list" which specifies the ASN(s) being shared and the IP ranges for each member. 
 
 See **conf-logstash/support/networkA-members-list.rb.example** for an example. 
 

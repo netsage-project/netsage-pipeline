@@ -3,7 +3,7 @@ id: docker_install_simple
 title:  Docker Installation Guide
 sidebar_label: Docker Installation
 ---
-In this deployment guide, you will learn how to deploy a basic Netsage setup that includes one sflow and/or one netflow collector.  If you have more than one collector of either type, or other special situations, see the Docker Advanced guide.
+This deployment guide describes how to deploy a basic Netsage setup that includes one sflow and/or one netflow collector.  If you have more than one collector of either type, or other special situations, see the Docker Advanced guide.
 
 The Docker containers included in the installation are
  - sfacctd_1 (sflow collector - receives sflow data and writes it to a rabbit queue)
@@ -17,7 +17,7 @@ Decide where to run the Docker Pipeline and get it set up. The default java heap
 
 Install Docker Engine (docker-ce, docker-ce-cli, containerd.io) - see instructions at [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/).
 
-Start docker
+Start docker:
 ```
 sudo systemctl docker start
 ```
@@ -61,6 +61,15 @@ git checkout {tag}
 Replace "{tag}" with the release version you intend to use, e.g., "v2.0.0".  ("Master" is the development version and is not intended for general use!)
 `git status` will confirm which branch you are on, e.g., master or v2.0.0.
 
+>Files located in the git checkout that are used by the docker services and cron:
+>- the .env file
+>- docker-compose.yml and docker-compose.override.yml
+>- files in conf-logstash/
+>- non-ORIG files in conf-pmacct/
+>- cron jobs use non-ORIG files in bin/ and cron.d/ and write to logstash-downloads/
+>- logstash may write to or read from logstash-temp/
+> On upgrade, docker-compose.yml, files in conf-logstash, ORIG and example files will be overwritten.
+
 ### 4. Create the Environment File
 
 Next, copy `env.example` to `.env`  then edit the .env file to set the sensor names, ports, and where to send processed flows.
@@ -90,7 +99,7 @@ Sensor names uniquely identify the source of the data and will be shown in the G
 ./setup-pmacct.sh
 ```
 
-This script will use settings in the .env file to create pmacct (ie, nfacctd and sfacctd) config files in conf-pmacct/ from the .ORIG files in the same directory. 
+This script will use settings in the .env file to create pmacct (ie, nfacctd and sfacctd) config files in **conf-pmacct/** from the .ORIG files in the same directory. 
 
 It will also create **docker-compose.override.yml** from docker-compose.override_example.yml, or update it if it exists, filling in ${var} values from the .env file. (This is needed since pmacct can't use environment variables directly, like logstash can.)
 
@@ -105,7 +114,7 @@ Check the override file to be sure it looks ok and is consistent with the new co
 ./setup-cron.sh
 ```
 
-This script will create docker-netsage-downloads.cron and .sh and restart-logstash-container.cron and .sh files in cron.d/ and bin/ from .ORIG files in the same directories, filling in required information.
+This script will create docker-netsage-downloads.cron and .sh and restart-logstash-container.cron and .sh files in **cron.d/** and **bin/** from .ORIG files in the same directories, filling in required information.
 
 The downloads cron job runs the downloads shell script, which will get various files required by the pipeline from scienceregistry.grnoc.iu.edu on a weekly basis.  
 The restart cron job runs the restart shell script, which restarts the logstash container once a day. Logstash must be restarted to pick up any changes in the downloaded files.
@@ -124,15 +133,6 @@ bin/docker-netsage-downloads.sh
 ```
 
 Check to be sure files are in downloads/.
-
->Files located in the git checkout that are used by the docker services and cron:
->- the .env file
->- docker-compose.yml and docker-compose.override.yml
->- files in conf-logstash/
->- non-ORIG files in conf-pmacct/
->- cron jobs use non-ORIG files in bin/ and cron.d/ and write to logstash-downloads/
->- logstash may write to or read from logstash-temp/
-> On upgrade, docker-compose.yml, files in conf-logstash, ORIG and example files will be overwritten.
 
 ### 8. Start up the Docker Containers
 
@@ -178,7 +178,7 @@ To shut down the pipeline (all containers) use
 
 The rabbitMQ user interface can be used to see if there are incoming flows from pmacct processes and if those flows are being comsumed by logstash.
 
-In your browser, go to ``` https://<pipeline host>/rabbit ```  Login with username guest, password guest.  Look at the small graph showing rates for incoming messages, acks, etc.
+In your browser, go to ``` https://<pipeline host>/rabbit ```  Login with username *guest*, password *guest*.  Look at the small graph showing rates for incoming messages, acks, etc. You should see bursts of incoming messages and no longterm buildup of messages in the other graph.
 
 ### 10. Check for processed flows
 
