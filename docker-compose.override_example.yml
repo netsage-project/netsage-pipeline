@@ -25,10 +25,10 @@ services:
 # add a section to the .env file that uses *_2 variable names 
 # and increase the number of sflowSensors or netflowSensors;
 # copy the whole nfacctd_1 or sfacctd_1 service section from docker-compose.yml to docker-compose.override.yml; 
-# change the ports to reference env variables instead of specifying example values: 
+# in the copied text, change the ports to reference env variables instead of specifying example values: 
 #       - "@{sflowPort_1}:@{sflowContainerPort_1}/udp"
 # or    - "@{netflowPort_1}:@{netflowContainerPort_1}/udp"
-# change the @'s to $'s in the above lines! (can't show $'s here or env var values will get stuck into the comment);
+# (change the @'s to $'s in the above lines! Can't show $'s here or env var values will get stuck into the comment);
 # change all _1's to _2's (or _3's for third sensor of one type, etc) in the new section; 
 # then run the setup_pmacct.sh script [again]. 
 # Double check the changes made to the override file! 

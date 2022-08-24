@@ -3,23 +3,23 @@ version: "3.7"
 # Default docker services and settings. 
 # Do not make changes here; use the override file.
 
-# Shared network for the containers. They will be able to communicate over default ports.
+# Shared network for the containers. Processes will be able to communicate over default ports.
 networks:
     netsage-network:
 
 services:
   sfacctd_1:
     container_name: sfacctd_1
-    image: sfacctd:7Jun2022
+    image: ghcr.io/netsage-project/sfacctd:7Jun2022
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
       - "8000:8000/udp"
     volumes:
-      # location of our configs : default location : read-only
+      # location of configs on host : location in container : read-only
       - ./conf-pmacct:/etc/pmacct:ro
     command:
-      # override the default parameters (entrypoint is the actual command)
+      # default parameters for the sfacctd command 
       - -f 
       - /etc/pmacct/sfacctd_1.conf
     networks:
@@ -29,16 +29,16 @@ services:
  
   nfacctd_1:
     container_name: nfacctd_1
-    image: nfacctd:7Jun2022
+    image: ghcr.io/netsage-project/nfacctd:7Jun2022
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
       - "9000:9000/udp"
     volumes:
-      # location of our configs : default location : read-only
+      # location of configs on host : location in container : read-only
       - ./conf-pmacct:/etc/pmacct:ro
     command:
-      # override the default parameters (entrypoint is the actual command)
+      # default parameters for the nfacctd command 
       - -f 
       - /etc/pmacct/nfacctd_1.conf
     networks:
