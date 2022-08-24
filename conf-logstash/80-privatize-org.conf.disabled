@@ -1,4 +1,5 @@
 # Remove information about any organizations that have privacy rules that require us to not identify them.
+### This example privatizes Australian sources and destinations
 filter {
 
     ruby { 
@@ -32,18 +33,17 @@ filter {
       tag_on_exception => '_rubyexception in 80-privatize-org'
     }  
 
-  # Australian SRCs: Copy some info to [private] and replace sensitive info with AARnet values.
-  # (Copy then replace in the same mutate filter results in both private and public values being privatized, 
-  # because copy is always done last, so use separate mutates. Update will not create a field if one doesn't exist.)
+  # Australian SRCs: replace sensitive info with AARnet values.
     if [@metadata][REDACT-SRC] == "YES" {
-      mutate {
-        id => "80-2"
-        copy => { "[meta][src_organization]" => "[PRIVATE][src_organization]" }
-        copy => { "[meta][src_asn]" => "[PRIVATE][src_asn]" }
-        copy => { "[meta][src_ip]" => "[PRIVATE][src_ip]" }
-        copy => { "[meta][scireg][src][org_name]" => "[PRIVATE][scireg_src_org_name]" }
-        copy => { "[meta][scireg][src][resource]" => "[PRIVATE][scireg_src_resource]" }
-      }
+
+##      mutate {
+##        id => "80-2"
+##        copy => { "[meta][src_organization]" => "[PRIVATE][src_organization]" }
+##        copy => { "[meta][src_asn]" => "[PRIVATE][src_asn]" }
+##        copy => { "[meta][src_ip]" => "[PRIVATE][src_ip]" }
+##        copy => { "[meta][scireg][src][org_name]" => "[PRIVATE][scireg_src_org_name]" }
+##        copy => { "[meta][scireg][src][resource]" => "[PRIVATE][scireg_src_resource]" }
+##      }
 
       mutate {
         id => "80-3"
@@ -65,16 +65,17 @@ filter {
 
     } # end SRC
 
-  # Australian DSTs: Copy some info to [private] and replace sensitive info with AARnet values
+  # Australian DSTs: replace sensitive info with AARnet values
     if [@metadata][REDACT-DST] == "YES" {
-      mutate {
-        id => "80-5"
-        copy => { "[meta][dst_organization]" => "[PRIVATE][dst_organization]" }
-        copy => { "[meta][dst_asn]" => "[PRIVATE][dst_asn]" }
-        copy => { "[meta][dst_ip]" => "[PRIVATE][dst_ip]" }
-        copy => { "[meta][scireg][dst][org_name]" => "[PRIVATE][scireg_dst_org_name]" }
-        copy => { "[meta][scireg][dst][resource]" => "[PRIVATE][scireg_dst_resource]" }
-      }
+
+##      mutate {
+##        id => "80-5"
+##        copy => { "[meta][dst_organization]" => "[PRIVATE][dst_organization]" }
+##        copy => { "[meta][dst_asn]" => "[PRIVATE][dst_asn]" }
+##        copy => { "[meta][dst_ip]" => "[PRIVATE][dst_ip]" }
+##        copy => { "[meta][scireg][dst][org_name]" => "[PRIVATE][scireg_dst_org_name]" }
+##        copy => { "[meta][scireg][dst][resource]" => "[PRIVATE][scireg_dst_resource]" }
+##      }
 
       mutate {
         id => "80-6"
@@ -97,18 +98,4 @@ filter {
     } # end DST
 
  
-    # Make sure we have consistent AARNET names even if no redaction (case insensitive)
-    if [meta][src_organization] =~ /(?i)Australian Academic and Research Network|AARNET/ {
-          mutate {
-              id => "80-8"
-              update => { "[meta][src_organization]" => "Australian Academic and Research Network (AARNet)" } 
-          }
-    }
-    if [meta][dst_organization] =~ /(?i)Australian Academic and Research Network|AARNET/ {
-          mutate {
-              id => "80-9"
-              update => { "[meta][dst_organization]" => "Australian Academic and Research Network (AARNet)" } 
-          }
-    }
-
 }

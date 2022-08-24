@@ -1,6 +1,7 @@
 ------------------------------------------------------
 ## GRNOC NetSage Pipeline 2.0.0 --, 2022
 NEW PACKAGE NAME; USING PMACCT INSTEAD OF NFDUMP AND IMPORTER
+Docker will pull 7Jun2022 images we made for nfacctd and sfacctd images from Github Container Registry
 ------------------------------------------------------
 Features:
  * Renamed package to grnoc-netsage-pipeline
@@ -37,6 +38,8 @@ Features:
  * Another cron file restarts the logstash container each day.
  * Docker-compose.yml ensures logstash runs with uid 1000, while setup-cron.sh sets the owner of logstash-temp/ to 1000, 
    so logstash can write and read aggregation map files when it stops and starts. (User 1000 could be anyone on the host; name doesn't matter.)
+ * AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, leaving it there as an example. Moved lines making
+   the org name consistent to 95-cleanup.conf.
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)
