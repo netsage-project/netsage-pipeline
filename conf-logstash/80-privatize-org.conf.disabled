@@ -1,14 +1,17 @@
 # Remove information about any organizations that have privacy rules that require us to not identify them.
-### This example privatizes Australian sources and destinations
+
+### This is a fictional example 
+# To use, set the following in the code below:  ASNs to privatize (asn_array), country the ASNs are in (called "CountryA" below);
+# what to use when overwriting org names ("NetworkA"), org abbreviations ("NetA"), latitude and longitude (set to -25 and 25 below), 
+# scireg resource names ("NetworkA member"), and scireg resource abbrevations ("NetA member")
+
 filter {
 
     ruby { 
       id => "80-1"
       code => '
-        # Australian ASNs to privatize
-        # 7/11/19 - ASNs from "/usr/bin/whois AS7575:AS-RNO" and "/usr/bin/whois AS7575:AS-EDGE" 
-        # (state based networks connected to AARNet and customers on AARNet using public AS numbers): 
-          asn_array = ["AS4738", "AS7569", "AS7571", "AS7570", "AS7572", "AS7573", "AS7574",    "AS1851", "AS4822", "AS6262", "AS7475", "AS7476", "AS7573", "AS7575", "AS7637", "AS7645", "AS9348", "AS4608", "AS9383", "AS9517", "AS10106", "AS10148", "AS17807", "AS20144", "AS22556", "AS23654", "AS23719", "AS23859", "AS23935", "AS24032", "AS24101", "AS24313", "AS24390", "AS24431", "AS24433", "AS24434", "AS24436", "AS24437", "AS24490", "AS24510", "AS37978", "AS38076", "AS38083", "AS38280", "AS38307", "AS38474", "AS38568", "AS38568", "AS38795", "AS38858", "AS45128", "AS45158", "AS45213", "AS45797", "AS45962", "AS55354", "AS55363", "AS55491", "AS55773", "AS55813", "AS56065", "AS56132", "AS56210", "AS56219", "AS56303", "AS58422", "AS58528", "AS58582", "AS58584", "AS58611", "AS58686", "AS58698", "AS58877", "AS59206", "AS64090", "AS131294", "AS137188", "AS132129", "AS132158", "AS132345", "AS132693", "AS132728", "AS132868", "AS133019", "AS134096", "AS134111", "AS134115", "AS134197", "AS134197", "AS134700", "AS134748", "AS137965", "AS135350", "AS135520", "AS135892", "AS135893", "AS136013", "AS136016", "AS136135", "AS136247", "AS136549", "AS136753", "AS136770", "AS136912", "AS136921", "AS136621", "AS137073", "AS137400", "AS138017", "AS137837", "AS137529", "AS138201", "AS138390", "AS138447", "AS138468", "AS138537",    "AS137429"]
+        # ASNs to privatize
+          asn_array = ["AS0001", "AS0002", "AS0003"]
 
         # Convert array to hash with values of true
           asn_hash = asn_array.map {|x| [x,true]}.to_h
@@ -20,11 +23,11 @@ filter {
           dst_country = event.get("[meta][dst_country_name]")
 
         # Are flow src or dst in the list?
-        # Redact only if src or dst is also physically IN Australia 
-          if asn_hash[src_asn] and src_country == "Australia"
+        # Redact only if src or dst is also physically IN countryA
+          if asn_hash[src_asn] and src_country == "countryA"
             event.set( "[@metadata][REDACT-SRC]" , "YES" )
           end
-          if asn_hash[dst_asn] and dst_country == "Australia"
+          if asn_hash[dst_asn] and dst_country == "countryA"
             event.set( "[@metadata][REDACT-DST]" , "YES" )
           end
 
@@ -33,9 +36,10 @@ filter {
       tag_on_exception => '_rubyexception in 80-privatize-org'
     }  
 
-  # Australian SRCs: replace sensitive info with AARnet values.
+  # CountryA SRCs: replace sensitive info 
     if [@metadata][REDACT-SRC] == "YES" {
 
+        # Save original values if needed or desired
 ##      mutate {
 ##        id => "80-2"
 ##        copy => { "[meta][src_organization]" => "[PRIVATE][src_organization]" }
@@ -47,25 +51,25 @@ filter {
 
       mutate {
         id => "80-3"
-        replace => { "[meta][src_organization]" => "Australian Academic and Research Network (AARNet)" }
+        replace => { "[meta][src_organization]" => "NetworkA" }
         replace => { "[meta][src_asn]" => -1 }
         replace => { "[meta][src_ip]" => "xx.xx.xx.xx" }
         replace => { "[meta][src_location][lat]" => -25 }
-        replace => { "[meta][src_location][lon]" => 135 }
+        replace => { "[meta][src_location][lon]" => 25 }
 
-        update  => { "[meta][scireg][src][org_name]" => "Australian Academic and Research Network (AARNet)" }
-        update  => { "[meta][scireg][src][org_abbr]" => "AARNet.au" }
-        update  => { "[meta][scireg][src][resource]" => "AARNet member" }
-        update  => { "[meta][scireg][src][resource_abbr]" => "AARNet" }
+        update  => { "[meta][scireg][src][org_name]" => "NetworkA" }
+        update  => { "[meta][scireg][src][org_abbr]" => "NetA" }
+        update  => { "[meta][scireg][src][resource]" => "NetworkA member" }
+        update  => { "[meta][scireg][src][resource_abbr]" => "NetA member" }
         update  => { "[meta][scireg][src][latitude]" => "-25" }
-        update  => { "[meta][scireg][src][longitude]" => "135" }
+        update  => { "[meta][scireg][src][longitude]" => "25" }
 
         remove_field  => [ "[meta][scireg][src][project_names]" ]
       }
 
     } # end SRC
 
-  # Australian DSTs: replace sensitive info with AARnet values
+  # CountryA DSTs: replace sensitive info 
     if [@metadata][REDACT-DST] == "YES" {
 
 ##      mutate {
@@ -79,18 +83,18 @@ filter {
 
       mutate {
         id => "80-6"
-        replace => { "[meta][dst_organization]" => "Australian Academic and Research Network (AARNet)" }
+        replace => { "[meta][dst_organization]" => "NetworkA" }
         replace => { "[meta][dst_asn]" => -1 }
         replace => { "[meta][dst_ip]" => "xx.xx.xx.xx" }
         replace => { "[meta][dst_location][lat]" => -25 }
-        replace => { "[meta][dst_location][lon]" => 135 }
+        replace => { "[meta][dst_location][lon]" => 25 }
 
-        update  => { "[meta][scireg][dst][org_name]" => "Australian Academic and Research Network (AARNet)" }
-        update  => { "[meta][scireg][dst][org_abbr]" => "AARNet.au" }
-        update  => { "[meta][scireg][dst][resource]" => "AARNet member" }
-        update  => { "[meta][scireg][dst][resource_abbr]" => "AARNet" }
+        update  => { "[meta][scireg][dst][org_name]" => "NetworkA" }
+        update  => { "[meta][scireg][dst][org_abbr]" => "NetA" }
+        update  => { "[meta][scireg][dst][resource]" => "NetworkA member" }
+        update  => { "[meta][scireg][dst][resource_abbr]" => "NetA member" }
         update  => { "[meta][scireg][dst][latitude]" => "-25" }
-        update  => { "[meta][scireg][dst][longitude]" => "135" }
+        update  => { "[meta][scireg][dst][longitude]" => "25" }
 
         remove_field  => [ "[meta][scireg][dst][project_names]" ]
       }
