@@ -23,13 +23,11 @@ x-default-pmacct-settings:
 
 x-default-sfacct-settings:
   &sflow-defaults
-    image: 
-      - ghcr.io/netsage-project/sfacctd:7Jun2022
+    image: ghcr.io/netsage-project/sfacctd:7Jun2022
 
 x-default-nfacct-settings:
   &netflow-defaults
-    image: 
-      - ghcr.io/netsage-project/nfacctd:7Jun2022
+    image: ghcr.io/netsage-project/nfacctd:7Jun2022
 
 # The containers  (setup script needs to have them in this order)
 services:
@@ -78,7 +76,7 @@ services:
     container_name: logstash
     image: docker.elastic.co/logstash/logstash:7.16.2
     env_file: .env
-    # user uid
+    # user uid is expected to be 1000
     user: 1000:1000
     # Explicitly specify *.conf to be sure logstash doesn't use *.disabled configs. 
     command: logstash -f /etc/logstash/conf.d/*.conf

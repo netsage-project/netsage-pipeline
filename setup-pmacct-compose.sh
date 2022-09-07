@@ -132,8 +132,8 @@ done
 envsubst < docker-compose.yml > docker-compose.yml.temp
 mv docker-compose.yml.temp  docker-compose.yml
 
-echo "    Pmacct config files have been created, based on the .env file."
-echo "    Docker-compose.yml has been created. Please check to be sure it matches the .env file!"
+echo "    Pmacct config and docker-compose.yml files have been created, based on the .env file."
+echo "    Please check to be sure Docker-compose.yml has the right number of sfacctd and pmacctd services with the right port numbers!"
 echo ""
 
 
