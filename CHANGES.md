@@ -7,20 +7,21 @@ Features:
  * Renamed package to grnoc-netsage-pipeline
  * Got rid of old importer references, requirements, files, etc. 
  * Used the %post section in the spec file to check to see if pmacct is installed.
- * Added systemd unit files for sfacctd and nfacctd  (default will be 1 sflow, 1 netflow source, for docker installs)
+ * Added systemd unit files for bare-metal sfacctd and nfacctd  (default will be 1 sflow, 1 netflow source, for docker installs)
  * Revised docker-compose.yml file, etc. to work with pmacct containers.
  * Revised parts of the .env file, including adding variables for number of sflow and netflow sensors. 
- * Added default sfacct and nfacct config files in conf-pmacct/ (.ORIG files to be copied)
- * Added setup-pmacct.sh script which the user runs to create pmacct config files and create or modify docker-compose.override.yml, 
-   filling in environment variables set in the .env file. (pmacct configs cannot use env vars directly.)
- * The number of sflow or netflow sensors can be 0. In this case, the setup script makes the container just run an echo command 
-   after which it shuts down.
+ * Added example/default sfacct and nfacct config files in conf-pmacct/ (.ORIG files to be copied)
+ * Added setup-pmacct-compose.sh script which the user runs to create pmacct config files and docker-compose.yml, based on
+   docker-compose.example.yml and .env files.  (pmacct configs cannot use env vars directly, so script fills them in.)
+ * The number of sflow or netflow sensors can be 0. In this case, the setup script does not include any of the unneeded services 
+   in the docker-compose.yml file.
  * Added 05-translate-pmacct.conf logstash config to translate pmacct fields to ones the pipeline uses.
  * Revised 40-aggregation.conf to deal with pmacct; there are separate sections for sflow and netflow. 
  * For netflow, in 40-aggregation.conf, the start time of incoming flows will be adjusted if duration is greater than the active timeout 
    (ie, for "updates" to long lasting flows)
  * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
- * Added 41-thresholds.conf - applies size threshold of 10 MB (drop smaller flows) and duration threshold of 0.1 sec (set rates to 0 if shorter)
+ * Added 41-thresholds.conf - applies size threshold of 10 MB (ie, drop smaller flows) and duration threshold of 0.1 sec (ie, set 
+   duration and rates to 0 if shorter) after aggregation is finished.
  * Added new field: @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
  * Sampling rate corrections will be done in logstash when requested (ie, flag is set in the env file) but 
    ONLY IF a correction has not yet been applied (by pmacct). 
@@ -28,18 +29,18 @@ Features:
  * Allowed "ALL" when specifying sensors for sampling rate corrections.
  * When a sampling rate correction is applied by logstash, add a tag with the rate. 
  * Added CERN and Utah regexes to sensor type and group files.
- * Added an env file option to skip de-identification.
+ * Added an option to skip de-identification. Set it in .env.
  * 0.0.0.x and 0.0.0.0 flows are tagged and dropped by default. (Unadvertised option to keep them is available in the env file.)
  * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular files/regexes will be downloaded from 
    scienceregistry.grnoc.
  * Added setup-cron.sh script which copies .ORIG .cron and .sh files and writes in username and the location of the git checkout. 
    The user must copy cron files to /etc/cron.d/.
- * One cron file runs a script to download all files from scienceregistry.grnoc once/wk.
+ * One cron file runs a script to download all files (caida, maxmind, etc) from scienceregistry.grnoc once/wk.
  * Another cron file restarts the logstash container each day.
  * Docker-compose.yml ensures logstash runs with uid 1000, while setup-cron.sh sets the owner of logstash-temp/ to 1000, 
    so logstash can write and read aggregation map files when it stops and starts. (User 1000 could be anyone on the host; name doesn't matter.)
- * AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, leaving it there as an example. Moved lines making
-   the org name consistent to 95-cleanup.conf.
+ * AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, leaving a generalized version there as an 
+   example. Moved lines making the org name consistent to 95-cleanup.conf.
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)
