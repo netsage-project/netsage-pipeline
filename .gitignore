@@ -5,6 +5,7 @@ conf/systemd/deploy
 ~
 
 .env
+docker-compose.yml
 docker-compose.override.yml
 userConfig
 bin/docker-netsage-downloads.sh

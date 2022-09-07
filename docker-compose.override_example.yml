@@ -1,13 +1,9 @@
 version: "3.7"
 
-# Settings in this file override or add to those in docker-compose.yml. Copy in anything that needs to be changed.
-# It will not be overwritten on upgrade.
-
-# setup_pmacct.sh creates docker_compose.override.yml from docker-compose.override_example.yml, if it does not yet exist, and fills in env vars.
-# (It also creates or re-creates pmacct config files, filling in env vars.)
-
-# For ports: In the final docker_compose.override.yml, the 'port on host' should match what is listed in the .env file, while
-# the 'port in the container' should match what is in the *facctd_n conf file (the latter is port number is determined by the setup script).
+# Settings in this file override or add to those in docker-compose.yml. 
+# Add anything that needs to be changed manually. (This is unusual).
+# Docker-compose.yml will not be overwritten on upgrade.
+# For example:
 
 services:
 
@@ -21,14 +17,3 @@ services:
       # port on host receiving flow data : port in the container
       - "${netflowPort_1}:${netflowContainerPort_1}/udp"
  
-# TO ADD A SECOND SENSOR OF THE SAME TYPE: 
-# add a section to the .env file that uses *_2 variable names 
-# and increase the number of sflowSensors or netflowSensors;
-# copy the whole nfacctd_1 or sfacctd_1 service section from docker-compose.yml to docker-compose.override.yml; 
-# in the copied text, change the ports to reference env variables instead of specifying example values: 
-#       - "@{sflowPort_1}:@{sflowContainerPort_1}/udp"
-# or    - "@{netflowPort_1}:@{netflowContainerPort_1}/udp"
-# (change the @'s to $'s in the above lines! Can't show $'s here or env var values will get stuck into the comment);
-# change all _1's to _2's (or _3's for third sensor of one type, etc) in the new section; 
-# then run the setup_pmacct.sh script [again]. 
-# Double check the changes made to the override file! 
