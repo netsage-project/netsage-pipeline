@@ -135,7 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/55-member-orgs.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
-%config /etc/logstash/conf.d/80-privatize-org.conf
+%config /etc/logstash/conf.d/80-privatize-org.conf.disabled
 %config /etc/logstash/conf.d/88-preferred-location-org.conf
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf
