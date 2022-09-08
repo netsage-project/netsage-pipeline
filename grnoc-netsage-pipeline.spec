@@ -115,10 +115,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/cron.d/netsage-logstash-restart.cron
 
 # Don't overwrite these .confs. Create .rpmnew files if needed.
-%config(noreplace) /etc/pmacct/sfacctd.conf
-%config(noreplace) /etc/pmacct/nfacctd.conf
-%config(noreplace) /etc/pmacct/sfacct-pretag.map
-%config(noreplace) /etc/pmacct/nfacct-pretag.map
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
 %config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
@@ -150,6 +146,11 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/support/sensor_groups.json
 %config /etc/logstash/conf.d/support/sensor_types.json
 %config /etc/logstash/conf.d/support/networkA-members-list.rb.example
+
+%config /etc/pmacct/sfacctd.conf.ORIG
+%config /etc/pmacct/nfacctd.conf.ORIG
+%config /etc/pmacct/sfacctd-pretag.map.ORIG
+%config /etc/pmacct/nfacctd-pretag.map.ORIG
 
 /usr/share/doc/grnoc/netsage-pipeline/CHANGES.md
 /usr/share/doc/grnoc/netsage-pipeline/INSTALL.md
@@ -187,15 +188,12 @@ echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 echo "AFTER UPGRADING..."
 echo " "
 echo " *  Check config and cron files with .rpmnew and .rpmsave versions to see if any need manual updates."
-echo " *  Pmacct configs:  /etc/pmacct/.   Logstash configs: /etc/logstash/conf.d/."
-echo " *  Pmacct configs and Logstash configs 01, 15, 40, and 99 are not replaced by updated versions, so check for changes. "
-echo " *  If using 55-member-orgs.conf, make sure you have the required files in support/. See comments in the conf file. "
+echo " *  Pmacct configs:  You must create or copy to /etc/pmacct/.  Examples are provided. See if any changes are required to existing files."
+echo " *  Logstash configs: /etc/logstash/conf.d/. 01, 15, 40, and 99 are not replaced by updated versions, so check for changes. "
+echo " *  Make sure you have any required member organization files in support/. See comments in the conf file. "
 echo " "
 echo " *  Note that this rpm puts logstash config files in /etc/logstash/conf.d/ and doesn't manage multiple pipelines in pipelines.yml."
 echo " *  Nor does it manage multiple pmacct processes."
-echo " "
-echo " *  IMPORTANT: Be sure the number of logstash pipeline workers is 1, or flow stitching (aggregation) won't work right. **"
-echo " *      and be sure logstash configs are specified by *.conf in the right directory."
 echo " "
 echo " *  [Re]start logstash and pmacct processes "
 echo "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
