@@ -11,8 +11,7 @@ networks:
 # Reusable blocks of settings
 x-default-pmacct-settings:
   &pmacct-defaults
-    env_file: 
-     - .env
+    env_file: .env
     volumes:
       # location of configs on host : location in container : read-only
       - ./conf-pmacct:/etc/pmacct:ro
@@ -29,7 +28,7 @@ x-default-nfacct-settings:
   &netflow-defaults
     image: ghcr.io/netsage-project/nfacctd:7Jun2022
 
-# The containers  (setup script needs to have them in this order)
+# The containers  (the setup script will replace those for sfacctd and nfacctd)
 services:
 
   sfacctd_1:

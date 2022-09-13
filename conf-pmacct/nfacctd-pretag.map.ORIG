@@ -1,6 +1,10 @@
-! This file is referenced in a config file and used to set the "label" field to a sensor name.
-! Label should be "sfacct--" or "nfacct--" (for sflow or netflow, respectively) 
-! followed by the sensor name with spaces replaced by #'s
+! This file is referenced in the nfacctd config file and used to set the "label" field
+! which is parsed to obtain and set the sensor name.
+!
+! After the setup script runs, label should be "nfacct--" for sflow
+! followed by the sensor name with spaces replaced by #'s.
+! No commas are allowed in the sensor name!
 ! eg, set_label=nfacct--Netflow#Sensor
 
 set_label=${netflowSensorName_1}
+

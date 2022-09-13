@@ -1,0 +1,27 @@
+output {
+    file {
+        path => "/logstash-temp/test-output"
+
+         #codec => json
+
+         # json with newlines (default) 
+         #codec => json_lines 
+
+         # one line per field  (x => v)
+          codec => rubydebug
+
+         # one line per event (no field names?)
+         #codec => plain  
+
+         # formatted output
+         #codec => line {format =>
+        #'{ "start":%{start}, "end":%{end},  "interval":%{interval},
+        #   "meta":{ "sensor_id":"%{[meta][sensor_id]}", "protocol":"%{[meta][protocol]}", "flow_type":"%{[meta][flow_type]}",
+        #   "src_ip":"%{[meta][src_ip]}", "src_port":%{[meta][src_port]}, "src_asn":%{[meta][src_asn]}, "src_ifindex":%{[meta][src_ifindex]},
+        #   "dst_ip":"%{[meta][dst_ip]}", "dst_port":%{[meta][dst_port]}, "dst_asn":%{[meta][dst_asn]}, "dst_ifindex":%{[meta][dst_ifindex]} },
+        #   "values":%{values} } '}
+
+        # append (default) or overwrite - use append to write all events, but delete file between runs
+         write_behavior => append
+      }
+}
