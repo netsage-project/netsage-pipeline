@@ -25,11 +25,10 @@ conf-logstash/88-preferred-location-org.conf
 conf-logstash/90-additional-fields.conf
 conf-logstash/95-cleanup.conf
 conf-logstash/98-post-process.conf
-conf-logstash/99-output-elastic.conf.disabled
-conf-logstash/99-output-jsonlog.conf.disabled
-conf-logstash/99-output-multiline-json.conf.disabled
-conf-logstash/99-output-stdout.conf.disabled
 conf-logstash/99-output-rabbit.conf
+conf-logstash/99-output-file.conf
+conf-logstash/99-output-elastic.conf.disabled
+conf-logstash/99-output-stdout.conf.disabled
 conf-logstash/ruby/anonymize_ipv6.rb
 conf-logstash/ruby/domestic.rb
 conf-logstash/support/sensor_groups.json  

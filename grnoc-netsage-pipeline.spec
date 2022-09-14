@@ -122,8 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
-%config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
-%config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/99-output-file.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
 %config /etc/logstash/conf.d/05-translate-pmacct.conf
 %config /etc/logstash/conf.d/10-preliminaries.conf
