@@ -20,7 +20,7 @@ Features:
  * For netflow, in 40-aggregation.conf, the start time of incoming flows will be adjusted if duration is greater than the active timeout 
    (ie, for "updates" to long lasting flows)
  * The default inactive timeout for logstash aggregation has been set to 6 minutes (to go with 5 minute sflow aggregation by sfacctd)
- * Added 41-thresholds.conf - applies size threshold of 10 MB (ie, drop smaller flows) and duration threshold of 0.1 sec (ie, set 
+ * Added 41-thresholds.conf - applies size threshold of 10 MB (will drop smaller flows) and duration threshold of 1.0 sec (will set 
    duration and rates to 0 if shorter) after aggregation is finished.
  * Added new field: @sampling_corrected = yes/no. If sampling rate correction has been applied by pmacct or logstash, value will be yes.
  * Sampling rate corrections will be done in logstash when requested (ie, flag is set in the env file) but 
