@@ -142,8 +142,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/99-output-stdout.conf.disabled
 %config /etc/logstash/conf.d/ruby/anonymize_ipv6.rb
 %config /etc/logstash/conf.d/ruby/domestic.rb
-%config /etc/logstash/conf.d/support/sensor_groups.json
-%config /etc/logstash/conf.d/support/sensor_types.json
+%config /etc/logstash/conf.d/support/sensor_groups.json.example
+%config /etc/logstash/conf.d/support/sensor_types.json.example
 %config /etc/logstash/conf.d/support/networkA-members-list.rb.example
 
 %config /etc/pmacct/sfacctd.conf.ORIG

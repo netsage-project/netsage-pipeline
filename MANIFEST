@@ -31,8 +31,8 @@ conf-logstash/99-output-elastic.conf.disabled
 conf-logstash/99-output-stdout.conf.disabled
 conf-logstash/ruby/anonymize_ipv6.rb
 conf-logstash/ruby/domestic.rb
-conf-logstash/support/sensor_groups.json  
-conf-logstash/support/sensor_types.json  
+conf-logstash/support/sensor_groups.json.example  
+conf-logstash/support/sensor_types.json.example  
 conf-logstash/support/networkA-members-list.rb.example
 cron.d/baremetal-netsage-downloads.cron
 cron.d/restart-logstash-service.cron

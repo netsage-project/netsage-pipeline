@@ -1,5 +1,5 @@
 {
     "^.*Tstat$": "Data Archive",
-    "^Network A -.*$":  "Circuit",
-    "^Network B -.*$": "Regional Network"
+    "^Network A -.*": "Circuit",
+    "^Network B -.*": "Regional Network"
 }

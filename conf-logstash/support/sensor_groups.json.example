@@ -1,4 +1,4 @@
 {
-    "^A.*$": "sensor group A",
-    "^B.*$": "sensor group B"
+    "^networkA-.*": "group A",
+    "^networkB-.*": "group B"
 }

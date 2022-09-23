@@ -28,19 +28,18 @@ Features:
  * Sensor list for sampling rate corrections in the env file is now semicolon-delimited.
  * Allowed "ALL" when specifying sensors for sampling rate corrections.
  * When a sampling rate correction is applied by logstash, add a tag with the rate. 
- * Added CERN and Utah regexes to sensor type and group files.
  * Added an option to skip de-identification. Set it in .env.
  * 0.0.0.x and 0.0.0.0 flows are tagged and dropped by default. (Unadvertised option to keep them is available in the env file.)
- * Changed to sensor_groups.json.example and sensor_types.json.example. From now on, our particular files/regexes will be downloaded from 
-   scienceregistry.grnoc.
  * Added setup-cron.sh script which copies .ORIG .cron and .sh files and writes in username and the location of the git checkout. 
    The user must copy cron files to /etc/cron.d/.
  * One cron file runs a script to download all files (caida, maxmind, etc) from scienceregistry.grnoc once/wk.
  * Another cron file restarts the logstash container each day.
+ * Changed sensor_groups.json and sensor_types.json in the git checkout to .example files. From now on, our particular files/regexes 
+   will be downloaded from scienceregistry.grnoc by a cron job (different cron jobs for docker and bare-metal installations).
  * Docker-compose.yml ensures logstash runs with uid 1000, while setup-cron.sh sets the owner of logstash-temp/ to 1000, 
    so logstash can write and read aggregation map files when it stops and starts. (User 1000 could be anyone on the host; name doesn't matter.)
- * AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, leaving a generalized version there as an 
-   example. Moved lines making the org name consistent to 95-cleanup.conf.
+ * AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, and made it into a generalized version as an 
+   example. Moved lines making the AARNET org name consistent to 95-cleanup.conf.
 
  * Documentation updates
  * Dependabot automatic remediations of vulnerabilites (for docusaurus)

@@ -11,7 +11,7 @@
 #   DOWNLOAD_PATH="/var/lib/grnoc/netsage"
 #   SUPPORT_PATH="/etc/logstash/conf.d/support"
 
-DOWNLOAD_PATH="-PATH-TO-GIT-CHECKOUT-/downloads"
+DOWNLOAD_PATH="-PATH-TO-GIT-CHECKOUT-/logstash-downloads"
 SUPPORT_PATH="-PATH-TO-GIT-CHECKOUT-/conf-logstash/support"
 
 # MAXMIND ASN 
