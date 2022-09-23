@@ -64,10 +64,6 @@ services:
       # The port for the UI needs to be mapped to that on the host
       # To view, go to https://<host>/rabbit
       - "15672:15672"
-    volumes:
-      # Use a named Volume for the rabbitmq config and files for its own use. 
-      # We want data (msgs in the queue) to persist but don't need to see it.
-      - rabbit_vol:/var/lib/rabbitmq
     networks: 
       - netsage-network
 
@@ -91,8 +87,4 @@ services:
     depends_on:
       - rabbit
     # restart is not included since if logstash dies, there may be an error and we dont' want it to keep restarting over and over
-  
-# named volumes 
-volumes:
-    rabbit_vol:
 

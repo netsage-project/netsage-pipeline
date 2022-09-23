@@ -14,6 +14,8 @@ bin/restart-logstash-container.sh
 cron.d/restart-logstash-container.cron
 conf-pmacct/*_1*
 conf-pmacct/*_2*
+conf-logstash/support/sensor_groups.json
+conf-logstash/support/sensor_types.json
 
 # Dependencies
 /website/node_modules
