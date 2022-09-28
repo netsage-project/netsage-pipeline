@@ -1,17 +1,16 @@
 version: "3.7"
 
 # Docker services and settings. 
-# The non-example version of this file is created by setup-pmacct-compose.sh.
-# Use the override file for any manual overrides.
+# Setup-pmacct-compose.sh uses this file to create the non-example version docker-compose.yml.
+# Optionally, use the docker-compose.override.yml file for any further manual overrides.
 
-# Shared network for the containers. Processes will be able to communicate over default ports.
+# Shared network for the containers. Processes will be able to communicate over their default ports.
 networks:
     netsage-network:
 
 # Reusable blocks of settings
 x-default-pmacct-settings:
   &pmacct-defaults
-    env_file: .env
     volumes:
       # location of configs on host : location in container : read-only
       - ./conf-pmacct:/etc/pmacct:ro
@@ -28,7 +27,7 @@ x-default-nfacct-settings:
   &netflow-defaults
     image: ghcr.io/netsage-project/nfacctd:7Jun2022
 
-# The containers  (the setup script will replace those for sfacctd and nfacctd)
+# The containers  (the setup script will replace those for sfacctd and nfacctd with the correct number and names)
 services:
 
   sfacctd_1:
