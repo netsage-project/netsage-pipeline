@@ -35,16 +35,16 @@ git pull
 
 ### 3. Recreate and check custom files
 
-- Compare the .env to env.example to see if any changes have been made. 
+- Compare your .env to env.example to see if any changes have been made. 
     Copy in any updates, particularly any relevant ones, or just recreate the .env file as you did during installation. 
 
-- Rerun the pmacct setup script to recreate the pmacct config files, in case there have been any changes. This might also update the override file.
+- Run the pmacct/compose setup script to recreate the pmacct config files and the docker-compose.yml file, in case there have been any changes. 
 
     ```sh
-    ./setup-pmacct.sh
+    ./setup-pmacct-compose.sh
     ```
 
-- Compare the docker-compose.override.yml file to the example. (Expect the example file to have environment variables that have gotten filled in in the non-example file.) If there are new lines or sections that are missing, copy them in. The setup script is not able to handle much in the way of changes.
+- If there is a docker-compose.override.yml file, check to see if it's still needed. (For the upgrade to v2.0, you will want to get rid of the override file since we are doing everything directly in docker-compose.yml now.
 
 - Rerun the cron setup script to recreate the non-ORIG files in bin/ and cron.d/: 
 
@@ -52,7 +52,7 @@ git pull
     ./setup-cron.sh
     ```
 
-- Compare the resulting .cron files in the cron.d/ directory to those in /etc/cron.d/. If any have changed, copy them to /etc/cron.d/.
+- Compare the resulting files in the cron.d/ directory to those in /etc/cron.d/. If any have changed, copy them to /etc/cron.d/.
 
 ### 4. Restart all the Docker Containers
 

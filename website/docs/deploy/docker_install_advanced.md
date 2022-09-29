@@ -29,47 +29,22 @@ netflowSensorName_3=The 3rd Netflow Sensor Name
 netflowPort_3=9002
 ```
 
-#### b. Edit docker-composeoverride_example.yml
-
-Add more nfacctd services to the **example** override file. When copying and pasting, replace _1 with _2 or _3 in three places! Your file should look look something like this (remember you'll need to do this again after an upgrade! We need to fix the script to do this automatically):
+#### b. Rerun setup-pmacct-compose.sh
 
 ```
-nfacctd_1:
-    ports:
-      # port on host receiving flow data : port in the container
-      - "${netflowPort_1}:${netflowContainerPort_1}/udp"
-
-nfacctd_2:
-    ports:
-      # port on host receiving flow data : port in the container
-      - "${netflowPort_2}:${netflowContainerPort_2}/udp"
-
-nfacctd_3:
-    ports:
-      # port on host receiving flow data : port in the container
-      - "${netflowPort_3}:${netflowContainerPort_3}/udp"
+./setup-pmacct-compose.sh
 ```
 
-#### c. Rerun setup-pmacct.sh
-
-Delete (after backing up) docker-compose.override.yml so the pmacct setup script can recreate it along with creating additional nfacctd config files. 
-
-```
-rm docker-compose.override.yml
-./pmacct-setup.sh
-```
-
-Check docker-compose.override.yml and files in conf-pmacct/ for consistency.
+Check the new docker-compose.yml and files in conf-pmacct/ for consistency.
 
 #### d. Start new containers
 
-If you are simply adding new collectors nfacctd_2 and nfacctd_3, and there are no changes to nfacctd_1, you should be able to start up the additional containers with
+To be safe, bring everything down first, then back up.
 
-```sh
-docker-compose up -d 
 ```
-
-Otherwise, or to be safe, bring everything down first, then back up.
+docker-compose down
+docker-compose up -d
+```
 
 ## To Filter Flows by Interface
 If your sensors are exporting all flows, but only those using particular interfaces are relevant, use this option in the .env file. All incoming flows will be read in, but the logstash pipeline will drop those that do not have src_ifindex OR dst_inindex equal to one of those listed.  (Processing a large number of unecessary flows may overwhelm logstash, so if at all possible, try to limit the flows at the router level or using iptables.) 
@@ -112,14 +87,16 @@ In the .env file, uncomment the appropriate section and enter the information re
 ```sh
 ifindex_sensor_rename_flag=True
 ifindex_sensor_rename_ifindex=10032
-ifindex_sensor_rename_old_name=IU Sflow 
-ifindex_sensor_rename_new_name=IU Bloomington Sflow
+ifindex_sensor_rename_old_name=MyNet Sflow 
+ifindex_sensor_rename_new_name=MyNet Bloomington Sflow
 ```
 
-In this case, any flows from the "IU Sflow" sensor that use interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name changed from "IU Sflow" to "IU Bloomington Sflow". Currently, only one such rename can be configured in Docker and only 1 ifindex is allowed.
+In this case, any flows from the "MyNet Sflow" sensor that use interface 10032 (src_ifindex = 10032 OR dst_ifindex = 10032) will have the sensor name changed from "MyNet Sflow" to "MyNet Bloomington Sflow". 
+
+Currently, only one such rename can be configured in Docker and only 1 ifindex is allowed.
 
 :::note
-Please notify the devs at IU in advance, if you need to modify a sensor name, because the regexes used for determining sensor_group and sensor_type may have to be updated.
+Please notify the devs in advance, if you need to modify a sensor name, because the regexes used for determining sensor_group and sensor_type may have to be updated.
 :::
 
 ## To Do Sampling Rate Corrections in Logstash
@@ -129,11 +106,13 @@ In the .env file, uncomment the appropriate section and enter the information re
 
 ```sh
 sampling_correction_flag=True
-sampling_correction_sensors=IU Bloomington Sflow; IU Indy Sflow
+sampling_correction_sensors=MyNet Bloomington Sflow; MyNet Indy Sflow
 sampling_correction_factor=512
 ```
 
-In this example, all flows from sensors "IU Bloomington Sflow" and "IU Indy Sflow" will have a correction factor of 512 applied by logstash. Any other sensors will not have a correction applied by logstash (presumably pmacct would apply the correction automatically).
+In this example, all flows from sensors "MyNet Bloomington Sflow" and "MyNet Indy Sflow" will have a correction factor of 512 applied by logstash. Any other sensors will not have a correction applied by logstash (presumably pmacct would apply the correction automatically).
+
+Only one correction factor is allowed for, so you can't, for example correct Sensor A with a factor of 512 and also Sensor B with a factor of 100.
 
 >Note that if pmacct has made a sampling correction already, no additional manual correction will be applied, even if these options are set, 
 >so this can be used *to be sure* a sampling correction is applied.
@@ -174,6 +153,13 @@ See **conf-logstash/support/networkA-members-list.rb.example** for an example.
 
 At https://scienceregistry.netsage.global, you can see a hand-curated list of resources (IP blocks) which are linked to the organizations, sciences, and projects that use them. This information is used by the Netsage pipeline to tag science-related flows. If you would like to see your resources or projects included, please contact us to have them added to the Registry. 
 
+## To Use IPtables to Block Some Incoming Traffic
+
+In certain situations, you may want to use a firewall to block some of the traffic coming to your pipeline host so that it does not enter the docker containers. For example, if multiple routers must send to the same port on the host, but you only want to process flows from one of them, you can use iptables to block traffic from the those you don't want. 
+
+With Docker, the INPUT chain in iptables is skipped and instead the FORWARDING chain is used. The first rule of the FORWARDING chain is to read the DOCKER-USER chain. This chain will contain docker rules that aren't overridden by docker. Rules that Docker creates are added to the DOCKER chain; do not manipulate this chain manually. 
+
+To allow only a specific IP or network to access the containers, insert a negated rule at the top of the DOCKER-USER filter chain (or an accept then a drop all others). 
 
  
 ## To Bring up Kibana and Elasticsearch Containers

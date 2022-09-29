@@ -1,9 +1,11 @@
 # Remove information about any organizations that have privacy rules that require us to not identify them.
 
-### This is a fictional example 
-# To use, set the following in the code below:  ASNs to privatize (asn_array), country the ASNs are in (called "CountryA" below);
-# what to use when overwriting org names ("NetworkA"), org abbreviations ("NetA"), latitude and longitude (set to -25 and 25 below), 
-# scireg resource names ("NetworkA member"), and scireg resource abbrevations ("NetA member")
+### The .disabled file has a fictional example 
+# To enable, set the following in the code below and remove the .disabled suffix.
+#   List the ASNs to privatize (asn_array) and specify the country the ASNs are in (called "CountryA" below).
+#   Specify what to use when overwriting org names (eg, "NetworkA"), org abbreviations ("NetA"), 
+#   latitudes and longitudes (set to -25 and 25 below), 
+#   scireg resource names ("NetworkA member"), and scireg resource abbrevations ("NetA member").
 
 filter {
 

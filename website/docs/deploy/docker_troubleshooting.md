@@ -37,7 +37,7 @@ sidebar_label: Troubleshooting
     - Make sure you don't have sflows going to a nfacctd process or vise versa.
     - Are there names and port numbers for each sensor? 
     - Are the environment variable names for sensors like *_1, *_2, *_3, etc. with one sequence for sflow and one for netflow?
-- Did you run setup-pmacct.sh?
+- Did you run setup-pmacct-compose.sh?
 - In docker-compose.override.yml, make sure the ports are set correctly. You will see *port on host : port in container*. (Docker uses its own port numbers internally.) *Port on host* should match what is in .env (the port the router is sending to on the pipeline host). *Port in container* should match what is in the corresponding pmacct config.  
 - In pmacct config files, make sure amqp_host is set to rabbit (for docker installs) or localhost (for bare metal)
 - In 'docker-compose ps' output, be sure the command for the sfacctd_1 container is /usr/local/sbin/sfacctd, similarly for nfacctd.

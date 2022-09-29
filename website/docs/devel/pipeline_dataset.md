@@ -4,6 +4,8 @@ title: Pipeline Replay Dataset
 sidebar_label: Replay Dataset
 ---
 
+(We haven't been using this for a long time, so it may be out of date.)
+
 The Netsage Pipeline processes network data.  Though there are some components and patterns we can use to test 
 the behavior using things like the Ruby unit [tests](https://github.com/netsage-project/netsage-pipeline/tree/master/conf-logstash/ruby/spec) in logstash, and the [generator](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-generator.html) pligin, but the best 
 test is to replay network data and inspect the output in the grafana dashboard. 

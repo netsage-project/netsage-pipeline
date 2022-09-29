@@ -31,7 +31,7 @@ docker-compose logs -f              # view logs for all containers
 docker-compose logs -f <container>  # view logs for container, eg logstash
 ```
 
-## To Build Docker Images 
+## To Build Pmacct Docker Images 
 
 We will normally use official images for rabbitMQ, logstash, nfacctd, and sfacctd, so no building of images is required.
 
