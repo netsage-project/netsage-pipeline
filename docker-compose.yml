@@ -11,7 +11,7 @@ services:
       - "5671:5671"
       - "5672:5672"
   importer:
-    image: netsage/pipeline_importer:latest
+    image: tacc/pipeline_importer:v2.0.0
     env_file: .env
     depends_on:
       - rabbit
@@ -22,10 +22,10 @@ services:
       - ./conf-logstash:/usr/share/logstash/pipeline/
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "@weekly"
+      ofelia.job-exec.dataUpdate.schedule: "@daily"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
-    image: netsage/pipeline_logstash:latest
+    image: tacc/pipeline_logstash:v2.0.0
     env_file: .env
     depends_on:
       - importer

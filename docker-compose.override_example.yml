@@ -2,13 +2,13 @@ version: "3.7"
 services:
 
   logstash:
-    image: netsage/pipeline_logstash:latest
+    image: tacc/pipeline_logstash:latest
     ## If you need to override JVM options, uncomment these lines
     #   volumes:
     #     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
 
   importer:
-    image: netsage/pipeline_importer:latest
+    image: tacc/pipeline_importer:latest
     ## If you add additional collectors or need to make other changes in the importer "shared" config, 
     ## use the netsage_override.xml file and uncomment the following lines 
     #   volumes:
