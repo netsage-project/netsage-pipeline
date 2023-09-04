@@ -1,7 +1,11 @@
 version: "3.7"
 services:
   rabbit:
-    image: rabbitmq:3.8-management
+    #image: rabbitmq:3.8-management
+    image: rabbitmq:3.10-management
+    # NOTE: newer versions (3.12+) give this error: "Feature flags: `classic_mirrored_queue_version`: required feature flag not enabled! It must be enabled before upgrading RabbitMQ."
+    # need to figure out how to fix that
+    #image: rabbitmq:3.12.4-management
     env_file: .env
     hostname: rabbit
     volumes:
@@ -36,7 +40,8 @@ services:
       - ./data:/data
       - ./data/cache:/var/lib/grnoc/netsage/
   ofelia: ## Scheduler Task
-    image: mcuadros/ofelia:v0.3.0
+    image: mcuadros/ofelia:v0.3.7
+    #image: mcuadros/ofelia:v0.3.0
     command: daemon --docker
     depends_on:
       - importer
