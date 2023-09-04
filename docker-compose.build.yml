@@ -1,12 +1,12 @@
 version: "3.7"
 services:
   importer:
-    image: tacc/pipeline_importer:latest
+    image: tacc/pipeline_importer:v2.0.0
     build:
       context: .
       dockerfile: compose/importer/Dockerfile
   logstash:
-    image: tacc/pipeline_logstash:latest
+    image: tacc/pipeline_logstash:v2.0.0
     build:
       context: .
       dockerfile: ./compose/logstash/Dockerfile
