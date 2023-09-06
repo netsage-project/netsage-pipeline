@@ -9,6 +9,11 @@ services:
 
   importer:
     image: tacc/pipeline_importer:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10g"
+        max-file: "6"
     ## If you add additional collectors or need to make other changes in the importer "shared" config, 
     ## use the netsage_override.xml file and uncomment the following lines 
     #   volumes:
