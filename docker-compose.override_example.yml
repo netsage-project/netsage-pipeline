@@ -22,7 +22,7 @@ services:
   ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
   ## Remove any collectors that do not need to be running.
   sflow-collector:
-    image: netsage/nfdump-collector:alpine-1.6.23
+    image: tacc/netsage-nfdump-collector:alpine-1.6.23
     restart: always
     command: sfcapd -T all -l /data -S 1 -w -z -p 9998
     volumes:
@@ -30,7 +30,7 @@ services:
     ports:
       - "9998:9998/udp"
   netflow-collector:
-    image: netsage/nfdump-collector:alpine-1.6.23
+    image: tacc/netsage-nfdump-collector:alpine-1.6.23
     command: nfcapd -T all -l /data -S 1 -w -z -p 9999
     ports:
       - "9999:9999/udp"
