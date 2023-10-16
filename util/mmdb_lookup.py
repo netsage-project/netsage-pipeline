@@ -39,7 +39,10 @@ def mmdb_lookup(ip_address, mmdb_file_path):
         # projects is a array, that includes project_name
         projects = jdata['projects']
         # XXX: Fixme: need to handle case with multiple project names
-        project_name = projects[0]['project_name']
+        try:
+            project_name = projects[0]['project_name']
+        except:
+            project_name = ""
         asn = jdata['asn']
 
         print(f"IP: {ip_address}")
