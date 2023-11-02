@@ -11,6 +11,7 @@
 import argparse
 import json
 import geoip2.database
+import sys
 
 # for testing
 # LHC/Atlas host
@@ -29,33 +30,49 @@ def mmdb_lookup(ip_address, mmdb_file_path):
         longitude = response.location.longitude
 
         # convert JSON string to dict
-        jdata = json.loads(city)
-        # extract data from JSON
-        country = jdata['country_code']
-        org_name = jdata['org_name']
-        org_abbr = jdata['org_abbr']
-        discipline = jdata['discipline']
-        resource = jdata['resource']
-        # projects is a array, that includes project_name
-        projects = jdata['projects']
-        # XXX: Fixme: need to handle case with multiple project names
         try:
-            project_name = projects[0]['project_name']
-        except:
-            project_name = ""
-        asn = jdata['asn']
+            jdata = json.loads(city)  # if it is SciReg format
+            # extract data from JSON
+            country = jdata['country_code']
+            org_name = jdata['org_name']
+            org_abbr = jdata['org_abbr']
+            discipline = jdata['discipline']
+            resource = jdata['resource']
+            # projects is a array, that includes project_name
+            projects = jdata['projects']
+            # XXX: Fixme: need to handle case with multiple project names
+            try:
+                project_name = projects[0]['project_name']
+            except:
+                project_name = ""
+            asn = jdata['asn']
+    
+            print(f"IP: {ip_address}")
+            print(f"Country: {country}")
+            #print(f"City: {city}")
+            print(f"Organization: {org_name}, {org_abbr}")
+            print(f"Latitude: {latitude}")
+            print(f"Longitude: {longitude}")
+            print(f"ASN: {asn}")
+            print(f"discipline: {discipline}")
+            print(f"resource: {resource}")
+            print(f"project name: {project_name}")
 
-        print(f"IP: {ip_address}")
-        print(f"Country: {country}")
-        #print(f"City: {city}")
-        print(f"Organization: {org_name}, {org_abbr}")
-        print(f"Latitude: {latitude}")
-        print(f"Longitude: {longitude}")
-        print(f"ASN: {asn}")
-        print(f"discipline: {discipline}")
-        print(f"resource: {resource}")
-        print(f"project name: {project_name}")
+        except:  # Assume standard mmdb format
+            country_iso = response.registered_country.iso_code
+            country_name = response.country.names['en']
+            state = response.subdivisions[0].names['en']
+            city = response.city.name
 
+            print(f"IP: {ip_address}")
+            print(f"Country: {country_name}")
+            print(f"Country ISO code: {country_iso}")
+            print(f"State: {state}")
+            print(f"City: {city}")
+            print(f"Latitude: {latitude}")
+            print(f"Longitude: {longitude}")
+
+    
     except geoip2.errors.AddressNotFoundError:
         print("IP address not found in the MMDB.")
 
