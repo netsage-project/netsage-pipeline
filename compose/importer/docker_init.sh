@@ -5,7 +5,7 @@ DATA_DIR=/data/cache/
 LOGSTASH_DIR=/usr/share/logstash/pipeline/support
 mkdir -p $DATA_DIR && echo "Cache directory ${DATA_DIR} created" || echo "cache dir ${DATA_DIR} already exists"
 
-FILES="GeoLite2-ASN scireg GeoLite2-City"
+FILES="GeoLite2-ASN GeoLite2-City"
 CAIDA_FILES="CAIDA-org-lookup"
 RUBY_DATA="FRGP-members-list ilight-members-list onenet-members-list"
 

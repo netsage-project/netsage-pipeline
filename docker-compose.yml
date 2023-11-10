@@ -25,7 +25,7 @@ services:
       - ./data/importer_cache:/var/cache/netsage
       - ./conf-logstash:/usr/share/logstash/pipeline/
     labels:
-      ofelia.enabled: "true"
+      ofelia.enabled: "false"
       ofelia.job-exec.dataUpdate.schedule: "@daily"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
