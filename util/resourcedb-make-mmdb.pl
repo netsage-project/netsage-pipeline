@@ -93,9 +93,9 @@ my %ipv6_singles;
 foreach my $res (@$scireg) {
     # Make a copy of the hash, remove the addresses array and string for anonymization purposes, get lat and long.
     my %data = %$res;
-    delete $data{'addresses_str'};
-    delete $data{'addresses'};
-    delete $data{'ip_block_id'};
+    #delete $data{'addresses_str'};
+    #delete $data{'addresses'};
+    #delete $data{'ip_block_id'};
     my $lat = $data{'latitude'};
     my $long = $data{'longitude'};
     # convert back to json
@@ -116,6 +116,7 @@ foreach my $res (@$scireg) {
                             'location' => { 'latitude' => $lat, 'longitude' => $long }
                              };
         }
+        print "added $addr \n";
     }
 }
 

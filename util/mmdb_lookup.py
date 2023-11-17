@@ -21,16 +21,26 @@ import sys
 
 def mmdb_lookup(ip_address, mmdb_file_path):
     reader = geoip2.database.Reader(mmdb_file_path)
+    db_type = reader.metadata().database_type
+    print (f"This MMDB file is of type: {db_type}")
+
     try:
         response = reader.city(ip_address)
-        # the mmdb file that Lisa generated shoves everything into 'city name'. 
-        city = response.city.name
-        #print (response.city)
-        latitude = response.location.latitude
-        longitude = response.location.longitude
+    except:
+    #except geoip2.errors.AddressNotFoundError:
+    #    print ("Error: city not found for address...")
+        print("IP address not found in the MMDB.")
+        sys.exit()
 
-        # convert JSON string to dict
-        try:
+
+    # the mmdb file that Lisa generated shoves everything into 'city name'. 
+    city = response.city.name
+    #print (response.city)
+    latitude = response.location.latitude
+    longitude = response.location.longitude
+
+    # convert JSON string to dict
+    try:
             jdata = json.loads(city)  # if it is SciReg format
             # extract data from JSON
             country = jdata['country_code']
@@ -58,7 +68,7 @@ def mmdb_lookup(ip_address, mmdb_file_path):
             print(f"resource: {resource}")
             print(f"project name: {project_name}")
 
-        except:  # Assume standard mmdb format
+    except:  # Assume standard mmdb format
             country_iso = response.registered_country.iso_code
             country_name = response.country.names['en']
             state = response.subdivisions[0].names['en']
@@ -73,9 +83,6 @@ def mmdb_lookup(ip_address, mmdb_file_path):
             print(f"Longitude: {longitude}")
 
     
-    except geoip2.errors.AddressNotFoundError:
-        print("IP address not found in the MMDB.")
-
     finally:
         reader.close()
 
