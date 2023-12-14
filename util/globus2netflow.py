@@ -33,9 +33,10 @@ def process_chunk(chunk):
     chunk['dst_asn'] = 0
     chunk['duration'] = (pd.to_datetime(chunk['end_time']) - pd.to_datetime(chunk['start_time'])).dt.total_seconds()
     chunk['num_bits'] = (chunk['bytes_xfered'] * 8).astype(int)
+    chunk['num_files'] = (chunk['files_xfered']).astype(int)
     chunk['packets_per_second'] = (chunk['packets'] / chunk['duration']).round(3)
     chunk['bits_per_second'] = (chunk['num_bits'] / chunk['duration']).round(3)
-    return chunk[['timestamp', 'start_time', 'end_time', 'source_ip', 'dest_ip', 'src_port', 'dst_port', 'bytes_xfered', 'packets', 'duration', 'num_bits', 'packets_per_second', 'bits_per_second', 'src_asn', 'dst_asn']]
+    return chunk[['timestamp', 'start_time', 'end_time', 'source_ip', 'dest_ip', 'src_port', 'dst_port', 'files_xfered', 'bytes_xfered', 'packets', 'duration', 'num_bits', 'packets_per_second', 'bits_per_second', 'src_asn', 'dst_asn']]
 
 def convert_csv_to_netflow(input_file, output_file):
     # Read CSV file into a DataFrame
@@ -69,6 +70,7 @@ def convert_csv_to_netflow(input_file, output_file):
                     "sensor_id": "Globus Logs",
                     "src_ip": x['source_ip'],
                     "protocol": "tcp",
+                    "num_files": x['files_xfered'],
                     "dst_ip": x['dest_ip'],
                     "src_asn": x['src_asn'],
                     "dst_asn": x['dst_asn']
