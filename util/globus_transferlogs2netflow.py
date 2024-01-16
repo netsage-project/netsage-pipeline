@@ -1,50 +1,79 @@
 #!/usr/bin/env python3
-
+#
 # convert Globus transfer logs to format compatible with NetFlow collector
 #
 # expects logs to have the following values:
 # "DATE=20240107092754.223249 HOST=data1.frontera.tacc.utexas.edu PROG=globus-gridftp-server NL.EVNT=FTP_INFO START=20240107092753.658868 USER=yifan97 FILE=/scratch1/09397/yifan97/cantilever/cantilever_3d_1.4_densified.tar.gz2 BUFFER=235104 BLOCK=4194304 NBYTES=218103808 VOLUME=/ STREAMS=4 STRIPES=1 DEST=[141.211.212.174] TYPE=RETR CODE=226 TASKID=0f7ec55a-ab48-11ee-be6c-f11924dc2d22"
 #
-# XXX not done!
-#  problem with routine to combine tasks. Only generating 1 task at the moment....
-#   need to rewrite combine_by_taskID!!
 
-
-import argparse, sys, json
-import pandas as pd
-import numpy as np
-import socket
-from datetime import datetime
-from collections import defaultdict
+import argparse, sys, json, socket
 
 MIN_XFER_SIZE = 10000  # ignore tiny files
 
 # remove NetLogger fields not needed and/or privacy reasons
-keys_to_remove = ['DATE', 'PROG', 'USER', 'NL.EVNT', 'FILE', 'VOLUME', 'TYPE', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
+keys_to_remove = ['PROG', 'USER', 'NL.EVNT', 'FILE', 'VOLUME', 'TYPE', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
 
-def combine_by_taskID(data_list, times_by_taskid):
+def combine_by_taskID(transfer_list):
+    # this routine does the following:
+    # 1) sorts the data by taskID
+    # 2) needs to loop over data twice, as start/end times might vary in sorted list
 
-    # Dictionary to store the sum of 'NBYTES' and other data items for each 'TASKID'
-    # start_time = 'START' of 1st line with new TASKID
-    # end_time = 'DATE' of last line with new TASKID
-    #  XXX: note: could also probably use pandas for this...
+    # sort by task ID, then loop over data to find start/end
+    sorted_list = sorted(transfer_list, key=lambda x: x['TASKID'])
 
-    sum_bytes_by_taskid = defaultdict(lambda: {'NBYTES': 0, 'NUM_FILES' : 0})
+    result_list = []
+    times_by_taskid = {}  # Dictionary to store 'start_time' and 'end_time' for each 'TASKID'
+    prev_task_id = -1
 
-    # Loop over filtered_data_list and sum 'NBYTES' while including other data items
-    for data_dict in data_list:
-        task_id = data_dict.get('TASKID')
-        sum_bytes_by_taskid[task_id].update(data_dict)  # Include other data items XXX: only do this 1st time?
+    # first loop over data to get start/end times
+    for task in sorted_list:
+        #print ("checking task: ",task)
+        task_id = task.get('TASKID')
+        if task_id != prev_task_id:
+            times_by_taskid[task_id] = {}
+            times_by_taskid[task_id]['start'] = task['START']
+            times_by_taskid[task_id]['end'] = task['DATE'];
+            #print ("new times entry: ", times_by_taskid[task_id]['start'], times_by_taskid[task_id]['end'])
+        if task['START'] < times_by_taskid[task_id]['start']:
+            times_by_taskid[task_id]['start'] = task['START'] # find smallest 'start' for this task
+            #print ("found earlier start: ", times_by_taskid[task_id]['start'])
+        if task['DATE'] > times_by_taskid[task_id]['end']:
+            times_by_taskid[task_id]['end'] = task['DATE'] # find largest 'date' for this task
+            #print ("found later end: ", times_by_taskid[task_id]['start'])
+        prev_task_id = task_id
 
-        nbytes = data_dict.get('NBYTES', 0)
-        sum_bytes_by_taskid[task_id]['NBYTES'] += nbytes
-        sum_bytes_by_taskid[task_id]['NUM_FILES'] += 1
-        sum_bytes_by_taskid[task_id]['start_time'] = times_by_taskid[task_id]['start']
-        sum_bytes_by_taskid[task_id]['end_time'] = times_by_taskid[task_id]['end']
-        #print (f"nbytes = {nbytes}, total bytes = {sum_bytes_by_taskid[task_id]['NBYTES']}")
+    # Next, loop over transfer_list and sum 'NBYTES' while including other data items, including start/end
+    prev_task_id = -1
+    for task in sorted_list:
+        #print ("combining:" , task)
+        task_id = task.get('TASKID')
+        nbytes = task.get('NBYTES', 0)
+
+        if task_id != prev_task_id:
+            if prev_task_id != -1: # not the first time
+                print (f"    Done with this taskID: # files = {combined_task['NUM_FILES']}, total bytes = {combined_task['NBYTES']}")
+                result_list.append(combined_task) # append the prevous task, as done with it
+                #print ("adding combined_task to list: ", combined_task)
+            print ("*** got new taskID: ", task_id)
+            # Create a new dictionary for each new task
+            combined_task = {'TASKID': task_id, 'NBYTES': 0, 'NUM_FILES': 0}
+            combined_task.update(task)  # Include other data items 
+            # add times and move on to next task
+            combined_task['start_time'] = times_by_taskid[task_id]['start']
+            combined_task['end_time'] = times_by_taskid[task_id]['end']
+            combined_task['duration'] = times_by_taskid[task_id]['end'] - times_by_taskid[task_id]['start']
+
+        combined_task['NBYTES'] += nbytes
+        combined_task['NUM_FILES'] += 1
+        prev_task_id = task_id
+
+    # dont forget the last task
+    print (f"    Done with this taskID: # files = {combined_task['NUM_FILES']}, total bytes = {combined_task['NBYTES']}")
+    result_list.append(combined_task) # append the prevous task, as done with it
+    print("\nCombined %d transfers into %d tasks " % (len(transfer_list), len(result_list)))
 
     # Generate a new list of dictionaries with the sum of 'NBYTES' and other data items for each 'TASKID'
-    result_list = list(sum_bytes_by_taskid.values())
+    #result_list = list(sum_bytes_by_taskid.values())
 
     return (result_list)
 
@@ -53,9 +82,8 @@ def convert_globus_to_netflow(input_file):
     print("Loading file: ", input_file)
 
     data_list = []  # List to store dictionaries
-    times_by_taskid = {}  # Dictionary to store 'start_time' and 'end_time' for each 'TASKID'
+    num_skipped = 0
 
-    prev_task_id = ""
     with open(input_file, 'r') as file:
         # Iterate through each line in the file
         for line in file:
@@ -67,70 +95,56 @@ def convert_globus_to_netflow(input_file):
             else:
                #print ("DATE not found")
                continue   # skip lines not containing 'DATE'
-            # Strip any quotes
-            nl = nl.strip('"')  # XXX not working????
-            #print ("Got line: ", nl)
 
             # Split the string into individual name-value pairs
             pairs = nl.split()
+            #print ("pairs: ", pairs)
 
-            # Create a dictionary from the name-value pairs
-            #data_dict = dict(pair.split('=') for pair in pairs)
+            # simple strip of nl.strip('"') not working, but this works. Not sure why this is needed
+            # Strip any quotes
+            transfer = {key: value.strip('"') for key, value in (pair.split('=') for pair in pairs)}
 
-            # strip above not working, but this works. Not sure why this is needed
-            data_dict = {key: value.strip('"') for key, value in (pair.split('=') for pair in pairs)}
+            transfer['NBYTES'] = int(transfer['NBYTES'])
+            transfer['DATE'] = float(transfer['DATE'])
+            transfer['START'] = float(transfer['START'])
 
-            # convert to int
-            data_dict['NBYTES'] = int(data_dict['NBYTES'])
-            data_dict['DATE'] = float(data_dict['DATE'])
-            data_dict['START'] = float(data_dict['START'])
-
-            #keep track of start/end times
-            task_id = data_dict.get('TASKID')
-            if task_id != prev_task_id:
-                print ("*** got new taskID: ", task_id)
-
-            if task_id not in times_by_taskid: #initialize
-#                print ("initializing start time to START", data_dict['START'])
-#                print ("initializing end time to DATE", data_dict['DATE'])
-                times_by_taskid[task_id] = {}
-                times_by_taskid[task_id]['start'] = data_dict['START']
-                times_by_taskid[task_id]['end'] = data_dict['DATE'];
-            if times_by_taskid[task_id]['start'] < data_dict['START']:
-#                print ("  setting start time to ", data_dict['START'])
-                times_by_taskid[task_id]['start'] = data_dict['START'] # find smallest 'start' for this task
-            if times_by_taskid[task_id]['end'] > data_dict['DATE']:
-#                print ("  setting end time to ", data_dict['DATE'])
-                times_by_taskid[task_id]['end'] = data_dict['DATE'] # find largest 'date' for this task
+            #print ("transfer:", transfer)
 
             for key in keys_to_remove: # clean up stuff no longer using
-                if key in data_dict:
-                    removed_value = data_dict.pop(key)
+                if key in transfer:
+                    removed_value = transfer.pop(key)
  
             # Append the dictionary to the list
-            if data_dict['NBYTES'] > MIN_XFER_SIZE:
-                data_list.append(data_dict)
+            if transfer['NBYTES'] > MIN_XFER_SIZE:
+                #print ("appending: ", transfer)
+                data_list.append(transfer)
+            else:
+                num_skipped += 1
+                #print ("Skipping small file transfer of %d bytes" % transfer['NBYTES'])
 
-            prev_task_id = task_id
-   
 
-    print ("\n start/end times: ", times_by_taskid)
+    print ("Skipped a total of %d small transfers" % num_skipped)
 
-    print ("\n Combining by TaskID...")
-    combined_list = combine_by_taskID(data_list, times_by_taskid)
+    # Count the number of unique task IDs
+    unique_task_ids = set(task['TASKID'] for task in data_list)
+    num_unique_task_ids = len(unique_task_ids)
+    print(f"\nNumber of unique task IDs: {num_unique_task_ids}")
+
+    print ("\nCombining %d transfers by TaskID..." % len(data_list))
+    combined_list = combine_by_taskID(data_list)
 
     # Print the resulting list
-    print(f"\n Result List ({len(combined_list)} items)")
-    print(combined_list)
+    #print("Combined list: ")
+    #print(combined_list)
     return combined_list
+
 
 def output_to_json(result_list, output_file):
 
-
     print(f'\nConverting to JSON.... ')
 
-    # all logs have the same source IP
-    hostname = result_list[0]['HOST']
+    hostname = result_list[0]['HOST'] # all logs have the same source IP
+    #print ("   Looking up IP for host: ", hostname)
     try:
         src_ip = socket.gethostbyname(hostname)
         #print(f'The IPv4 address of {hostname} is {src_ip}')
@@ -158,13 +172,14 @@ def output_to_json(result_list, output_file):
            "dst_asn": 0
        }
 
-       task['values'] = {
-         "num_packets":  int(item['NBYTES'] / 1500), # not correct for Jumbo frames, but no way to know...
-         "num_bits": item['NBYTES'] * 8,
-         "duration": float(item['end_time']) - float(item['start_time']),
-         "packets_per_second": 1000,
-         "bits_per_second": 1000
-       }
+       # fill in 'values' part of JSON object
+       task['values'] = {}
+       task['values']['num_packets'] = int(item['NBYTES'] / 1500)  # not correct for Jumbo frames, but no way to know...
+       task['values']['num_bits'] = item['NBYTES'] * 8
+       task['values']['duration'] = item['duration']
+       task['values']['packets_per_second'] = round(task['values']['num_packets'] / item['duration'],3)
+       task['values']['bits_per_second'] = round(task['values']['num_bits'] / item['duration'],3)
+
        task['type'] = "globus"
        task['start'] = item['start_time']
        task['end'] = item['end_time']
@@ -173,7 +188,7 @@ def output_to_json(result_list, output_file):
 
 
     print(f'Done Converting to JSON.... ')
-    print (netsage_format_list)
+    #print (netsage_format_list)
 
     with open(output_file, 'w') as json_file:
          json.dump(netsage_format_list, json_file, indent=2)
@@ -186,7 +201,9 @@ if __name__ == "__main__":
     parser.add_argument("output_file", help="Output NetFlow-compatible file")
 
     args = parser.parse_args()
+
     results = convert_globus_to_netflow(args.input_file)
+
     output_to_json(results, args.output_file)
 
     print("Done.")
