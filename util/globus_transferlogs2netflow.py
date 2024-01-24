@@ -188,8 +188,15 @@ def output_to_json(result_list, output_file):
        task['values']['bits_per_second'] = round(task['values']['num_bits'] / item['duration'],3)
 
        task['type'] = "globus"
-       task['start'] = item['start_time']
-       task['end'] = item['end_time']
+
+       # Convert the time string to a datetime object
+       dt_object = datetime.strptime(str(item['start_time']), "%Y%m%d%H%M%S.%f")
+       # Convert datetime object to Unix timestamp
+       unix_timestamp = dt_object.timestamp()
+       task['start'] = unix_timestamp
+       dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       unix_timestamp = dt_object.timestamp()
+       task['end'] = unix_timestamp
 
        netsage_format_list.append(task)
 
@@ -198,7 +205,6 @@ def output_to_json(result_list, output_file):
     #print (netsage_format_list)
 
     with open(output_file, 'w') as json_file:
-         #json.dump(netsage_format_list, json_file, indent=2)
         for record in netsage_format_list:
              json_file.write(json.dumps(record) + '\n')
 
