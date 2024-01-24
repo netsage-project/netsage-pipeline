@@ -5,14 +5,18 @@
 # expects logs to have the following values:
 # "DATE=20240107092754.223249 HOST=data1.frontera.tacc.utexas.edu PROG=globus-gridftp-server NL.EVNT=FTP_INFO START=20240107092753.658868 USER=yifan97 FILE=/scratch1/09397/yifan97/cantilever/cantilever_3d_1.4_densified.tar.gz2 BUFFER=235104 BLOCK=4194304 NBYTES=218103808 VOLUME=/ STREAMS=4 STRIPES=1 DEST=[141.211.212.174] TYPE=RETR CODE=226 TASKID=0f7ec55a-ab48-11ee-be6c-f11924dc2d22"
 #
+# use TYPE=STOR or TYPE=RETR to determine source/dest
+# if TYPE=STOR, then src_ip = DEST, and dst_ip = HOST
+# if TYPE=RETR, then dst_ip = DEST, and src_ip = HOST
+# ignore other types
 
 import argparse, sys, json, socket
 from datetime import datetime
 
-MIN_XFER_SIZE = 10000  # ignore tiny files
+MIN_TASK_SIZE = 10000  # ignore tiny tasks
 
 # remove NetLogger fields not needed and/or privacy reasons
-keys_to_remove = ['PROG', 'USER', 'NL.EVNT', 'FILE', 'VOLUME', 'TYPE', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
+keys_to_remove = ['PROG', 'USER', 'NL.EVNT', 'FILE', 'VOLUME', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
 
 def combine_by_taskID(transfer_list):
     # this routine does the following:
@@ -83,7 +87,6 @@ def convert_globus_to_netflow(input_file):
     print("Loading file: ", input_file)
 
     data_list = []  # List to store dictionaries
-    num_skipped = 0
 
     with open(input_file, 'r') as file:
         # Iterate through each line in the file
@@ -115,16 +118,9 @@ def convert_globus_to_netflow(input_file):
                 if key in transfer:
                     removed_value = transfer.pop(key)
  
-            # Append the dictionary to the list
-            if transfer['NBYTES'] > MIN_XFER_SIZE:
-                #print ("appending: ", transfer)
-                data_list.append(transfer)
-            else:
-                num_skipped += 1
-                #print ("Skipping small file transfer of %d bytes" % transfer['NBYTES'])
+            #print ("appending: ", transfer)
+            data_list.append(transfer)
 
-
-    print ("Skipped a total of %d small transfers" % num_skipped)
 
     # Count the number of unique task IDs
     unique_task_ids = set(task['TASKID'] for task in data_list)
@@ -147,18 +143,32 @@ def output_to_json(result_list, output_file):
     hostname = result_list[0]['HOST'] # all logs have the same source IP
     #print ("   Looking up IP for host: ", hostname)
     try:
-        src_ip = socket.gethostbyname(hostname)
-        #print(f'The IPv4 address of {hostname} is {src_ip}')
+        ip = socket.gethostbyname(hostname)
+        #print(f'The IPv4 address of {hostname} is {ip}')
     except socket.error as e:
         print(f'Error: {e}')
 
     # Convert DataFrame to the desired JSON structure 
     netsage_format_list = []
+    num_skipped = 0
 
     for item in result_list:
+
+       # ignore tiny tasks
+       if item['NBYTES'] < MIN_TASK_SIZE:
+           num_skipped += 1
+           continue
+
        # add items to match netflow format
        task = {}
-       dst_ip = item['DEST'].replace("[", "").replace("]", "")
+       if item['TYPE'] == 'RETR':
+           src_ip = ip
+           dst_ip = item['DEST'].replace("[", "").replace("]", "")
+       elif item['TYPE'] == 'STOR':
+           src_ip = item['DEST'].replace("[", "").replace("]", "")
+           dst_ip = ip
+       else:
+           continue   # skip lines with other TYPE values
 
        # Convert the time string to a datetime object
        dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
@@ -200,6 +210,7 @@ def output_to_json(result_list, output_file):
 
        netsage_format_list.append(task)
 
+    print ("Skipped a total of %d small tasks" % num_skipped)
 
     print(f'Done Converting to JSON.... ')
     #print (netsage_format_list)
