@@ -7,6 +7,7 @@
 #
 
 import argparse, sys, json, socket
+from datetime import datetime
 
 MIN_XFER_SIZE = 10000  # ignore tiny files
 
@@ -158,7 +159,13 @@ def output_to_json(result_list, output_file):
        # add items to match netflow format
        task = {}
        dst_ip = item['DEST'].replace("[", "").replace("]", "")
-       task['@timestamp'] = item['end_time']
+
+       # Convert the time string to a datetime object
+       dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       # Format the datetime object as a string for logstash
+       ts = dt_object.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
+
+       task['@timestamp'] = ts
        task['meta'] = {
            "flow_type": "globus",
            "src_port": 443,
@@ -191,7 +198,9 @@ def output_to_json(result_list, output_file):
     #print (netsage_format_list)
 
     with open(output_file, 'w') as json_file:
-         json.dump(netsage_format_list, json_file, indent=2)
+         #json.dump(netsage_format_list, json_file, indent=2)
+        for record in netsage_format_list:
+             json_file.write(json.dumps(record) + '\n')
 
     print(f'\nConversion completed. NetFlow-compatible file saved to {output_file}')
 
