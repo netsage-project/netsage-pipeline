@@ -1,10 +1,11 @@
-Summary: GRNOC NetSage Flow-Processing Pipeline
+Summary: NetSage Flow-Processing Pipeline
 Name: grnoc-netsage-deidentifier
-Version: 1.2.9
+Version: 2.0.0
+  # update Version here, in conf-logstash/98-post-process.conf, lib/GRNOC/NetSage/Deidentifier.pm
 Release: 1%{?dist}
 License: GRNOC
 Group: Measurement
-URL: http://globalnoc.iu.edu
+URL: http://tacc.utexas.edu
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
@@ -136,12 +137,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/logstash/conf.d/01-input-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/01-input-multiline-json-file.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/01-input-jsonfile.conf.disabled
+%config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
+%config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-rabbit.conf
 %config(noreplace) /etc/logstash/conf.d/99-output-jsonlog.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-multiline-json.conf.disabled
 %config(noreplace) /etc/logstash/conf.d/99-output-elastic.conf.disabled
-%config(noreplace) /etc/logstash/conf.d/15-sensor-specific-changes.conf
-%config(noreplace) /etc/logstash/conf.d/40-aggregation.conf
 # logstash files that can be updated automatically (if there are updates, the old ver will be in .rpmsave)
 %config /etc/logstash/conf.d/10-preliminaries.conf
 %config /etc/logstash/conf.d/20-add-id.conf
@@ -149,9 +150,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/logstash/conf.d/50-asn.conf
 %config /etc/logstash/conf.d/53-caida-org.conf
 %config /etc/logstash/conf.d/55-member-orgs.conf
+%config /etc/logstash/conf.d/57-ip-version.conf
 %config /etc/logstash/conf.d/60-scireg-tagging-fakegeoip.conf
 %config /etc/logstash/conf.d/70-deidentify.conf
-%config /etc/logstash/conf.d/80-privatize-org.conf
+%config /etc/logstash/conf.d/80-privatize-org.conf.disabled
 %config /etc/logstash/conf.d/88-preferred-location-org.conf
 %config /etc/logstash/conf.d/90-additional-fields.conf
 %config /etc/logstash/conf.d/95-cleanup.conf

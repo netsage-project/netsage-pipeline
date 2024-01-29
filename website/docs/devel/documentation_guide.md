@@ -32,9 +32,9 @@ $ cd netsage-pipeline/website
 $ yarn install
 ```
 
-### Local Development
+### If Local Development
 
-If you are working on your local machine, you can view changes to the docs in a browser as you work. Use the following commands to generate the static website content (gets written into the build directory), then start a local development server and open up a browser window in which to view the docs. Most changes you make will be reflected live without having to restart the server.
+If you are working on your local machine, rather than sshing into a host, you can view changes to the docs in a browser as you work. Use the following commands to generate the static website content (gets written into the build directory), then start a local development server and open up a browser window in which to view the docs. Most changes you make will be reflected live without having to restart the server.
 ```
 $ yarn build  
 $ yarn start
@@ -46,6 +46,7 @@ Whether on a local machine or a linux host, to make changes, edit the files in w
 When finished, git add, git commit, git push, as usual.
 Repeat as needed.
 
+To view the changes you've made with some formatting, just go to the file on github in a browser. To see all of the formatting, read the "Deploying Docs to github.io" section below.
 
 ### Tagging a New release
 
@@ -80,15 +81,20 @@ $ USE_SSH="true" GIT_USER="your-username" yarn deploy
 ```
 replacing your-username.  This sets a couple env vars then runs 'yarn deploy' which runs 'docusaurus deploy' (see package.json) which pushes the static website created to url: "https://netsage-project.github.io" (see docusaurus.config.js) 
 
+NOTE: You need to have created ssh keys on the host you are running this on and added them to your github account. 
+
 ### Removing a version 
 
-To remove version 1.2.6 for example.
+To remove version 1.2.6 of the docs, for example,
 
 we need to: 
 
   * update versions.json to remove the reference
   * remove the versioned_docs/version-1.2.6
   * remove versioned_sidebars/version-1.2.6-sidebars.json
+  * change 1.2.6 in docusaurus.config.js back to 1.2.5
+
+Then git add, commit, and push
 
 ## If Using Docker
 

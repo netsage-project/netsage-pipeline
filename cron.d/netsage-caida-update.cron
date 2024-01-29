@@ -10,4 +10,4 @@ MAILTO=root
 
 ## UNCOMMENT AFTER FILLING IN USERNAME AND PW
 # on Wednesdays at 23:40 UTC
-##40 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/CAIDA-org-lookup.csv -q -O /var/lib/grnoc/netsage/newCAIDA.mmdb  &&  mv /var/lib/grnoc/netsage/newCAIDA.mmdb /var/lib/grnoc/netsage/CAIDA-org-lookup.csv && touch /var/lib/grnoc/netsage/CAIDA-org-lookup.csv
+##40 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://epoc-rabbitmq.tacc.utexas.edu/NetSage/CAIDA-org-lookup.csv -q -O /var/lib/grnoc/netsage/newCAIDA.mmdb  &&  mv /var/lib/grnoc/netsage/newCAIDA.mmdb /var/lib/grnoc/netsage/CAIDA-org-lookup.csv && touch /var/lib/grnoc/netsage/CAIDA-org-lookup.csv

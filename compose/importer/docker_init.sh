@@ -7,14 +7,14 @@ mkdir -p $DATA_DIR && echo "Cache directory ${DATA_DIR} created" || echo "cache 
 
 FILES="GeoLite2-ASN scireg GeoLite2-City"
 CAIDA_FILES="CAIDA-org-lookup"
-RUBY_DATA="FRGP-members-list ilight-members-list"
+RUBY_DATA="FRGP-members-list ilight-members-list onenet-members-list"
 
 function downloadFiles() {
     ext=$1
     shift 1
     ## Download all files to temporary destination
     for f in $@; do
-        wget https://scienceregistry.grnoc.iu.edu/exported/${f}.${ext} --no-use-server-timestamps -q -O ${DATA_DIR}/$f.tmp
+        wget https://epoc-rabbitmq.tacc.utexas.edu/NetSage/${f}.${ext} --no-use-server-timestamps -q -O ${DATA_DIR}/$f.tmp
     done
 
     ## Rename the temporary files to replace the production ones.

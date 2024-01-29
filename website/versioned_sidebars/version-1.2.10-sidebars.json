@@ -1,0 +1,89 @@
+{
+  "version-1.2.10/Pipeline": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Pipeline",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/intro"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/tstat"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/nfdump"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/importer"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/logstash"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/pipeline/elastic"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Deployment",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/choose_install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/bare_metal_install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/docker_install_simple"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/docker_install_advanced"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/docker_upgrade"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/deploy/docker_troubleshoot"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Development",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.10/devel/dev_dataset"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/devel/docker_dev_guide"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/devel/docusaurus"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.10/devel/docker_dev_tag"
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,10 @@ MAILTO=root
 
 ## UNCOMMENT AFTER FILLING IN USERNAME AND PW
 # on Wednesdays at 23:45 UTC
-##45 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/FRGP-members-list.rb -q -O /etc/logstash/conf.d/support/newFRGP.rb  &&  mv /etc/logstash/conf.d/support/newFRGP.rb /etc/logstash/conf.d/support/FRGP-members-list.rb && touch /etc/logstash/conf.d/support/FRGP-members-list.rb
+##45 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://epoc-rabbitmq.tacc.utexas.edu/NetSage/FRGP-members-list.rb -q -O /etc/logstash/conf.d/support/newFRGP.rb  &&  mv /etc/logstash/conf.d/support/newFRGP.rb /etc/logstash/conf.d/support/FRGP-members-list.rb && touch /etc/logstash/conf.d/support/FRGP-members-list.rb
 
 # on Wednesdays at 23:50 UTC
-##50 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://scienceregistry.grnoc.iu.edu/exported/ilight-members-list.rb -q -O /etc/logstash/conf.d/support/newilight.rb  &&  mv /etc/logstash/conf.d/support/newilight.rb /etc/logstash/conf.d/support/ilight-members-list.rb && touch /etc/logstash/conf.d/support/ilight-members-list.rb
+##50 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://epoc-rabbitmq.tacc.utexas.edu/NetSage/ilight-members-list.rb -q -O /etc/logstash/conf.d/support/newilight.rb  &&  mv /etc/logstash/conf.d/support/newilight.rb /etc/logstash/conf.d/support/ilight-members-list.rb && touch /etc/logstash/conf.d/support/ilight-members-list.rb
+
+# on Wednesdays at 23:55 UTC
+##55 23 * * 3 root /usr/bin/wget --user xxx --password xxx  https://epoc-rabbitmq.tacc.utexas.edu/NetSage/onenet-members-list.rb -q -O /etc/logstash/conf.d/support/newonenet.rb  &&  mv /etc/logstash/conf.d/support/newonenet.rb /etc/logstash/conf.d/support/onenet-members-list.rb && touch /etc/logstash/conf.d/support/onenet-members-list.rb

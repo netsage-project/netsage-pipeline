@@ -13,6 +13,7 @@ module.exports = {
       "deploy/bare_metal_install",
       "deploy/docker_install_simple",
       "deploy/docker_install_advanced",
+      "deploy/docker_upgrade",
       "deploy/docker_troubleshoot",
     ],
     Development: [

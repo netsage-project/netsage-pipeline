@@ -1,5 +1,4 @@
 {
-    "^AMPATH.*": "AMPATH",
     "^.*cenic.*": "CENIC",
     "^FRGP.*": "FRGP",
     "^GEANT.*": "GEANT",
@@ -11,9 +10,11 @@
     "^GigaPOP.*": "I-Light",
     "^NEAAR.*": "NEAAR",
     "^NEA3R.*": "NEAAR",
+    "^NORDUnet.*": "NORDUnet",
     "^.*nersc.*": "NERSC",
     "^.*pacificwave.*": "PacWave",
     "^.*pnw-gigapop\\.net$": "PacWave",
+    "^LEARN.*": "LEARN",
     "^PennREN.*": "PennREN",
     "^SANReN.*": "SANReN",
     "^SingAREN.*": "SingAREN",

@@ -1,20 +1,28 @@
 version: "3.7"
 services:
-  logstash:
-    image: netsage/pipeline_logstash:latest
-  ## If you need to allocate more than 1GB (default) override the JMV options
-  #    volumes:
-  #      - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
-  importer:
-    image: netsage/pipeline_importer:latest
-  ## If you are using custom collectors you need to create this file and specify any addition ENV flags to identify the collector source
-  #   volumes:
-  #      - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
 
-  ## Please remove or add any additional collectors here.  Default setup should work fine without any custom config.
-  ## You may remove any collectors that are not needed.
+  logstash:
+    image: tacc/pipeline_logstash:v2.0.0
+    ## If you need to override JVM options, uncomment these lines
+    #   volumes:
+    #     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
+
+  importer:
+    image: tacc/pipeline_importer:v2.0.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10g"
+        max-file: "6"
+    ## If you add additional collectors or need to make other changes in the importer "shared" config, 
+    ## use the netsage_override.xml file and uncomment the following lines 
+    #   volumes:
+    #     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+
+  ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
+  ## Remove any collectors that do not need to be running.
   sflow-collector:
-    image: netsage/nfdump-collector:alpine-nightly
+    image: tacc/netsage-nfdump-collector:alpine-1.6.23
     restart: always
     command: sfcapd -T all -l /data -S 1 -w -z -p 9998
     volumes:
@@ -22,7 +30,7 @@ services:
     ports:
       - "9998:9998/udp"
   netflow-collector:
-    image: netsage/nfdump-collector:alpine-nightly
+    image: tacc/netsage-nfdump-collector:alpine-1.6.23
     command: nfcapd -T all -l /data -S 1 -w -z -p 9999
     ports:
       - "9999:9999/udp"
