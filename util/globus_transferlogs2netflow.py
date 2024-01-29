@@ -106,7 +106,16 @@ def convert_globus_to_netflow(input_file):
 
             # simple strip of nl.strip('"') not working, but this works. Not sure why this is needed
             # Strip any quotes
-            transfer = {key: value.strip('"') for key, value in (pair.split('=') for pair in pairs)}
+
+            transfer = {}
+            for pair in pairs:
+                try:
+                    key, value = pair.split('=')
+                    transfer[key.strip()] = value.strip('"')
+                except ValueError:
+                    #print(f"Error splitting pair: {pair}")
+                    # note: filename might have a space, and causing this to fail. Just skip and continue
+                    continue
 
             transfer['NBYTES'] = int(transfer['NBYTES'])
             transfer['DATE'] = float(transfer['DATE'])
