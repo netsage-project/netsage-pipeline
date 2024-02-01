@@ -16,7 +16,7 @@ from datetime import datetime
 MIN_TASK_SIZE = 10000  # ignore tiny tasks
 
 # remove NetLogger fields not needed and/or privacy reasons
-keys_to_remove = ['PROG', 'USER', 'NL.EVNT', 'FILE', 'VOLUME', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
+keys_to_remove = ['PROG', 'NL.EVNT', 'FILE', 'VOLUME', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
 
 def combine_by_taskID(transfer_list):
     # this routine does the following:
@@ -178,15 +178,29 @@ def output_to_json(result_list, output_file):
            dst_ip = ip
        else:
            continue   # skip lines with other TYPE values
+       user = item['USER']
 
        # Convert the time string to a datetime object
-       dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       try:
+           dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       except:
+           # for some reason, Globus logs might have a timestamp like 20240130202460.0 (ends in 60) which is not valid
+           # so need to check if seconds end with "60"
+           if dt_object.second == 60:
+               # Add 1 to hours
+               dt_object += timedelta(hours=1)
+               # Set seconds to 0
+               dt_object = dt_object.replace(second=0)
+           else: # some other error
+               print ("Error getting date_time object from end_time string: ", item['end_time'])
+               continue
        # Format the datetime object as a string for logstash
        ts = dt_object.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
 
        task['@timestamp'] = ts
        task['meta'] = {
            "flow_type": "globus",
+           "user": user, 
            "src_port": 443,
            "dst_port": 50001,
            "sensor_id": "Globus Logs",
@@ -209,11 +223,19 @@ def output_to_json(result_list, output_file):
        task['type'] = "globus"
 
        # Convert the time string to a datetime object
-       dt_object = datetime.strptime(str(item['start_time']), "%Y%m%d%H%M%S.%f")
+       try:
+          dt_object = datetime.strptime(str(item['start_time']), "%Y%m%d%H%M%S.%f")
+       except:
+          print("Error with start timestamp: ", item['start_time'])
+          continue
        # Convert datetime object to Unix timestamp
        unix_timestamp = dt_object.timestamp()
        task['start'] = unix_timestamp
-       dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       try:
+           dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
+       except:
+          print("Error with end timestamp: ", item['end_time'])
+          continue
        unix_timestamp = dt_object.timestamp()
        task['end'] = unix_timestamp
 
