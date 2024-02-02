@@ -18,6 +18,18 @@ MIN_TASK_SIZE = 10000  # ignore tiny tasks
 # remove NetLogger fields not needed and/or privacy reasons
 keys_to_remove = ['PROG', 'NL.EVNT', 'FILE', 'VOLUME', 'CODE', 'STRIPES', 'retrans', 'BUFFER', 'BLOCK'] 
 
+def extract_nl_from_line(input_string):
+    start_index = input_string.find("DATE")
+    if start_index == -1:
+        return None  # "DATE" substring not found in the input string
+    # grab everying up untill '"'
+    end_index = input_string.find('"', start_index)
+    if end_index == -1:
+        return None  # Closing '"' not found after "DATE"
+    result_string = input_string[start_index:end_index]
+    return result_string.strip()
+
+
 def combine_by_taskID(transfer_list):
     # this routine does the following:
     # 1) sorts the data by taskID
@@ -48,6 +60,7 @@ def combine_by_taskID(transfer_list):
         prev_task_id = task_id
 
     # Next, loop over transfer_list and sum 'NBYTES' while including other data items, including start/end
+    # also add start/end times and duration
     prev_task_id = -1
     for task in sorted_list:
         #print ("combining:" , task)
@@ -59,6 +72,10 @@ def combine_by_taskID(transfer_list):
                 print (f"    Done with this taskID: # files = {combined_task['NUM_FILES']}, total bytes = {combined_task['NBYTES']}")
                 result_list.append(combined_task) # append the prevous task, as done with it
                 #print ("adding combined_task to list: ", combined_task)
+            duration = times_by_taskid[task_id]['end'] - times_by_taskid[task_id]['start']
+            if duration == 0:
+                print("Skipping Task with duration = 0")
+                continue
             print ("*** got new taskID: ", task_id)
             # Create a new dictionary for each new task
             combined_task = {'TASKID': task_id, 'NBYTES': 0, 'NUM_FILES': 0}
@@ -66,7 +83,7 @@ def combine_by_taskID(transfer_list):
             # add times and move on to next task
             combined_task['start_time'] = times_by_taskid[task_id]['start']
             combined_task['end_time'] = times_by_taskid[task_id]['end']
-            combined_task['duration'] = times_by_taskid[task_id]['end'] - times_by_taskid[task_id]['start']
+            combined_task['duration'] = duration
 
         combined_task['NBYTES'] += nbytes
         combined_task['NUM_FILES'] += 1
@@ -91,44 +108,50 @@ def convert_globus_to_netflow(input_file):
     with open(input_file, 'r') as file:
         # Iterate through each line in the file
         for line in file:
-            #print ("parsing line: ", line)
-            # strip splunk added stuff from NetLogger line
-            date_index = line.find("DATE")
-            if date_index != -1:
-               nl = line[date_index:]
-            else:
-               #print ("DATE not found")
-               continue   # skip lines not containing 'DATE'
-
-            # Split the string into individual name-value pairs
-            pairs = nl.split()
-            #print ("pairs: ", pairs)
-
-            # simple strip of nl.strip('"') not working, but this works. Not sure why this is needed
-            # Strip any quotes
-
-            transfer = {}
-            for pair in pairs:
-                try:
-                    key, value = pair.split('=')
-                    transfer[key.strip()] = value.strip('"')
-                except ValueError:
-                    #print(f"Error splitting pair: {pair}")
-                    # note: filename might have a space, and causing this to fail. Just skip and continue
+            # catch any errors and continue to next line
+            try:
+                #print ("parsing line: ", line)
+                # strip splunk added stuff from NetLogger line
+                nl = extract_nl_from_line(line)
+                if not nl:
+                    # skip lines that do not contain NetLogger format
+                    #print("Could not extract netlogger log from the input string.", line)
                     continue
+                #else:
+                #    print("Extracted NetLogger info:", nl)
+    
+                # Split the string into individual name-value pairs
+                pairs = nl.split()
+                #print ("pairs: ", pairs)
+    
+                # simple strip of nl.strip('"') not working, but this works. Not sure why this is needed
+                # Strip any quotes
+    
+                transfer = {}
+                for pair in pairs:
+                    try:
+                        key, value = pair.split('=')
+                        transfer[key.strip()] = value.strip('"')
+                    except ValueError:
+                        #print(f"Error splitting pair: {pair}")
+                        # note: filename might have a space, and causing this to fail. Just skip and continue
+                        continue
+    
+                transfer['NBYTES'] = int(transfer['NBYTES'])
+                transfer['DATE'] = float(transfer['DATE'])
+                transfer['START'] = float(transfer['START'])
+    
+                #print ("transfer:", transfer)
 
-            transfer['NBYTES'] = int(transfer['NBYTES'])
-            transfer['DATE'] = float(transfer['DATE'])
-            transfer['START'] = float(transfer['START'])
-
-            #print ("transfer:", transfer)
-
-            for key in keys_to_remove: # clean up stuff no longer using
-                if key in transfer:
-                    removed_value = transfer.pop(key)
+                for key in keys_to_remove: # clean up stuff no longer using
+                    if key in transfer:
+                        removed_value = transfer.pop(key)
  
-            #print ("appending: ", transfer)
-            data_list.append(transfer)
+                #print ("appending: ", transfer)
+                data_list.append(transfer)
+            except:
+                print("Error parsing line: ", line)
+                continue
 
 
     # Count the number of unique task IDs
@@ -186,6 +209,7 @@ def output_to_json(result_list, output_file):
        except:
            # for some reason, Globus logs might have a timestamp like 20240130202460.0 (ends in 60) which is not valid
            # so need to check if seconds end with "60"
+           print ("Error! Invalid end_time: ", item['end_time'])
            if dt_object.second == 60:
                # Add 1 to hours
                dt_object += timedelta(hours=1)
@@ -226,7 +250,7 @@ def output_to_json(result_list, output_file):
        try:
           dt_object = datetime.strptime(str(item['start_time']), "%Y%m%d%H%M%S.%f")
        except:
-          print("Error with start timestamp: ", item['start_time'])
+          print("Error! invalid start timestamp: ", item['start_time'])
           continue
        # Convert datetime object to Unix timestamp
        unix_timestamp = dt_object.timestamp()
@@ -234,7 +258,7 @@ def output_to_json(result_list, output_file):
        try:
            dt_object = datetime.strptime(str(item['end_time']), "%Y%m%d%H%M%S.%f")
        except:
-          print("Error with end timestamp: ", item['end_time'])
+          print("Error! Invalid end timestamp: ", item['end_time'])
           continue
        unix_timestamp = dt_object.timestamp()
        task['end'] = unix_timestamp
