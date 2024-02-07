@@ -3,7 +3,7 @@
 # convert Globus transfer logs to format compatible with NetFlow collector
 #
 # expects logs to have the following values:
-# "DATE=20240107092754.223249 HOST=data1.frontera.tacc.utexas.edu PROG=globus-gridftp-server NL.EVNT=FTP_INFO START=20240107092753.658868 USER=yifan97 FILE=/scratch1/09397/yifan97/cantilever/cantilever_3d_1.4_densified.tar.gz2 BUFFER=235104 BLOCK=4194304 NBYTES=218103808 VOLUME=/ STREAMS=4 STRIPES=1 DEST=[141.211.212.174] TYPE=RETR CODE=226 TASKID=0f7ec55a-ab48-11ee-be6c-f11924dc2d22"
+# DATE=20240107092754.223249 HOST=data1.frontera.tacc.utexas.edu PROG=globus-gridftp-server NL.EVNT=FTP_INFO START=20240107092753.658868 USER=yifan97 FILE=/scratch1/09397/yifan97/cantilever/cantilever_3d_1.4_densified.tar.gz2 BUFFER=235104 BLOCK=4194304 NBYTES=218103808 VOLUME=/ STREAMS=4 STRIPES=1 DEST=[141.211.212.174] TYPE=RETR CODE=226 TASKID=0f7ec55a-ab48-11ee-be6c-f11924dc2d22
 #
 # use TYPE=STOR or TYPE=RETR to determine source/dest
 # if TYPE=STOR, then src_ip = DEST, and dst_ip = HOST
@@ -112,10 +112,11 @@ def convert_globus_to_netflow(input_file):
             try:
                 #print ("parsing line: ", line)
                 # strip splunk added stuff from NetLogger line
-                nl = extract_nl_from_line(line)
+                #nl = extract_nl_from_line(line) # no longer needed with new retrieval script
+                nl = line
                 if not nl:
                     # skip lines that do not contain NetLogger format
-                    #print("Could not extract netlogger log from the input string.", line)
+                    print("Could not extract netlogger log from the input string.", line)
                     continue
                 #else:
                 #    print("Extracted NetLogger info:", nl)
