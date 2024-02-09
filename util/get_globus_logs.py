@@ -16,7 +16,6 @@
 
 import sys
 import time
-import csv
 import splunklib.client as client
 import splunklib.results as results
 from datetime import datetime, timedelta
@@ -30,7 +29,8 @@ import os
 #
 ndays = "2"
 
-def main(config_file, output_dir):
+def main(config_file, output_dir, day_of_month=None):
+
     # Read configuration from config.ini file
     config = configparser.ConfigParser()
     try:
@@ -49,12 +49,17 @@ def main(config_file, output_dir):
         print ("Config file not found or missing fields! ", config_file)
         exit(1)
 
-    today = datetime.now()
-    yesterday = today - timedelta(days=1)
-    yesterday_str = yesterday.strftime("%Y-%m-%d")
+    # Compute the date for yesterday if no day is provided
+    if day_of_month is None:
+        today = datetime.now()
+        specified_date = today - timedelta(days=1)
+    else:
+        today = datetime.now()
+        specified_date = today.replace(day=day_of_month)
+    specified_date_str = specified_date.strftime("%Y-%m-%d")
 
     # Output file name
-    output_file = output_dir+"/globus_logs."+yesterday_str+".nl"
+    output_file = output_dir + "/globus_logs." + specified_date_str + ".nl"
     print("Saving results to file: ", output_file)
 
     file = open(output_file, mode='w')
@@ -67,13 +72,25 @@ def main(config_file, output_dir):
         password=password
     )
 
-    # midnight 'ndays' ago to midnight last night
-    #earliest_time =  "-2d@d" # midnight yesterday
-    earliest_time = "-"+ndays+"d@d"
-    kwargs_export = {"earliest_time": earliest_time,
-                     "latest_time": "-1d@d",
+ # Set up time range for the specified day
+    earliest_time = specified_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    latest_time = specified_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+    earliest_time_str = earliest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
+    latest_time_str = latest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
+    print (f"Getting globus logs for times %s to %s" % (earliest_time_str, latest_time_str))
+
+    kwargs_export = {"earliest_time": earliest_time_str,
+                     "latest_time": latest_time_str,
                      "search_mode": "normal",
                      "output_mode": "json"}
+
+#    # midnight 'ndays' ago to midnight last night
+#    #earliest_time =  "-2d@d" # midnight yesterday
+#    earliest_time = "-"+ndays+"d@d"
+#    kwargs_export = {"earliest_time": earliest_time,
+#                     "latest_time": "-1d@d",
+#                     "search_mode": "normal",
+#                     "output_mode": "json"}
 
     searchquery_export = "search index=globust"
 
@@ -105,9 +122,11 @@ if __name__ == "__main__":
                         help='config file containing user/password, default = splunk_config.ini')
     parser.add_argument('-o', '--outputdir', type=str, default='.',
                         help='output directory, default = .')
+    parser.add_argument('-d', '--day', type=int, 
+                        help='day of the month to get logs (default = yesterday)')
     args = parser.parse_args()
 
-    main(args.config, args.outputdir)
+    main(args.config, args.outputdir, args.day)
 
     print("\nDone.")
 
