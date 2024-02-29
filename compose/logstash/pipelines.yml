@@ -1,2 +1,6 @@
 - pipeline.id: elastiflow
   path.config: "/usr/share/logstash/pipeline/*.conf"
+  # set one of these...
+  pipeline.ecs_compatibility: v8
+  #pipeline.ecs_compatibility: disabled
+
