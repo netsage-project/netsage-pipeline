@@ -1,0 +1,19 @@
+# Mainly for dev work.
+# Write events as readable json (ie, with new-lines; only fields as specified below between single quotes).
+# The output file can be read with 01-input-multiline-json.conf.
+# We need "append" to write all events to the file, but delete the file in-between runs or it'll keep appending.
+# (The example output fields are to directly write out events read from the "raw" rabbit queue.)
+output {
+    file {
+        path => "/data/output_data/test-data.json"
+ 	codec => line {format => 
+        '{ "start":%{start}, "end":%{end},  "interval":%{interval},
+           "meta":{ "sensor_id":"%{[meta][sensor_id]}", "protocol":"%{[meta][protocol]}", "flow_type":"%{[meta][flow_type]}", 
+           "src_ip":"%{[meta][src_ip]}", "src_port":%{[meta][src_port]}, "src_asn":%{[meta][src_asn]}, "src_ifindex":%{[meta][src_ifindex]},
+           "dst_ip":"%{[meta][dst_ip]}", "dst_port":%{[meta][dst_port]}, "dst_asn":%{[meta][dst_asn]}, "dst_ifindex":%{[meta][dst_ifindex]},
+           "src_project_names":"%{[meta][scireg][src][project_names]}", "dst_project_names":"%{[meta][scireg][dst][project_names]},
+           "src_discipline":"%{[meta][scireg][src][discipline]}", "dst_discipline":"%{[meta][scireg][dst][discipline]} },
+           "values":%{values} } '}
+        write_behavior => append
+      }
+}
