@@ -1,8 +1,9 @@
+# output json blob of everything being sent to rabbit queue / elastic
 output {
     file {
-        path => "/data/output/test.json"
-         codec => json_lines 
-         #codec => json
-         write_behavior => overwrite
-      }
+        path => "/data/output_data/test.json"
+        codec => json_lines 
+        #codec => json
+        write_behavior => overwrite
+    }
 }
