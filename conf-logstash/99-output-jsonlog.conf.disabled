@@ -1,9 +1,8 @@
 # output json blob of everything being sent to rabbit queue / elastic
+# note: you can multiple outputs, and run this and output to rabbit at the same time
 output {
     file {
-        path => "/data/output_data/test.json"
+        path => "/data/output_data/pipeline_test.json"
         codec => json_lines 
-        #codec => json
-        write_behavior => overwrite
     }
 }
