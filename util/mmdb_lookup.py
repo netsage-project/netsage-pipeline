@@ -5,7 +5,7 @@
 #
 # this program is mainly used for testing/debugging
 
-# note: most everything is shoved in 'city' as a bit JSON blob
+# note: most everything is shoved in 'city' as a big JSON blob
 # 
 
 import argparse
