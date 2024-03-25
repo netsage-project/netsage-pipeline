@@ -66,6 +66,7 @@ def combine_by_taskID(transfer_list):
         #print ("combining:" , task)
         task_id = task.get('TASKID')
         nbytes = task.get('NBYTES', 0)
+        host = task.get('HOST') # want to capture host where logs where collected too
 
         if task_id != prev_task_id:
             if prev_task_id != -1: # not the first time
@@ -173,15 +174,6 @@ def output_to_json(result_list, output_file):
 
     print(f'\nConverting to JSON.... ')
 
-    hostname = result_list[0]['HOST'] # all logs have the same source IP
-    #print ("   Looking up IP for host: ", hostname)
-    try:
-        ip = socket.gethostbyname(hostname)
-        #print(f'The IPv4 address of {hostname} is {ip}')
-    except socket.error as e:
-        print(f'Error: {e}')
-
-    # Convert DataFrame to the desired JSON structure 
     netsage_format_list = []
     num_skipped = 0
 
@@ -192,6 +184,15 @@ def output_to_json(result_list, output_file):
            num_skipped += 1
            continue
 
+       hostname = result_list[0]['HOST'] 
+       #print ("   Looking up IP for host: ", hostname)
+       try:
+           ip = socket.gethostbyname(hostname)
+           #print(f'The IPv4 address of {hostname} is {ip}')
+       except socket.error as e:
+           print(f'Error: {e}')
+
+    # Convert DataFrame to the desired JSON structure 
        # add items to match netflow format
        task = {}
        if item['TYPE'] == 'RETR':
@@ -233,6 +234,7 @@ def output_to_json(result_list, output_file):
            "protocol": "tcp",
            "num_files": item['NUM_FILES'],
            "dst_ip": dst_ip,
+           "globus_host": hostname,
            "src_asn": 0,
            "dst_asn": 0
        }
