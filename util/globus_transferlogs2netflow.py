@@ -229,12 +229,11 @@ def output_to_json(result_list, output_file):
            "user": user, 
            "src_port": 443,
            "dst_port": 50001,
-           "sensor_id": "Globus Logs",
+           "sensor_id": hostname,
            "src_ip": src_ip,
            "protocol": "tcp",
            "num_files": item['NUM_FILES'],
            "dst_ip": dst_ip,
-           "globus_host": hostname,
            "src_asn": 0,
            "dst_asn": 0
        }
