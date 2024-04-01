@@ -1,6 +1,7 @@
-FROM docker.elastic.co/logstash/logstash:7.16.2
-#newer version tested and NOT working
-#FROM logstash:8.9.1
+# older version (works)
+#FROM docker.elastic.co/logstash/logstash:7.16.2
+#newer version, testing
+FROM logstash:8.12.2
 
 #Create symlink so can use paths from production with logstash docker defaults
 USER root
