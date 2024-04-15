@@ -79,7 +79,7 @@ def filter_fields(input_file, output_json_file, output_xls_file):
         json.dump(filtered_data, f, indent=2)
 
     workbook.save(output_xls_file)
-    return (scireg_id)
+    return (row)
 
 if __name__ == "__main__":
     input_file = "scireg.json"
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     cnt = filter_fields(input_file, output_json_file, output_xls_file)
 
     total_32s = ping_suceeded + ping_failed
-    print("Found %d subnets, including %d /32s, %d are pingable, %d are not" % (total_32s, ping_suceeded, ping_failed))
+    print("Found %d subnets, including %d /32s, %d are pingable, %d are not" % (cnt, total_32s, ping_suceeded, ping_failed))
     print("Results written to files: JSON - %s, XLS - %s" % (output_json_file, output_xls_file))
     print("Done.")
 
