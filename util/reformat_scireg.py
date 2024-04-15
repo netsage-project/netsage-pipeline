@@ -2,6 +2,8 @@
 
 # read old style of Science Registry JSON, and convert to new format
 # also create xls file for Jin
+#
+# requires this package: pip install xlwt
 
 import json
 import subprocess
@@ -31,9 +33,10 @@ def ping_host(address):
 def filter_fields(input_file, output_json_file, output_xls_file):
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet("Data")
+    scireg_id = 1  # give each entry a unique ID 
 
     # Column headers for XLS file
-    headers = ["org_name", "org_abbr", "address", "resource_name", "is_pingable"]
+    headers = ["org_name", "org_abbr", "address", "resource_name", "is_pingable", "contact_email"]
     for col, header in enumerate(headers):
         sheet.write(0, col, header)
 
@@ -50,7 +53,7 @@ def filter_fields(input_file, output_json_file, output_xls_file):
             resources.append({
                 "address": address,
                 "resource_name": item.get("resource", ""),
-                "is_pingable": is_pingable
+                "is_pingable": is_pingable,
             })
             sheet.write(row, 0, item.get("org_name", ""))
             sheet.write(row, 1, item.get("org_abbr", ""))
@@ -65,25 +68,30 @@ def filter_fields(input_file, output_json_file, output_xls_file):
             "discipline": item.get("discipline", ""),
             "latitude": item.get("latitude", ""),
             "longitude": item.get("longitude", ""),
+            "scireg_id": scireg_id,
+            "contact_email": "",
             "resources": resources
         }
         filtered_data.append(filtered_item)
+        scireg_id += 1
 
     with open(output_json_file, 'w') as f:
         json.dump(filtered_data, f, indent=2)
 
     workbook.save(output_xls_file)
-
-    total_32s = ping_suceeded + ping_failed
-    print("Found %d /32s, %d are pingable, %d are not" % (total_32s, ping_suceeded, ping_failed))
-    print("Results written to files: JSON - %s, XLS - %s" % (output_json_file, output_xls_file))
-    print("Done.")
+    return (scireg_id)
 
 if __name__ == "__main__":
     input_file = "scireg.json"
     output_json_file = "new_scireg.json"
     output_xls_file = "new_scireg.xls"
 
-    filter_fields(input_file, output_json_file, output_xls_file)
+    cnt = filter_fields(input_file, output_json_file, output_xls_file)
+
+    total_32s = ping_suceeded + ping_failed
+    print("Found %d subnets, including %d /32s, %d are pingable, %d are not" % (total_32s, ping_suceeded, ping_failed))
+    print("Results written to files: JSON - %s, XLS - %s" % (output_json_file, output_xls_file))
+    print("Done.")
+
 
 
