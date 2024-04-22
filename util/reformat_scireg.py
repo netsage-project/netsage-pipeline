@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
 # read old style of Science Registry JSON, and convert to new format
-# also create xls file for for adding to a Google Sheet for editing
+# also create csv file for for adding to a Google Sheet for editing
 #
-# requires this package: pip install xlwt
-#
-# To Do: 
-#   more testing
 
 import json
 import subprocess
@@ -112,6 +108,9 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
             #print ("")
             filtered_data.append(filtered_item)
             scireg_id += 1
+
+    # Sort the filtered_data by discipline
+    filtered_data.sort(key=lambda x: x["discipline"])
 
     with open(output_json_file, 'w') as f:
         json.dump(filtered_data, f, indent=2)
