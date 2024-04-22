@@ -136,17 +136,22 @@ def write_to_csv(data, output_csv):
             for resource in entry.get('resources', []):
                 resource_address = resource.get('address', '')
                 resource_name = resource.get('resource_name', '')
+                if resource_name:
+                     resource_name = resource_name.strip()
                 is_pingable = resource.get('is_pingable', '')
                 #projects = json.dumps(resource.get('projects', ''))  # Serialize JSON object to string
                 for project in resource.get('projects', []):
                     project_name = project.get('project_name', '')
                     project_abbr = project.get('project_abbr', '')
                     if project_abbr == None:
-                        # Extract text between parentheses in project_name using regular expression
-                        match = re.search(r'\((.*?)\)', project_name)
-                        project_abbr = match.group(1) if match else ''
-                        #print ("Extracting project abbr from project name: ", project_abbr)
-                        project_name = re.sub(r'\(.*?\)', '', project_name)
+                        if project_name:
+                            # Extract text between parentheses in project_name using regular expression
+                            match = re.search(r'\((.*?)\)', project_name)
+                            project_abbr = match.group(1) if match else ''
+                            #print ("Extracting project abbr from project name: ", project_abbr)
+                            project_name = re.sub(r'\(.*?\)', '', project_name)
+                            if project_name:
+                                project_name = project_name.strip()
 
                     writer.writerow({
                         'org_name': org_name,
@@ -154,9 +159,9 @@ def write_to_csv(data, output_csv):
                         'discipline': discipline,
                         'contact_email': contact_email,
                         'resource_address': resource_address,
-                        'resource_name': resource_name.strip(),
+                        'resource_name': resource_name(),
                         'is_pingable': is_pingable,
-                        'project_name': project_name.strip(),
+                        'project_name': project_name,
                         'project_abbr': project_abbr
                 })
 
