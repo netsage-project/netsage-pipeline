@@ -177,7 +177,7 @@ def write_to_csv(data, output_csv):
                         'discipline': discipline,
                         'contact_email': contact_email,
                         'resource_address': resource_address,
-                        'resource_name': resource_name(),
+                        'resource_name': resource_name,
                         'is_pingable': is_pingable,
                         'project_name': project_name,
                         'project_abbr': project_abbr
