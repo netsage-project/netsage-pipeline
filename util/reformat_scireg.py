@@ -8,6 +8,7 @@ import json
 import subprocess
 import csv
 import re
+import ipaddress
 
 ping_succeeded = 0
 ping_failed = 0
@@ -43,6 +44,19 @@ def ping_host(address):
     else:
         return 2  # For non /32 addresses, set is_pingable to 2
 
+def extract_ip_subnet(ip_address):
+    # gets the first part of ipaddress: X.X.X.0
+    try:
+        ip_network = ipaddress.ip_network(ip_address, strict=False)
+        # Get the network address and convert it to string
+        network_address = str(ip_network.network_address)
+        # Replace the last octet with 0
+        network_address_parts = network_address.split('.')
+        network_address_parts[-1] = '0'
+        return '.'.join(network_address_parts)
+
+    except ValueError:
+        return None
 
 
 def filter_fields(input_file, output_json_file, skipped_json_file):
@@ -50,20 +64,22 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
     skip_cnt = 0
     filtered_data = []
     skipped_data = []
-    org_address_count = {}  # Dictionary to store address count for each org_name
+    subnet_address_count = {}  # Dictionary to store address count for each subnet (x.x.x.0)
 
     with open(input_file, 'r') as f:
         data = json.load(f)
 
     for item in data:
         org_name = item.get("org_name", "")
-        org_address_count.setdefault(org_name, 0)  # Initialize count for org_name if not already present
         resources = []
 
         for address in item.get("addresses", []):
             is_pingable = ping_host(address)
             if address.endswith("/32"):
                 print ("  host is up")
+            subnet = extract_ip_subnet(address)
+            #print("  subnet: ", subnet)
+            subnet_address_count.setdefault(subnet, 0)  # Initialize count for subnet if not already present
             projects = []  # Initialize the projects array for each address
             for project in item.get("projects", []):
                 projects.append({
@@ -76,7 +92,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
                 "is_pingable": is_pingable,
                 "projects": projects
             })
-            org_address_count[org_name] += 1  # Increment address count for the current org_name
+            subnet_address_count[subnet] += 1  # Increment address count for the current subnet
 
         filtered_item = {
             "org_name": item.get("org_name", ""),
@@ -94,8 +110,8 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
         if filtered_item['discipline'] == "CS.Network Testing and Monitoring":  
            print ("Skipping perfSONAR host")
            skip = 1
-        if (address.endswith("/32") and org_address_count[org_name] <= 1):
-           print ("Skipping entry with only a single /32 that is up (%s, %d addresses up)" %(org_name, org_address_count[org_name]))
+        if (address.endswith("/32") and subnet_address_count[subnet] <= 1):
+           print ("Skipping entry %s, only a single /32 that is up on subnet %s (%d addresses up)" %(org_name, subnet, subnet_address_count[subnet]))
            skip = 1
 
         if skip:
@@ -104,6 +120,8 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
             skipped_data.append(filtered_item)
             skip_cnt += 1
         else:
+            if subnet_address_count[subnet] > 1:
+                print ("Org: %s; Found %d addresses on subnet %s" %(org_name, subnet_address_count[subnet], subnet))
             #print ("adding address", address, filtered_item)
             #print ("")
             filtered_data.append(filtered_item)
