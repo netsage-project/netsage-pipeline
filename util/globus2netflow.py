@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 # convert Globus logs to format compatible with NetFlow collector
+# Assumes the following log format (from globus.org)
+#
 #
 # Note: This program can take > 30 mins for a large globus log file.
 # Breaking the work up into chunks of 100000 records seemed to help a bit
@@ -24,6 +26,7 @@ CHUNK_SIZE = 100000  # Set the chunk size
 
 def process_chunk(chunk):
     chunk['timestamp'] = chunk['start_time']
+    # set last octet to ".1"
     chunk['source_ip'] = chunk['source_ip'].astype(str) + ".1"
     chunk['dest_ip'] = chunk['dest_ip'].astype(str) + ".1"
     chunk['packets'] = (chunk['bytes_xfered'] / 1500).round().astype(int)

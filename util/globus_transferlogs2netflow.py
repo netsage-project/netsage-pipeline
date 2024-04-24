@@ -2,6 +2,8 @@
 #
 # convert Globus transfer logs to format compatible with NetFlow collector
 #
+# Note: These are the logs on the server hosts, not the central logs at globus.org
+#
 # expects logs to have the following values:
 # DATE=20240107092754.223249 HOST=data1.frontera.tacc.utexas.edu PROG=globus-gridftp-server NL.EVNT=FTP_INFO START=20240107092753.658868 USER=yifan97 FILE=/scratch1/09397/yifan97/cantilever/cantilever_3d_1.4_densified.tar.gz2 BUFFER=235104 BLOCK=4194304 NBYTES=218103808 VOLUME=/ STREAMS=4 STRIPES=1 DEST=[141.211.212.174] TYPE=RETR CODE=226 TASKID=0f7ec55a-ab48-11ee-be6c-f11924dc2d22
 #
@@ -204,6 +206,11 @@ def output_to_json(result_list, output_file):
        else:
            continue   # skip lines with other TYPE values
        user = item['USER']
+
+       # skip anything where IP = 0.0.0.0, which happens occationally
+       if src_ip == "0.0.0.0" or dst_ip == "0.0.0.0":
+           num_skipped += 1
+           continue
 
        # Convert the time string to a datetime object
        try:
