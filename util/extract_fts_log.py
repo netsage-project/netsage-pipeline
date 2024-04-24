@@ -17,15 +17,12 @@
 # num_packets = total_file_size / 1500  ; this wrong for jumbo frames, but num_packets is not used
 
 # current issues:
+# what should sensor_id be? Is there a central log collector for a given project using Rucio?
 
 # To Do:
-# timestamp goes 1 level above meta, not in meta
 # make sure start/end times are correct for jobs with multiple files
-# command line option to not deidentify IPs
-# command line for input/output files
 # option to skip files where source/dest are the same subnet
 # support for ipv6?? currently all logs say: "IPv6: indeterminate"
-# what should sensor_id be? Is there a central log collector?
 
 import sys
 import re
@@ -43,7 +40,7 @@ all_jobs = {}
 # only save results for file transfers > min_file_size
 min_file_size = 1024*2024*10  # 10MB
 
-def extract_info(line):
+def extract_info(line,deidentify):
     # Regular expression patterns for each field
     source_url_pattern = r'Source\s+url:\s+(https?://(\S+))'
     dest_url_pattern = r'Dest\s+url:\s+(https?://(\S+))'
@@ -74,7 +71,7 @@ def extract_info(line):
         source_host = parsed_url.hostname
         source_port = parsed_url.port
         if source_host:
-            deidentified_ip = ip_lookup(source_host)
+            deidentified_ip = ip_lookup(source_host, deidentify)
             extracted_data["source_host"] = deidentified_ip
             extracted_data["source_port"] = source_port
 
@@ -83,7 +80,7 @@ def extract_info(line):
         dest_host = parsed_url.hostname
         dest_port = parsed_url.port
         if dest_host:
-            deidentified_ip = ip_lookup(dest_host)
+            deidentified_ip = ip_lookup(dest_host, deidentify)
             extracted_data["dest_host"] = deidentified_ip
             extracted_data["dest_port"] = dest_port
 
@@ -122,11 +119,12 @@ def extract_info(line):
 
     return extracted_data
 
-def ip_lookup(hostname):
+def ip_lookup(hostname,deidentify):
     ip_address = socket.gethostbyname(hostname)
     ip_address = IPv4Address(ip_address)
     ip_address = str(ip_address)
-    ip_address = ".".join(ip_address.split('.')[:-1]) + ".1"
+    if deidentify:
+        ip_address = ".".join(ip_address.split('.')[:-1]) + ".1"
     return ip_address
 
 def read_file(filename):
@@ -134,7 +132,7 @@ def read_file(filename):
         with open(filename, 'r') as file:
             for line in file:
                 #print ("checking line: ", line)
-                data = extract_info(line)   # check if this line contains anything useful
+                data = extract_info(line,deidentify)   # check if this line contains anything useful
                 if data:
                     #print ("Got Data: ", data)
                     job_id = data.get("job_id") # assumes job_id is the 1st thing returned
@@ -146,7 +144,7 @@ def read_file(filename):
                             all_jobs[job_id] = {}  # Initialize a new dictionary for this job_id
                             all_jobs[job_id]['meta'] = {  # Initialize a new dictionary for this job_id
                                 "flow_type": "fts",
-                                "sensor_id": "LSST Rucio",  # XXX: ask what to use for this
+                                "sensor_id": "FTS",  # XXX: ask what to use for this
                                 "num_files": 0,
                                 "total_file_size": 0,
                                 "start_time": 0,
@@ -199,20 +197,45 @@ def read_file(filename):
     
     return 
 
+def convert_json(data):
+    # dont need to save job_id in final results, so loop over data and reorg the JSON struct a bit
+    new_data = []
+    for key, object in data.items():
+        #print (key, object)
+        new_obj = {
+           "@timestamp": object['timestamp'],
+           "meta": object['meta'],
+           "values": object['values']
+        }
+        new_data.append(new_obj)
+
+    return (new_data)
+        
 def write_to_json(data, output_file):
 
     # Remove entries with file size less than min_file_size
     filtered_data = {job_id: job_data for job_id, job_data in data.items() if job_data['meta'].get("total_file_size", 0) >= min_file_size }
 
-    with open(output_file, 'w') as f:
-        json.dump(filtered_data, f, indent=4)
+    # Iterate over each job and move 'timestamp' to the top-level
+    for job_data in filtered_data.values():
+        job_data['timestamp'] = job_data['meta'].pop('timestamp', None)
 
-def process_files(directory):
+    # reformat JSON to not include job_id
+    filtered_data = convert_json(filtered_data)
+
+    with open(output_file, 'w') as json_file:
+        for record in filtered_data:
+             json_file.write(json.dumps(record) + '\n')
+
+
+def process_files(directory,deidentify):
     file_cnt = 0
     for root, dirs, files in os.walk(directory):
         num_files = len(files)
         print(f"Directory: {root}, Number of Files: {num_files}")
         for file in files:
+            if file.endswith('.json'):
+                continue  # Skip files ending with .json
             file_path = os.path.join(root, file)
             if debug_mode:
                  print("Reading file: ", file_path)
@@ -228,15 +251,20 @@ def process_files(directory):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Read Rucio FTS logs and convert them into a JSON format that can be fed to the NetSage pipeline.")
     parser.add_argument("-d", "--directory", help="Top-level directory containing the log files. Default is the current directory.", default=".")
+    parser.add_argument("-o", "--output", help="Output filename for JSON results. Default is 'fts-netsage.json'.", default="fts-netsage.json")
+
+    parser.add_argument("-nd", "--nodeidentify", action="store_false", help="Flag to not deidentify IPs.")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
 
     top_directory = args.directory
+    output_file = args.output
+    deidentify = args.nodeidentify
     debug_mode = args.debug
 
-    process_files(top_directory)
-    output_file = "/tmp/results.json"
+    process_files(top_directory, deidentify)
     write_to_json(all_jobs, output_file)
+
     print ("Done. Results in file: ", output_file)
 
 
