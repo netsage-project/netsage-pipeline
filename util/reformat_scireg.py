@@ -3,6 +3,8 @@
 # read old style of Science Registry JSON, and convert to new format
 # also create csv file for for adding to a Google Sheet for editing
 #
+# note: assumes all resources for a given ORG are adjacent in the orginal data
+# if this is not true, might need to refactor to write entire JSON file at the end
 
 import json
 import subprocess
@@ -107,7 +109,13 @@ def filter_fields(input_file, output_json_file, skipped_json_file):
         }
         #Skip /32s that are the only host at a give site, even its its pingable; and skip all perfSONAR hosts
         skip = 0
-        if filtered_item['discipline'] == "CS.Network Testing and Monitoring":  
+
+        try:
+            proj_name = filtered_item['resources'][0]['projects'][0]['project_name']
+        except:
+            proj_name = None
+
+        if filtered_item['discipline'] == "CS.Network Testing and Monitoring" and proj_name != "Data Mobility Exhibition":  
            print ("Skipping perfSONAR host")
            skip = 1
         if (address.endswith("/32") and subnet_address_count[subnet] <= 1):
