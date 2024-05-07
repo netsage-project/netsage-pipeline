@@ -1,0 +1,114 @@
+# Remove information about any organizations that have privacy rules that require us to not identify them.
+filter {
+
+    ruby { 
+      id => "80-1"
+      code => '
+        # Australian ASNs to privatize
+        # 7/11/19 - ASNs from "/usr/bin/whois AS7575:AS-RNO" and "/usr/bin/whois AS7575:AS-EDGE" 
+        # (state based networks connected to AARNet and customers on AARNet using public AS numbers): 
+          asn_array = ["AS4738", "AS7569", "AS7571", "AS7570", "AS7572", "AS7573", "AS7574",    "AS1851", "AS4822", "AS6262", "AS7475", "AS7476", "AS7573", "AS7575", "AS7637", "AS7645", "AS9348", "AS4608", "AS9383", "AS9517", "AS10106", "AS10148", "AS17807", "AS20144", "AS22556", "AS23654", "AS23719", "AS23859", "AS23935", "AS24032", "AS24101", "AS24313", "AS24390", "AS24431", "AS24433", "AS24434", "AS24436", "AS24437", "AS24490", "AS24510", "AS37978", "AS38076", "AS38083", "AS38280", "AS38307", "AS38474", "AS38568", "AS38568", "AS38795", "AS38858", "AS45128", "AS45158", "AS45213", "AS45797", "AS45962", "AS55354", "AS55363", "AS55491", "AS55773", "AS55813", "AS56065", "AS56132", "AS56210", "AS56219", "AS56303", "AS58422", "AS58528", "AS58582", "AS58584", "AS58611", "AS58686", "AS58698", "AS58877", "AS59206", "AS64090", "AS131294", "AS137188", "AS132129", "AS132158", "AS132345", "AS132693", "AS132728", "AS132868", "AS133019", "AS134096", "AS134111", "AS134115", "AS134197", "AS134197", "AS134700", "AS134748", "AS137965", "AS135350", "AS135520", "AS135892", "AS135893", "AS136013", "AS136016", "AS136135", "AS136247", "AS136549", "AS136753", "AS136770", "AS136912", "AS136921", "AS136621", "AS137073", "AS137400", "AS138017", "AS137837", "AS137529", "AS138201", "AS138390", "AS138447", "AS138468", "AS138537",    "AS137429"]
+
+        # Convert array to hash with values of true
+          asn_hash = asn_array.map {|x| [x,true]}.to_h
+
+        # event values
+          src_asn = "AS" + event.get("[meta][src_asn]").to_s
+          dst_asn = "AS" + event.get("[meta][dst_asn]").to_s
+          src_country = event.get("[meta][src_country_name]")
+          dst_country = event.get("[meta][dst_country_name]")
+
+        # Are flow src or dst in the list?
+        # Redact only if src or dst is also physically IN Australia 
+          if asn_hash[src_asn] and src_country == "Australia"
+            event.set( "[@metadata][REDACT-SRC]" , "YES" )
+          end
+          if asn_hash[dst_asn] and dst_country == "Australia"
+            event.set( "[@metadata][REDACT-DST]" , "YES" )
+          end
+
+          return [event]
+      '   
+      tag_on_exception => '_rubyexception in 80-privatize-org'
+    }  
+
+  # Australian SRCs: Copy some info to [private] and replace sensitive info with AARnet values.
+  # (Copy then replace in the same mutate filter results in both private and public values being privatized, 
+  # because copy is always done last, so use separate mutates. Update will not create a field if one doesn't exist.)
+    if [@metadata][REDACT-SRC] == "YES" {
+      mutate {
+        id => "80-2"
+        copy => { "[meta][src_organization]" => "[PRIVATE][src_organization]" }
+        copy => { "[meta][src_asn]" => "[PRIVATE][src_asn]" }
+        copy => { "[meta][src_ip]" => "[PRIVATE][src_ip]" }
+        copy => { "[meta][scireg][src][org_name]" => "[PRIVATE][scireg_src_org_name]" }
+        copy => { "[meta][scireg][src][resource]" => "[PRIVATE][scireg_src_resource]" }
+      }
+
+      mutate {
+        id => "80-3"
+        replace => { "[meta][src_organization]" => "Australian Academic and Research Network (AARNet)" }
+        replace => { "[meta][src_asn]" => -1 }
+        replace => { "[meta][src_ip]" => "xx.xx.xx.xx" }
+        replace => { "[meta][src_location][lat]" => -25 }
+        replace => { "[meta][src_location][lon]" => 135 }
+
+        update  => { "[meta][scireg][src][org_name]" => "Australian Academic and Research Network (AARNet)" }
+        update  => { "[meta][scireg][src][org_abbr]" => "AARNet.au" }
+        update  => { "[meta][scireg][src][resource]" => "AARNet member" }
+        update  => { "[meta][scireg][src][resource_abbr]" => "AARNet" }
+        update  => { "[meta][scireg][src][latitude]" => "-25" }
+        update  => { "[meta][scireg][src][longitude]" => "135" }
+
+        remove_field  => [ "[meta][scireg][src][project_names]" ]
+      }
+
+    } # end SRC
+
+  # Australian DSTs: Copy some info to [private] and replace sensitive info with AARnet values
+    if [@metadata][REDACT-DST] == "YES" {
+      mutate {
+        id => "80-5"
+        copy => { "[meta][dst_organization]" => "[PRIVATE][dst_organization]" }
+        copy => { "[meta][dst_asn]" => "[PRIVATE][dst_asn]" }
+        copy => { "[meta][dst_ip]" => "[PRIVATE][dst_ip]" }
+        copy => { "[meta][scireg][dst][org_name]" => "[PRIVATE][scireg_dst_org_name]" }
+        copy => { "[meta][scireg][dst][resource]" => "[PRIVATE][scireg_dst_resource]" }
+      }
+
+      mutate {
+        id => "80-6"
+        replace => { "[meta][dst_organization]" => "Australian Academic and Research Network (AARNet)" }
+        replace => { "[meta][dst_asn]" => -1 }
+        replace => { "[meta][dst_ip]" => "xx.xx.xx.xx" }
+        replace => { "[meta][dst_location][lat]" => -25 }
+        replace => { "[meta][dst_location][lon]" => 135 }
+
+        update  => { "[meta][scireg][dst][org_name]" => "Australian Academic and Research Network (AARNet)" }
+        update  => { "[meta][scireg][dst][org_abbr]" => "AARNet.au" }
+        update  => { "[meta][scireg][dst][resource]" => "AARNet member" }
+        update  => { "[meta][scireg][dst][resource_abbr]" => "AARNet" }
+        update  => { "[meta][scireg][dst][latitude]" => "-25" }
+        update  => { "[meta][scireg][dst][longitude]" => "135" }
+
+        remove_field  => [ "[meta][scireg][dst][project_names]" ]
+      }
+
+    } # end DST
+
+ 
+    # Make sure we have consistent AARNET names even if no redaction (case insensitive)
+    if [meta][src_organization] =~ /(?i)Australian Academic and Research Network|AARNET/ {
+          mutate {
+              id => "80-8"
+              update => { "[meta][src_organization]" => "Australian Academic and Research Network (AARNet)" } 
+          }
+    }
+    if [meta][dst_organization] =~ /(?i)Australian Academic and Research Network|AARNET/ {
+          mutate {
+              id => "80-9"
+              update => { "[meta][dst_organization]" => "Australian Academic and Research Network (AARNet)" } 
+          }
+    }
+
+}
