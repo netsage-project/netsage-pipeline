@@ -2,7 +2,7 @@ filter {
 
   # Tag SOURCE with Science Registry info - get info from fake geoip db holding scireg data
     geoip {
-        id => "30-1"
+        id => "60-1"
         database => "/var/lib/grnoc/netsage/scireg.mmdb"
         default_database_type => "City"
         cache_size => 1000
@@ -12,7 +12,7 @@ filter {
     }
   # break up the json in city_name into indiv fields (target gets totally overwritten with the info from the json)
     json {
-        id => "30-2"
+        id => "60-2"
         source => "[meta][scireg][src][city_name]"
         target => "[meta][scireg][src]"
     }
@@ -21,7 +21,7 @@ filter {
   #     Skip if it's Multicast!
     if [meta][dst_organization] != "Multicast" {
         geoip {
-            id => "30-3"
+            id => "60-3"
             database => "/var/lib/grnoc/netsage/scireg.mmdb"
             default_database_type => "City"
             cache_size => 1000
@@ -30,7 +30,7 @@ filter {
             tag_on_failure => []
         }
         json {
-            id => "30-4"
+            id => "60-4"
             source => "[meta][scireg][dst][city_name]"
             target => "[meta][scireg][dst]"
         }
@@ -39,7 +39,7 @@ filter {
   # Move project names to new fields
     if [meta][scireg][src][projects][0] {
         ruby {
-            id => "30-5"
+            id => "60-5"
             code => "
                 event.set('[meta][scireg][src][project_names]', event.get('[meta][scireg][src][projects]').map{ |n| n['project_name'] })
             "
@@ -47,46 +47,16 @@ filter {
     }
     if [meta][scireg][dst][projects][0] {
         ruby {
-            id => "30-6"
+            id => "60-6"
             code => "
                 event.set('[meta][scireg][dst][project_names]', event.get('[meta][scireg][dst][projects]').map{ |n| n['project_name'] })
             "
         }
     }
 
-    # if lat/long set in Science Registry, use those
-    if [meta][scireg][src][latitude]   {
-          mutate {
-              id => "30-7"
-              copy => {
-                  "[meta][scireg][src][latitude]"  => "[meta][src_location][lat]"
-                  "[meta][scireg][src][longitude]" => "[meta][src_location][lon]"
-                  "[meta][scireg][src][org_name]"  => "[meta][src_organization]" 
-                  # no longer need: "[meta][scireg][src][org_name]"  => "[meta][src_preferred_org]"
-              }
-              add_field => { "[meta][src_location][data_source]" => "scireg" }
-          }
-
-    }
-    if [meta][scireg][dst][latitude]   {
-          mutate {
-              id => "30-8"
-              copy => { 
-                   "[meta][scireg][dst][latitude]"  => "[meta][dst_location][lat]" 
-                   "[meta][scireg][dst][longitude]" => "[meta][dst_location][lon]" 
-                   "[meta][scireg][dst][org_name]"  => "[meta][dst_organization]" 
-                   # no longer need: "[meta][scireg][dst][org_name]"  => "[meta][dst_preferred_org]" 
-              }
-
-              add_field => { "[meta][dst_location][data_source]" => "scireg" }
-          }
-    }
-
-
   # Remove unneeded fields
-  # note: after SciReg cleanup, be sure to edit this!! XXX
     mutate {
-        id => "30-10"
+        id => "60-7"
         remove_field => "[meta][scireg][src][org_description]"
         remove_field => "[meta][scireg][dst][org_description]"
         remove_field => "[meta][scireg][src][org_url]"
@@ -97,10 +67,6 @@ filter {
         remove_field => "[meta][scireg][dst][org_latitude]"
         remove_field => "[meta][scireg][src][org_longitude]"
         remove_field => "[meta][scireg][dst][org_longitude]"
-        remove_field => "[meta][scireg][src][latitude]"
-        remove_field => "[meta][scireg][dst][latitude]"
-        remove_field => "[meta][scireg][src][longitude]"
-        remove_field => "[meta][scireg][dst][longitude]"
         remove_field => "[meta][scireg][src][asn]"
         remove_field => "[meta][scireg][dst][asn]"
         remove_field => "[meta][scireg][src][description]"
@@ -111,21 +77,6 @@ filter {
         remove_field => "[meta][scireg][dst][role_description]"
         remove_field => "[meta][scireg][src][country_code]"
         remove_field => "[meta][scireg][dst][country_code]"
-        remove_field => "[meta][scireg][src][ip_block_id]"  
-        remove_field => "[meta][scireg][dst][ip_block_id]"
-        remove_field => "[meta][scireg][src][addresses]"
-        remove_field => "[meta][scireg][dst][addresses]"
-        remove_field => "[meta][scireg][src][addresses_str]"
-        remove_field => "[meta][scireg][dst][addresses_str]"
-        remove_field => "[meta][scireg][src][org_abbr]"
-        remove_field => "[meta][scireg][dst][org_abbr]"
-        remove_field => "[meta][scireg][src][org_name]"
-        remove_field => "[meta][scireg][dst][org_abbr]"
-        remove_field => "[meta][scireg][src][resource]"
-        remove_field => "[meta][scireg][dst][resource]"
-        remove_field => "[meta][scireg][src][resource_abbr]"
-        remove_field => "[meta][scireg][dst][resource_abbr]"
-        # maybe this will get used someday??
         remove_field => "[meta][scireg][src][projects]"  
         remove_field => "[meta][scireg][dst][projects]"
     }

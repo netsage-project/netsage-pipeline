@@ -29,7 +29,7 @@ services:
       ofelia.job-exec.dataUpdate.schedule: "@daily"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
-    image: tacc/pipeline_logstash:v2.0.0
+    image: tacc/pipeline_logstash:v2.0.0-globus
     env_file: .env
     depends_on:
       - importer
@@ -38,6 +38,7 @@ services:
       - "5044:5044"
     volumes:
       - ./conf-logstash:/usr/share/logstash/pipeline/
+      - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
       - ./data/cache:/var/lib/grnoc/netsage/
   ofelia: ## Scheduler Task
