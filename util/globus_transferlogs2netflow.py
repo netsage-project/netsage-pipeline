@@ -11,6 +11,9 @@
 # if TYPE=STOR, then src_ip = DEST, and dst_ip = HOST
 # if TYPE=RETR, then dst_ip = DEST, and src_ip = HOST
 # ignore other types
+#
+# Note that input files might not be sorted by "DATE", so need to keep track of earlist and latest date for a given TASKID
+#
 
 import argparse, sys, json, socket
 from datetime import datetime
@@ -75,9 +78,17 @@ def combine_by_taskID(transfer_list):
                 print (f"    Done with this taskID: # files = {combined_task['NUM_FILES']}, total bytes = {combined_task['NBYTES']}")
                 result_list.append(combined_task) # append the prevous task, as done with it
                 #print ("adding combined_task to list: ", combined_task)
-            duration = times_by_taskid[task_id]['end'] - times_by_taskid[task_id]['start']
-            if duration == 0:
-                print("Skipping Task with duration = 0")
+            end_tobj = datetime.strptime(str(times_by_taskid[task_id]['end']), "%Y%m%d%H%M%S.%f")
+            start_tobj = datetime.strptime(str(times_by_taskid[task_id]['start']), "%Y%m%d%H%M%S.%f")
+            timedelta = end_tobj - start_tobj
+            duration = timedelta.total_seconds()
+            #print ("duration: ", duration, times_by_taskid[task_id]['start'], times_by_taskid[task_id]['end'])
+            if duration <= 0:
+                print("Skipping Task with duration <= 0")
+                continue
+            if duration > 172800:
+                print("Skipping Task with duration greater than 2 days. Something must be wrong")
+                print("start: %.2f, end:%.2f" % times_by_taskid[task_id]['start'], times_by_taskid[task_id]['end'])
                 continue
             print ("*** got new taskID: ", task_id)
             # Create a new dictionary for each new task
