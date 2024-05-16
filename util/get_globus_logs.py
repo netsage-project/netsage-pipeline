@@ -29,7 +29,7 @@ import os
 #
 ndays = "2"
 
-def main(config_file, output_dir, day_of_month=None):
+def main(config_file, output_dir, specified_date_str=None):
 
     # Read configuration from config.ini file
     config = configparser.ConfigParser()
@@ -50,71 +50,59 @@ def main(config_file, output_dir, day_of_month=None):
         exit(1)
 
     # Compute the date for yesterday if no day is provided
-    if day_of_month is None:
-        today = datetime.now()
-        specified_date = today - timedelta(days=1)
+    if specified_date_str is None:
+        specified_date = datetime.now() - timedelta(days=1)
     else:
-        today = datetime.now()
-        specified_date = today.replace(day=day_of_month)
+        specified_date = datetime.strptime(specified_date_str, "%Y-%m-%d")
+        
     specified_date_str = specified_date.strftime("%Y-%m-%d")
 
     # Output file name
-    output_file = output_dir + "/globus_logs." + specified_date_str + ".nl"
-    print("Saving results to file: ", output_file)
+    output_file = os.path.join(output_dir, f"globus_logs.{specified_date_str}.nl")
+    print("Saving results to file:", output_file)
 
-    file = open(output_file, mode='w')
+    with open(output_file, mode='w') as file:
 
-    # Set up Splunk connection
-    service = client.connect(
-        host=host,
-        port=port,
-        username=username,
-        password=password
-    )
+        # Set up Splunk connection
+        service = client.connect(
+            host=host,
+            port=port,
+            username=username,
+            password=password
+        )
 
- # Set up time range for the specified day
-    earliest_time = specified_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    latest_time = specified_date.replace(hour=23, minute=59, second=59, microsecond=999999)
-    earliest_time_str = earliest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
-    latest_time_str = latest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
-    print (f"Getting globus logs for times %s to %s" % (earliest_time_str, latest_time_str))
+        # Set up time range for the specified day
+        earliest_time = specified_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        latest_time = specified_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+        earliest_time_str = earliest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
+        latest_time_str = latest_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-00:00"
+        print(f"Getting globus logs for times {earliest_time_str} to {latest_time_str}")
 
-    kwargs_export = {"earliest_time": earliest_time_str,
-                     "latest_time": latest_time_str,
-                     "search_mode": "normal",
-                     "output_mode": "json"}
+        kwargs_export = {"earliest_time": earliest_time_str,
+                         "latest_time": latest_time_str,
+                         "search_mode": "normal",
+                         "output_mode": "json"}
 
-#    # midnight 'ndays' ago to midnight last night
-#    #earliest_time =  "-2d@d" # midnight yesterday
-#    earliest_time = "-"+ndays+"d@d"
-#    kwargs_export = {"earliest_time": earliest_time,
-#                     "latest_time": "-1d@d",
-#                     "search_mode": "normal",
-#                     "output_mode": "json"}
+        searchquery_export = "search index=globust"
 
-    searchquery_export = "search index=globust"
+        print("Collecting logs from Splunk.... (this may take a while)")
+        exportsearch_results = service.jobs.export(searchquery_export, **kwargs_export)
 
-    print("Collecting logs from Splunk.... (this may take a while)")
-    exportsearch_results = service.jobs.export(searchquery_export, **kwargs_export)
+        # Get the results and display them using the JSONResultsReader
+        reader = results.JSONResultsReader(exportsearch_results)
+        count = 0
+        for result in reader:
+            if isinstance(result, dict):
+                file.write(result['_raw'])
+                file.write("\n")
+                count += 1
+                if count % 10000 == 0:
+                    print(f"Wrote {count} logs to file")
+            elif isinstance(result, results.Message):
+                # Diagnostic messages may be returned in the results
+                print("Message:", result)
 
-    # Get the results and display them using the JSONResultsReader
-    reader = results.JSONResultsReader(exportsearch_results)
-    count = 0
-    for result in reader:
-        if isinstance(result, dict):
-            # print("Result: %s" % result)
-            file.write(result['_raw'])
-            file.write("\n")
-            count += 1
-            if count % 10000 == 0:
-                print("   Wrote %d logs to file" % count)
-        elif isinstance(result, results.Message):
-            # Diagnostic messages may be returned in the results
-            print("Message: %s" % result)
-
-    print("Wrote a total of %d log entries to file %s " % (count, output_file))
-
-    file.close()
+        print(f"Wrote a total of {count} log entries to file {output_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Get Globus Logs from Splunk.')
@@ -122,11 +110,11 @@ if __name__ == "__main__":
                         help='config file containing user/password, default = splunk_config.ini')
     parser.add_argument('-o', '--outputdir', type=str, default='.',
                         help='output directory, default = .')
-    parser.add_argument('-d', '--day', type=int, 
-                        help='day of the month to get logs (default = yesterday)')
+    parser.add_argument('-d', '--date', type=str,
+                        help='date of the logs to get in YYYY-MM-DD format (default = yesterday)')
     args = parser.parse_args()
 
-    main(args.config, args.outputdir, args.day)
+    main(args.config, args.outputdir, args.date)
 
     print("\nDone.")
 
