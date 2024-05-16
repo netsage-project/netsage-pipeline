@@ -3,8 +3,6 @@
 # read old style of Science Registry JSON, and convert to new format
 # also create csv file for for adding to a Google Sheet for editing
 #
-# note: assumes all resources for a given ORG are adjacent in the orginal data
-# if this is not true, might need to refactor to write entire JSON file at the end
 
 import json
 import subprocess

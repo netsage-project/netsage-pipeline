@@ -21,7 +21,7 @@ def check_subnet(subnet):
     try:
         ipaddress.ip_network(subnet)
         if ':' in subnet:  # Check if IPv6
-            print("Warning: IPv6 address detected. IPv6 is not supported.", subnet)
+            print("Warning: IPv6 address detected. IPv6 is not yet supported.", subnet)
             return False
         else:
             return True
