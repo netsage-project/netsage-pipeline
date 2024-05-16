@@ -2,20 +2,39 @@
 
 # This program reformats scireg.json to the format needed to use 
 # this docker image: https://hub.docker.com/r/cameronkerrnz/json-to-mmdb
+# which runs this script: https://github.com/cameronkerrnz/json-to-mmdb/blob/master/app/json-to-mmdb
 # json-to-mmdb runs in docker to simplify all the dependancies,
 # Note that this warning is expected, and can be ignored for now:
 #      MaxMind::DB::Writer::Tree is deprecated and should no longer be used 
+# If that perl modules goes away, here is a possible replacement: https://github.com/maxmind/mmdbwriter
+#
+# TODO: add support for IPv6
 
 import json
 import subprocess
 import os
 import sys
 import getopt
+import ipaddress  
+
+def check_subnet(subnet):
+    try:
+        ipaddress.ip_network(subnet)
+        if ':' in subnet:  # Check if IPv6
+            print("Warning: IPv6 address detected. IPv6 is not supported.", subnet)
+            return False
+        else:
+            return True
+    except ValueError:
+        print("Invalid subnet address.", subnet)
+        return False
 
 def main(argv):
     # Default values
     infile = None
     outfile = None
+    num_entries=0
+    skipped_entries=0
 
     # Parse command line arguments
     try:
@@ -50,6 +69,13 @@ def main(argv):
         for resource in item.get("resources", []):
             # Check if the resource has 'address' and 'is_pingable' keys
             if "address" in resource and "is_pingable" in resource:
+            #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
+                # Check if the subnet is IPv6, if so, skip
+                if not check_subnet(resource["address"]):
+                    print (f"  Skipping resource: {resource["resource_name"]} \n")
+                    skipped_entries += 1
+                    continue
+
                 # Construct allocation for each resource
                 allocation = {
                     "subnet": resource["address"],
@@ -62,6 +88,7 @@ def main(argv):
                     "projects": str(resource.get("projects", ""))
                 }
                 allocations.append(allocation)
+                num_entries += 1
 
     # Construct the final JSON object
     final_json = {
@@ -83,6 +110,7 @@ def main(argv):
         "allocations": allocations
     }
 
+    print(f"Created {num_entries} and skipped {skipped_entries} entries in the DB")
     # Temporary file
     tmpfile = "temp.json"
 
