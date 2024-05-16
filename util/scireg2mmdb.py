@@ -60,6 +60,8 @@ def main(argv):
     with open(infile, "r") as file:
         data = json.load(file)
 
+    print (f"Input file contains {len(data)} entries")
+
     # Initialize list to hold allocations
     allocations = []
 
@@ -72,7 +74,7 @@ def main(argv):
             #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
                 # Check if the subnet is IPv6, if so, skip
                 if not check_subnet(resource["address"]):
-                    print (f"  Skipping resource: {resource["resource_name"]} \n")
+                    print(f"  Skipping resource: {resource['resource_name']} \n")
                     skipped_entries += 1
                     continue
 
