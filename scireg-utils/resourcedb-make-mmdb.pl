@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+#
+# NOTE: this script is obsolete! It uses the old style scireg.mmdb
+#  leaving the code here as an archive
 
 # This script reads a json export of the Science Registry database and
 # converts it into a fake GeoIP database (.mmdb file) that can be used by the logstash GeoIP filter to do science registry tagging.
