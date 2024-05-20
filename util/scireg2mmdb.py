@@ -68,15 +68,21 @@ def main(argv):
     # Iterate over each item in the data
     for item in data:
         # Iterate over each resource in the item
+        if 'description' in item:
+             print("Error: old style science registry file. Need to use updated file. ")
+             sys.exit()
         for resource in item.get("resources", []):
             # Check if the resource has 'address' and 'is_pingable' keys
-            if "address" in resource and "is_pingable" in resource:
+            if "address" in resource:
             #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
                 # Check if the subnet is IPv6, if so, skip
                 if not check_subnet(resource["address"]):
                     print(f"  Skipping resource: {resource['resource_name']} \n")
                     skipped_entries += 1
                     continue
+                #print (resource)
+                # to just print warning about V6
+                #check_subnet(resource["address"])
 
                 # Construct allocation for each resource
                 allocation = {
@@ -89,6 +95,7 @@ def main(argv):
                     "resource_name": resource["resource_name"],
                     "projects": str(resource.get("projects", ""))
                 }
+                #print ("Adding: ", allocation)
                 allocations.append(allocation)
                 num_entries += 1
 
@@ -97,7 +104,7 @@ def main(argv):
         "schema": {
             "database_type": "network",
             "description": {"en": "NetSage Science Registry Data"},
-            "ip_version": 4,
+            "ip_version": 6,
             "types": {
                 "org_name": "utf8_string",
                 "org_abbr": "utf8_string",
