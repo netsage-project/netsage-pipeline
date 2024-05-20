@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 
-# This program reformats scireg.json to the format needed to use 
-# this docker image: https://hub.docker.com/r/cameronkerrnz/json-to-mmdb
-# which runs this script: https://github.com/cameronkerrnz/json-to-mmdb/blob/master/app/json-to-mmdb
-# json-to-mmdb runs in docker to simplify all the dependancies,
-# Note that this warning is expected, and can be ignored for now:
-#      MaxMind::DB::Writer::Tree is deprecated and should no longer be used 
-# If that perl modules goes away, here is a possible replacement: https://github.com/maxmind/mmdbwriter
+# This program reformats scireg.json to the format needed by program scireg2mmdb.go 
 #
-# TODO: add support for IPv6
+# TODO: test support for IPv6
 
 import json
 import subprocess
@@ -32,28 +26,25 @@ def check_subnet(subnet):
 def main(argv):
     # Default values
     infile = None
-    outfile = None
     num_entries=0
     skipped_entries=0
 
     # Parse command line arguments
     try:
-        opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+        opts, args = getopt.getopt(argv,"hi:",["ifile=","ofile="])
     except getopt.GetoptError:
-        print(f'Usage: {os.path.basename(__file__)} -i <inputfile> -o <outputfile>')
+        print(f'Usage: {os.path.basename(__file__)} -i <inputfile>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print(f'Usage: {os.path.basename(__file__)} -i <inputfile> -o <outputfile>')
+            print(f'Usage: {os.path.basename(__file__)} -i <inputfile>')
             sys.exit()
         elif opt in ("-i", "--ifile"):
             infile = arg
-        elif opt in ("-o", "--ofile"):
-            outfile = arg
 
     # Check if both input and output files are provided
-    if infile is None or outfile is None:
-        print(f'Usage: {os.path.basename(__file__)} -i <inputfile> -o <outputfile>')
+    if infile is None :
+        print(f'Usage: {os.path.basename(__file__)} -i <inputfile>')
         sys.exit(2)
 
     # Read and parse the input JSON file
@@ -63,7 +54,7 @@ def main(argv):
     print (f"Input file contains {len(data)} entries")
 
     # Initialize list to hold allocations
-    allocations = []
+    resources = []
 
     # Iterate over each item in the data
     for item in data:
@@ -85,7 +76,7 @@ def main(argv):
                 #check_subnet(resource["address"])
 
                 # Construct allocation for each resource
-                allocation = {
+                resource = {
                     "subnet": resource["address"],
                     "discipline": item["discipline"],
                     "latitude": item["latitude"],
@@ -95,45 +86,24 @@ def main(argv):
                     "resource_name": resource["resource_name"],
                     "projects": str(resource.get("projects", ""))
                 }
-                #print ("Adding: ", allocation)
-                allocations.append(allocation)
+                #print ("Adding: ", resource)
+                resources.append(resource)
                 num_entries += 1
 
     # Construct the final JSON object
     final_json = {
-        "schema": {
-            "database_type": "network",
-            "description": {"en": "NetSage Science Registry Data"},
-            "ip_version": 6,
-            "types": {
-                "org_name": "utf8_string",
-                "org_abbr": "utf8_string",
-                "discipline": "utf8_string",
-                "latitude": "utf8_string",
-                "longitude": "utf8_string",
-                "subnet": "utf8_string",
-                "resource_name": "utf8_string",
-                "projects": "utf8_string"
-            }
-        },
-        "allocations": allocations
+        "resources": resource
     }
 
     print(f"Created {num_entries} and skipped {skipped_entries} entries in the DB")
-    # Temporary file
-    tmpfile = "temp.json"
+    tmpfile = "scireg-temp.json"
 
     # Write final JSON object to temporary JSON file
     with open(tmpfile, "w") as file:
         json.dump(final_json, file, indent=2)
 
-    print ("Converting file %s to mmdb using docker " % outfile)
-    print (f"Running: docker run -v {os.getcwd()}:/data/ --rm cameronkerrnz/json-to-mmdb:latest --input=/data/{tmpfile} --output=/data/{outfile}")
-
-    # Run the Docker container to convert JSON to mmdb
-    subprocess.run(["docker", "run", "-v", f"{os.getcwd()}:/data/", "--rm", "cameronkerrnz/json-to-mmdb:latest", f"--input=/data/{tmpfile}", f"--output=/data/{outfile}"])
-
-    print("Done. Results in file: ", outfile)
+    print("Done. Results in file: ", tmpfile)
+    print(f"Now run: scireg2mmdb -i {tmpfile} -o scireg-new.mmdb ")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
