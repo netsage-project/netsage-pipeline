@@ -67,13 +67,13 @@ def main(argv):
             if "address" in resource:
             #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
                 # Check if the subnet is IPv6, if so, skip
-                if not check_subnet(resource["address"]):
-                    print(f"  Skipping resource: {resource['resource_name']} \n")
-                    skipped_entries += 1
-                    continue
+                #if not check_subnet(resource["address"]):
+                #    print(f"  Skipping resource: {resource['resource_name']} \n")
+                #    skipped_entries += 1
+                #    continue
                 #print (resource)
                 # to just print warning about V6
-                #check_subnet(resource["address"])
+                check_subnet(resource["address"])
 
                 # Construct allocation for each resource
                 resource = {
