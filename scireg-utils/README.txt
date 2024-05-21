@@ -14,8 +14,9 @@ Transition tools:
   - reformat_scireg.py : read old style of Science Registry JSON, and convert to new format
 
 Obsolete, but keep around for now:
-  -  resourcedb-make-mmdb.pl
-  -  mmdb_lookup.py
+  - scireg2mmdb.py : replaced by scireg2mmdb.go
+  - resourcedb-make-mmdb.pl
+  - mmdb_lookup.py
   - scireg-csv2json.py
   - scireg-single-csv2json.py
 
