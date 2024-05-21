@@ -74,7 +74,7 @@ func main() {
 
     // Create a new MMDB writer with specified options
     writer, err := mmdbwriter.New(mmdbwriter.Options{
-        DatabaseType: "GeoIP2-ISP",
+        DatabaseType: "GeoLite2-City",
         RecordSize:   24,
     })
     if err != nil {
