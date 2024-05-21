@@ -73,7 +73,7 @@ def main(argv):
                 #    continue
                 #print (resource)
                 # to just print warning about V6
-                check_subnet(resource["address"])
+                #check_subnet(resource["address"])
 
                 # Construct allocation for each resource
                 resource = {
@@ -90,12 +90,15 @@ def main(argv):
                 resources.append(resource)
                 num_entries += 1
 
+    #print(f"Length of resources array: {len(resources)}")
+
     # Construct the final JSON object
     final_json = {
-        "resources": resource
+        "resources": resources
     }
 
     print(f"Created {num_entries} and skipped {skipped_entries} entries in the DB")
+
     tmpfile = "scireg-temp.json"
 
     # Write final JSON object to temporary JSON file
