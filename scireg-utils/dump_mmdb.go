@@ -1,4 +1,6 @@
 
+// simple program to dump the contents of a mmdb file
+
 package main
 
 import (

@@ -15,7 +15,8 @@ init:
 # Build the binary for the current platform
 build: $(GOFILES)
 	@echo "Building $(BINARY_NAME)..."
-	@go build -o $(BUILD_DIR)/$(BINARY_NAME) scireg2mmdb.go
+	@go build -o $(BUILD_DIR)/scireg2mmdb scireg2mmdb.go
+	@go build -o $(BUILD_DIR)/dump_mmdb dump_mmdb.go
 	@echo "Build complete!"
 
 # Clean up build artifacts
@@ -24,15 +25,13 @@ clean:
 	@rm -rf $(BUILD_DIR)/*
 	@echo "Clean complete!"
 
-# Run tests
-test:
-	@echo "Running tests..."
-	@go test ./...
-	@echo "Tests complete!"
-
 # Cross-compile for multiple platforms
 platforms:
 	@$(MAKE) build-windows build-darwin build-linux
+
+build-linux:
+	@echo "Building for Linux..."
+	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
 
 build-windows:
 	@echo "Building for Windows..."
@@ -41,10 +40,6 @@ build-windows:
 build-darwin:
 	@echo "Building for macOS..."
 	@GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64
-
-build-linux:
-	@echo "Building for Linux..."
-	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
 
 # Install the binary to $GOPATH/bin
 install:

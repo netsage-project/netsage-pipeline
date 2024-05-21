@@ -38,6 +38,8 @@ type Resource struct {
 
 // Resources represents the top-level structure of the JSON input.
 type Resources struct {
+// simple program to dump the contents of a mmdb file
+
     Resources []Resource `json:"resources"`
 }
 
