@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# OBSOLETE: only works with old style scireg.mmdb file
+#
 # NetSage pipeline uses a MMDB to map IP address to City name, lat, and long
 # should be able to look up any host in the subnet
 #
