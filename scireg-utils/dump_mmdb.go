@@ -28,6 +28,9 @@ func main() {
 	}
 	defer db.Close()
 
+        // Print database metadata
+	printDBMetadata(db)
+
 	// Iterate over all networks in the database
 	iter := db.Networks()
 	for iter.Next() {
@@ -44,6 +47,17 @@ func main() {
 	if iter.Err() != nil {
 		log.Fatal(iter.Err())
 	}
+}
+
+// Function to print the database metadata
+func printDBMetadata(db *maxminddb.Reader) {
+	meta := db.Metadata
+
+	fmt.Printf("Database Type: %s\n", meta.DatabaseType)
+	fmt.Printf("Description: %v\n", meta.Description)
+	fmt.Printf("IP Version: %d\n", meta.IPVersion)
+	fmt.Printf("Node Count: %d\n", meta.NodeCount)
+	fmt.Printf("Record Size: %d\n", meta.RecordSize)
 }
 
 
