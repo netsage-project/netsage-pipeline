@@ -1,4 +1,6 @@
 
+// Based on this blog: https://blog.maxmind.com/2020/09/enriching-mmdb-files-with-your-own-data-using-go/
+//
 // this program requires mmdbwriter from github.com/maxmind
 // to install:
 //    go mod init generate_mmdb
@@ -7,6 +9,8 @@
 //    go build -o scireg2mmdb scireg2mmdb.go
 // To run:
 //    scireg2mmdb -i scireg.json -o scireg.mmdb
+
+// not done: support for projects array. Use mmdbtype.Slice
 
 
 package main
@@ -19,6 +23,7 @@ import (
     "log"
     "net"
     "os"
+    "strconv"
 
     "github.com/maxmind/mmdbwriter"
     "github.com/maxmind/mmdbwriter/mmdbtype"
@@ -27,6 +32,7 @@ import (
 // Resource represents the structure of each resource entry in the JSON input.
 type Resource struct {
     Subnet       string `json:"subnet"`
+    City         string `json:"city_name"`
     Discipline   string `json:"discipline"`
     Latitude     string `json:"latitude"`
     Longitude    string `json:"longitude"`
@@ -75,6 +81,7 @@ func main() {
     // Create a new MMDB writer with specified options
     writer, err := mmdbwriter.New(mmdbwriter.Options{
         DatabaseType: "GeoLite2-City",
+        Description: map[string]string{ "en": "Fake GeoIP2-City db for Science Registry"},
         RecordSize:   24,
     })
     if err != nil {
@@ -92,17 +99,44 @@ func main() {
         }
 
         // Create a map of the data to be stored in the MMDB
-        geoData := mmdbtype.Map{
-            "discipline":    mmdbtype.String(resource.Discipline),
-            "latitude":      mmdbtype.String(resource.Latitude),
-            "longitude":     mmdbtype.String(resource.Longitude),
-            "org_name":      mmdbtype.String(resource.OrgName),
-            "org_abbr":      mmdbtype.String(resource.OrgAbbr),
-            "resource_name": mmdbtype.String(resource.ResourceName),
-            "projects":      mmdbtype.String(resource.Projects),
-        }
+        // note that logstash expects a field named 'city_name', even tho we arent using it that way
+
+        // Convert Latitude and Longitude strings to float64
+	lat, err := strconv.ParseFloat(strings.TrimSpace(resource.Latitude), 64)
+	if err != nil {
+	    log.Printf("Warning: Failed to parse Latitude: %v", err)
+	    lat = 0.0 // Default value or handle accordingly
+	}
+
+	long, err := strconv.ParseFloat(strings.TrimSpace(resource.Longitude), 64)
+	if err != nil {
+	    log.Printf("Warning: Failed to parse Latitude: %v", err)
+	    long = 0.0 // Default value or handle accordingly
+	}
+
+	geoData := mmdbtype.Map{
+		"city": mmdbtype.Map{
+			"names": mmdbtype.Map{
+				"en": mmdbtype.String("my Science City"),
+			},
+			// maxmind not finding these, so moving to inside of 'city' to see if that works
+			// XXX: move back if not required!
+			"scireg_fields": mmdbtype.Map{
+				"discipline":    mmdbtype.String(resource.Discipline),
+				"org_name":      mmdbtype.String(resource.OrgName),
+				"org_abbr":      mmdbtype.String(resource.OrgAbbr),
+				"resource_name": mmdbtype.String(resource.ResourceName),
+				"projects":      mmdbtype.String(resource.Projects),
+			},
+		},
+		"location": mmdbtype.Map{
+			"latitude":  mmdbtype.Float64(lat),
+			"longitude": mmdbtype.Float64(long),
+		},
+	}
+
         // Print the geoData for debugging
-	fmt.Printf("Inserting data for subnet: %s\n", resource.Subnet)
+	fmt.Printf("Inserting data for subnet: %s, resource: %s\n", resource.Subnet, resource.ResourceName)
 	//fmt.Printf("geoData: %v\n", geoData)
 
         // Insert the data into the MMDB writer
