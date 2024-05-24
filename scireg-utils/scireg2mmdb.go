@@ -24,6 +24,7 @@ import (
     "net"
     "os"
     "strconv"
+    "strings"
 
     "github.com/maxmind/mmdbwriter"
     "github.com/maxmind/mmdbwriter/mmdbtype"
@@ -114,19 +115,31 @@ func main() {
 	    long = 0.0 // Default value or handle accordingly
 	}
 
+// this seems the logical way to do it, but logstash could not read it
+//	geoData := mmdbtype.Map{
+//		"city": mmdbtype.Map{
+//			"names": mmdbtype.Map{
+//				"en": mmdbtype.String("my Science City"),
+//			},
+//		},
+//		"location": mmdbtype.Map{
+//			"latitude":  mmdbtype.Float64(lat),
+//			"longitude": mmdbtype.Float64(long),
+//		},
+//		"discipline":    mmdbtype.String(resource.Discipline),
+//		"org_name":      mmdbtype.String(resource.OrgName),
+//		"org_abbr":      mmdbtype.String(resource.OrgAbbr),
+//		"resource_name": mmdbtype.String(resource.ResourceName),
+//		"projects":      mmdbtype.String(resource.Projects),
+//	}
+
+        jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
+                resource.Discipline, resource.OrgName, resource.OrgAbbr, resource.ResourceName, resource.Projects)
+
 	geoData := mmdbtype.Map{
 		"city": mmdbtype.Map{
 			"names": mmdbtype.Map{
-				"en": mmdbtype.String("my Science City"),
-			},
-			// maxmind not finding these, so moving to inside of 'city' to see if that works
-			// XXX: move back if not required!
-			"scireg_fields": mmdbtype.Map{
-				"discipline":    mmdbtype.String(resource.Discipline),
-				"org_name":      mmdbtype.String(resource.OrgName),
-				"org_abbr":      mmdbtype.String(resource.OrgAbbr),
-				"resource_name": mmdbtype.String(resource.ResourceName),
-				"projects":      mmdbtype.String(resource.Projects),
+				"en": mmdbtype.String(jsonString),
 			},
 		},
 		"location": mmdbtype.Map{
