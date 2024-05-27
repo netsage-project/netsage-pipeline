@@ -148,8 +148,8 @@ func main() {
 		},
 	}
 
-        // Print the geoData for debugging
 	fmt.Printf("Inserting data for subnet: %s, resource: %s\n", resource.Subnet, resource.ResourceName)
+        // Print the geoData for debugging
 	//fmt.Printf("geoData: %v\n", geoData)
 
         // Insert the data into the MMDB writer
@@ -177,5 +177,4 @@ func main() {
     fmt.Printf("MMDB file created successfully! Total records inserted: %d\n", recordCount)
 
 }
-
 

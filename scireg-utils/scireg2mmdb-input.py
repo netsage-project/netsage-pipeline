@@ -65,7 +65,9 @@ def main(argv):
         for resource in item.get("resources", []):
             # Check if the resource has 'address' and 'is_pingable' keys
             if "address" in resource:
+
             #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
+                # code to check for IPv6: no longer needed
                 # Check if the subnet is IPv6, if so, skip
                 #if not check_subnet(resource["address"]):
                 #    print(f"  Skipping resource: {resource['resource_name']} \n")
@@ -74,6 +76,15 @@ def main(argv):
                 #print (resource)
                 # to just print warning about V6
                 #check_subnet(resource["address"])
+
+                projects_string = str(resource.get("projects", ""))
+                #print ("projects_string: ", projects_string)
+                # Check if projects_string starts and ends with double quotes (required by json.loads())
+                if not (projects_string.startswith('"') and projects_string.endswith('"')):
+                    projects_string = '"' + projects_string + '"'
+                #print ("projects_string2: ", projects_string)
+                projects_json = json.loads(projects_string)
+                #print ("projects_json: ", projects_json)
 
                 # Construct allocation for each resource
                 resource = {
@@ -84,7 +95,7 @@ def main(argv):
                     "org_name": item["org_name"],
                     "org_abbr": item["org_abbr"],
                     "resource_name": resource["resource_name"],
-                    "projects": str(resource.get("projects", ""))
+                    "projects": projects_json
                 }
                 #print ("Adding: ", resource)
                 resources.append(resource)
