@@ -1,0 +1,205 @@
+filter {
+
+  # Tag SOURCE with Science Registry info - get info from fake geoip db holding scireg data
+    geoip {
+        id => "42-1"
+        database => "/var/lib/grnoc/netsage/scireg-new.mmdb"
+        default_database_type => "City"
+        cache_size => 1000
+        source => "[meta][src_ip]"
+        target => "[meta][scireg][src]"
+        tag_on_failure => []
+    }
+  # break up the json in city_name into indiv fields (target gets totally overwritten with the info from the json)
+    json {
+        id => "42-2"
+        source => "[meta][scireg][src][city_name]"
+        target => "[meta][scireg][src_json]"
+        tag_on_failure => ["_jsonparsefailure of city_name"]
+    }
+
+# Note: I attempted to do it like this instead of putting everything into city_name, but logstash did not find the user-definded fields.
+#  XXX: try again with updated mmdb file. I might have fixed something... (need to uncomment code in scireg2mmdb.go)
+#   Maybe I'm missing something -blt   Try again later?
+#      target => "[src_scireg]"  # instead of "[meta][scireg][src]" above
+#    if [src_scireg] {
+#       mutate {
+#          add_field => { "[meta][scireg][src][discipline]" => "%{[src_scireg][discipline]}" }
+#          add_field => { "[meta][scireg][src][resource_name]" => "%{[src_scireg][resource_name]}" }
+#          add_field => { "[meta][scireg][src][org_name]" => "%{[src_scireg][org_name]}" }
+#       }
+
+# for debugging
+#      ruby {
+#         code => "
+#           event.tag('src IP found in scireg db')
+#           scireg_data = event.get('[src_scireg]')
+#           event.set('scireg_data', scireg_data)
+#           save_src_ip = event.get('[meta][src_ip]')
+#           event.set('saved_src_ip', save_src_ip)
+#           resource_name = event.get('[src_scireg][resource]')
+#           event.set('scireg_resource_name', resource_name)
+#           discipline = event.get('[src_scireg][discipline]')
+#           event.set('scireg_discipline', discipline)
+#         "
+#       }
+
+  # Tag DESTINATION with Science Registry info - get info from fake geoip db holding scireg data
+  #     Skip if it's Multicast!
+    if [meta][dst_organization] != "Multicast" {
+        geoip {
+            id => "42-3"
+            database => "/var/lib/grnoc/netsage/scireg-new.mmdb"
+            default_database_type => "City"
+            cache_size => 1000
+            source => "[meta][dst_ip]"
+            target => "[meta][scireg][dst]"
+            tag_on_failure => []
+        }
+        json {
+            id => "42-4"
+            source => "[meta][scireg][dst][city_name]"
+            target => "[meta][scireg][dst_json]"
+            tag_on_failure => ["_jsonparsefailure of city_name"]
+        }
+    } 
+
+# try new way (did not work!!): Error: was expecting double-quote to start field name
+# XXXX: add code for dst too
+#    ruby {
+#        id => "42-5"
+#        code => "
+#            require 'json'
+#            projects = event.get('[meta][scireg][src][projects]')
+#        
+#            if projects
+#                begin
+#                    # Parse the JSON string into an array of objects
+#                    projects_array = JSON.parse(projects)
+#                    
+#                    # Extract project names and abbreviations
+#                    project_names = projects_array.map { |n| n['project_name'] }
+#                    
+#                    # Set the new fields in the event
+#                    event.set('[meta][scireg][src][project_names]', project_names)
+#                rescue JSON::ParserError => e
+#                    # Handle JSON parsing error if projects is not a valid JSON string
+#                    event.tag('json_parse_error')
+#                    event.set('json_parse_error_message', e.message)
+#                end
+#            end
+#       "
+#   }
+
+  # Move project names to new fields
+# test: seems to not work with new scireg.mmdb file..
+# XXX: confirmed: not working. Maybe try logstash 'JSON' parser?
+    if [meta][scireg][src_json][projects][0] {
+        ruby {
+            id => "42-5"
+            code => "
+                event.set('[meta][scireg][src_json][project_names]', event.get('[meta][scireg][src_json][projects]').map{ |n| n['project_name'] })
+            "
+            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
+        }
+    }
+    if [meta][scireg][dst_json][projects][0] {
+        ruby {
+            id => "42-6"
+            code => "
+                event.set('[meta][scireg][dst_json][project_names]', event.get('[meta][scireg][dst_json][projects]').map{ |n| n['project_name'] })
+            "
+            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting dst project_names'
+        }
+    }
+
+    # if lat/long set in Science Registry, use those
+    # XXX FIXME: should not always assume location is present
+    if [meta][scireg][src][location]   {
+          mutate {
+              id => "42-7"
+              copy => {
+                  "[meta][scireg][src][location][latitude]"  => "[meta][src_location][lat]"
+                  "[meta][scireg][src][location][longitude]" => "[meta][src_location][lon]"
+                  "[meta][scireg][src_json][org_name]"  => "[meta][src_organization]" 
+                  "[meta][scireg][src_json][resource]"  => "[meta][src_resource_name]" 
+              }
+              add_field => { "[meta][src_location][data_source]" => "scireg" }
+          }
+
+    }
+    if [meta][scireg][dst][location]   {
+          mutate {
+              id => "42-8"
+              copy => { 
+                   "[meta][scireg][dst][location][latitude]"  => "[meta][dst_location][lat]" 
+                   "[meta][scireg][dst][location][longitude]" => "[meta][dst_location][lon]" 
+                   "[meta][scireg][dst_json][org_name]"  => "[meta][dst_organization]" 
+                   "[meta][scireg][dst_json][resource]"  => "[meta][dst_resource_name]" 
+              }
+
+              add_field => { "[meta][dst_location][data_source]" => "scireg" }
+          }
+    }
+
+
+  # Remove unneeded fields
+  # note: after SciReg cleanup, be sure to edit this!! XXX
+  # check in elastic for unneeded stuff...
+    mutate {
+        id => "42-10"
+        #remove_field => "[meta][scireg][src][location]"
+        #remove_field => "[meta][scireg][dst][location]"
+        remove_field => "[meta][scireg][src][org_abbr]"
+        remove_field => "[meta][scireg][dst][org_abbr]"
+        remove_field => "[meta][scireg][src][org_name]"
+        remove_field => "[meta][scireg][dst][org_name]"
+        remove_field => "[meta][scireg][src][resource]"
+        remove_field => "[meta][scireg][dst][resource]"
+        remove_field => "[meta][scireg][src][resource_abbr]"
+        remove_field => "[meta][scireg][dst][resource_abbr]"
+        # must remove these, other elastic throws the data away!
+        remove_field => "[meta][scireg][src][projects]"  
+        remove_field => "[meta][scireg][dst][projects]"
+        #remove_field => "[meta][src_json]"
+        #remove_field => "[meta][dst_json]"
+    }
+
+}
+
+# for debuging
+#output {
+# Log everything to file
+#  file {
+#      path => "/data/output/42-scireg.log"
+#      codec => json_lines
+#      # overwrite everytime (file will only contain last entry)
+#      write_behavior => "overwrite"
+#      #write_behavior => "append"
+#    }
+#  if [scireg_data] {
+#    # log more specific stuff (easier to see what is happening)
+#    file {
+#      path => "/data/output/mmdb_lookup.log"
+#      codec => line {
+#        format => "src_ip: %{saved_src_ip}, scireg_data: %{scireg_data}, scireg_city_name: %{scireg_city_name}, scireg_resource_name: %{scireg_resource_name} discipline: %{discipline}"
+#      }
+#      # overwrite everytime (file will only contain last entry)
+#      write_behavior => "overwrite"
+#      #write_behavior => "append"
+#    }
+#  }
+#
+# for more (actually way too much) debug info, uncomment these
+#  stdout {
+#    codec => rubydebug
+#  }
+#
+#  if [ruby_debug] {
+#    stdout {
+#      codec => line {
+#        format => "src_ip: %{saved_src_ip}, scireg_data: %{scireg_data}, scireg_city_name: %{scireg_city_name}, scireg_resource_name: %{scireg_resource_name} discipline: %{discipline}"
+#      }
+#    }
+#  }
+#}

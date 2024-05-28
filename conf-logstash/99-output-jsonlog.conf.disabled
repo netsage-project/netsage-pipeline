@@ -2,7 +2,7 @@
 # note: you can multiple outputs, and run this and output to rabbit at the same time
 output {
     file {
-        path => "/data/output_data/pipeline_test.json"
+        path => "/data/output/pipeline_test.json"
         codec => json_lines 
     }
 }
