@@ -178,8 +178,8 @@ filter {
   # check in elastic for unneeded stuff...
     mutate {
         id => "42-10"
-        #remove_field => "[meta][scireg][src][location]"
-        #remove_field => "[meta][scireg][dst][location]"
+        remove_field => "[meta][scireg][src][location]"
+        remove_field => "[meta][scireg][dst][location]"
         remove_field => "[meta][scireg][src][org_abbr]"
         remove_field => "[meta][scireg][dst][org_abbr]"
         remove_field => "[meta][scireg][src][org_name]"
@@ -188,12 +188,14 @@ filter {
         remove_field => "[meta][scireg][dst][resource]"
         remove_field => "[meta][scireg][src][resource_abbr]"
         remove_field => "[meta][scireg][dst][resource_abbr]"
-        # must remove these, otherwise elastic throws the data away!
+        remove_field => "[meta][scireg][src][city_name]"
+        remove_field => "[meta][scireg][dst][city_name]"
+        # MUST remove projects, otherwise elastic throws the data away!
         remove_field => "[meta][scireg][src][projects]"  
         remove_field => "[meta][scireg][dst][projects]"
         #add when done debugging
-        #remove_field => "[meta][src_json]"
-        #remove_field => "[meta][dst_json]"
+        remove_field => "[meta][src_json]"
+        remove_field => "[meta][dst_json]"
     }
 
 }
