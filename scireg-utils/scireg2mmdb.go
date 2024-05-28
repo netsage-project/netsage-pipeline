@@ -91,8 +91,7 @@ func main() {
     // Counter for the number of records inserted
     var recordCount int
 
-    emptyProjects := `[{"project_abbr": null, "project_name": null}]`
-
+    emptyProjects := `[{'project_abbr': None, 'project_name': None}]`
 
     // Iterate over the resources and insert data into the MMDB writer
     for _, resource := range resourcesData.Resources {
@@ -136,17 +135,21 @@ func main() {
 //		"projects":      mmdbtype.String(resource.Projects),
 //	}
 
-	fmt.Printf("Projects: %v\n", resource.Projects)
+        // Initialize jsonString
+        var jsonString string
+
+	//fmt.Printf("Projects: %v\n", resource.Projects)
+
         // old version of scireg.mmdb does not have quotes around 'projects' JSON, logstash gives an error without them
-        //jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
+        //jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
         //        resource.Discipline, resource.OrgName, resource.OrgAbbr, resource.ResourceName, resource.Projects)
 
         // to leave out projects if null
         if resource.Projects != emptyProjects {
-            jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
+            jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
                 resource.Discipline, resource.OrgName, resource.OrgAbbr, resource.ResourceName, resource.Projects)
         } else {
-            jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s"}`,
+            jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s"}`,
                 resource.Discipline, resource.OrgName, resource.OrgAbbr, resource.ResourceName)
         }
 
