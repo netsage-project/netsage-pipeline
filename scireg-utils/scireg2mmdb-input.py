@@ -77,14 +77,9 @@ def main(argv):
                 # to just print warning about V6
                 #check_subnet(resource["address"])
 
-                projects_string = str(resource.get("projects", ""))
+                projects_string = str(resource.get("projects", "")) # convert to string
+                #projects_string = resource.get("projects", "")
                 #print ("projects_string: ", projects_string)
-                # Check if projects_string starts and ends with double quotes (required by json.loads())
-                if not (projects_string.startswith('"') and projects_string.endswith('"')):
-                    projects_string = '"' + projects_string + '"'
-                #print ("projects_string2: ", projects_string)
-                projects_json = json.loads(projects_string)
-                #print ("projects_json: ", projects_json)
 
                 # Construct allocation for each resource
                 resource = {
@@ -95,7 +90,7 @@ def main(argv):
                     "org_name": item["org_name"],
                     "org_abbr": item["org_abbr"],
                     "resource_name": resource["resource_name"],
-                    "projects": projects_json
+                    "projects": projects_string
                 }
                 #print ("Adding: ", resource)
                 resources.append(resource)

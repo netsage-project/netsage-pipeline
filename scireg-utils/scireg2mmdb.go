@@ -133,7 +133,9 @@ func main() {
 //		"projects":      mmdbtype.String(resource.Projects),
 //	}
 
-        jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
+	fmt.Printf("Projects: %v\n", resource.Projects)
+        //jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": "%s"}`,
+        jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "org_abbr": "%s", "resource": "%s", "projects": %s}`,
                 resource.Discipline, resource.OrgName, resource.OrgAbbr, resource.ResourceName, resource.Projects)
 
 	geoData := mmdbtype.Map{
