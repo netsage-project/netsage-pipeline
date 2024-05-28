@@ -65,7 +65,9 @@ def main(argv):
         for resource in item.get("resources", []):
             # Check if the resource has 'address' and 'is_pingable' keys
             if "address" in resource:
+
             #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
+                # code to check for IPv6: no longer needed
                 # Check if the subnet is IPv6, if so, skip
                 #if not check_subnet(resource["address"]):
                 #    print(f"  Skipping resource: {resource['resource_name']} \n")
@@ -74,6 +76,10 @@ def main(argv):
                 #print (resource)
                 # to just print warning about V6
                 #check_subnet(resource["address"])
+
+                projects_string = str(resource.get("projects", "")) # convert to string
+                #projects_string = resource.get("projects", "")
+                #print ("projects_string: ", projects_string)
 
                 # Construct allocation for each resource
                 resource = {
@@ -84,7 +90,7 @@ def main(argv):
                     "org_name": item["org_name"],
                     "org_abbr": item["org_abbr"],
                     "resource_name": resource["resource_name"],
-                    "projects": str(resource.get("projects", ""))
+                    "projects": projects_string
                 }
                 #print ("Adding: ", resource)
                 resources.append(resource)
