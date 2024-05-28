@@ -100,24 +100,31 @@ filter {
 
   # Move project names to new fields
 # test: seems to not work with new scireg.mmdb file..
-# XXX: confirmed: not working. Maybe try logstash 'JSON' parser?
+# XXX: confirmed: still not working. 
 
 # Parse the nested JSON in the 'projects' field
-    if [meta][scireg][src_json][projects] {
-        ruby {
-          id => "42-5"
-          code => '
-            require "json"
-            projects_field = event.get("[meta][scireg][src_json][projects]")
-            if projects_field
-                projects = JSON.parse(projects_field.gsub("'", "\""))
-                event.set("[meta][scireg][src][project_names]", projects)
-              end
-          '
-          tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
-        }
-     }
+#  new method
+#    if [meta][scireg][src_json][projects] {
+#        ruby {
+#          id => "42-5"
+#          code => '
+#             require "json"
+#             projects_field = event.get("[meta][scireg][src_json][projects]")
+#             if projects_field
+#               # Replace 'None' with 'null' and ensure single quotes are converted to double quotes
+#               #cleaned_projects_field = projects_field.gsub(/None/, "null").gsub(/\'/, "\"")
+#               cleaned_projects_field = projects_field.gsub("None", "null")  # JSON.parse expects null
+#               event.set("[debug][cleaned_projects_field]", cleaned_projects_field)  # Debugging line
+#               projects = JSON.parse(cleaned_projects_field)
+#               project_names = projects.map { |project| project["project_name"] }
+#               event.set("[meta][scireg][src][project_names]", project_names)
+#             end
+#           '
+#          tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
+#        }
+#     }
 
+# old method also not working...
 #    if [meta][scireg][src_json][projects][0] {
 #        ruby {
 #            id => "42-5"
