@@ -1,3 +1,10 @@
+
+# general approach used here:
+#   mmdb record gets parsed into [meta][scireg][src] (or [dst])
+#      this fills in [meta][scireg][src][latitude] and [meta][scireg][src][city_name]
+#   JSON in [meta][scireg][src][city_name] gets parsed into [meta][scireg][src_json]
+#   fields in [meta][scireg][src_json] are copied to final locations
+
 filter {
 
   # Tag SOURCE with Science Registry info - get info from fake geoip db holding scireg data
@@ -94,46 +101,62 @@ filter {
   # Move project names to new fields
 # test: seems to not work with new scireg.mmdb file..
 # XXX: confirmed: not working. Maybe try logstash 'JSON' parser?
-    if [meta][scireg][src_json][projects][0] {
+
+# Parse the nested JSON in the 'projects' field
+    if [meta][scireg][src_json][projects] {
         ruby {
-            id => "42-5"
-            code => "
-                event.set('[meta][scireg][src_json][project_names]', event.get('[meta][scireg][src_json][projects]').map{ |n| n['project_name'] })
-            "
-            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
+          id => "42-5"
+          code => '
+            require "json"
+            projects_field = event.get("[meta][scireg][src_json][projects]")
+            if projects_field
+                projects = JSON.parse(projects_field.gsub("'", "\""))
+                event.set("[meta][scireg][src][project_names]", projects)
+              end
+          '
+          tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
         }
-    }
-    if [meta][scireg][dst_json][projects][0] {
-        ruby {
-            id => "42-6"
-            code => "
-                event.set('[meta][scireg][dst_json][project_names]', event.get('[meta][scireg][dst_json][projects]').map{ |n| n['project_name'] })
-            "
-            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting dst project_names'
-        }
-    }
+     }
+
+#    if [meta][scireg][src_json][projects][0] {
+#        ruby {
+#            id => "42-5"
+#            code => "
+#                event.set('[meta][scireg][src][project_names]', event.get('[meta][scireg][src_json][projects]').map{ |n| n['project_name'] })
+#            "
+#            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting src project_names'
+#        }
+#    }
+#    if [meta][scireg][dst_json][projects][0] {
+#        ruby {
+#            id => "42-6"
+#            code => "
+#                event.set('[meta][scireg][dst][project_names]', event.get('[meta][scireg][dst_json][projects]').map{ |n| n['project_name'] })
+#            "
+#            tag_on_exception => '_rubyexception in 42-scireg.conf, error getting dst project_names'
+#        }
+#    }
 
     # if lat/long set in Science Registry, use those
     # XXX FIXME: should not always assume location is present
-    if [meta][scireg][src][location]   {
+    if [meta][scireg][src]  {
           mutate {
               id => "42-7"
               copy => {
-                  "[meta][scireg][src][location][latitude]"  => "[meta][src_location][lat]"
-                  "[meta][scireg][src][location][longitude]" => "[meta][src_location][lon]"
-                  "[meta][scireg][src_json][org_name]"  => "[meta][src_organization]" 
+                  "[meta][scireg][src][latitude]"  => "[meta][src_location][lat]"
+                  "[meta][scireg][src][longitude]" => "[meta][src_location][lon]"
                   "[meta][scireg][src_json][resource]"  => "[meta][src_resource_name]" 
               }
               add_field => { "[meta][src_location][data_source]" => "scireg" }
           }
 
     }
-    if [meta][scireg][dst][location]   {
+    if [meta][scireg][dst]   {
           mutate {
               id => "42-8"
               copy => { 
-                   "[meta][scireg][dst][location][latitude]"  => "[meta][dst_location][lat]" 
-                   "[meta][scireg][dst][location][longitude]" => "[meta][dst_location][lon]" 
+                   "[meta][scireg][dst][latitude]"  => "[meta][dst_location][lat]" 
+                   "[meta][scireg][dst][longitude]" => "[meta][dst_location][lon]" 
                    "[meta][scireg][dst_json][org_name]"  => "[meta][dst_organization]" 
                    "[meta][scireg][dst_json][resource]"  => "[meta][dst_resource_name]" 
               }
@@ -158,9 +181,10 @@ filter {
         remove_field => "[meta][scireg][dst][resource]"
         remove_field => "[meta][scireg][src][resource_abbr]"
         remove_field => "[meta][scireg][dst][resource_abbr]"
-        # must remove these, other elastic throws the data away!
+        # must remove these, otherwise elastic throws the data away!
         remove_field => "[meta][scireg][src][projects]"  
         remove_field => "[meta][scireg][dst][projects]"
+        #add when done debugging
         #remove_field => "[meta][src_json]"
         #remove_field => "[meta][dst_json]"
     }
