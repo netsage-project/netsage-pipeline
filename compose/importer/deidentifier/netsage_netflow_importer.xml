@@ -1,0 +1,54 @@
+<config>
+<!--  NOTE: Values here override those in the shared config -->
+
+  <!-- rabbitmq queues -->
+  <rabbit_input>
+    <queue>netsage_deidentifier_netflow_fake</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <channel>3</channel>
+    <queue>netsage_deidentifier_raw</queue>
+  </rabbit_output>
+
+  <worker>
+    <!-- How many flows to process at once -->
+        <flow-batch-size>100</flow-batch-size>
+
+    <!-- How many concurrent workers should perform the necessary operations -->
+        <num-processes>1</num-processes>
+
+    <!-- path to nfdump executable (defaults to /usr/bin/nfdump) -->
+    <!--   <nfdump-path>/path/to/nfdump</nfdump-path>  -->
+
+    <!-- Where to store the cache, where it tracks what files it has/hasn't read -->
+        <cache-file>/var/cache/netsage/netflow_importer.cache</cache-file>
+
+    <!-- The minium flow size threshold - will not  import any flows smaller than this -->
+    <!-- Defaults to 500M  -->
+        <min-bytes>100000000</min-bytes> 
+
+    <!-- Do not import nfcapd files younger than min-file-age
+        The value must match /^(\d+)([DWMYhms])$/ where D, W, M, Y, h, m and s are
+        "day(s)", "week(s)", "month(s)", "year(s)", "hour(s)", "minute(s)" and "second(s)", respectively"
+        See http://search.cpan.org/~pfig/File-Find-Rule-Age-0.2/lib/File/Find/Rule/Age.pm
+        Default: 0 (no minimum age) 
+    -->
+        <min-file-age>10m</min-file-age> 
+
+    <!-- cull-enable: whether to cull processed flow data files -->
+    <!-- default: no culling; set to 1 to turn culling on -->
+    <!--    <cull-enable>1</cull-enable>  -->
+
+    <!-- cull-tty: cull time to live, in days -->
+    <!-- number of days to retain imported data files before deleting them; default: 3 -->
+    <!--    <cull-ttl>5</cull-ttl>  -->
+
+  </worker>
+
+  <master>
+    <!-- where should we write the daemon pid file to -->
+        <pid-file>/var/run/netsage-netflow-importer-daemon.pid</pid-file>
+  </master>
+
+</config>

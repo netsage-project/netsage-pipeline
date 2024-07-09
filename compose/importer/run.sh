@@ -2,4 +2,4 @@
 
 /tmp/docker_init.sh
 
-netsage-netflow-importer-daemon --nofork  --config /etc/grnoc/netsage/deidentifier/netsage_netflow_importer.xml 
+/tmp/netsage-netflow-importer-daemon.pl --nofork  --config /tmp/conf/netsage_netflow_importer.xml --sharedconfig /tmp/conf/netsage_shared.xml
