@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-#DATA_DIR=/var/lib/grnoc/netsage/
 DATA_DIR=/data/cache/
 LOGSTASH_DIR=/usr/share/logstash/pipeline/support
 mkdir -p $DATA_DIR && echo "Cache directory ${DATA_DIR} created" || echo "cache dir ${DATA_DIR} already exists"

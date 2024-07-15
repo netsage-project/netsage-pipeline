@@ -1,0 +1,33 @@
+<config>
+  <!-- rabbitmq connection info -->
+  <rabbit_input>
+    <queue>netsage_deidentifier_raw_prefilter</queue>
+    <channel>2</channel>
+  </rabbit_input>
+  <rabbit_output>
+    <channel>3</channel>
+    <queue>netsage_deidentifier_raw</queue>
+  </rabbit_output>
+  <!-- simp connection info -->
+  <simp>
+      <host>127.0.0.1</host>
+      <port>5672</port>
+      <username>guest</username>
+      <password>guest</password>
+      <exchange>Simp</exchange>
+      <timeout>60</timeout>
+      <topic>Simp.Data</topic>
+  </simp>
+  <worker>
+    <!-- How many flows to process at once -->
+      <flow-batch-size>100</flow-batch-size>
+    <!-- How many concurrent workers should perform the necessary operations -->
+      <num-processes>1</num-processes>
+    <!-- how long to cache router SNMP data, in seconds (defaults to 3600) -->
+      <!-- <snmp-cache-time>7200</snmp-cache-time> -->
+  </worker>
+  <master>
+    <!-- where should we write the daemon pid file to -->
+      <pid-file>/var/run/netsage-flow-filter-daemon.pid</pid-file>
+  </master>
+</config>
