@@ -1,12 +1,10 @@
 version: "3.7"
 services:
   rabbit:
-    #image: rabbitmq:3.8-management
-    image: rabbitmq:3.10-management
-    # NOTE: newer versions (3.12+) give this error: "Feature flags: `classic_mirrored_queue_version`: required feature flag not enabled! It must be enabled before upgrading RabbitMQ."
-    # need to figure out how to fix that
-    #image: rabbitmq:3.12.4-management
+    image: rabbitmq:3.13.2-management
+    container_name: NetSage_RabbitMQ
     env_file: .env
+    restart: always
     hostname: rabbit
     volumes:
       - ./data/rabbit:/var/lib/rabbitmq
@@ -15,7 +13,8 @@ services:
       - "5671:5671"
       - "5672:5672"
   importer:
-    image: tacc/pipeline_importer:v2.0.0
+    image: tacc/netsage_importer:v2.1.0
+    container_name: NetSage_Importer
     env_file: .env
     depends_on:
       - rabbit
@@ -26,10 +25,11 @@ services:
       - ./conf-logstash:/usr/share/logstash/pipeline/
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "@daily"
+      ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
-    image: tacc/pipeline_logstash:v2.0.0-globus
+    image: tacc/netsage_pipeline:v2.1.0
+    container_name: NetSage_Logstash
     env_file: .env
     depends_on:
       - importer
@@ -42,10 +42,26 @@ services:
       - ./data:/data
       - ./data/cache:/var/lib/grnoc/netsage/
   ofelia: ## Scheduler Task
-    image: mcuadros/ofelia:v0.3.7
-    #image: mcuadros/ofelia:v0.3.0
+    image: mcuadros/ofelia:0.3.12
+    container_name: NetSage_Ofelia
     command: daemon --docker
     depends_on:
       - importer
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  manager:
+    image: tacc/netsage_manager:v2.1.0
+    container_name: NetSage_Manager
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/cache:/data/cache
+    entrypoint: ["/bin/sh","-c"]
+    command:
+      - |
+        while true; do
+          inotifywait -e modify /data/cache/*;
+          docker restart NetSage_Logstash;
+        done
