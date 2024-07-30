@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Function to check if the expected changes were made
+# Check if the expected changes were made
 check_change() {
   file=$1
   pattern=$2
@@ -12,7 +12,7 @@ check_change() {
   fi
 }
 
-# Function to check if the directory is removed
+# Check if RabbitMQ directory is removed
 check_removal() {
   directory=$1
   if [ -d "$directory" ]; then
@@ -43,11 +43,11 @@ check_change docker-compose.override.yml "netsage_collector:v2.1.0" "Failed to u
 check_change docker-compose.override.yml "nfcapd -w /data -S 1 -z -p" "Failed to update nfcapd command"
 check_change docker-compose.override.yml "sfcapd -w /data -S 1 -z -p" "Failed to update sfcapd command"
 
-# Remove the directory
+# Remove RabbitMQ directory
 rm -rf ./data/rabbit
 
-# Verify the directory has been deleted
+# Verify RabbitMQ directory has been deleted
 check_removal ./data/rabbit
 
-echo "Pipeline successfully upgraded to 2.1.0"
+echo "NetSage Ingest Pipeline successfully upgraded to 2.1.0"
 
