@@ -20,18 +20,18 @@ To upgrade to a new release, pull new tags/code from github and docker images fr
 
 ```sh
 git reset --hard
-git pull origin master
+git fetch
 ```
 
 :::warning
 git reset --hard will obliterate any changes you have made to non-override files, eg, logstash conf files.  If necessary, please make sure you commit and save to a feature branch before continuing.
 :::
 
-Run these three commands to select the new release you want to run. In the first, replace "{tag}" by the version to run (eg, v1.2.11). When asked by the third, select the same version as the tag you checked out.
+Run these commands to upgrade to the current announced version. While older versions of the pipeline are available, they are not recommended or supported for daily use. If in doubt, the Master branch contains the latest version. The documentation version at the top of this page is also the current pipeline version number.
 ```sh
-git checkout -b {tag} 
+git switch {tag} 
 git pull
-./scripts/docker_select_version.sh
+./Upgrade_x_x_x.sh (where x_x_x is the current version you are upgrading to)
 ```
 The docker-compose.yml and docker-compose.override.yml should both now have the version number you selected for pipeline_importer and pipeline_logstash.  
 
