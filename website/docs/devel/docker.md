@@ -18,39 +18,6 @@ See the Deployment Guide to learn how to set up collectors, your environment and
 
 The importer "shared" config that Docker uses is defined in compose/netsage_shared.xml.  ** NOTE: If you want to make changes to this file, you will need to rebuild the container**
 
-## Build Images 
-
-The images are published on Docker Hub, but if you'd like to incorporate local changes please follow the process below.
-
-### Build Using Source Code
-
-If you would like to build the *importer* container using the version of the pipeline scripts found in the GitHub repo then run the following:
-
-```sh 
-docker-compose -f docker-compose.build.yml build
-
-```
-
-NOTE: The importer container includes the config files for the logstash pipeline. 
-
-
-## Optional: ElasticSearch and Kibana
-
-You can optionally store flow data locally in an ElasticSearch container and view the data with Kibana. Local storage can be enabled with the following steps:
-
-1.  Uncomment the following lines in conf-logstash/99-outputs.conf:
-
-``` 
-elasticsearch {
-    hosts => ["elasticsearch"]
-    index => "netsage_flow-%{+YYYY.MM.dd}"
-}
-```
-
-2. Comment out the `rabbitmq {...}` block in conf-logstash/99-outputs.conf if you do not want to also send logstash output to RabbitMQ.
-
-3.  Run the containers using the following line: ` `  ` docker-compose -f docker-compose.yml  -f docker-compose.develop.yml up  -d `  ` `
-
 ## Handy Docker Commands
 
 ### Start the Containers
