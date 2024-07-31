@@ -1,11 +1,12 @@
-# read log files for testing
+# read globus log files, and remove when processed
+# This assumes globus logs are added by a nightly cron job
 input {
      file {
-       path => "/data/input_data/*.json"
+       path => "/data/input_data/globus/*.json"
        sincedb_path => "/dev/null"       # to not keep track of processed lines
        start_position => "beginning"     # to always redo all lines in the file
        codec => "json"                   # parses JSON into logstash fields
        mode => "read"
-       #file_completed_action => "delete"
+       file_completed_action => "delete"
      }
 }

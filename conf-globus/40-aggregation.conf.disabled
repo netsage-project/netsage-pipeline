@@ -1,0 +1,133 @@
+##### COPY ANY CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE    #####
+
+## Fields most likely to be specific to a logstash pipeline:
+## These may be set via environment variables.
+##    aggregate_maps_path  - must be unique for each pipeline. Aggregation info is written here if logstash exits. Default is /tmp/logstash-aggregation-maps.
+##    inactivity_timeout   - value depends on timespan of nfcapd files. Default is 630 sec.
+##    timeout - the maximum length of a flow.  Default is 1 day.
+##    (trial - this may be useful for testing. Commented out by default.)
+
+# This filter stitches together flows from different nfcapd files, each (usually) spanning a 5 min. period.
+# Note: netflow keeps the start time the same for all flows with the same fingerprint, even across different nfcapd files;
+# duration is cumulative but counts are not. Sflow just sends samples.
+# If only 1 packet is seen, end time will = start time and duration will be 0.
+
+# NOTE: tags added to events before this point in the pipeline aren't kept.
+
+filter {
+
+    # TSTAT - tstat only reports complete flows, so no stitching is needed!
+    # Just add stitched_flows=0 (means no stitching attempted)
+    if [meta][flow_type] == 'tstat' {
+      mutate {
+        id => "40-1"
+        add_field => { 'stitched_flows' => 0 }
+      }
+
+    } 
+
+    # SFLOW AND NETFLOW - aggregate flows spanning more than 1 nfcapd file
+    else {
+      # We need the 'start' time as a date, as well as as a timestamp 
+      date {
+          id => "40-2"
+          match  => [ '[start]', 'UNIX' ]
+          target => '[start_date]'
+      }
+ 
+      aggregate {
+          id => "40-3"
+          # unique ID used to aggregate events
+          task_id => '%{[flow_fingerprint]}'
+
+          # save the fingerprint value on timeout
+          timeout_task_id_field => "[flow_fingerprint]"
+
+          # use event's start time rather than system time to determine whether a timeout has occured (must be type 'date')
+          timeout_timestamp_field => '[start_date]'
+
+          # If more than inactivity_timeout seconds have passed between the 'start' of this event and the 'start'
+          # of the LAST matching event, OR if no matching flow has coming in for inactivity_timeout seconds
+          # on the clock, assume the flow has ended.
+          ##  Use 630 sec = 10.5 min for 5-min files,  960 sec = 16 min for 15-min files.
+          ##  (For 5-min files, this allows one 5 min gap or period during which the no. of bits transferred don't meet the cutoff)
+          inactivity_timeout => "${inactivity_timeout:630}"
+  
+          # Maximum possible flow length. Stop aggregating even if we're still seeing matching events coming in.
+          ##  Use 86400 sec = 1 day
+          timeout => "${max_flow_timeout:86400}"
+
+          # send the aggregation map as a new event upon timeout
+          push_map_as_event_on_timeout => true
+  
+          # save the aggregation maps here when logstash shuts down 
+          ##  (use a different file for each logstash pipeline!)
+          aggregate_maps_path => '${aggregation_maps_path:/tmp/logstash-aggregation-maps}'
+
+
+          # ruby code to run each time we see an event
+          # (||= assigns the value only if the variable does not yet exist. 'map' values are included in the final event.)
+          code => "
+            # keep track of how many events we aggregate
+            map['stitched_flows'] ||= 0
+            map['stitched_flows'] += 1
+
+            # map[start and end] are start and end times of the full stitched flow (timestamps)
+            map['start'] ||= event.get('start')
+            map['end']   ||= event.get('end')
+
+            # save meta and values info from the first event 
+            # values will be updated as we stitch on other flows
+            map['meta']   ||= event.get('meta')
+            map['values'] ||= event.get('values')
+
+            # essentially the time the flow entered the pipeline
+            map['@ingest_time'] ||= Time.now     # Saving @timestamp caused problems when aggregate map was saved to a file then read.
+                                                 # but this works.
+                                                 # An @timestamp will be added when the map is finally pushed as an event.
+
+       #### FOR TESTING
+            # map['trial'] = 1
+            # map['values']['durations_sum'] ||= 0;
+            # map['values']['durations_sum'] += event.get('[values][duration]')
+            # map['values']['durations'] ||= ' '
+            # map['values']['durations'] += event.get('[values][duration]').to_s
+            # map['values']['durations'] += '; '
+       ####
+
+            # if we are seeing a subsequent flow event
+            if map['stitched_flows'] > 1
+
+                # be very sure we are getting the correct start and end times, even if events are out of order
+                map['start'] = [ map['start'], event.get('start') ].min
+                map['end']   = [ map['end'], event.get('end') ].max
+                
+                # sum the packet and bit counters
+                map['values']['num_packets'] += event.get('[values][num_packets]')
+                map['values']['num_bits'] += event.get('[values][num_bits]')
+
+                # recalculate total duration 
+                map['values']['duration'] = map['end'] - map['start']
+
+                # recalculate average pps and bps
+                if map['values']['duration'] > 0
+                    map['values']['packets_per_second'] = (map['values']['num_packets'] / map['values']['duration']).to_i;
+                    map['values']['bits_per_second'] = (map['values']['num_bits'] / map['values']['duration']).to_i;
+                else
+                # can't calculate so set to 0 #
+                    map['values']['packets_per_second'] = 0;
+                    map['values']['bits_per_second'] = 0;
+                end
+
+                # round off after calculations
+                map['values']['duration'] = (map['values']['duration']).round(3)
+
+            end
+
+            # discard the original event. we only care about the aggregation.
+            event.cancel()
+          "
+      }
+    }
+
+}

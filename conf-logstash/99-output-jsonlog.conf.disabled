@@ -1,8 +1,0 @@
-output {
-    file {
-        path => "/data/output/test.json"
-         codec => json_lines 
-         #codec => json
-         write_behavior => overwrite
-      }
-}

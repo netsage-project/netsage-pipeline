@@ -1,4 +1,41 @@
 ------------------------------------------------------
+# NetSage Ingest Pipeline 2.1.0 -- July 31, 2024
+------------------------------------------------------
+
+Features:
+* All-new containers based on current OS builds and elimination of EOL platforms such as CentOS
+* Updates to current versions of Logstash, RabbitMQ, Ofelia, and nfdump
+* Streamlined codebase, eliminating unnecessary legacy code and repositories
+* Unified, transparent naming scheme for containers
+* New NetSage Manager container, responsible for necessary restarts of containers when Science Registry files are updated
+* Ability to ingest Globus log data
+* Revised flow tagging scheme using the NetSage Science Registry, resulting in more accurate information on NetSage Dashboads
+
+Bug Fixes:
+
+* Fixed issue where not all containers would restart after a host reboot
+* Fixed issue where updated Science Registry data was not being used by Logstash
+* Fixed issue with incorrect Docker container dependencies
+
+------------------------------------------------------
+# NetSage Deidentfier 2.0.0 -- September 19, 2023
+------------------------------------------------------
+
+Features:
+
+* Updated docker_init.sh with new locations for Science Registry, CAIDA, and GeoLite databases
+* Updated jobs in cron.d with new locations for Science Registry, CAIDA, and GeoLite databases
+* General updates to all container images
+* Updated pipeline-logstash, pipeline-importer, and netsage-nfdump-collector to point to TACC repositories
+* Revised 15-sensor-specific-changes.conf to add filter-by-subnet flow collection filtering
+* Added 57-ip-protocol.conf to tag IPv4/IPv6 flows
+* AARNET privatization is no longer needed, so added .disabled to 80-privatize-org.conf, and made it into a generalized version as an example. Moved lines making the AARNET org name consistent to 95-cleanup.conf.
+
+Documentation updates
+
+* Dependabot automatic remediations of vulnerabilites (for docusaurus)
+
+------------------------------------------------------
 ## GRNOC NetSage Deidentfier 1.2.12 -- Jan 4, 2022
 ------------------------------------------------------
 Usage note: With this release, we will move to using logstash 7.16.2 to fix a Log4j vulnerability.

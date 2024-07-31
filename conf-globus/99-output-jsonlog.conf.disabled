@@ -1,0 +1,8 @@
+output {
+    file {
+        path => "/data/all.json"
+         codec => json_lines 
+         #codec => json
+        #  write_behavior => overwrite
+      }
+}
