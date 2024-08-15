@@ -24,14 +24,14 @@ services:
   sflow-collector:
     image: tacc/netsage_collector:v2.1.0
     restart: always
-    command: sfcapd -w /data -S 1 -z -p 9999
+    command: sfcapd -w /data -S 1 -z=lzo -p 9999
     volumes:
       - ./data/input_data/sflow:/data
     ports:
       - "9998:9998/udp"
   netflow-collector:
     image: tacc/netsage_collector:v2.1.0
-    command: nfcapd -w /data -S 1 -z -p 9999
+    command: nfcapd -w /data -S 1 -z=lzo -p 9999
     ports:
       - "9999:9999/udp"
     restart: always
