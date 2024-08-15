@@ -17,7 +17,7 @@ services:
     ## If you add additional collectors or need to make other changes in the importer "shared" config, 
     ## use the netsage_override.xml file and uncomment the following lines 
     #   volumes:
-    #     - ./userConfig/netsage_override.xml:/etc/grnoc/netsage/deidentifier/netsage_shared.xml
+    #     - ./userConfig/netsage_override.xml:/tmp/conf/netsage_shared.xml
 
   ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
   ## Remove any collectors that do not need to be running.
