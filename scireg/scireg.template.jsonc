@@ -1,0 +1,27 @@
+// sample JSON template for the Science Registry.
+// be sure to strip out all comments when finished.
+// eg: sed '/^\s*\/\//d; s/\/\*.*\*\///g' yourfile.jsonc > new_entry.json
+// note: all entries are strings, and should in quotes
+{
+      // array of subnets
+      "addresses" : [
+         "129.114.0.0/16",
+         "129.115.0.0/16"
+      ],
+      "description" : "All TACC IP addresses",
+      // NSF Code for Classifications for Research, applicable; 
+      // e.g.: MPS.Physics.High Energy, GEO.Earth, MPS.Astronomy, BIO.Genomics and Bioinformatics, etc.
+      "discipline" : "Multi-Science Facility",
+      "latitude" : "30.3897376",
+      "longitude" : "-97.7261257",
+      "org_abbr" : "TACC",
+      "org_name" : "Texas Advanced Computing Center (TACC)",
+      // resource name =  "org_abbr - resource_name - resource type"
+      // where type must be one of the following: Types: Compute, Storage, Archive, Test
+      // e.g.: "NERSC - DTN - Storage"  or "TACC - Stampede3 - Compute"
+      "resource_name" : null,
+      // sample projects: ATLAS, CMS, FIONA, Environmental Molecular Sciences Lab (EMSL), etc (optional)
+      "project_name" : null,
+      // email list to contact to see if information is current, avoid personal emails
+      "contact_email" : null
+}
