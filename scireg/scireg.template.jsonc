@@ -8,14 +8,12 @@
          "129.114.0.0/16",
          "129.115.0.0/16"
       ],
-      "description" : "All TACC IP addresses",
+      "org_name" : "Texas Advanced Computing Center (TACC)",
       // NSF Code for Classifications for Research, applicable; 
       // e.g.: MPS.Physics.High Energy, GEO.Earth, MPS.Astronomy, BIO.Genomics and Bioinformatics, etc.
       "discipline" : "Multi-Science Facility",
       "latitude" : "30.3897376",
       "longitude" : "-97.7261257",
-      "org_abbr" : "TACC",
-      "org_name" : "Texas Advanced Computing Center (TACC)",
       // resource name =  "org_abbr - resource_name - resource type"
       // where type must be one of the following: Types: Compute, Storage, Archive, Test
       // e.g.: "NERSC - DTN - Storage"  or "TACC - Stampede3 - Compute"
