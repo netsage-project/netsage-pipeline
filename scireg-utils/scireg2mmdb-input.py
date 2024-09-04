@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # This program reformats scireg.json to the format needed by program scireg2mmdb.go 
-#
+# 
 # TODO: test support for IPv6
 
 import json
@@ -62,11 +62,11 @@ def main(argv):
         if 'description' in item:
              print("Error: old style science registry file. Need to use updated file. ")
              sys.exit()
-        for resource in item.get("resources", []):
+
+        resource = item.get("resources", []):
             # Check if the resource has 'address' and 'is_pingable' keys
             if "address" in resource:
 
-            #if "address" in resource and "is_pingable" in resource:  # to skip entries not pingable..
                 # code to check for IPv6: no longer needed
                 # Check if the subnet is IPv6, if so, skip
                 #if not check_subnet(resource["address"]):
@@ -77,12 +77,7 @@ def main(argv):
                 # to just print warning about V6
                 #check_subnet(resource["address"])
 
-                projects_string = str(resource.get("projects", "")) # convert to string
-                #projects_string = resource.get("projects", "")
-                #print ("projects_string: ", projects_string)
-
                 # Construct allocation for each resource
-                resource = {
                     "subnet": resource["address"],
                     "discipline": item["discipline"],
                     "latitude": item["latitude"],
@@ -91,7 +86,6 @@ def main(argv):
                     "org_abbr": item["org_abbr"],
                     "resource_name": resource["resource_name"],
                     "projects": projects_string
-                }
                 #print ("Adding: ", resource)
                 resources.append(resource)
                 num_entries += 1
