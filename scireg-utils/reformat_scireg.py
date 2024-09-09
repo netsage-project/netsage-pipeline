@@ -16,6 +16,7 @@ import csv
 import re
 import sys
 import ipaddress
+import socket
 import argparse
 from collections import defaultdict
 
@@ -32,15 +33,32 @@ include_single_hosts = 0
 include_single_hosts = 1
 
 # this needs more testing: do hostname lookups to see what they are
-#combine24 = 1
+combine24 = 1
+#combine24 = 0
+
+
+
+import ipaddress
+from collections import defaultdict
+
+# Function to lookup hostname from an IP address (assumes `lookup_ip` exists)
+def lookup_ip(ip_address):
+    # You can implement or modify this function as needed.
+    # For now, let's just mock the lookup to return the IP as the "hostname"
+    try:
+        hostname = socket.gethostbyaddr(ip_address)[0]
+        return hostname
+    except (socket.herror, socket.gaierror):
+        return ip_address + "; Unknown"
 
 def combine_to_24(subnets):
-# routine to combine multiple /32s into a single /24
-
-   # Dictionary to store the /32 subnets grouped by their /24 network
+    # Dictionary to store the /32 subnets grouped by their /24 network
     network_groups = defaultdict(list)
     # List to store all IPv6 subnets
     ipv6_subnets = []
+
+    # Dictionary to store hostnames for /32 addresses
+    hostnames_by_24 = defaultdict(list)
 
     # Group subnets by their parent /24 network
     for subnet in subnets:
@@ -55,6 +73,10 @@ def combine_to_24(subnets):
         if ip_net.prefixlen == 32:
             parent_net = ip_net.supernet(new_prefix=24)
             network_groups[parent_net].append(ip_net)
+
+            # Lookup the hostname for the /32 address
+            hostname = lookup_ip(str(ip_net.network_address))
+            hostnames_by_24[parent_net].append(hostname)
         else:
             # If it's not /32, add it directly to the result (optional handling)
             network_groups[ip_net].append(ip_net)
@@ -67,16 +89,19 @@ def combine_to_24(subnets):
         if len(ip_list) > 1:
             # Combine into /24 if more than one /32 in the same /24 network
             result.append(str(parent_net))
+
+            # Print the list of hostnames for the combined /32 addresses
+            print(f"  Combined /32 addresses into {parent_net}:")
+            for hostname in hostnames_by_24[parent_net]:
+                print(f"    Hostname: {hostname}")
         else:
-            # Otherwise, keep the individual /32 subnet
+            # Otherwise, keep the individual subnet
             result.append(str(ip_list[0]))
 
     # Add the IPv6 subnets to the result as they are
     result.extend(str(subnet) for subnet in ipv6_subnets)
 
     return result
-
-
 
 def ping_host(address):
     # checks if ping works, or port 22 or 443 are open
@@ -169,12 +194,6 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         org_name = item.get("org_name", "")
         addresses = item.get("addresses", [])
 
-        if combine24 and len(addresses) > 1:
-            combined_subnets = combine_to_24(addresses)
-            if len(combined_subnets) < len(addresses):
-                print ("converted subnet list: ", addresses)
-                print ("   to new subnet list: ", combined_subnets)
-
         # combine org_name and org_abbr
         org_name = item.get("org_name", "")
         org_abbr = item.get("org_abbr", "")
@@ -197,6 +216,16 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
             resource_name = item.get("resource", "") 
 
         discipline = item.get("discipline", "")
+
+        if combine24 and len(addresses) > 1:
+            print (f"\n{filtered_cnt}: Combining subnets for ORG: {org_name}", addresses)
+            combined_subnets = combine_to_24(addresses)
+            if len(combined_subnets) < len(addresses):
+                print (f"{filtered_cnt}: Converted subnet list: ", addresses)
+                print ("     to new subnet list: ", combined_subnets)
+            else:
+                print (f"{filtered_cnt}: Leaving subnet list as is: ", combined_subnets)
+            addresses = combined_subnets
 
         new_subnets = []
         for address in addresses:
@@ -228,6 +257,15 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
             print ("error: number of subnets is zero. This should not happen. exiting")
             sys.exit()
 
+        # for any of the following DOE sites, set engage@es.net as the contact email
+        if "ESnet" in org_name or "FNAL" in org_name or "BNL" in org_name or \
+             "ORNL" in org_name or "Fermi" in org_name or "NERSC" in org_name or \
+             "ANL" in org_name or "LBL" in org_name or "LBNL" in org_name or "LLNL" in org_name:
+            contact_email = "engage@es.net"
+            #print (f"Setting contact email to {contact_email} for Org {org_name}")
+        else:
+            contact_email = "unknown"
+
         if len(new_subnets) > 0: # only if have at least 1 subnet
             projects = item.get("projects", []) # projects is an array, but almost never has more than 1 entry
             proj_name = get_project_name(projects)
@@ -244,7 +282,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
                 "resource_name": resource_name,
                 "project_name": proj_name,
                 "scireg_id": filtered_cnt,
-                "contact_email": "unknown",
+                "contact_email": contact_email,
                 "last_updated": "unknown",
             }
 
