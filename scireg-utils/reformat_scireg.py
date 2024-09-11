@@ -7,6 +7,10 @@
 #   all /32s (single hosts)
 #   all perfSONAR hosts
 #
+# other options (set via globals below)
+#  combine24: combine mutiple /32s into a single /24. Note: there is no way to tell if its actually a /24
+#  include_single_hosts: if only 1 /32 for the Organization, throw it out
+#
 # TODO: handle IPV6 better!
 #
 
@@ -24,6 +28,7 @@ from collections import defaultdict
 # to get contact address from whois
 #import whois
 
+#globals
 ping_succeeded = 0
 ping_failed = 0
 
@@ -32,7 +37,7 @@ ping_failed = 0
 include_single_hosts = 0
 include_single_hosts = 1
 
-# this needs more testing: do hostname lookups to see what they are
+# if multiple /32s, combine into a single /24
 combine24 = 1
 #combine24 = 0
 
@@ -72,11 +77,19 @@ def combine_to_24(subnets):
         # Ensure we are working with a /32 network
         if ip_net.prefixlen == 32:
             parent_net = ip_net.supernet(new_prefix=24)
-            network_groups[parent_net].append(ip_net)
+            ip_str = str(ip_net.network_address)
 
-            # Lookup the hostname for the /32 address
-            hostname = lookup_ip(str(ip_net.network_address))
-            hostnames_by_24[parent_net].append(hostname)
+            # Check if the host is pingable before adding
+            if ping_host(ip_str, check_ping):
+                #print (f"host at address {ip_str} is up")
+                network_groups[parent_net].append(ip_net)
+
+                # Lookup the hostname for the /32 address
+                hostname = lookup_ip(ip_str)  # Assuming `lookup_ip` is defined elsewhere
+                hostnames_by_24[parent_net].append(hostname)
+            else:
+                print(f"Skipping {ip_str} as it is not reachable.")
+
         else:
             # If it's not /32, add it directly to the result (optional handling)
             network_groups[ip_net].append(ip_net)
@@ -103,38 +116,39 @@ def combine_to_24(subnets):
 
     return result
 
-def ping_host(address):
+def ping_host(address, check_ping):
     # checks if ping works, or port 22 or 443 are open
     global ping_succeeded
     global ping_failed
 
-    if address.endswith("/32"):
-        ip = address.split("/")[0]
-        print("checking host:", ip)
-        try:
-            ping_output = subprocess.check_output(["ping", "-c", "1", '-W', '1', ip], stderr=subprocess.DEVNULL)
-            #print("   ping succeeded.")
-            ping_succeeded += 1
-            return 1  # Ping succeeded
-        except subprocess.CalledProcessError:
-            #print("   ping failed.")
-            # if ping fails, also check if 443 or 22 are open, in case ICMP is blocked
-            ports_to_check = [22, 443]
-            for port in ports_to_check:
-                #print("checking port:", port, "on host:", ip)
-                try:
-                    nc_output = subprocess.check_output(["nc", "-zv", "-w1", ip, str(port)], stderr=subprocess.DEVNULL, timeout=1)
-                    #print("   port check succeeded:", port)
-                    ping_succeeded += 1
-                    return 1  # Port is open
-                except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-                    #print("   port check failed.")
-                    ping_failed += 1
-            ping_failed += 1
-            print(f"  host {ip} not up")
-            return 0  # All checks failed, both ping and ports
-    else:
-        return 2  # For non /32 addresses, set is_pingable to 2
+    if not check_ping:  # just return 1 if not checking
+        print ("skipping ping check for address: ", address)
+        return 1
+
+    print (f"Checking if host {address} ({lookup_ip(address)}) is up.")
+    try:
+        ping_output = subprocess.check_output(["ping", "-c", "1", '-W', '1', address], stderr=subprocess.DEVNULL)
+        #print("   ping succeeded.")
+        ping_succeeded += 1
+        return 1  # Ping succeeded
+    except subprocess.CalledProcessError:
+        print("   ping failed.")
+        # if ping fails, also check if 443 or 22 are open, in case ICMP is blocked
+        # Xrootd port is usually 1094, so adding that
+        ports_to_check = [22, 443, 1094]
+        for port in ports_to_check:
+            #print("checking port:", port, "on host:", address)
+            try:
+                nc_output = subprocess.check_output(["nc", "-zv", "-w1", address, str(port)], stderr=subprocess.DEVNULL, timeout=1)
+                print(f"   {address} port check succeeded:", port)
+                ping_succeeded += 1
+                return 1  # Port is open
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+                print(f"   port {port} check failed.")
+        # if got this far, host is down
+        ping_failed += 1
+        print(f"   host {address} not up")
+        return 0  # All checks failed, both ping and ports
 
 def extract_ip_subnet(ip_address):
     # gets the first part of ipaddress: X.X.X.0
@@ -237,8 +251,8 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
 			 # skip perfSONAR hosts: more are out of date.
                          #print (f"  skipping perfSONAR host {address}")
                          skip_cnt += 1
-                    elif check_ping:
-                         is_pingable = ping_host(address)
+                    elif check_ping and not combine24:
+                         is_pingable = ping_host(address, check_ping)
                          if is_pingable:
                              print (f"  host {address} is up")
                     if is_pingable > 0:
@@ -247,15 +261,16 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
                           new_subnets.append(address)
                 else:
                     skip_cnt += 1
+                    print (f"Skipping /32 address {address} for org {org_name}")
                     continue  # skip /32 and continue with next item
             else:
                 num_subnets += 1  
                 #print (f"{filtered_cnt}: adding subnet {address} to new subnets array")
                 new_subnets.append(address)
 
-        if include_single_hosts and len(new_subnets) == 0:
-            print ("error: number of subnets is zero. This should not happen. exiting")
-            sys.exit()
+        if len(new_subnets) == 0:
+            print (f"No active subnets found for org {org_name}. Skipping")
+            continue
 
         # for any of the following DOE sites, set engage@es.net as the contact email
         if "ESnet" in org_name or "FNAL" in org_name or "BNL" in org_name or \
@@ -288,6 +303,19 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
 
             filtered_cnt+=1
             filtered_data.append(filtered_item)
+        else:
+            skipped_item = {
+                "addresses": addresses,
+                "org_name": org_name,
+                "discipline": item.get("discipline", ""),
+                "latitude": item.get("latitude", ""),
+                "longitude": item.get("longitude", ""),
+                "resource_name": resource_name,
+                "project_name": proj_name,
+                "contact_email": contact_email,
+                "last_updated": "unknown",
+            }
+            skipped_data.append(skipped_item)
 
     print (f"\nProcessed {total_cnt} science registry entries; skipped {skip_cnt} /32 hosts")
 
@@ -295,10 +323,9 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         json.dump(filtered_data, f, indent=2)
     print (f"\nWrote {len(filtered_data)} entries ({num_subnets} subnets) to file {output_json_file} \n")
 
-# XXX: revisit later
-#    with open(skipped_json_file, 'w') as f:
-#        json.dump(skipped_data, f, indent=2)
-#    print (f"Wrote {len(skipped_data)} entries to file {skipped_json_file} \n")
+    with open(skipped_json_file, 'w') as f:
+        json.dump(skipped_data, f, indent=2)
+    print (f"Wrote {len(skipped_data)} entries to file {skipped_json_file} \n")
 
     return (filtered_cnt, skip_cnt, filtered_data)
 
