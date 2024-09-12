@@ -74,10 +74,10 @@ def combine_to_24(subnets,id):
                 hostname = lookup_ip(ip_str)  # Assuming `lookup_ip` is defined elsewhere
                 hostnames_by_24[parent_net].append(hostname)
             else:
-                print(f"{id}:  Skipping {ip_str} as it is not reachable.")
+                print(f"{id}:  Skipping {ip_str} since it is not reachable.")
 
         else:
-            # If it's not /32, add it directly to the result (optional handling)
+            # If it's not /32, add it to the list of subnets
             network_groups[ip_net].append(ip_net)
 
     # List to store the final result
@@ -134,7 +134,7 @@ def ping_host(address, check_ping, id):
                 continue
         # if got this far, host is down
         ping_failed += 1
-        print(f"   host {address} not up")
+        print(f"     host {address} not up")
         return 0  # All checks failed, both ping and ports
 
 def extract_ip_subnet(ip_address):
@@ -191,6 +191,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         data = json.load(f)
 
     for item in data:
+        print ("--------------")
         total_cnt += 1
         org_name = item.get("org_name", "")
         addresses = item.get("addresses", [])
@@ -215,20 +216,22 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
 
         orig_addresses = addresses  # keep a copy of orginal subnet list for 'skipped' file
         if combine24 and len(addresses) > 1:
-            print (f"\n{filtered_cnt}: Combining subnets for ORG: {org_name}", addresses)
-            combined_subnets = combine_to_24(addresses, filtered_cnt)
-            if len(combined_subnets) < len(addresses):
-                print (f"{filtered_cnt}: Converted subnet list: ", addresses)
-                print ("     to new subnet list: ", combined_subnets)
+            print (f"\n{total_cnt}: Combining subnets for ORG: {org_name}", addresses)
+            combined_subnets = combine_to_24(addresses, total_cnt)
+            if len(combined_subnets) > 0:
+                if len(combined_subnets) < len(addresses):
+                    print (f"{total_cnt}: Converted subnet list: ", addresses)
+                    print ("     to new subnet list: ", combined_subnets)
+                else:
+                    print (f"{total_cnt}: Leaving subnet list as is: ", combined_subnets)
             else:
-                print (f"{filtered_cnt}: Leaving subnet list as is: ", combined_subnets)
-                print ("")
+                print (f"{total_cnt}: No valid addresses for this organization ")
             addresses = combined_subnets
 
         new_subnets = []
         up = "" # initialize, flag for /32 up/down
         for address in addresses:
-            #print(f"{filtered_cnt}: checking address: ", address)
+            #print(f"{total_cnt}: checking address: ", address)
             if address.endswith("/32"):
                 is_pingable = 1   # assume pingable by default
                 # only keep /32 addresses that are pingable. Note that even with combine24, single /32s may still exist
@@ -237,19 +240,20 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
                     #print (f"  skipping perfSONAR host {address}")
                     skip_cnt += 1
                 elif check_ping:
-                    is_pingable = ping_host(address, check_ping, filtered_cnt)
+                    if len(orig_addresses) == 1: # then did not get checked by combine_to_24 routine
+                        is_pingable = ping_host(address, check_ping, total_cnt)
                 if is_pingable:
                     num_subnets += 1  
-                    #print (f"{filtered_cnt}: adding /32 address {address} to new subnets array")
+                    #print (f"{total_cnt}: adding /32 address {address} to new subnets array")
                     new_subnets.append(address)
                 else:
                     skip_cnt += 1
                     up = "False"
-                    print (f"Skipping /32 address {address} for org {org_name}, host is down")
+                    print (f"{total_cnt}: Skipping /32 address {address} for org {org_name}, host is down")
                     continue  # skip /32 and continue with next item
             else:
                 num_subnets += 1  
-                #print (f"{filtered_cnt}: adding subnet {address} to new subnets array")
+                #print (f"{total_cnt}: adding subnet {address} to new subnets array")
                 new_subnets.append(address)
 
         # for any of the following DOE sites, set engage@es.net as the contact email
@@ -264,7 +268,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         projects = item.get("projects", []) # projects is an array, but almost never has more than 1 entry
         proj_name = get_project_name(projects)
         if len(projects) > 1:
-            print(f"  {filtered_cnt}: New combined project name string: {proj_name}")
+            print(f"  {total_cnt}: New combined project name string: {proj_name}")
             print(f"        Subnet list: ", new_subnets)
 
         if len(new_subnets) > 0: # only if have at least 1 subnet
@@ -304,6 +308,8 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
             }
             #print ("adding to list of skipped entries: ", skipped_item)
             skipped_data.append(skipped_item)
+
+        print (f"{total_cnt}: Done with this entry for org {org_name}\n")
 
         # to speed up debugging
         #if total_cnt > 10:
