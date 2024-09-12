@@ -203,6 +203,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
            #print (f"XXX: adding {org_abbr} to {org_name}")
            org_name += f" ({org_abbr})" # add org_abbr to end of org_name if not already there
 
+        print (f"{total_cnt}: Checking subnets for org {org_name}", addresses)
         role = item.get("role", "")
         if role == None:
             role = ""
@@ -237,7 +238,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
                 # only keep /32 addresses that are pingable. Note that even with combine24, single /32s may still exist
                 if discipline == "CS.Network Testing and Monitoring" and proj_name != "Data Mobility Exhibition":  
 		    # skip perfSONAR hosts: most are out of date, and some overlap with DTNs.
-                    #print (f"  skipping perfSONAR host {address}")
+                    print (f"{total_cnt}:  skipping perfSONAR host {address}")
                     skip_cnt += 1
                 elif check_ping:
                     if len(orig_addresses) == 1: # then did not get checked by combine_to_24 routine
@@ -253,7 +254,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
                     continue  # skip /32 and continue with next item
             else:
                 num_subnets += 1  
-                #print (f"{total_cnt}: adding subnet {address} to new subnets array")
+                print (f"{total_cnt}:   adding subnet {address} to new subnets array")
                 new_subnets.append(address)
 
         # for any of the following DOE sites, set engage@es.net as the contact email
@@ -325,7 +326,7 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         json.dump(skipped_data, f, indent=2)
     print (f"Wrote {len(skipped_data)} entries to file {skipped_json_file} \n")
 
-    return (filtered_cnt, skip_cnt, filtered_data)
+    return (filtered_cnt, skip_cnt, filtered_data, skipped_data)
 
 # Function to write data to CSV
 def write_to_csv(data, output_csv):
@@ -366,12 +367,14 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input", default="scireg.json", help="Input JSON file (default = scireg.json)")
     parser.add_argument("-o", "--output", default="newScireg.json", help="Output JSON file (default = newScireg.json)")
     parser.add_argument("-c", "--csv", default = "scireg.csv", help="Output CSV file")
+    parser.add_argument("-s", "--csv_skip", default = "skipped.csv", help="Output CSV file of skipped entries")
     parser.add_argument("-p", "--ping", action="store_true", help="Check if host is reachable")
     args = parser.parse_args()
 
     input_file = args.input
     output_json_file = args.output
     output_csv = args.csv
+    skipped_csv = args.csv_skip
     check_ping = args.ping
 
     skipped_json_file = "skipped_entries.json"
@@ -379,18 +382,19 @@ if __name__ == "__main__":
     if check_ping:
         print ("Will check if host is pingable before adding to output file")
 
-    cnt,skip_cnt,data = filter_fields(input_file, output_json_file,skipped_json_file,check_ping)
+    cnt,skip_cnt,data,skipped_data = filter_fields(input_file, output_json_file,skipped_json_file,check_ping)
 
     # Write data to CSV
     # Sort data by org_name for csv file
     data.sort(key=lambda x: x["org_name"])
     write_to_csv(data, output_csv)
+    write_to_csv(skipped_data, output_csv)
 
     if check_ping:
        total_32s = ping_succeeded + ping_failed
        print("\nFound %d valid subnet entries, including %d /32s, %d are pingable, %d are not" % (cnt, total_32s, ping_succeeded, ping_failed))
     print("Results written to files: JSON - %s, CSV - %s" % (output_json_file, output_csv))
-    #print("%d entries skipped. See %s" % (skip_cnt, skipped_json_file))
+    print("%d entries skipped. See %s" % (skip_cnt, skipped_json_file))
     print("Done.")
 
 
