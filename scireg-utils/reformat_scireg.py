@@ -388,7 +388,7 @@ if __name__ == "__main__":
     # Sort data by org_name for csv file
     data.sort(key=lambda x: x["org_name"])
     write_to_csv(data, output_csv)
-    write_to_csv(skipped_data, output_csv)
+    write_to_csv(skipped_data, skipped_csv)
 
     if check_ping:
        total_32s = ping_succeeded + ping_failed
