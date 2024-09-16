@@ -3,7 +3,7 @@
 // eg: sed '/^\s*\/\//d; s/\/\*.*\*\///g' yourfile.jsonc > new_entry.json
 // note: all entries are strings, and should in quotes
 {
-      // array of subnets
+      // array of subnets, both IPV4 and IPV6
       "addresses" : [
          "129.114.0.0/16",
          "129.115.0.0/16"
