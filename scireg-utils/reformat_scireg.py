@@ -6,12 +6,11 @@
 # this program strips out all of the following old scireg data:
 #   all /32s (single hosts)
 #   all perfSONAR hosts
+#   if 'check_ping' is set, also removes all hosts that are to not respond to port 22, 443, 1095 (Rucio), or ping
 #
 # other options (set via globals below)
 #  combine24: combine mutiple /32s into a single /24. Note: there is no way to tell if its actually a /24
 #     - current default is TRUE
-#
-# TODO: combine multiple IPV6 /128 into a /64 
 #
 
 import json
@@ -25,12 +24,12 @@ import argparse
 from collections import defaultdict
 
 #globals
-
 ping_succeeded = 0
 ping_failed = 0
 
 # if multiple /32s, combine into a single /24
 combine24 = 1
+lookup_hostname = 0  # useful for debugging/verification, but slows things down a lot
 
 # Function to lookup hostname from an IP address (assumes `lookup_ip` exists)
 def lookup_ip(ip_address):
@@ -41,6 +40,20 @@ def lookup_ip(ip_address):
         return hostname
     except (socket.herror, socket.gaierror):
         return ip_address + "; Unknown"
+
+def fix_ip_addresses(addresses):
+    # some of the SciReg subnets are invalid, with host bits set incorrectly. This fixes those.
+    fixed_subnets = []
+    
+    for subnet in addresses:
+        try:
+            # Attempt to create an IPv4 or IPv6 network, correcting any host bits
+            fixed_subnet = ipaddress.ip_network(subnet, strict=False)
+            fixed_subnets.append(str(fixed_subnet))
+        except ValueError:
+            # Skip any invalid addresses
+            print(f"Invalid address skipped: {subnet}")
+    return fixed_subnets
 
 def combine_to_24(subnets,id):
     # Dictionary to store the /32 subnets grouped by their /24 network
@@ -71,8 +84,9 @@ def combine_to_24(subnets,id):
                 network_groups[parent_net].append(ip_net)
 
                 # Lookup the hostname for the /32 address
-                hostname = lookup_ip(ip_str)  # Assuming `lookup_ip` is defined elsewhere
-                hostnames_by_24[parent_net].append(hostname)
+                if lookup_hostname:  # slows things down
+                    hostname = lookup_ip(ip_str)  # Assuming `lookup_ip` is defined elsewhere
+                    hostnames_by_24[parent_net].append(hostname)
             else:
                 print(f"{id}:  Skipping {ip_str} since it is not reachable.")
 
@@ -91,8 +105,9 @@ def combine_to_24(subnets,id):
 
             # Print the list of hostnames for the combined /32 addresses
             print(f"{id}: Combined /32 addresses into {parent_net}:")
-            for hostname in hostnames_by_24[parent_net]:
-                print(f"    Hostname: {hostname}")
+            if lookup_hostname:
+                for hostname in hostnames_by_24[parent_net]:
+                    print(f"    Hostname: {hostname}")
         else:
             # Otherwise, keep the individual subnet
             result.append(str(ip_list[0]))
@@ -216,9 +231,16 @@ def filter_fields(input_file, output_json_file, skipped_json_file, check_ping):
         discipline = item.get("discipline", "")
 
         orig_addresses = addresses  # keep a copy of orginal subnet list for 'skipped' file
-        if combine24 and len(addresses) > 1:
+        # some of the old SciReg entries have invalid subnets. This will fix that.
+        fixed_addresses = fix_ip_addresses(addresses)
+        ipv4_subnets = [subnet for subnet in fixed_addresses if isinstance(ipaddress.ip_network(subnet), ipaddress.IPv4Network)]
+        ipv6_subnets = [subnet for subnet in fixed_addresses if isinstance(ipaddress.ip_network(subnet), ipaddress.IPv6Network)]
+        if combine24 and len(ipv6_subnets) > 1:
+            print ("Error: combinine V6 subnets not yet supported. Exiting")
+            sys.exit()
+        if combine24 and len(ipv4_subnets) > 1:
             print (f"\n{total_cnt}: Combining subnets for ORG: {org_name}", addresses)
-            combined_subnets = combine_to_24(addresses, total_cnt)
+            combined_subnets = combine_to_24(ipv4_subnets, total_cnt) + ipv6_subnets
             if len(combined_subnets) > 0:
                 if len(combined_subnets) < len(addresses):
                     print (f"{total_cnt}: Converted subnet list: ", addresses)
