@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 # adds new Science Registry Entry to existing file from a '.template' file.
-#
-#Usage: python combine_json.py [input_file1] [input_file2] [output_file]
-#    Default input_file1: scireg.json
-#    Default input_file2: scireg.template.json
-#    Default output_file: newScireg.json
+# Usage:
+# add new entry:
+#   add_new_scireg.py -i input_file1.json -t input_file2.json -o output_file.json
+# cleanup
+#   add_new_scireg.py --clean -i input_file1.json -o output_file.json
 
 # note: scireg.template.json must contain only 1 entry.
 #   If adding multiple entries, run this multiple times
@@ -15,7 +15,7 @@
 import json
 import sys
 from datetime import datetime
-
+import argparse
 
 def sort_by_org_name(data):
     """Sort entries by 'org_name' field."""
@@ -31,9 +31,7 @@ def update_last_updated(data):
     """Update the 'last_updated' field in all entries with today's date."""
     today = datetime.today().strftime('%Y-%m-%d')
     print ("Setting last_updated field to: ", today)
-    #print ("data: ", data)
     data['last_updated'] = today
-
     return data
 
 def remove_comments(file_content):
@@ -58,7 +56,7 @@ def combine_json_files(file1, file2, output_file):
 
         # Update 'last_updated' field for the second file
         data2 = update_last_updated(data2)
-        print ("Adding to Science Registry: ", data2)
+        print("Adding to Science Registry: ", data2)
 
         # add data2 to the end of data1
         data1.append(data2)
@@ -72,26 +70,33 @@ def combine_json_files(file1, file2, output_file):
         with open(output_file, 'w') as f_out:
             json.dump(renumbered_data, f_out, indent=4)
 
+def clean_and_renumber(file1, output_file):
+    """Load JSON, sort by org_name, and renumber scireg_id without merging."""
+    with open(file1, 'r') as f1:
+        data = json.load(f1)
+
+        data = sort_by_org_name(data)
+        renumbered_data = renumber_scireg_id(data)
+
+        with open(output_file, 'w') as f_out:
+            json.dump(renumbered_data, f_out, indent=4)
+
 if __name__ == "__main__":
-    # Default filenames
-    default_file1 = 'scireg.json'
-    default_file2 = 'scireg.template.json'
-    default_output_file = 'newScireg.json'
+    parser = argparse.ArgumentParser(description="Combine and clean Science Registry JSON files.")
+    parser.add_argument('--clean', action='store_true', help="Sort by org_name and renumber scireg_id without merging files.")
+    parser.add_argument('-i', '--input_file1', default='scireg.json', help="Input file 1 (default: scireg.json)")
+    parser.add_argument('-t', '--input_file2', default='scireg.template.json', help="Input file 2 (default: scireg.template.json)")
+    parser.add_argument('-o', '--output_file', default='newScireg.json', help="Output file (default: newScireg.json)")
 
-   # Check for the help flag
-    if '-h' in sys.argv:
-        print(f"Usage: combine_json.py [input_file1] [input_file2] [output_file]")
-        print(f"    Default input_file1: {default_file1}")
-        print(f"    Default input_file2: {default_file2}")
-        print(f"    Default output_file: {default_output_file}")
-        sys.exit(0)
+    args = parser.parse_args()
 
-   # Set file names or fallback to defaults if not provided
-    file1 = sys.argv[1] if len(sys.argv) > 1 else default_file1
-    file2 = sys.argv[2] if len(sys.argv) > 2 else default_file2
-    output_file = sys.argv[3] if len(sys.argv) > 3 else default_output_file
-
-    combine_json_files(file1, file2, output_file)
-    print(f"Combined JSON data written to {output_file}")
+    if args.clean:
+        # Clean and renumber without merging
+        clean_and_renumber(args.input_file1, args.output_file)
+        print(f"Cleaned and renumbered data written to {args.output_file}")
+    else:
+        # Combine and process files
+        combine_json_files(args.input_file1, args.input_file2, args.output_file)
+        print(f"Combined JSON data written to {args.output_file}")
 
 
