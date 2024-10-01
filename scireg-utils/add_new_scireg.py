@@ -16,6 +16,11 @@ import json
 import sys
 from datetime import datetime
 
+
+def sort_by_org_name(data):
+    """Sort entries by 'org_name' field."""
+    return sorted(data, key=lambda x: x.get('org_name', '').lower())
+
 def renumber_scireg_id(data):
     """Renumber 'scireg_id' field sequentially starting from 0."""
     for i, entry in enumerate(data):
@@ -58,8 +63,10 @@ def combine_json_files(file1, file2, output_file):
         # add data2 to the end of data1
         data1.append(data2)
 
+        data = sort_by_org_name(data1)
+
         # Renumber scireg_id
-        renumbered_data = renumber_scireg_id(data1)
+        renumbered_data = renumber_scireg_id(data)
 
         # Write the combined and renumbered data to a new file
         with open(output_file, 'w') as f_out:
