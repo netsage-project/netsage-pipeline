@@ -16,7 +16,7 @@ Steps to update Science Registry:
        wget https://epoc-rabbitmq.tacc.utexas.edu/NetSage/scireg.template.json
 
   2) add new entries to template using your favorite editor, then do:
-       add_new_scireg.py scireg.json scireg.template.json newScireg.json
+       add_new_scireg.py -i scireg.json -t scireg.template.json -o scireg-update.json
 
   3) convert to mmdb:
        scireg2mmdb -i newScireg.json -o newScireg.mmdb
