@@ -128,11 +128,11 @@
             "192.148.93.0/24",
             "192.148.96.0/23"
         ],
-        "org_name": "Atmospheric Radiation Measurement (ARM) user facility",
+        "org_name": "Atmospheric Radiation Measurement User Facility (ARM)",
         "discipline": "GEO.Atmospheric",
         "latitude": "35.972400",
         "longitude": "-84.290400",
-        "resource_name": "Atmospheric Radiation Measurement (ARM) user facility",
+        "resource_name": "Atmospheric Radiation Measurement User Facility (ARM)",
         "project_name": "Atmospheric Radiation Measurement (ARM)",
         "scireg_id": 8,
         "contact_email": "unknown",
@@ -143,7 +143,7 @@
             "2001:388:cf04:26::2/128",
             "138.44.15.78/32"
         ],
-        "org_name": "Australian Academic and Research Network (AARNet) (AARNet.au)",
+        "org_name": "Australian Academic and Research Network (AARNet)",
         "discipline": "CS.Network Testing and Monitoring",
         "latitude": "-33.798500",
         "longitude": "151.144800",
@@ -287,7 +287,7 @@
             "61.56.13.0/24",
             "61.56.15.0/24"
         ],
-        "org_name": "Central Weather Bureau (CWB), Taiwan (CWB.tw)",
+        "org_name": "Central Weather Bureau, Taiwan (CWB)",
         "discipline": "GEO.Atmospheric",
         "latitude": "25.041800",
         "longitude": "121.496600",
@@ -375,7 +375,7 @@
         "addresses": [
             "131.169.193.0/24"
         ],
-        "org_name": "Deutsches Elektronen-Synchrotron (DESY) (DESY.de)",
+        "org_name": "Deutsches Elektronen-Synchrotron (DESY)",
         "discipline": "MPS.Physics",
         "latitude": "53.550000",
         "longitude": "10.000000",
@@ -503,7 +503,7 @@
             "198.129.104.0/22",
             "198.129.232.0/22"
         ],
-        "org_name": "General Atomics (GA) (Gen. Atomics)",
+        "org_name": "General Atomics (GA)",
         "discipline": "MPS.Physics",
         "latitude": "32.894100",
         "longitude": "-117.237700",
@@ -563,7 +563,7 @@
         "addresses": [
             "143.89.47.70/32"
         ],
-        "org_name": "Hong Kong University of Science and Technology (HKUST) (HKUST.hk)",
+        "org_name": "Hong Kong University of Science and Technology (HKUST)",
         "discipline": "ENG.General",
         "latitude": "22.283300",
         "longitude": "114.150000",
@@ -577,7 +577,7 @@
         "addresses": [
             "90.147.132.10/32"
         ],
-        "org_name": "Institute of Radio Astronomy (Istituto di Radioastronomia) (IRA) (IRA.it)",
+        "org_name": "Institute of Radio Astronomy (Istituto di Radioastronomia) (IRA)",
         "discipline": "MPS.Astronomy",
         "latitude": "43.147900",
         "longitude": "12.109700",
@@ -606,7 +606,7 @@
         "addresses": [
             "210.119.23.12/32"
         ],
-        "org_name": "Korea Institute of Science and Technology Information (KISTI) (KISTI.kr)",
+        "org_name": "Korea Institute of Science and Technology Information (KISTI)",
         "discipline": "CS.Network Testing and Monitoring",
         "latitude": "37.570000",
         "longitude": "126.980000",
@@ -620,7 +620,7 @@
         "addresses": [
             "144.206.236.0/24"
         ],
-        "org_name": "Kurchatov Institute - National Research Center (NRC) (Kurchatov.ru)",
+        "org_name": "Kurchatov Institute - National Research Center (NRC)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "55.752200",
         "longitude": "37.615600",
@@ -638,7 +638,7 @@
             "128.3.90.0/23",
             "128.3.96.0/23"
         ],
-        "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+        "org_name": "Lawrence Berkeley National Laboratory (LBL)",
         "discipline": "BIO.Genomics and Bioinformatics",
         "latitude": "37.931400",
         "longitude": "-122.021700",
@@ -653,7 +653,7 @@
             "131.243.3.0/24",
             "131.243.180.0/22"
         ],
-        "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+        "org_name": "Lawrence Berkeley National Laboratory (LBL)",
         "discipline": "Multi-Science Facility",
         "latitude": "37.866800",
         "longitude": "-122.253600",
@@ -697,7 +697,7 @@
             "131.243.201.0/24",
             "131.243.202.0/23"
         ],
-        "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+        "org_name": "Lawrence Berkeley National Laboratory (LBL)",
         "discipline": "MPS.Physics",
         "latitude": "37.866800",
         "longitude": "-122.253600",
@@ -754,7 +754,7 @@
         "addresses": [
             "130.183.36.0/24"
         ],
-        "org_name": "Max Planck Computing and Data Facility (MPCDF) (MPCDF.de)",
+        "org_name": "Max Planck Computing and Data Facility (MPCDF)",
         "discipline": "Multi-Science Facility",
         "latitude": "48.250000",
         "longitude": "11.650000",
@@ -801,8 +801,8 @@
         "discipline": "MPS.Astronomy",
         "latitude": "35.690600",
         "longitude": "139.770000",
-        "resource_name": "NAOJ - unknown",
-        "project_name": "National Astronomical Observatory of Japan (NAOJ)",
+        "resouce_name": "National Astronomical Observatory of Japan (NAOJ)",
+        "project_name": "",
         "scireg_id": 50,
         "contact_email": "unknown",
         "last_updated": "unknown"
@@ -905,11 +905,11 @@
         "addresses": [
             "131.154.130.0/24"
         ],
-        "org_name": "National Institute for Nuclear Physics - National Center for Frame Analysis (INFN - CNAF)",
+        "org_name": "National Institute for Nuclear Physics (INFN)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "44.483300",
         "longitude": "11.333300",
-        "resource_name": "INFN - CNAF - HPC - Compute",
+        "resource_name": "INFN - CNAF - Compute",
         "project_name": "National Center for Frame Analysis",
         "scireg_id": 57,
         "contact_email": "unknown",
@@ -1048,7 +1048,7 @@
             "2001:df4:2600:2::2/128",
             "103.72.192.66/32"
         ],
-        "org_name": "National Supercomputing Center Singapore (NSCC Sing.)",
+        "org_name": "National Supercomputing Center Singapore (NSCC)",
         "discipline": "CS.Network Testing and Monitoring",
         "latitude": "1.298900",
         "longitude": "103.787600",
@@ -1079,7 +1079,7 @@
             "128.219.196.0/24",
             "128.219.198.0/24"
         ],
-        "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+        "org_name": "Oak Ridge National Laboratory (ORNL)",
         "discipline": "MPS.Materials",
         "latitude": "35.972400",
         "longitude": "-84.290400",
@@ -1096,7 +1096,7 @@
             "192.12.68.0/24",
             "192.188.178.0/23"
         ],
-        "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+        "org_name": "Oak Ridge National Laboratory (ORNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "36.021000",
         "longitude": "-84.252700",
@@ -1113,7 +1113,7 @@
             "160.91.230.0/23",
             "160.91.232.0/21"
         ],
-        "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+        "org_name": "Oak Ridge National Laboratory (ORNL)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "35.972400",
         "longitude": "-84.290400",
@@ -1128,7 +1128,7 @@
             "160.91.144.0/22",
             "160.91.148.0/24"
         ],
-        "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+        "org_name": "Oak Ridge National Laboratory (ORNL)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "35.972400",
         "longitude": "-84.290400",
@@ -1158,11 +1158,11 @@
             "192.101.139.0/24",
             "192.101.140.0/24"
         ],
-        "org_name": "Pittsburgh Supercomputer Center (PSC)",
+        "org_name": "Pittsburgh Supercomputing Center (PSC)",
         "discipline": "Multi-Science Facility",
         "latitude": "40.4456",
         "longitude": "-79.9490",
-        "resource_name": "Pittsburgh Supercomputer Center (PSC)",
+        "resource_name": "Pittsburgh Supercomputing Center (PSC)",
         "project_name": "",
         "scireg_id": 74,
         "contact_email": "unknown",
@@ -1416,7 +1416,7 @@
             "129.57.0.0/16",
             "192.70.245.0/24"
         ],
-        "org_name": "Thomas Jefferson National Accelerator Facility (Jefferson Lab or TJNAF) (JeffersonLab)",
+        "org_name": "Thomas Jefferson National Accelerator Facility (JLab)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "37.073600",
         "longitude": "-76.493600",
@@ -1521,7 +1521,7 @@
         "latitude": "34.432900",
         "longitude": "-119.837100",
         "resource_name": "UCSB - High Energy Physics",
-        "project_name": "U of California, Santa Barbara (UCSB)",
+        "project_name": "unknown",
         "scireg_id": 98,
         "contact_email": "unknown",
         "last_updated": "unknown"
@@ -1530,7 +1530,7 @@
         "addresses": [
             "192.170.224.0/19"
         ],
-        "org_name": "University of Chicago (U of C) (U of Chicago)",
+        "org_name": "University of Chicago (UChicago)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "41.788600",
         "longitude": "-87.600900",
@@ -1544,7 +1544,7 @@
         "addresses": [
             "128.227.221.0/24"
         ],
-        "org_name": "University of Florida (UF) (U of Florida)",
+        "org_name": "University of Florida (UF)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "29.651600",
         "longitude": "-82.324800",
@@ -1558,7 +1558,7 @@
         "addresses": [
             "128.171.72.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.703400",
         "longitude": "-155.090400",
@@ -1572,7 +1572,7 @@
         "addresses": [
             "128.171.91.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.703500",
         "longitude": "-155.090300",
@@ -1587,7 +1587,7 @@
             "128.171.110.128/25",
             "128.171.165.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.703500",
         "longitude": "-155.090300",
@@ -1601,7 +1601,7 @@
         "addresses": [
             "166.122.71.144/29"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.534500",
         "longitude": "-155.576000",
@@ -1615,7 +1615,7 @@
         "addresses": [
             "166.122.71.160/29"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.534500",
         "longitude": "-155.576000",
@@ -1629,7 +1629,7 @@
         "addresses": [
             "166.122.71.152/29"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.534500",
         "longitude": "-155.576000",
@@ -1643,7 +1643,7 @@
         "addresses": [
             "128.171.169.205/32"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "GEO.Atmospheric",
         "latitude": "21.326700",
         "longitude": "-157.810000",
@@ -1657,7 +1657,7 @@
         "addresses": [
             "128.171.177.192/26"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.307300",
         "longitude": "-157.811600",
@@ -1672,7 +1672,7 @@
             "128.171.123.224/27",
             "166.122.172.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.298800",
         "longitude": "-157.817100",
@@ -1686,7 +1686,7 @@
         "addresses": [
             "128.171.177.128/27"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.298800",
         "longitude": "-157.817100",
@@ -1700,7 +1700,7 @@
         "addresses": [
             "128.171.45.0/27"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.298800",
         "longitude": "-157.817100",
@@ -1714,7 +1714,7 @@
         "addresses": [
             "132.160.100.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "20.821900",
         "longitude": "-156.332500",
@@ -1733,7 +1733,7 @@
             "128.171.146.0/24",
             "128.171.73.32/29"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.307300",
         "longitude": "-157.811600",
@@ -1750,7 +1750,7 @@
             "128.171.123.192/27",
             "128.171.123.160/27"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "21.298800",
         "longitude": "-157.817100",
@@ -1764,7 +1764,7 @@
         "addresses": [
             "128.171.73.64/27"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "19.703500",
         "longitude": "-155.090300",
@@ -1780,7 +1780,7 @@
             "166.122.171.0/24",
             "166.122.173.0/24"
         ],
-        "org_name": "University of Hawaii (UH) (U of Hawaii)",
+        "org_name": "University of Hawaii (UH)",
         "discipline": "MPS.Astronomy",
         "latitude": "20.821900",
         "longitude": "-156.332500",
@@ -1797,11 +1797,11 @@
             "195.194.109.156/30",
             "195.194.109.160/29"
         ],
-        "org_name": "University of Manchester (U Manchester)",
+        "org_name": "University of Manchester (UoM)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "53.469700",
         "longitude": "-2.236700",
-        "resource_name": "U of Manchester - Tier 2 center  SE nodes - Storage",
+        "resource_name": "UoM - Tier 2 center  SE nodes - Storage",
         "project_name": "ATLAS",
         "scireg_id": 117,
         "contact_email": "unknown",
@@ -1812,7 +1812,7 @@
             "129.93.182.0/23",
             "2600:900:6:1102::/64"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "40.813000",
         "longitude": "-96.702900",
@@ -1827,7 +1827,7 @@
             "129.93.241.1/32",
             "2600:900:6:1302::7ac0:b0a7/128"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "40.800000",
         "longitude": "-96.667000",
@@ -1842,7 +1842,7 @@
             "129.93.239.128/26",
             "2600:900:6:1101::/64"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "MPS.Physics.High Energy",
         "latitude": "40.813000",
         "longitude": "-96.702900",
@@ -1856,7 +1856,7 @@
         "addresses": [
             "129.93.227.64/26"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "41.247400",
         "longitude": "-96.017800",
@@ -1870,7 +1870,7 @@
         "addresses": [
             "129.93.241.16/28"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "40.822100",
         "longitude": "-96.698000",
@@ -1885,7 +1885,7 @@
             "129.93.244.192/26",
             "2600:900:6:1301::/64"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "40.800000",
         "longitude": "-96.667000",
@@ -1899,7 +1899,7 @@
         "addresses": [
             "129.93.175.0/26"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "41.247400",
         "longitude": "-96.017800",
@@ -1913,7 +1913,7 @@
         "addresses": [
             "2600:900:6::/48"
         ],
-        "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+        "org_name": "University of Nebraska-Lincoln (UNL)",
         "discipline": "Multi-Science Facility",
         "latitude": "40.813000",
         "longitude": "-96.702900",
@@ -1927,11 +1927,11 @@
         "addresses": [
             "129.15.42.0/23"
         ],
-        "org_name": "University of Oklahoma (OU) (U of OK)",
+        "org_name": "University of Oklahoma (OU)",
         "discipline": "Multi-Science Facility",
         "latitude": "35.181500",
         "longitude": "-97.432800",
-        "resource_name": "U of OK - OU Supercomputing Center for Education & Research (OSCER) - Compute",
+        "resource_name": "OU - Supercomputing Center for Education & Research (OSCER) - Compute",
         "project_name": "OU-OSCER",
         "scireg_id": 126,
         "contact_email": "unknown",
@@ -1941,11 +1941,11 @@
         "addresses": [
             "129.15.42.0/24"
         ],
-        "org_name": "University of Oklahoma (OU) (U of OK)",
+        "org_name": "University of Oklahoma (OU)",
         "discipline": "Multi-Science Facility",
         "latitude": "35.183700",
         "longitude": "-97.437100",
-        "resource_name": "U of OK - Schooner DTNs - Data Transfer",
+        "resource_name": "OU - Schooner DTNs - Data Transfer",
         "project_name": "UO-Schooner",
         "scireg_id": 127,
         "contact_email": "unknown",
@@ -1981,12 +1981,12 @@
             "155.97.0.0/16",
             "155.98.0.0/16"
         ],
-        "org_name": "University of Utah (U of U) (U of Utah)",
+        "org_name": "University of Utah (U of U)",
         "discipline": "MPS.Astronomy",
         "latitude": "40.785500",
         "longitude": "-111.730000",
         "resource_name": "Telescope Array (TARA)",
-        "project_name": "Telescope Array (TARA)",
+        "project_name": "unknown",
         "scireg_id": 129,
         "contact_email": "unknown",
         "last_updated": "unknown"
@@ -2009,7 +2009,7 @@
         "addresses": [
             "140.142.30.20/32"
         ],
-        "org_name": "University of Washington (UW) (U of Wash.)",
+        "org_name": "University of Washington (UW)",
         "discipline": "GEO.Atmospheric",
         "latitude": "47.660600",
         "longitude": "-122.290000",
@@ -2048,7 +2048,7 @@
         "discipline": "Multi-Science Facility",
         "latitude": "39.994570",
         "longitude": "-83.038220",
-        "resource_name": null,
+        "resource_name": "Ohio Supercomputer Center (OSC)",
         "project_name": null,
         "contact_email": null,
         "last_updated": "2024-10-09",
