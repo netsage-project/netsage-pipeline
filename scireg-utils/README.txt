@@ -4,7 +4,7 @@
 Contents of this directory
 
 Current scripts/programs:
-  - add_new_scireg.py: script to add new entry to end of scireg.json file
+  - add_new_scireg.py: script to add new entry to scireg.json file, or cleanup file
   - scireg2mmdb.go : builds mmdb from JSON
   - dump_mmdb.go : dump entire mmdb for debugging
   - Makefile : builds go tools
@@ -17,6 +17,10 @@ Steps to update Science Registry:
 
   2) add new entries to template using your favorite editor, then do:
        add_new_scireg.py -i scireg.json -t scireg.template.json -o scireg-update.json
+
+     or to cleanup existing JSON if edited directly:
+       add_new_scireg.py --clean -i newScireg.json -o newestScireg.json
+
 
   3) convert to mmdb:
        scireg2mmdb -i newScireg.json -o newScireg.mmdb
