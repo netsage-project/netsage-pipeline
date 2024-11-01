@@ -27,11 +27,6 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10g"
-        max-file: "6"
   logstash:
     image: tacc/netsage_pipeline:v2.1.2
     container_name: NetSage_Logstash
@@ -45,7 +40,7 @@ services:
       - ./conf-logstash:/usr/share/logstash/pipeline/
       - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
-      - ./data/cache:/var/lib/netsage/
+      - ./data/cache:/var/lib/grnoc/netsage/
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:0.3.12
     container_name: NetSage_Ofelia
@@ -63,10 +58,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/cache:/data/cache
+      - ./scripts:/scripts
     entrypoint: ["/bin/sh","-c"]
-    command:
-      - |
-        while true; do
-          inotifywait -e modify /data/cache/*;
-          docker restart NetSage_Logstash;
-        done
+    command: ["/scripts/scireg_restart.sh"]
