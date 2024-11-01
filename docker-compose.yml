@@ -13,7 +13,7 @@ services:
       - "5671:5671"
       - "5672:5672"
   importer:
-    image: tacc/netsage_importer:v2.1.1
+    image: tacc/netsage_importer:v2.1.2
     container_name: NetSage_Importer
     env_file: .env
     depends_on:
@@ -27,8 +27,13 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10g"
+        max-file: "6"
   logstash:
-    image: tacc/netsage_pipeline:v2.1.0
+    image: tacc/netsage_pipeline:v2.1.2
     container_name: NetSage_Logstash
     env_file: .env
     depends_on:
@@ -40,7 +45,7 @@ services:
       - ./conf-logstash:/usr/share/logstash/pipeline/
       - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
-      - ./data/cache:/var/lib/grnoc/netsage/
+      - ./data/cache:/var/lib/netsage/
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:0.3.12
     container_name: NetSage_Ofelia
@@ -52,12 +57,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   manager:
-    image: tacc/netsage_manager:v2.1.0
+    image: tacc/netsage_manager:v2.1.2
     container_name: NetSage_Manager
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/cache:/data/cache
-      - ./scripts:/scripts
     entrypoint: ["/bin/sh","-c"]
-    command: ["/scripts/scireg_restart.sh"]
+    command:
+      - |
+        while true; do
+          inotifywait -e modify /data/cache/*;
+          docker restart NetSage_Logstash;
+        done
