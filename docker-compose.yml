@@ -13,7 +13,7 @@ services:
       - "5671:5671"
       - "5672:5672"
   importer:
-    image: tacc/netsage_importer:v2.1.1
+    image: tacc/netsage_importer:v2.1.2
     container_name: NetSage_Importer
     env_file: .env
     depends_on:
@@ -28,7 +28,7 @@ services:
       ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
       ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
-    image: tacc/netsage_pipeline:v2.1.0
+    image: tacc/netsage_pipeline:v2.1.2
     container_name: NetSage_Logstash
     env_file: .env
     depends_on:
@@ -52,7 +52,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   manager:
-    image: tacc/netsage_manager:v2.1.0
+    image: tacc/netsage_manager:v2.1.2
     container_name: NetSage_Manager
     restart: unless-stopped
     volumes:
