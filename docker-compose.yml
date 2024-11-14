@@ -10,7 +10,7 @@ networks:
 services:
   sfacctd_1:
     container_name: sfacctd_1
-    image: sfacctd:7Jun2022
+    image: pmacct/sfacctd:v1.7.9
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
@@ -29,11 +29,11 @@ services:
  
   nfacctd_1:
     container_name: nfacctd_1
-    image: nfacctd:7Jun2022
+    image: pmacct/nfacctd:v1.7.9
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
-      - "9000:9000/udp"
+      - "9999:9000/udp"
     volumes:
       # location of our configs : default location : read-only
       - ./conf-pmacct:/etc/pmacct:ro
@@ -49,7 +49,7 @@ services:
   rabbit:
     container_name: rabbit
     hostname: rabbit
-    image: rabbitmq:3.9-management
+    image: rabbitmq:4.0-management
     env_file: .env
     ports:
       # The port for the UI needs to be mapped to that on the host
@@ -64,7 +64,7 @@ services:
 
   logstash:
     container_name: logstash
-    image: docker.elastic.co/logstash/logstash:7.16.2
+    image: logstash:8.12.2
     env_file: .env
     # user uid
     user: 1000:1000
@@ -74,7 +74,7 @@ services:
       # location of logstash configs on host : location within container : read-only
       - ./conf-logstash/:/etc/logstash/conf.d/:ro
       # location of downloaded maxmind and caida files on host : location within container : read-only 
-      - ./logstash-downloads/:/var/lib/grnoc/netsage/:ro  
+      - ./logstash-downloads/:/var/lib/netsage/:ro  
       # location for aggregation map files, which save flows being aggregated when logstash shuts down
       - ./logstash-temp/:/logstash-temp/
     networks: 
