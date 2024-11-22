@@ -28,6 +28,7 @@ pre_tag_map: /etc/pmacct/sfacctd-pretag_1.map
     amqp_persistent_msg: true
     amqp_routing_key: netsage_deidentifier_raw
     amqp_vhost: /
+    amqp_preprocess: minb=2000000
 ! How often to write to rabbit queue = time to aggregate over (default = 60 sec)
     amqp_refresh_time: 300
 

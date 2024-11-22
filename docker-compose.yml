@@ -14,7 +14,7 @@ services:
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
-      - "8000:8000/udp"
+      - "6343:8000/udp"
     volumes:
       # location of our configs : default location : read-only
       - ./conf-pmacct:/etc/pmacct:ro
@@ -26,6 +26,25 @@ services:
       - netsage-network
     depends_on:
       - rabbit
+
+  sfacctd_2:
+    container_name: sfacctd_2
+    image: pmacct/sfacctd:v1.7.9
+    env_file: .env
+    ports:
+      # port on host for incoming flow data : port in the container
+      - "9999:8000/udp"
+    volumes:
+      # location of our configs : default location : read-only
+      - ./conf-pmacct:/etc/pmacct:ro
+    command:
+      # override the default parameters (entrypoint is the actual command)
+      - -f
+      - /etc/pmacct/sfacctd_2.conf
+    networks:
+      - netsage-network
+    depends_on:
+      - rabbit
  
   nfacctd_1:
     container_name: nfacctd_1
@@ -33,7 +52,7 @@ services:
     env_file: .env
     ports:
       # port on host for incoming flow data : port in the container
-      - "9999:9000/udp"
+      - "9998:9000/udp"
     volumes:
       # location of our configs : default location : read-only
       - ./conf-pmacct:/etc/pmacct:ro
