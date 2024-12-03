@@ -17,6 +17,7 @@
       // resource name =  "org_abbr - resource_name - resource type"
       // where type must be one of the following: Types: Compute, Storage, Archive, Test
       // e.g.: "NERSC - DTN - Storage"  or "TACC - Stampede3 - Compute"
+      // If resource name is the same as the org_name, leave it blank. logstash will copy org_name over.
       "resource_name" : null,
       // sample projects: ATLAS, CMS, FIONA, Environmental Molecular Sciences Lab (EMSL), etc (optional)
       "project_name" : null,

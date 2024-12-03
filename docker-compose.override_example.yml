@@ -1,14 +1,6 @@
 version: "3.7"
 services:
-
-  logstash:
-    image: tacc/netsage_pipeline:v2.1.0
-    ## If you need to override JVM options, uncomment these lines
-    #   volumes:
-    #     - ./userConfig/jvm.options:/usr/share/logstash/config/jvm.options
-
   importer:
-    image: tacc/netsage_importer:v2.1.1
     logging:
       driver: json-file
       options:
@@ -22,15 +14,15 @@ services:
   ## Modify port numbers as needed, and add any additional collectors here (see Docker Advanced documentation).  
   ## Remove any collectors that do not need to be running.
   sflow-collector:
-    image: tacc/netsage_collector:v2.1.0
+    image: tacc/netsage_collector:v2.1.2
     restart: always
-    command: sfcapd -w /data -S 1 -z=lzo -p 9999
+    command: sfcapd -w /data -S 1 -z=lzo -p 9998
     volumes:
       - ./data/input_data/sflow:/data
     ports:
       - "9998:9998/udp"
   netflow-collector:
-    image: tacc/netsage_collector:v2.1.0
+    image: tacc/netsage_collector:v2.1.2
     command: nfcapd -w /data -S 1 -z=lzo -p 9999
     ports:
       - "9999:9999/udp"
