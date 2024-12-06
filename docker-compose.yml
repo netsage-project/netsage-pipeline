@@ -40,7 +40,7 @@ services:
       - ./conf-logstash:/usr/share/logstash/pipeline/
       - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
-      - ./data/cache:/var/lib/grnoc/netsage/
+      - ./data/cache:/var/lib/netsage/
   ofelia: ## Scheduler Task
     image: mcuadros/ofelia:0.3.12
     container_name: NetSage_Ofelia
