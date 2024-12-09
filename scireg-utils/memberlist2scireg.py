@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 # converts old NetSage 'member list' file to new NetSage "Science Registry" JSON file.
+#
+# note: if entry has its own ASN separate from the Regional Network dont include it.
 
 # To Do / figure out:
-#  - dont include at all if ASN exists? Do we need it in the Science Registry?
 #  - maybe: Do lat/long lookup based on address?
 
 import json
@@ -90,7 +91,7 @@ def lookup_asn(ip_subnet):
                     #print ("Got contact_address: ", contact_address)
                     break  # Stop after finding the first contact
 
-        print (f"whois data for subnet {ip_subnet}: ASN = {asn}, org name = {contact_name}")
+        print (f"  whois data for subnet {ip_subnet}: ASN = {asn}, org name = {contact_name}")
         return { "asn": asn, "asn_contact": contact_name, "CIDR": network_cidr, "contact_address": contact_address }
     except Exception as e:
         print(f"ASN lookup failed for {ip_subnet}: {e}")
@@ -108,6 +109,7 @@ def convert_to_scireg_format(members, asn):
         "resource_name": "",  # Placeholder for resource name
         "project_name": "",   # Empty as specified
         "contact_email": "unknown",  # Placeholder for email
+        # if want extra ASN info (mainly for debugging)
         "asn_data": [],  # List of ASN data for each subnet
         "last_updated": datetime.now().strftime("%Y-%m-%d"),  # Today's date
         "scireg_id": 0  # Placeholder for ID
@@ -135,9 +137,13 @@ def convert_to_scireg_format(members, asn):
         member_asn = asn_data[0].get('asn') if asn_data else None
 
         if asn != int(member_asn):
-            print(f"  Note: member ASN {member_asn} is different from regional network ASN {asn}. Skip?? ")
-        # XXX: Fixme! only add if its a different ASN ?
+            print(f"  Note: member ASN {member_asn} is different from regional network ASN {asn}. Skipping... ")
+            continue
+        
+        # Remove the 'asn_data' field from the final output, as no longer needed
+        del ordered_org_data["asn_data"]
         output_list.append(ordered_org_data)
+
     return output_list
 
 def write_output_file(output_file, output_list):
