@@ -104,8 +104,8 @@ def convert_to_scireg_format(members, asn):
         "org_name": "",  # Placeholder to maintain order
         "member_of": "",  # Group name
         "discipline": "",  # Placeholder for discipline
-        "latitude": "",    # Placeholder for latitude
-        "longitude": "",   # Placeholder for longitude
+        "latitude": "0",    # Placeholder for latitude
+        "longitude": "0",   # Placeholder for longitude
         "resource_name": "",  # Placeholder for resource name
         "project_name": "",   # Empty as specified
         "contact_email": "unknown",  # Placeholder for email
