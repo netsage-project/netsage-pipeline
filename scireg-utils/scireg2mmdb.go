@@ -108,7 +108,7 @@ func main() {
                         var jsonString string
 
                         // all of these fields get embedded to 'city'
-                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", member_of": "%s"}`,
+                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "member_of": "%s"}`,
                                 entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.MemberOf)
 
                         geoData := mmdbtype.Map{
