@@ -4,13 +4,17 @@
 #
 # note: if entry has its own ASN separate from the Regional Network dont include it.
 
-# To Do / figure out:
-#  - maybe: Do lat/long lookup based on address?
+# after running this on all memberlist.rb files, do:
+# copy scireg.json to cwd
+# jq -s 'add' *.json > combined.json
+# add_new_scireg.py --clean -i combined.json -o cleaned.json
+# scireg2mmdb -i cleaned.json -o newScireg.mmdb
 
 import json
 import argparse
 import os
 import re
+import sys
 from datetime import datetime
 from collections import defaultdict
 from ipwhois import IPWhois
@@ -66,20 +70,27 @@ def parse_members(input_data):
 
 def lookup_asn(ip_subnet):
     """Look up the ASN for a given IP subnet using IPWhois."""
+    asn_lookup_error = 0
+    ip = ip_subnet.split('/')[0]  # Use only the base IP for the lookup
+    obj = IPWhois(ip)
     try:
-        ip = ip_subnet.split('/')[0]  # Use only the base IP for the lookup
-        obj = IPWhois(ip)
-        result = obj.lookup_rdap()
-        #print (result)
+       result = obj.lookup_rdap(retry_count=5)
+    except Exception as e:
+       print(f"ASN lookup failed for {ip_subnet}: {e}, Exiting...")
+       # this should not happen, so exit
+       asn_lookup_error = 1
+    if asn_lookup_error  > 0:
+       sys.exit()
+    #print (result)
 
-        asn = result.get('asn', 'Unknown')
-        network_cidr = result.get('network', {}).get('cidr', 'Unknown')
-        address_fields = result.get('network', {}).get('remarks', [])
-        entities = result.get('entities', [])
+    asn = result.get('asn', 'Unknown')
+    network_cidr = result.get('network', {}).get('cidr', 'Unknown')
+    address_fields = result.get('network', {}).get('remarks', [])
+    entities = result.get('entities', [])
 
-        # Extract contact name
-        contact_name = "No contact name available"
-        if entities:
+    # Extract contact name
+    contact_name = "No contact name available"
+    if entities:
             # Loop through entities to find the first contact name
             for entity in entities:
                 entity_details = result.get('objects', {}).get(entity, {})
@@ -91,11 +102,8 @@ def lookup_asn(ip_subnet):
                     #print ("Got contact_address: ", contact_address)
                     break  # Stop after finding the first contact
 
-        print (f"  whois data for subnet {ip_subnet}: ASN = {asn}, org name = {contact_name}")
-        return { "asn": asn, "asn_contact": contact_name, "CIDR": network_cidr, "contact_address": contact_address }
-    except Exception as e:
-        print(f"ASN lookup failed for {ip_subnet}: {e}")
-        return {"asn": "Unknown", "asn_contact": "Unknown", "CIDR": "Unknown", "status": "Unknown", "contact_address": "Unknown"}
+    print (f"  whois data for subnet {ip_subnet}: ASN = {asn}, org name = {contact_name}")
+    return { "asn": asn, "asn_contact": contact_name, "CIDR": network_cidr, "contact_address": contact_address }
 
 def convert_to_scireg_format(members, asn):
     """Convert parsed members data to the scireg JSON format."""
@@ -136,6 +144,9 @@ def convert_to_scireg_format(members, asn):
         asn_data = ordered_org_data["asn_data"]
         member_asn = asn_data[0].get('asn') if asn_data else None
 
+        if member_asn == 'Unknown' or member_asn == None:
+            print(f"  Note: member ASN lookup failed. Skipping... ")
+            continue
         if asn != int(member_asn):
             print(f"  Note: member ASN {member_asn} is different from regional network ASN {asn}. Skipping... ")
             continue

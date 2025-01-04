@@ -34,6 +34,7 @@ type AddressBlock struct {
 	Addresses    []string `json:"addresses"`
 	OrgName      string   `json:"org_name"`
 	Discipline   string   `json:"discipline"`
+	MemberOf     string   `json:"member_of"`
 	Latitude     string   `json:"latitude"`
 	Longitude    string   `json:"longitude"`
 	ResourceName string   `json:"resource_name"`
@@ -107,8 +108,8 @@ func main() {
                         var jsonString string
 
                         // all of these fields get embedded to 'city'
-                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s"}`,
-                                entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName)
+                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "member_of": "%s"}`,
+                                entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.MemberOf)
 
                         geoData := mmdbtype.Map{
                                 "city": mmdbtype.Map{
