@@ -76,6 +76,25 @@ def clean_and_renumber(file1, output_file):
         data = json.load(f1)
 
         data = sort_by_org_name(data)
+
+        # Remove duplicates based on 'org_name' and 'addresses'
+        seen_entries = {}
+        unique_data = []
+        for entry in data:
+            org_name = entry.get('org_name', '').strip()
+            addresses = tuple(entry.get('addresses', []))  # Convert addresses to a tuple for hashability
+            identifier = (org_name, addresses)
+
+            if identifier in seen_entries:
+                print(
+                    f"Duplicate entry removed: scireg_id={entry.get('scireg_id')}, "
+                    f"matches scireg_id={seen_entries[identifier]}, "
+                    f"org_name='{org_name}', addresses={addresses}"
+                )
+            else:
+                seen_entries[identifier] = entry.get('scireg_id')
+                unique_data.append(entry)
+
         renumbered_data = renumber_scireg_id(data)
 
         with open(output_file, 'w') as f_out:
