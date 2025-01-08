@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-# converts old NetSage 'member list' file to new NetSage "Science Registry" JSON file.
+# converts old NetSage 'member list' file to new NetSage "Science Registry" formatted JSON file.
 #
 # note: if entry has its own ASN separate from the Regional Network dont include it.
 
 # after running this on all memberlist.rb files, do:
-# copy scireg.json to cwd
+# copy members*.json to cwd
 # jq -s 'add' *.json > combined.json
 # add_new_scireg.py --clean -i combined.json -o cleaned.json
 # scireg2mmdb -i cleaned.json -o newScireg.mmdb
@@ -110,7 +110,7 @@ def convert_to_scireg_format(members, asn):
     combined_data = defaultdict(lambda: {
         "addresses": [],
         "org_name": "",  # Placeholder to maintain order
-        "member_of": "",  # Group name
+        "community": "",  # Group name
         "discipline": "",  # Placeholder for discipline
         "latitude": "0",    # Placeholder for latitude
         "longitude": "0",   # Placeholder for longitude
@@ -128,16 +128,16 @@ def convert_to_scireg_format(members, asn):
             key = org_name
             combined_data[key]["addresses"].append(prefix)
             combined_data[key]["org_name"] = org_name
-            combined_data[key]["member_of"] = group_name
+            combined_data[key]["community"] = group_name
             if not combined_data[key]["asn_data"]:  # Only append the first `asn_info`
                 asn_info = lookup_asn(prefix)
                 combined_data[key]["asn_data"].append(asn_info)
 
 
-    # Add scireg_id and ensure field order matches the defaultdict
+    # Add id and ensure field order matches the defaultdict
     output_list = []
-    for scireg_id, org_data in enumerate(combined_data.values()):
-        org_data["scireg_id"] = scireg_id
+    for id, org_data in enumerate(combined_data.values()):
+        org_data["scireg_id"] = id
         # Convert to an ordered dictionary to preserve the field order
         ordered_org_data = {key: org_data[key] for key in combined_data.default_factory().keys()}
         #print ("ASN Data: ",ordered_org_data["asn_data"])

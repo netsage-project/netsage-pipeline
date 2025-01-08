@@ -25,7 +25,6 @@ import (
     "os"
     "strconv"
     "strings"
-//    "io/ioutil"
     "github.com/maxmind/mmdbwriter"
     "github.com/maxmind/mmdbwriter/mmdbtype"
 )
@@ -34,14 +33,11 @@ type AddressBlock struct {
 	Addresses    []string `json:"addresses"`
 	OrgName      string   `json:"org_name"`
 	Discipline   string   `json:"discipline"`
-	MemberOf     string   `json:"member_of"`
+	Community    string   `json:"community"`
 	Latitude     string   `json:"latitude"`
 	Longitude    string   `json:"longitude"`
 	ResourceName string   `json:"resource_name"`
-	ProjectName  string   `json:"project_name"`
-	SciRegID     int      `json:"scireg_id"`
-	ContactEmail string   `json:"contact_email"`
-	LastUpdated  string   `json:"last_updated"`
+        ProjectName  string   `json:"project_name"`
 }
 
 func main() {
@@ -108,8 +104,8 @@ func main() {
                         var jsonString string
 
                         // all of these fields get embedded to 'city'
-                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "member_of": "%s"}`,
-                                entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.MemberOf)
+                        jsonString = fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "community": "%s"}`,
+                                entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.Community)
 
                         geoData := mmdbtype.Map{
                                 "city": mmdbtype.Map{
