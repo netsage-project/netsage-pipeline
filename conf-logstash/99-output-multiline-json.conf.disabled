@@ -29,6 +29,8 @@ output {
           "dst_discipline":"%{[meta][dst_discipline]}",
           "src_project_names":"%{[meta][src_project_names]}",
           "dst_project_names":"%{[meta][dst_project_names]}",
+          "src_member_of":"%{[meta][src][member_of]}",
+          "dst_member_of":"%{[meta][dst][member_of]}",
           "src_continent":"%{[meta][src_continent]}",
           "dst_continent":"%{[meta][dst_continent]}",
           "legacy:src_preferred_org":"%{[meta][src_preferred_org]}",
