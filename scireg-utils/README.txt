@@ -25,6 +25,9 @@ Steps to update Science Registry:
   3) convert to mmdb:
        scireg2mmdb -i newScireg.json -o newScireg.mmdb
 
+  4) test using mmdblookup tool:
+      mmdblookup --file community.mmdb --ip 134.55.1.1
+
   4) copy updated files to repo
 
 
