@@ -1,0 +1,1252 @@
+[
+  {
+    "addresses": [
+      "164.58.1.56/30",
+      "164.58.139.56/29"
+    ],
+    "org_name": "Allen Bowden School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.40.52/30"
+    ],
+    "org_name": "Allen Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.0.0/20",
+      "2001:18e8:464::/48",
+      "2001:18E8:4FF:205::/64"
+    ],
+    "org_name": "Anderson University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.63.128/29"
+    ],
+    "org_name": "Ardmore ISD-19 (Ardmore City Schools)",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.222.88/30",
+      "164.58.185.0/24"
+    ],
+    "org_name": "Bacone College",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.42.48/30",
+      "164.58.9.16/30",
+      "164.58.17.224/29"
+    ],
+    "org_name": "Bennington Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.6.0/29",
+      "164.58.7.128/28"
+    ],
+    "org_name": "Berryhill High School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.57.0/24"
+    ],
+    "org_name": "Bethel University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.16.252/30"
+    ],
+    "org_name": "Binger-Oney Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.215.32/30"
+    ],
+    "org_name": "Blanchard Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.72.8/29"
+    ],
+    "org_name": "Boise City High School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.7.164/30",
+      "164.58.28.112/29"
+    ],
+    "org_name": "Bokoshe Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.204.0/29",
+      "164.58.14.144/30",
+      "164.58.80.16/28"
+    ],
+    "org_name": "Bristow Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.156.0/22"
+    ],
+    "org_name": "Calumet College of Saint Joseph",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.42.72/29"
+    ],
+    "org_name": "Canadian Valley Technology Center-Chickasha",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.12/30",
+      "156.110.25.40/30",
+      "156.110.25.52/30",
+      "156.110.39.192/29",
+      "164.58.149.0/27"
+    ],
+    "org_name": "Canadian Valley VT-El Ren",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "129.19.162.0/24"
+    ],
+    "org_name": "Colorado State University",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "156.110.46.192/28"
+    ],
+    "org_name": "Cordell Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.60/31",
+      "156.110.31.160/29"
+    ],
+    "org_name": "Coyle Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "157.91.22.160/27",
+      "157.91.22.192/27"
+    ],
+    "org_name": "Delaware County CES",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "163.120.0.0/18",
+      "2001:18E8:401::20/125",
+      "2001:18E8:401::28/125",
+      "2001:18e8:420::/48"
+    ],
+    "org_name": "DePauw University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.59.24/29",
+      "164.58.212.104/30",
+      "164.58.225.124/30"
+    ],
+    "org_name": "Donald W Reynolds Community Center and Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.136/30",
+      "156.110.35.192/29",
+      "156.110.39.64/27",
+      "164.58.109.96/28"
+    ],
+    "org_name": "Duncan Regional Hospital",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.68/30",
+      "156.110.28.176/29",
+      "164.58.6.8/29"
+    ],
+    "org_name": "East Central Oklahoma Family Health Center - Henryetta",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.28.64/28",
+      "164.58.28.80/29"
+    ],
+    "org_name": "East Central Oklahoma Family Health Center - Wetumka Medical",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.7.148/30"
+    ],
+    "org_name": "East Central Oklahoma FHC - Behavioral Health Services",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.34.184/29",
+      "164.58.0.104/30"
+    ],
+    "org_name": "East Central Oklahoma FHC - Wewoka",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.2/31",
+      "156.110.26.220/30",
+      "156.110.35.144/29",
+      "164.58.6.84/30",
+      "164.58.11.132/30",
+      "164.58.21.80/30"
+    ],
+    "org_name": "East Central University",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.177.32/27"
+    ],
+    "org_name": "Eastern Ok Dist Library System (EODLS)",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.48/30",
+      "164.58.3.224/29"
+    ],
+    "org_name": "El Reno Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.248/30",
+      "156.110.28.128/29",
+      "164.58.28.120/30",
+      "164.58.28.232/30"
+    ],
+    "org_name": "Empire Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.4.188/30",
+      "164.58.63.240/29",
+      "164.58.156.64/28"
+    ],
+    "org_name": "Erick Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.118.48/30",
+      "164.58.192.0/26"
+    ],
+    "org_name": "Frontier Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.23.224/28"
+    ],
+    "org_name": "Glencoe Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.0.124/30"
+    ],
+    "org_name": "Goodwell Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.50.0/24",
+      "2001:18e8:41c::/48"
+    ],
+    "org_name": "Grace College",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.110.96/27",
+      "164.58.1.48/29"
+    ],
+    "org_name": "Guthrie Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.152/30",
+      "156.110.34.112/29"
+    ],
+    "org_name": "Hammon Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "2001:18E8:46C::/48"
+    ],
+    "org_name": "Hanover College",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.223.0/26",
+      "164.58.223.128/25"
+    ],
+    "org_name": "High Plains Vo-Tech-Woodward",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.104.0/22",
+      "199.8.108.0/22",
+      "2001:18e8:448::/48"
+    ],
+    "org_name": "Holy Cross College",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.31.112/28",
+      "164.58.3.100/30",
+      "164.58.4.220/30"
+    ],
+    "org_name": "Hooker Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.88.0/23",
+      "199.8.90.0/24"
+    ],
+    "org_name": "Huntington University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "157.91.0.0/16",
+      "199.8.0.0/16",
+      "2001:18e8:400::/40"
+    ],
+    "org_name": "I-Light",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "157.91.24.128/25"
+    ],
+    "org_name": "Indiana Univesity Purdue University Columbus Learning Center",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "2001:18e8:40c::/48"
+    ],
+    "org_name": "Ivy Tech Fairbanks",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.26.76/30",
+      "164.58.70.128/25"
+    ],
+    "org_name": "J D McCarty Center",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.207.112/29",
+      "164.58.9.88/30"
+    ],
+    "org_name": "Jay C. Byers Memorial Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.54.0/29"
+    ],
+    "org_name": "Jennings Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.231.96/29"
+    ],
+    "org_name": "Keota High School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.1.142/31",
+      "164.58.16.196/30"
+    ],
+    "org_name": "Keystone School District",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.127.64/29",
+      "164.58.5.80/30",
+      "164.58.16.28/30"
+    ],
+    "org_name": "Kildare School District",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.5.180/30"
+    ],
+    "org_name": "Kiowa Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.34.8/30",
+      "156.110.34.20/30",
+      "164.58.6.184/29",
+      "164.58.6.208/29",
+      "164.58.6.220/30"
+    ],
+    "org_name": "Latta Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.27.32/29",
+      "156.110.86.108/30",
+      "156.110.90.208/30"
+    ],
+    "org_name": "Lawton Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.25.44/30",
+      "156.110.25.88/29",
+      "156.110.25.120/29",
+      "156.110.25.128/29",
+      "156.110.28.252/30",
+      "156.110.42.52/30",
+      "156.110.122.0/30",
+      "164.58.69.192/29"
+    ],
+    "org_name": "Madill Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.40.0/21",
+      "199.8.51.0/24",
+      "199.8.56.0/24",
+      "2001:18e8:468::/48"
+    ],
+    "org_name": "Manchester University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "199.8.53.0/24",
+      "2001:18E8:403::/48"
+    ],
+    "org_name": "Manchester University - Ft. Wayne Campus",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "192.189.3.0/24"
+    ],
+    "org_name": "Manchester University - North Manchester Campus",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.92.152/30",
+      "164.58.29.128/30",
+      "164.58.186.144/30"
+    ],
+    "org_name": "Mannford Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.230.76/30"
+    ],
+    "org_name": "Marble City School District 35",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "64.189.120.0/22"
+    ],
+    "org_name": "Marian (Apogee)",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "2001:18e8:418::/48"
+    ],
+    "org_name": "Marian University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "199.8.36.0/22"
+    ],
+    "org_name": "Martin University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.58.84/30"
+    ],
+    "org_name": "Maysville Elementary School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.43.64/30",
+      "164.58.58.88/30"
+    ],
+    "org_name": "Maysville High School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.6.28/31",
+      "164.58.6.32/30",
+      "164.58.6.36/30",
+      "164.58.7.192/27"
+    ],
+    "org_name": "McAlester Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.215.48/30"
+    ],
+    "org_name": "McLoud Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.38.176/28",
+      "164.58.1.212/30"
+    ],
+    "org_name": "Miami Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.27.176/29"
+    ],
+    "org_name": "Monroe Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.99.0/29",
+      "164.58.0.76/30",
+      "164.58.69.0/29",
+      "164.58.151.0/28"
+    ],
+    "org_name": "Moore Norman Technology Center",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.24.4/30",
+      "164.58.28.244/30",
+      "164.58.215.52/30"
+    ],
+    "org_name": "Moore Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.31.80/28",
+      "164.58.0.192/30",
+      "164.58.7.0/27"
+    ],
+    "org_name": "Mustang Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "129.19.148.0/24",
+      "129.19.149.0/24"
+    ],
+    "org_name": "NEON, Inc.",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "164.58.1.44/31"
+    ],
+    "org_name": "New Lima Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.215.56/30"
+    ],
+    "org_name": "Newcastle Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.215.60/30"
+    ],
+    "org_name": "Noble Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.14.192/30"
+    ],
+    "org_name": "Norman Central Library (PLS)",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.200/29",
+      "164.58.0.108/30"
+    ],
+    "org_name": "Norman East Public Library (PLS)",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.25.254/31",
+      "156.110.235.192/28"
+    ],
+    "org_name": "Northeastern State Univ",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.144/31",
+      "156.110.26.146/31",
+      "164.58.237.88/29"
+    ],
+    "org_name": "Northeastern State Univ.",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.145.0/24",
+      "199.8.146.0/24",
+      "2001:18e8:454::/48"
+    ],
+    "org_name": "Oakland City University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.1.132/30"
+    ],
+    "org_name": "Oklahoma Association of Career and Technology Education",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.5.64/28"
+    ],
+    "org_name": "Oklahoma Medical Research Foundation",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.38.12/30",
+      "156.110.39.248/29",
+      "164.58.6.22/31"
+    ],
+    "org_name": "Olustee/Eldorado School District",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.0.0/16",
+      "164.58.0.0/16"
+    ],
+    "org_name": "OneNet",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.42.0/30",
+      "164.58.87.120/29",
+      "164.58.139.128/28"
+    ],
+    "org_name": "Pawnee Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.1.76/30"
+    ],
+    "org_name": "Perry Carnegie Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.109.56/30"
+    ],
+    "org_name": "Pioneer Library System (Norman West)",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.26.252/30",
+      "164.58.218.64/26"
+    ],
+    "org_name": "Ponca City Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.34.120/30",
+      "164.58.83.0/27",
+      "164.58.183.48/28"
+    ],
+    "org_name": "Pontotoc Area VoTech",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.227.16/28",
+      "164.58.0.188/30",
+      "164.58.11.76/30",
+      "164.58.11.176/30",
+      "164.58.155.32/27",
+      "164.58.209.120/29"
+    ],
+    "org_name": "Poteau Public Schools I-29 Admin Bldg",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.4.0/30"
+    ],
+    "org_name": "Purcell Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.25.224/28",
+      "164.58.0.132/30"
+    ],
+    "org_name": "Pushmataha Hospital",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.42.56/30",
+      "164.58.72.184/29"
+    ],
+    "org_name": "Ravia School District",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.2.52/30"
+    ],
+    "org_name": "Robin Hill Elementary",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "2001:18E8:401::18/125",
+      "2001:18E8:401::1B/128",
+      "2001:18E8:401::1C/128",
+      "2001:18E8:401::30/125",
+      "2620:e7::/48"
+    ],
+    "org_name": "Rose Hulman",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.28.250/32",
+      "164.58.17.238/31"
+    ],
+    "org_name": "Sayre Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.25.12/30",
+      "156.110.235.64/29"
+    ],
+    "org_name": "Shady Grove School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.82.220/30",
+      "164.58.215.144/30"
+    ],
+    "org_name": "Shawnee Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.4.216/30"
+    ],
+    "org_name": "South Oklahoma City Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.38.40/29",
+      "156.110.39.208/29",
+      "164.58.173.64/26"
+    ],
+    "org_name": "Southwest Technology Center",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.7.64/27",
+      "164.58.206.128/29"
+    ],
+    "org_name": "Spiro Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.59.0/24",
+      "199.8.60.0/24",
+      "199.8.72.0/24",
+      "2001:18e8:45c::/48"
+    ],
+    "org_name": "St Mary of the Woods College",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.47.160/29",
+      "164.58.17.178/31"
+    ],
+    "org_name": "Sterling Public Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.27.100/30",
+      "156.110.107.16/29",
+      "164.58.184.124/30"
+    ],
+    "org_name": "Stidham Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.38.192/27",
+      "164.58.0.184/30",
+      "164.58.46.0/24",
+      "164.58.59.0/24"
+    ],
+    "org_name": "SWOSU-Weatherford",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.4.164/30"
+    ],
+    "org_name": "Tannehill Elementary School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "192.195.234.0/24",
+      "192.195.248.0/24",
+      "192.195.249.0/24",
+      "192.195.250.0/24",
+      "2001:18E8:4FF:404::/64",
+      "216.162.48.0/20",
+      "2620:48:8000::/48"
+    ],
+    "org_name": "Taylor University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.215.148/30"
+    ],
+    "org_name": "Tecumseh Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "129.19.92.0/23"
+    ],
+    "org_name": "The Auraria Higher Education Center",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "164.58.97.0/24"
+    ],
+    "org_name": "Thunderbird Youth Academy",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "198.62.98.0/24",
+      "199.8.100.0/22",
+      "199.8.96.0/22",
+      "2001:18E8:401::10/125",
+      "2001:18E8:401::14/128",
+      "2001:18E8:4FF:101::/64",
+      "2001:18E8:4FF:203::/64",
+      "2620:f8:4000::/48"
+    ],
+    "org_name": "Trine University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.26.148/30",
+      "156.110.50.4/30",
+      "164.58.23.128/26",
+      "164.58.177.136/29",
+      "164.58.243.232/29"
+    ],
+    "org_name": "University of Science & Arts of Oklahoma",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.80.0/21",
+      "2001:18e8:444::/48"
+    ],
+    "org_name": "University of St. Francis",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "199.8.112.0/24",
+      "199.8.113.0/24"
+    ],
+    "org_name": "University of St. Francis, Crownpoint",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "152.228.0.0/17",
+      "2001:18e8:458::/48"
+    ],
+    "org_name": "Valparaiso University",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "164.58.2.148/30",
+      "164.58.6.200/29",
+      "164.58.206.160/29"
+    ],
+    "org_name": "Vanoss Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "161.32.0.0/19",
+      "2001:18E8:402::/48"
+    ],
+    "org_name": "Wabash College",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.26.192/30"
+    ],
+    "org_name": "Wayne Public School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.115.40/29",
+      "164.58.4.104/30"
+    ],
+    "org_name": "Wewoka High School",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "157.91.66.0/25"
+    ],
+    "org_name": "WFYI",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.211.216/29",
+      "164.58.83.32/30"
+    ],
+    "org_name": "Woodward Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "164.58.28.208/30",
+      "164.58.207.208/28"
+    ],
+    "org_name": "Wright City Schools",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "199.8.48.192/27"
+    ],
+    "org_name": "WYIN",
+    "community": "ilight"
+  },
+  {
+    "addresses": [
+      "156.110.25.112/30"
+    ],
+    "org_name": "Yale Public Library",
+    "community": "onenet"
+  },
+  {
+    "addresses": [
+      "156.110.204.16/29",
+      "164.58.2.216/30",
+      "164.58.72.192/29"
+    ],
+    "org_name": "Yale Public Schools",
+    "community": "onenet"
+  },
+  {
+        "addresses": [
+            "147.155.0.0/16",
+            "2620:57::/48"
+        ],
+        "org_name": "Ames Laboratory",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "130.202.0.0/16",
+            "2620:0:dc0::/48",
+            "140.221.0.0/18",
+            "146.137.0.0/16",
+            "146.139.0.0/16",
+            "164.54.0.0/16",
+            "2602:278:2000::/36",
+            "2602:278:4000::/36",
+            "2602:278:5000::/36"
+        ],
+        "org_name": "Argonne National Laboratory (ANL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "130.199.0.0/16",
+            "2620:10a::/44",
+            "192.12.15.0/24",
+            "192.33.128.0/24",
+            "192.153.161.0/24",
+            "192.203.218.0/24",
+            "2620:0:210::/48",
+            "2620:10a::/44",
+            "2620:12f:f000::/44"
+        ],
+        "org_name": "Brookhaven National Laboratory (BNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "131.225.0.0/16",
+            "192.190.216.0/22",
+            "198.49.208.0/24",
+            "2620:6a::/48"
+        ],
+        "org_name": "Fermi National Accelerator Laboratory (Fermilab)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "134.20.0.0/16",
+            "141.221.0.0/16",
+            "2620:0:2b80::/44"
+        ],
+        "org_name": "Idaho National Laboratory (INL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "128.3.0.0/16",
+            "131.243.0.0/16",
+            "2620:83:8000::/48"
+        ],
+        "org_name": "Lawrence Berkeley National Laboratory (LBNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "128.15.0.0/16",
+            "128.115.0.0/16",
+            "134.9.88.0/21",
+            "134.9.96.0/19",
+            "134.9.128.0/17",
+            "134.9.254.0/24",
+            "192.5.99.0/24",
+            "192.12.17.0/24",
+            "192.12.133.0/24",
+            "192.12.134.0/24",
+            "192.188.35.0/24",
+            "2602:80e:d000::/40"
+        ],
+        "org_name": "Lawrence Livermore National Laboratory (LLNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "128.165.0.0/16",
+            "130.55.0.0/16",
+            "138.98.0.0/16",
+            "141.111.0.0/16",
+            "192.12.184.0/24",
+            "192.52.70.0/24",
+            "192.65.95.0/24",
+            "204.121.0.0/16",
+            "2620:126:4000::/40"
+        ],
+        "org_name": "Los Alamos National Laboratory (LANL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "192.206.135.0/24",
+            "204.154.136.0/24",
+            "204.154.137.0/24",
+            "204.154.139.0/24",
+            "204.154.140.0/24",
+            "2620:111:a000::/44"
+        ],
+        "org_name": "National Energy Technology Laboratory (NETL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "192.174.32.0/19",
+            "2620:d0:8000::/48"
+        ],
+        "org_name": "National Renewable Energy Laboratory (NREL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "128.219.0.0/16",
+            "160.91.0.0/16",
+            "192.12.68.0/24",
+            "192.31.96.0/24",
+            "192.148.93.0/24",
+            "192.148.96.0/23",
+            "192.188.177.0/24",
+            "192.188.178.0/23",
+            "192.188.180.0/24",
+            "192.188.182.0/24",
+            "2620:0:2b30::/44"
+        ],
+        "org_name": "Oak Ridge National Laboratory (ORNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "130.20.0.0/16",
+            "192.35.193.0/24",
+            "192.101.100.0/22",
+            "192.101.104.0/22",
+            "192.101.108.0/23",
+            "2620:0:50f0::/44"
+        ],
+        "org_name": "Pacific Northwest National Laboratory (PNNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "192.55.106.0/24",
+            "192.188.106.0/24",
+            "198.35.0.0/20"
+        ],
+        "org_name": "Princeton Plasma Physics Laboratory (PPPL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "134.252.0.0/16",
+            "146.246.0.0/16",
+            "192.73.207.0/24",
+            "192.160.228.0/24",
+            "198.206.219.0/24",
+            "198.206.221.0/24",
+            "204.238.65.0/24",
+            "2620:106:6000::/44",
+            "2620:106:6000::/48"
+        ],
+        "org_name": "Sandia National Laboratories (SNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "2620:b0:8000::/48",
+            "192.33.240.0/24"
+        ],
+        "org_name": "Savannah River National Laboratory (SRNL)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "134.79.0.0/16",
+            "2620:114:d000::/44"
+        ],
+        "org_name": "SLAC National Accelerator Laboratory",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "129.57.0.0/16",
+            "2620:0:22f0::/48"
+        ],
+        "org_name": "Thomas Jefferson National Accelerator Facility (Jefferson Lab)",
+        "community": "DOE"
+    },
+    {
+        "addresses": [
+            "134.55.0.0/16",
+            "134.167.0.0/16",
+            "2001:400::/32"
+        ],
+        "org_name": "ESnet",
+        "community": "DOE"
+    }
+]
