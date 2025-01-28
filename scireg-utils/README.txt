@@ -38,6 +38,12 @@ For communities.mmdb generation:
       scireg2mmdb -i combined.json -o communities.mmdb
 
 
+Other useful tools:
+
+To merge 2 Science Registry files, only keeping unique entries
+    merge_scireg.py newScireg.json newScireg-testing.json merged.json
+
+
 ----------------------------------------------
 
 Transition tools:
