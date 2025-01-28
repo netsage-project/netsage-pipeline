@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # script to download mmdb files and CAIDA csv file from central repo
+#
+# NOTE: the exact same script is used by the importer docker image
+# Keep this file and the verion in docker-images/importer the same
 
 DATA_DIR="/data/cache"
 #DATA_DIR="/tmp/data/cache"  # for testing
