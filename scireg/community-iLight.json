@@ -1,0 +1,230 @@
+[
+  {
+    "addresses": [
+      "128.92.72.0/24"
+    ],
+    "org_name": "Anderson University",
+    "community": "iLight",
+    "asn": "62652"
+  },
+  {
+    "addresses": [
+      "12.159.206.0/23",
+      "147.226.0.0/16",
+      "2620:0:3b0::/48"
+    ],
+    "org_name": "Ball State University",
+    "community": "iLight",
+    "asn": "20452"
+  },
+  {
+    "addresses": [
+      "140.88.0.0/16"
+    ],
+    "org_name": "Bethel University",
+    "community": "iLight",
+    "asn": "40497"
+  },
+  {
+    "addresses": [
+      "159.242.0.0/21"
+    ],
+    "org_name": "Butler University",
+    "community": "iLight",
+    "asn": "26026"
+  },
+  {
+    "addresses": [
+      "64.189.100.0/24",
+      "159.28.0.0/18"
+    ],
+    "org_name": "Earlham College",
+    "community": "iLight",
+    "asn": "397356"
+  },
+  {
+    "addresses": [
+      "192.207.174.0/23",
+      "192.207.176.0/23",
+      "192.207.178.0/24"
+    ],
+    "org_name": "Franklin College",
+    "community": "iLight",
+    "asn": "399909"
+  },
+  {
+    "addresses": [
+      "198.51.243.0/24",
+      "198.51.244.0/24",
+      "199.8.232.0/21",
+      "2001:18e8:408::/48"
+    ],
+    "org_name": "Goshen College",
+    "community": "iLight",
+    "asn": "22966"
+  },
+  {
+    "addresses": [
+      "192.200.128.0/21"
+    ],
+    "org_name": "Hanover College",
+    "community": "iLight",
+    "asn": "16575"
+  },
+  {
+    "addresses": [
+      "108.59.48.0/20",
+      "108.59.48.0/21",
+      "108.59.56.0/22",
+      "108.59.60.0/22",
+      "2620:1e:e000::/48"
+    ],
+    "org_name": "Indiana Office of Technology",
+    "community": "iLight",
+    "asn": "46701"
+  },
+  {
+    "addresses": [
+      "139.102.0.0/16",
+      "139.102.96.0/24"
+    ],
+    "org_name": "Indiana State University",
+    "community": "iLight",
+    "asn": "399315"
+  },
+  {
+    "addresses": [
+      "199.8.54.0/23",
+      "199.8.64.0/21"
+    ],
+    "org_name": "Indiana Tech",
+    "community": "iLight",
+    "asn": "395395"
+  },
+  {
+    "addresses": [
+      "149.165.128.0/17",
+      "149.165.131.0/24",
+      "149.165.132.0/24",
+      "149.165.134.0/24",
+      "149.165.192.0/24",
+      "149.165.243.0/24",
+      "149.165.246.0/24",
+      "149.165.252.0/24",
+      "206.53.139.0/24",
+      "2001:18e8::/32",
+      "2001:18e8:ffff::/48"
+    ],
+    "org_name": "Indiana University",
+    "community": "iLight",
+    "asn": "19782"
+  },
+  {
+    "addresses": [
+      "199.8.16.0/21",
+      "199.8.24.0/22"
+    ],
+    "org_name": "Indiana Wesleyan University",
+    "community": "iLight",
+    "asn": "397534"
+  },
+  {
+    "addresses": [
+      "170.76.232.0/23",
+      "199.8.160.0/21"
+    ],
+    "org_name": "Marian University",
+    "community": "iLight",
+    "asn": "46266"
+  },
+  {
+    "addresses": [
+      "69.51.160.0/19",
+      "128.10.0.0/16",
+      "128.46.0.0/16",
+      "128.210.0.0/16",
+      "128.211.0.0/16",
+      "163.245.0.0/16",
+      "192.5.40.0/24",
+      "192.5.48.0/24",
+      "192.5.91.0/24",
+      "192.12.63.0/24",
+      "192.31.0.0/24",
+      "205.215.64.0/18",
+      "2001:18e8:800::/44",
+      "2607:ac80::/32",
+      "2607:ac80:500::/48"
+    ],
+    "org_name": "Purdue University",
+    "community": "iLight",
+    "asn": "17"
+  },
+  {
+    "addresses": [
+      "137.112.0.0/16",
+      "2620:e7::/48"
+    ],
+    "org_name": "Rose-Hulman Institute of Technology",
+    "community": "iLight",
+    "asn": "398451"
+  },
+  {
+    "addresses": [
+      "192.195.225.0/24",
+      "192.195.226.0/24",
+      "192.195.227.0/24",
+      "192.195.228.0/24",
+      "192.195.229.0/24",
+      "192.195.230.0/24"
+    ],
+    "org_name": "University of Evansville",
+    "community": "iLight",
+    "asn": "397348"
+  },
+  {
+    "addresses": [
+      "192.146.191.0/24",
+      "192.146.192.0/24",
+      "199.8.28.0/22",
+      "199.8.32.0/22"
+    ],
+    "org_name": "University of Indianapolis",
+    "community": "iLight",
+    "asn": "396892"
+  },
+  {
+    "addresses": [
+      "66.205.160.0/20",
+      "66.254.224.0/19",
+      "129.74.0.0/16",
+      "129.74.86.0/23",
+      "2620:0:2f00::/41"
+    ],
+    "org_name": "University of Notre Dame",
+    "community": "iLight",
+    "asn": "693"
+  },
+  {
+    "addresses": [
+      "192.206.9.0/24",
+      "192.206.10.0/23",
+      "199.8.92.0/22",
+      "199.8.136.0/22",
+      "199.8.168.0/22",
+      "208.96.144.0/20",
+      "2602:fc25::/36"
+    ],
+    "org_name": "University of Southern Indiana",
+    "community": "iLight",
+    "asn": "46149"
+  },
+  {
+    "addresses": [
+      "159.218.0.0/16",
+      "159.218.6.0/24"
+    ],
+    "org_name": "Vincennes University",
+    "community": "iLight",
+    "asn": "399569"
+  }
+]

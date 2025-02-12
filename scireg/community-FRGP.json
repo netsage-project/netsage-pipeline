@@ -1,0 +1,27 @@
+[
+    {
+        "addresses": [
+            "129.19.162.0/24"
+        ],
+        "org_name": "Colorado State University",
+        "community": "FRGP",
+        "asn": "14041"
+    },
+    {
+        "addresses": [
+            "129.19.148.0/24",
+            "129.19.149.0/24"
+        ],
+        "org_name": "NEON, Inc.",
+        "community": "FRGP",
+        "asn": "14041"
+    },
+    {
+        "addresses": [
+            "129.19.92.0/23"
+        ],
+        "org_name": "The Auraria Higher Education Center",
+        "community": "FRGP",
+        "asn": "14041"
+    }
+]

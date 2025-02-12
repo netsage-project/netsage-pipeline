@@ -1,25 +1,32 @@
 [
     {
         "addresses": [
-            "74.200.128.0/18"
+            "74.200.128.0/18",
+            "2607:f928::/32"
         ],
         "org_name": "Lonestar Education and Research Network (LEARN)",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
+            "72.18.160.0/19",
             "74.200.187.54/31"
         ],
         "org_name": "Angelo State University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "129.62.0.0/16",
             "74.200.133.0/24",
-            "74.200.187.208/31"
+            "74.200.187.208/31",
+            "2605:c780::/32"
         ],
         "org_name": "Baylor University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "30674"
     },
     {
         "addresses": [
@@ -27,36 +34,43 @@
             "74.200.176.10/31"
         ],
         "org_name": "City of San Angelo",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
+            "208.79.137.0/24",
             "74.200.187.222/31"
         ],
         "org_name": "City of Waco",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "144.162.0.0/16",
             "74.200.187.140/31",
             "74.200.187.142/31"
         ],
         "org_name": "Dallas College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.187.0/29"
         ],
         "org_name": "Education Service Center Region 13",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.187.138/31"
         ],
         "org_name": "Education Service Center Region 14",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -64,7 +78,8 @@
             "74.200.187.252/31"
         ],
         "org_name": "Education Service Center Region 3",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -72,62 +87,75 @@
             "74.200.187.150/31"
         ],
         "org_name": "Education Service Center Region 5",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.187.134/31"
         ],
         "org_name": "Education Service Center Region 6",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "38.100.171.0/24",
             "74.200.135.0/24"
         ],
         "org_name": "Kilgore College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
+            "140.158.0.0/16",
             "74.200.176.4/31",
             "74.200.176.8/31",
             "74.200.187.56/31",
             "74.200.187.124/31"
         ],
         "org_name": "Lamar University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.144.0/24"
         ],
-        "org_name": "MUS-IX",
-        "community": "LEARN"
+        "org_name": "Midsouth U.S. Internet Exchange (MUS-IX)",
+        "community": "LEARN",
+        "asn": "32440"
     },
     {
         "addresses": [
+            "198.134.151.0/24",
             "74.200.176.22/31",
             "74.200.184.82/31",
             "74.200.187.90/31"
         ],
         "org_name": "McLennan Community College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "69.84.160.0/20",
             "74.200.184.86/31",
             "74.200.187.94/31"
         ],
         "org_name": "Midland College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "206.197.219.0/24",
             "74.200.187.166/31"
         ],
         "org_name": "National Radio Astronomy Observatory",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -137,7 +165,8 @@
             "74.200.141.0/24"
         ],
         "org_name": "Odyssey Academy, Inc.",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
@@ -146,7 +175,8 @@
             "74.200.159.80/28"
         ],
         "org_name": "Parker University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
@@ -154,38 +184,52 @@
             "74.200.187.216/31"
         ],
         "org_name": "Round Rock Independent School District",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "158.135.0.0/16",
             "74.200.176.32/31",
-            "74.200.176.34/31"
+            "74.200.176.34/31",
+            "2620:7e:c080::/48"
         ],
         "org_name": "Sam Houston State University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "33187"
     },
     {
         "addresses": [
+            "64.69.240.0/20",
+            "216.117.112.0/20",
             "74.200.176.64/31"
         ],
         "org_name": "South Plains College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
+            "67.67.36.0/22",
+            "97.77.221.0/24",
+            "208.84.208.0/21",
             "74.200.176.24/31",
             "74.200.184.84/31",
             "74.200.187.92/31"
         ],
         "org_name": "South Texas College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "104.150.0.0/16",
+            "129.119.0.0/16",
             "74.200.187.106/31"
         ],
         "org_name": "Southern Methodist University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -195,17 +239,21 @@
             "74.200.187.170/31"
         ],
         "org_name": "St Mary's University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "173.255.32.0/20",
             "74.200.187.136/31"
         ],
         "org_name": "Tarleton State University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "64.28.240.0/20",
             "74.200.159.0/29",
             "74.200.159.8/29",
             "74.200.159.16/29",
@@ -214,41 +262,50 @@
             "74.200.159.40/29"
         ],
         "org_name": "Tarrant County College District",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     },
     {
         "addresses": [
+            "170.76.133.0/24",
             "74.200.184.96/31",
-            "74.200.187.210/31"
+            "74.200.187.210/31",
+            "2620:12b:b000::/44"
         ],
         "org_name": "Texarkana College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "395770"
     },
     {
         "addresses": [
             "74.200.130.0/24"
         ],
-        "org_name": "Texas A&M University",
-        "community": "LEARN"
+        "org_name": "Texas A&M University (TAMU)",
+        "community": "LEARN",
+        "asn": "8075"
     },
     {
         "addresses": [
+            "138.237.0.0/16",
             "74.200.134.0/24",
             "74.200.176.44/31",
             "74.200.187.42/31"
         ],
         "org_name": "Texas Christian University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.187.86/31"
         ],
         "org_name": "Texas Education Agency",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "147.26.0.0/16",
             "74.200.136.0/24",
             "74.200.138.0/24",
             "74.200.187.22/31",
@@ -256,21 +313,27 @@
             "74.200.187.104/31"
         ],
         "org_name": "Texas State University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
-            "74.200.187.80/30"
+            "64.111.0.0/20",
+            "100.43.32.0/19",
+            "74.200.187.80/30",
+            "2602:805::/44"
         ],
         "org_name": "Texas Tech University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "53809"
     },
     {
         "addresses": [
             "74.200.187.52/31"
         ],
         "org_name": "Texas Tech University Health Sciences Center",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -278,7 +341,8 @@
             "74.200.187.84/31"
         ],
         "org_name": "Texas Tech University Health Sciences Center at El Paso",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -287,15 +351,18 @@
             "74.200.187.118/31"
         ],
         "org_name": "Texas Woman's University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "143.111.0.0/16",
             "74.200.187.114/31",
             "74.200.187.164/31"
         ],
-        "org_name": "The University Of Texas M.D. Anderson Cancer Center",
-        "community": "LEARN"
+        "org_name": "University Of Texas M.D. Anderson Cancer Center",
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -303,16 +370,19 @@
             "74.200.184.94/31",
             "74.200.187.206/31"
         ],
-        "org_name": "Trinity Lutheran University",
-        "community": "LEARN"
+        "org_name": "Texas Lutheran University",
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "131.194.0.0/16",
             "74.200.184.88/31",
             "74.200.187.108/31"
         ],
         "org_name": "Trinity University",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
@@ -320,44 +390,53 @@
             "74.200.187.220/31"
         ],
         "org_name": "Trinity Valley Community College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "199.216.150.0/24",
             "74.200.187.128/31",
             "74.200.187.152/29"
         ],
         "org_name": "University of Mary Hardin-Baylor",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
+            "129.107.0.0/16",
             "74.200.176.48/31",
             "74.200.183.8/30",
             "74.200.183.12/30",
             "74.200.187.20/31",
             "74.200.187.58/31",
             "74.200.187.120/31",
-            "74.200.187.122/31"
+            "74.200.187.122/31",
+            "2602:fd0f::/36"
         ],
         "org_name": "University of Texas at Arlington",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "18515"
     },
     {
         "addresses": [
+            "129.110.0.0/16",
             "74.200.176.38/31",
             "74.200.187.110/31",
             "74.200.187.112/31"
         ],
         "org_name": "University of Texas at Dallas",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "16905"
     },
     {
         "addresses": [
             "74.200.132.0/24"
         ],
         "org_name": "Victoria College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "62912"
     },
     {
         "addresses": [
@@ -366,6 +445,7 @@
             "74.200.182.210/31"
         ],
         "org_name": "Wharton County Junior College",
-        "community": "LEARN"
+        "community": "LEARN",
+        "asn": "22645"
     }
 ]
