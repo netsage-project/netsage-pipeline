@@ -5,7 +5,8 @@
             "2620:57::/48"
         ],
         "org_name": "Ames Laboratory",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "2640"
     },
     {
         "addresses": [
@@ -20,7 +21,8 @@
             "2602:278:5000::/36"
         ],
         "org_name": "Argonne National Laboratory (ANL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "683"
     },
     {
         "addresses": [
@@ -35,7 +37,8 @@
             "2620:12f:f000::/44"
         ],
         "org_name": "Brookhaven National Laboratory (BNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "43"
     },
     {
         "addresses": [
@@ -45,7 +48,8 @@
             "2620:6a::/48"
         ],
         "org_name": "Fermi National Accelerator Laboratory (Fermilab)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "3152"
     },
     {
         "addresses": [
@@ -54,7 +58,8 @@
             "2620:0:2b80::/44"
         ],
         "org_name": "Idaho National Laboratory (INL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "14702"
     },
     {
         "addresses": [
@@ -63,7 +68,8 @@
             "2620:83:8000::/48"
         ],
         "org_name": "Lawrence Berkeley National Laboratory (LBNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "16"
     },
     {
         "addresses": [
@@ -81,7 +87,8 @@
             "2602:80e:d000::/40"
         ],
         "org_name": "Lawrence Livermore National Laboratory (LLNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "45"
     },
     {
         "addresses": [
@@ -96,7 +103,8 @@
             "2620:126:4000::/40"
         ],
         "org_name": "Los Alamos National Laboratory (LANL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "68"
     },
     {
         "addresses": [
@@ -108,7 +116,8 @@
             "2620:111:a000::/44"
         ],
         "org_name": "National Energy Technology Laboratory (NETL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "32982"
     },
     {
         "addresses": [
@@ -116,7 +125,8 @@
             "2620:d0:8000::/48"
         ],
         "org_name": "National Renewable Energy Laboratory (NREL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "16411"
     },
     {
         "addresses": [
@@ -133,7 +143,8 @@
             "2620:0:2b30::/44"
         ],
         "org_name": "Oak Ridge National Laboratory (ORNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "50"
     },
     {
         "addresses": [
@@ -145,7 +156,8 @@
             "2620:0:50f0::/44"
         ],
         "org_name": "Pacific Northwest National Laboratory (PNNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "3428"
     },
     {
         "addresses": [
@@ -154,7 +166,8 @@
             "198.35.0.0/20"
         ],
         "org_name": "Princeton Plasma Physics Laboratory (PPPL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "3380"
     },
     {
         "addresses": [
@@ -169,7 +182,8 @@
             "2620:106:6000::/48"
         ],
         "org_name": "Sandia National Laboratories (SNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "3562"
     },
     {
         "addresses": [
@@ -177,7 +191,8 @@
             "192.33.240.0/24"
         ],
         "org_name": "Savannah River National Laboratory (SRNL)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "54297"
     },
     {
         "addresses": [
@@ -185,7 +200,8 @@
             "2620:114:d000::/44"
         ],
         "org_name": "SLAC National Accelerator Laboratory",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "3671"
     },
     {
         "addresses": [
@@ -193,7 +209,8 @@
             "2620:0:22f0::/48"
         ],
         "org_name": "Thomas Jefferson National Accelerator Facility (Jefferson Lab)",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "6406"
     },
     {
         "addresses": [
@@ -202,6 +219,7 @@
             "2001:400::/32"
         ],
         "org_name": "ESnet",
-        "community": "DOE"
+        "community": "DOE",
+        "asn": "293"
     }
 ]

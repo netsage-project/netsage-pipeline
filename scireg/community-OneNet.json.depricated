@@ -1,0 +1,875 @@
+[
+    {
+        "addresses": [
+            "164.58.1.56/30",
+            "164.58.139.56/29"
+        ],
+        "org_name": "Allen Bowden School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.40.52/30"
+        ],
+        "org_name": "Allen Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.63.128/29"
+        ],
+        "org_name": "Ardmore ISD-19 (Ardmore City Schools)",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.222.88/30",
+            "164.58.185.0/24"
+        ],
+        "org_name": "Bacone College",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.42.48/30",
+            "164.58.9.16/30",
+            "164.58.17.224/29"
+        ],
+        "org_name": "Bennington Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.6.0/29",
+            "164.58.7.128/28"
+        ],
+        "org_name": "Berryhill High School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.16.252/30"
+        ],
+        "org_name": "Binger-Oney Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.215.32/30"
+        ],
+        "org_name": "Blanchard Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.72.8/29"
+        ],
+        "org_name": "Boise City High School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.7.164/30",
+            "164.58.28.112/29"
+        ],
+        "org_name": "Bokoshe Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.204.0/29",
+            "164.58.14.144/30",
+            "164.58.80.16/28"
+        ],
+        "org_name": "Bristow Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.42.72/29"
+        ],
+        "org_name": "Canadian Valley Technology Center-Chickasha",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.12/30",
+            "156.110.25.40/30",
+            "156.110.25.52/30",
+            "156.110.39.192/29",
+            "164.58.149.0/27"
+        ],
+        "org_name": "Canadian Valley VT-El Ren",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.46.192/28"
+        ],
+        "org_name": "Cordell Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.60/31",
+            "156.110.31.160/29"
+        ],
+        "org_name": "Coyle Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.59.24/29",
+            "164.58.212.104/30",
+            "164.58.225.124/30"
+        ],
+        "org_name": "Donald W Reynolds Community Center and Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.136/30",
+            "156.110.35.192/29",
+            "156.110.39.64/27",
+            "164.58.109.96/28"
+        ],
+        "org_name": "Duncan Regional Hospital",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.68/30",
+            "156.110.28.176/29",
+            "164.58.6.8/29"
+        ],
+        "org_name": "East Central Oklahoma Family Health Center - Henryetta",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.28.64/28",
+            "164.58.28.80/29"
+        ],
+        "org_name": "East Central Oklahoma Family Health Center - Wetumka Medical",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.7.148/30"
+        ],
+        "org_name": "East Central Oklahoma FHC - Behavioral Health Services",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.34.184/29",
+            "164.58.0.104/30"
+        ],
+        "org_name": "East Central Oklahoma FHC - Wewoka",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.2/31",
+            "156.110.26.220/30",
+            "156.110.35.144/29",
+            "164.58.6.84/30",
+            "164.58.11.132/30",
+            "164.58.21.80/30"
+        ],
+        "org_name": "East Central University",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.177.32/27"
+        ],
+        "org_name": "Eastern Ok Dist Library System (EODLS)",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.48/30",
+            "164.58.3.224/29"
+        ],
+        "org_name": "El Reno Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.248/30",
+            "156.110.28.128/29",
+            "164.58.28.120/30",
+            "164.58.28.232/30"
+        ],
+        "org_name": "Empire Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.4.188/30",
+            "164.58.63.240/29",
+            "164.58.156.64/28"
+        ],
+        "org_name": "Erick Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.118.48/30",
+            "164.58.192.0/26"
+        ],
+        "org_name": "Frontier Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.23.224/28"
+        ],
+        "org_name": "Glencoe Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.0.124/30"
+        ],
+        "org_name": "Goodwell Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.110.96/27",
+            "164.58.1.48/29"
+        ],
+        "org_name": "Guthrie Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.152/30",
+            "156.110.34.112/29"
+        ],
+        "org_name": "Hammon Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.223.0/26",
+            "164.58.223.128/25"
+        ],
+        "org_name": "High Plains Vo-Tech-Woodward",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.31.112/28",
+            "164.58.3.100/30",
+            "164.58.4.220/30"
+        ],
+        "org_name": "Hooker Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.76/30",
+            "164.58.70.128/25"
+        ],
+        "org_name": "J D McCarty Center",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.207.112/29",
+            "164.58.9.88/30"
+        ],
+        "org_name": "Jay C. Byers Memorial Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.54.0/29"
+        ],
+        "org_name": "Jennings Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.231.96/29"
+        ],
+        "org_name": "Keota High School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.1.142/31",
+            "164.58.16.196/30"
+        ],
+        "org_name": "Keystone School District",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.127.64/29",
+            "164.58.5.80/30",
+            "164.58.16.28/30"
+        ],
+        "org_name": "Kildare School District",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.5.180/30"
+        ],
+        "org_name": "Kiowa Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.34.8/30",
+            "156.110.34.20/30",
+            "164.58.6.184/29",
+            "164.58.6.208/29",
+            "164.58.6.220/30"
+        ],
+        "org_name": "Latta Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.27.32/29",
+            "156.110.86.108/30",
+            "156.110.90.208/30"
+        ],
+        "org_name": "Lawton Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.25.44/30",
+            "156.110.25.88/29",
+            "156.110.25.120/29",
+            "156.110.25.128/29",
+            "156.110.28.252/30",
+            "156.110.42.52/30",
+            "156.110.122.0/30",
+            "164.58.69.192/29"
+        ],
+        "org_name": "Madill Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.92.152/30",
+            "164.58.29.128/30",
+            "164.58.186.144/30"
+        ],
+        "org_name": "Mannford Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.230.76/30"
+        ],
+        "org_name": "Marble City School District 35",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.58.84/30"
+        ],
+        "org_name": "Maysville Elementary School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.43.64/30",
+            "164.58.58.88/30"
+        ],
+        "org_name": "Maysville High School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.6.28/31",
+            "164.58.6.32/30",
+            "164.58.6.36/30",
+            "164.58.7.192/27"
+        ],
+        "org_name": "McAlester Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.215.48/30"
+        ],
+        "org_name": "McLoud Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.38.176/28",
+            "164.58.1.212/30"
+        ],
+        "org_name": "Miami Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.27.176/29"
+        ],
+        "org_name": "Monroe Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.99.0/29",
+            "164.58.0.76/30",
+            "164.58.69.0/29",
+            "164.58.151.0/28"
+        ],
+        "org_name": "Moore Norman Technology Center",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.24.4/30",
+            "164.58.28.244/30",
+            "164.58.215.52/30"
+        ],
+        "org_name": "Moore Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.31.80/28",
+            "164.58.0.192/30",
+            "164.58.7.0/27"
+        ],
+        "org_name": "Mustang Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.1.44/31"
+        ],
+        "org_name": "New Lima Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.215.56/30"
+        ],
+        "org_name": "Newcastle Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.215.60/30"
+        ],
+        "org_name": "Noble Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.14.192/30"
+        ],
+        "org_name": "Norman Central Library (PLS)",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.200/29",
+            "164.58.0.108/30"
+        ],
+        "org_name": "Norman East Public Library (PLS)",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.25.254/31",
+            "156.110.235.192/28"
+        ],
+        "org_name": "Northeastern State Univ",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.144/31",
+            "156.110.26.146/31",
+            "164.58.237.88/29"
+        ],
+        "org_name": "Northeastern State Univ.",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.1.132/30"
+        ],
+        "org_name": "Oklahoma Association of Career and Technology Education",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.5.64/28"
+        ],
+        "org_name": "Oklahoma Medical Research Foundation",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.38.12/30",
+            "156.110.39.248/29",
+            "164.58.6.22/31"
+        ],
+        "org_name": "Olustee/Eldorado School District",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.0.0/16",
+            "164.58.0.0/16"
+        ],
+        "org_name": "OneNet",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.42.0/30",
+            "164.58.87.120/29",
+            "164.58.139.128/28"
+        ],
+        "org_name": "Pawnee Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.1.76/30"
+        ],
+        "org_name": "Perry Carnegie Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.109.56/30"
+        ],
+        "org_name": "Pioneer Library System (Norman West)",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.252/30",
+            "164.58.218.64/26"
+        ],
+        "org_name": "Ponca City Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.34.120/30",
+            "164.58.83.0/27",
+            "164.58.183.48/28"
+        ],
+        "org_name": "Pontotoc Area VoTech",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.227.16/28",
+            "164.58.0.188/30",
+            "164.58.11.76/30",
+            "164.58.11.176/30",
+            "164.58.155.32/27",
+            "164.58.209.120/29"
+        ],
+        "org_name": "Poteau Public Schools I-29 Admin Bldg",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.4.0/30"
+        ],
+        "org_name": "Purcell Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.25.224/28",
+            "164.58.0.132/30"
+        ],
+        "org_name": "Pushmataha Hospital",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.42.56/30",
+            "164.58.72.184/29"
+        ],
+        "org_name": "Ravia School District",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.2.52/30"
+        ],
+        "org_name": "Robin Hill Elementary",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.28.250/32",
+            "164.58.17.238/31"
+        ],
+        "org_name": "Sayre Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.25.12/30",
+            "156.110.235.64/29"
+        ],
+        "org_name": "Shady Grove School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.82.220/30",
+            "164.58.215.144/30"
+        ],
+        "org_name": "Shawnee Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.4.216/30"
+        ],
+        "org_name": "South Oklahoma City Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.38.40/29",
+            "156.110.39.208/29",
+            "164.58.173.64/26"
+        ],
+        "org_name": "Southwest Technology Center",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.7.64/27",
+            "164.58.206.128/29"
+        ],
+        "org_name": "Spiro Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.47.160/29",
+            "164.58.17.178/31"
+        ],
+        "org_name": "Sterling Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.27.100/30",
+            "156.110.107.16/29",
+            "164.58.184.124/30"
+        ],
+        "org_name": "Stidham Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.38.192/27",
+            "164.58.0.184/30",
+            "164.58.46.0/24",
+            "164.58.59.0/24"
+        ],
+        "org_name": "SWOSU-Weatherford",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.4.164/30"
+        ],
+        "org_name": "Tannehill Elementary School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.215.148/30"
+        ],
+        "org_name": "Tecumseh Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.97.0/24"
+        ],
+        "org_name": "Thunderbird Youth Academy",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.148/30",
+            "156.110.50.4/30",
+            "164.58.23.128/26",
+            "164.58.177.136/29",
+            "164.58.243.232/29"
+        ],
+        "org_name": "University of Science & Arts of Oklahoma",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.2.148/30",
+            "164.58.6.200/29",
+            "164.58.206.160/29"
+        ],
+        "org_name": "Vanoss Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.26.192/30"
+        ],
+        "org_name": "Wayne Public School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.115.40/29",
+            "164.58.4.104/30"
+        ],
+        "org_name": "Wewoka High School",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.211.216/29",
+            "164.58.83.32/30"
+        ],
+        "org_name": "Woodward Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "164.58.28.208/30",
+            "164.58.207.208/28"
+        ],
+        "org_name": "Wright City Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.25.112/30"
+        ],
+        "org_name": "Yale Public Library",
+        "community": "OneNet",
+        "asn": "5078"
+    },
+    {
+        "addresses": [
+            "156.110.204.16/29",
+            "164.58.2.216/30",
+            "164.58.72.192/29"
+        ],
+        "org_name": "Yale Public Schools",
+        "community": "OneNet",
+        "asn": "5078"
+    }
+]
