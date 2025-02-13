@@ -11,15 +11,20 @@ import csv
 import requests
 import json
 import time
+import re
 from bs4 import BeautifulSoup
 
 # File Paths
 INPUT_CSV = "organizations_with_asn.csv"
 OUTPUT_JSON = "subnets.json"
 BASE_URL = "https://bgp.he.net/"
-COMMUNITY = "iLight"  # Set static community value
+COMMUNITY = "SCN"  # Set static community value
 
 ################################################################
+
+def extract_numbers(s):
+    match = re.search(r'\d+', s)  # Find the first sequence of digits
+    return match.group() if match else None
 
 # Function to get valid subnets (IPv4 & IPv6) for a given ASN
 def get_subnets(asn):
@@ -78,10 +83,14 @@ try:
         header = next(reader)  # Read header row
 
         for row in reader:
-            org_name = row[0]  # Organization name
-            asn = row[1]        # ASN
+            print ("Processing row: ", row)
+            org_name = row[1]  # Organization name
+            asn = row[0]        # ASN
+            asn = extract_numbers(asn)
             if asn.isdigit():    # Validate ASN
                 orgs.append({"org_name": org_name, "asn": asn})
+            else:
+                print (f"Error: ASN {asn} invalid ")
 
     print(f"[INFO] Found {len(orgs)} organizations with ASNs.")
 
