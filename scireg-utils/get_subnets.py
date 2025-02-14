@@ -18,13 +18,13 @@ from bs4 import BeautifulSoup
 INPUT_CSV = "organizations_with_asn.csv"
 OUTPUT_JSON = "subnets.json"
 BASE_URL = "https://bgp.he.net/"
-COMMUNITY = "SCN"  # Set static community value
+COMMUNITY = "CENIC"  # Set static community value
 
 ################################################################
 
 def extract_numbers(s):
     match = re.search(r'\d+', s)  # Find the first sequence of digits
-    return match.group() if match else None
+    return match.group() if match else ""
 
 # Function to get valid subnets (IPv4 & IPv6) for a given ASN
 def get_subnets(asn):
@@ -84,8 +84,8 @@ try:
 
         for row in reader:
             print ("Processing row: ", row)
-            org_name = row[1]  # Organization name
-            asn = row[0]        # ASN
+            org_name = row[0]  # Organization name
+            asn = row[1]        # ASN
             asn = extract_numbers(asn)
             if asn.isdigit():    # Validate ASN
                 orgs.append({"org_name": org_name, "asn": asn})
