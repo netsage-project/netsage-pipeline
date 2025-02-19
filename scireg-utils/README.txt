@@ -1,5 +1,8 @@
 # This directory contains files for building and maintaining the NetSage Science Registry.
 # See: https://netsage.io/scienceregistry
+#
+# additional scripts that were used to help create the 'communities' files are here too.
+#
 
 Contents of this directory
 

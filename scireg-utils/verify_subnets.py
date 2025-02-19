@@ -4,8 +4,14 @@
 
 # after running this, check community-mismatched.json for any entries that should be re-added
 
-# note: if regional provided a subnet not found routing tables, this will throw it out.
-#  not sure if this is 'desired' Behavior
+# Note: sometimes description in bgp.he.net is wrong. eg: https://bgp.he.net/AS53372#_prefixes
+# To check what orgs are being removed, check the length:
+#	jq 'length' community-verified.json
+#       jq 'length' community-SCN.json
+#  if they differ, check org_names
+#  	grep org_name community-SCN.json > org1
+#    	grep org_name community-verified.json > org2
+#       diff -w org1 org2
 
 
 import json
@@ -108,7 +114,8 @@ for entry in data:
                 print (f"name '{org_name}' fuzzy match for '{prefix_org_list[address]}', adding subnet {address}")
                 valid_addresses.append(address)
             else:
-                print (f"WARNING: subnet {address} not found, skipping")
+                print (f"*** WARNING: subnet {address} not found. Assuming its shared by ASN owner, so including it. ***")
+                valid_addresses.append(address)
     
     if valid_addresses:
         entry['addresses'] = valid_addresses
