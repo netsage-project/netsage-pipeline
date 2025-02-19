@@ -5,26 +5,26 @@
 {
       // array of subnets, both IPV4 and IPV6
       "addresses" : [
-         "129.114.0.0/16",
-         "129.115.0.0/16"
+         "129.114.104.0/24",
+         "2001:db8:114:104::/64"
       ],
       // recommended format: "full orgization name (abbr)"
       "org_name" : "Texas Advanced Computing Center (TACC)",
-      // NSF Code for Classifications for Research, applicable; 
+      // NSF Code for Classifications for Research, applicable; (optional)
       // e.g.: MPS.Physics.High Energy, GEO.Earth, MPS.Astronomy, BIO.Genomics and Bioinformatics, etc.
-      // set to null if N/A
+      // for compute centers, set to 'Multi-Science Facility'. set to null if N/A
       "discipline" : "Multi-Science Facility",
-      // note: set lat/lon to 0.0 to force use of MaxMind GEO DB for location
+      // lat/long: (optional) set to 0.0 to use MaxMind GEO DB for location 
       // see: https://www.maxmind.com/en/geoip-demo to verify Maxmind DB is correct for your subnets
-      "latitude" : "30.3897376",
-      "longitude" : "-97.7261257",
+      "latitude" : "0.0",
+      "longitude" : "0.0",
       // resource name =  "org_abbr - resource_name - resource type"
       // where type must be one of the following: Types: Compute, Storage, Archive, Test
       // e.g.: "NERSC - DTN - Storage"  or "TACC - Stampede3 - Compute"
-      "resource_name" : null,
+      "resource_name" : "TACC - Jetstream - Compute",
       // sample projects: ATLAS, CMS, FIONA, Environmental Molecular Sciences Lab (EMSL), etc (optional)
       "project_name" : null,
-      // community (eg: DOE, UT Austin, LEARN, FRGP, etc) (optional)
+      // community (eg: DOE, LEARN, FRGP, etc) (optional)
       "community" : null,
       // email list to contact to see if information is current, avoid personal emails
       "contact_email" : null
