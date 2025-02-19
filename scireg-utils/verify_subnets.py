@@ -59,7 +59,7 @@ def fetch_prefixes(asn, version=4):
     #print ("DEBUG: returning list for ASN {asn}: ", prefixes)
     return prefixes
 
-def fuzzy_match(org1, org2, threshold=0.8):
+def fuzzy_match(org1, org2, threshold=0.7):
     """Return True if org1 and org2 match with a similarity above the threshold."""
     ratio = SequenceMatcher(None, org1.lower(), org2.lower()).ratio()
     return ratio >= threshold
