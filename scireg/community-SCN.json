@@ -1,0 +1,522 @@
+[
+  {
+    "addresses": [
+      "128.196.0.0/16",
+      "150.135.0.0/16",
+      "192.12.69.0/24",
+      "192.33.140.0/23",
+      "192.80.43.0/24",
+      "198.60.133.0/24",
+      "198.60.134.0/23",
+      "198.60.136.0/21",
+      "198.60.144.0/20",
+      "198.60.144.0/24",
+      "198.60.145.0/24",
+      "198.60.152.0/24",
+      "198.60.159.0/24",
+      "198.60.160.0/24",
+      "198.60.161.0/24",
+      "198.60.162.0/24",
+      "198.60.188.0/24",
+      "198.60.190.0/24",
+      "198.151.212.0/24",
+      "199.104.128.0/19",
+      "199.104.148.0/22",
+      "199.104.152.0/21",
+      "199.104.218.0/23",
+      "199.104.220.0/22",
+      "199.104.224.0/20",
+      "199.104.240.0/21",
+      "199.104.248.0/22",
+      "199.104.252.0/24",
+      "199.104.254.0/23",
+      "204.27.250.0/24",
+      "204.229.192.0/20",
+      "204.229.208.0/21",
+      "204.229.216.0/23",
+      "204.229.218.0/24",
+      "204.229.224.0/21",
+      "204.229.232.0/23",
+      "204.229.235.0/24",
+      "204.229.236.0/22",
+      "204.229.240.0/20",
+      "206.207.1.0/24",
+      "206.207.2.0/23",
+      "206.207.4.0/24",
+      "206.207.7.0/24",
+      "206.207.8.0/21",
+      "206.207.18.0/24",
+      "206.207.20.0/22",
+      "206.207.24.0/21",
+      "206.207.32.0/20",
+      "206.207.42.0/24",
+      "206.207.48.0/23",
+      "206.207.51.0/24",
+      "206.207.52.0/22",
+      "206.207.56.0/23",
+      "206.207.59.0/24",
+      "206.207.62.0/24",
+      "206.207.128.0/20",
+      "206.207.144.0/21",
+      "206.207.153.0/24",
+      "206.207.154.0/24",
+      "206.207.176.0/20",
+      "206.207.192.0/19",
+      "206.207.224.0/19",
+      "206.207.240.0/23",
+      "208.68.28.0/22",
+      "208.75.160.0/21",
+      "2607:f088::/32"
+    ],
+    "org_name": "The University of Arizona",
+    "asn": "1706",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "129.219.0.0/16",
+      "129.219.0.0/17",
+      "129.219.128.0/17",
+      "149.169.0.0/16",
+      "149.169.0.0/17",
+      "149.169.128.0/17",
+      "198.60.132.0/24",
+      "198.153.152.0/24",
+      "206.206.192.0/18",
+      "206.206.192.0/19",
+      "206.206.224.0/19",
+      "206.207.0.0/24",
+      "206.207.50.0/24",
+      "207.246.32.0/19",
+      "207.246.32.0/20",
+      "207.246.48.0/20",
+      "209.147.128.0/18",
+      "209.147.128.0/19",
+      "209.147.160.0/19",
+      "2604:e580:ffff::/48",
+      "2620:d8:8000::/48"
+    ],
+    "org_name": "Arizona State University",
+    "asn": "2900",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "199.195.64.0/19",
+      "199.195.96.0/20",
+      "199.195.112.0/23"
+    ],
+    "org_name": "Paradise Valley Unified School District",
+    "asn": "4514",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "144.90.0.0/16",
+      "144.90.252.0/22"
+    ],
+    "org_name": "Pima Community College",
+    "asn": "6652",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "199.101.32.0/21",
+      "199.101.32.0/24",
+      "199.101.33.0/24",
+      "199.101.34.0/24",
+      "199.101.35.0/24",
+      "199.101.36.0/24",
+      "199.101.37.0/24",
+      "199.101.38.0/24",
+      "199.101.40.0/23",
+      "199.101.40.0/24",
+      "199.101.41.0/24"
+    ],
+    "org_name": "City of Mesa",
+    "asn": "19185",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "68.228.111.0/24",
+      "204.43.7.0/24"
+    ],
+    "org_name": "Vail School District",
+    "asn": "20269",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "134.114.0.0/16",
+      "198.60.189.0/24",
+      "207.246.0.0/19"
+    ],
+    "org_name": "Northern Arizona University",
+    "asn": "21582",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "140.198.0.0/20",
+      "140.198.0.0/21",
+      "140.198.8.0/22",
+      "140.198.12.0/23",
+      "140.198.14.0/24",
+      "140.198.15.0/24",
+      "140.198.16.0/20",
+      "140.198.32.0/20",
+      "140.198.48.0/20",
+      "140.198.64.0/20",
+      "140.198.80.0/20",
+      "140.198.96.0/20",
+      "140.198.112.0/20",
+      "140.198.128.0/20",
+      "140.198.144.0/20",
+      "140.198.160.0/20",
+      "140.198.176.0/20",
+      "140.198.192.0/20",
+      "140.198.208.0/20",
+      "140.198.224.0/20",
+      "140.198.240.0/24",
+      "140.198.241.0/24",
+      "140.198.242.0/24",
+      "140.198.243.0/24",
+      "140.198.244.0/24",
+      "140.198.245.0/24",
+      "140.198.246.0/24",
+      "140.198.247.0/24",
+      "140.198.249.0/24",
+      "140.198.250.0/24",
+      "140.198.251.0/24",
+      "140.198.252.0/24",
+      "140.198.253.0/24",
+      "140.198.254.0/24",
+      "140.198.255.0/24"
+    ],
+    "org_name": "Maricopa County Community College District",
+    "asn": "26783",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "98.179.129.0/24"
+    ],
+    "org_name": "Translational Genomics Research Institute (TGEN)",
+    "asn": "53372",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.17/30",
+      "204.43.1.0/28",
+      "206.207.5.25/30",
+      "204.43.1.16/28"
+    ],
+    "org_name": "Arizona State School For The Deaf And The Blind (ASDB)",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.37/30",
+      "204.43.1.64/29"
+    ],
+    "org_name": "Altar Valley School District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.210.128.0/20",
+      "206.210.144.0/20"
+    ],
+    "org_name": "Amphitheater Public Schools",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.173/30"
+    ],
+    "org_name": "Arizona PBS KAET",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.49/30",
+      "204.43.4.0/27"
+    ],
+    "org_name": "Avondale Elementary School",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.49/30"
+    ],
+    "org_name": "Basis Peoria Primary",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.53/30"
+    ],
+    "org_name": "Basis Phoenix Central",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.57/30"
+    ],
+    "org_name": "Basis Phoenix Primary",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.61/30"
+    ],
+    "org_name": "Basis Phoenix South Primary",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.65/30"
+    ],
+    "org_name": "Basis Scottsdale Primary East",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.69/30"
+    ],
+    "org_name": "Basis Tucson North",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.73/30"
+    ],
+    "org_name": "Basis Tucson Primary",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "104.166.108.0/24"
+    ],
+    "org_name": "Crane Schools",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.101/30"
+    ],
+    "org_name": "Fala (Flagstaff Arts And Leadership Academy)",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.169/30",
+      "204.43.0.128/26"
+    ],
+    "org_name": "Flagstaff Unified School District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.177/30"
+    ],
+    "org_name": "Gila Bend Unified School District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.9/30",
+      "204.43.5.0/25"
+    ],
+    "org_name": "Isaac Elementary District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "140.252.0.0/16"
+    ],
+    "org_name": "National Optical Astronomy Observatories",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.105/30"
+    ],
+    "org_name": "Northland Preparatory Academy",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.85/30",
+      "204.43.6.0/30"
+    ],
+    "org_name": "Paradise Honors Hs",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.89/30",
+      "204.43.6.4/30"
+    ],
+    "org_name": "Paradise Honors Elementary",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.45/30"
+    ],
+    "org_name": "Ponderosa High School",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.41/30",
+      "204.43.0.40/29"
+    ],
+    "org_name": "Riverbend Prep Academy",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.65/30",
+      "204.43.4.96/27"
+    ],
+    "org_name": "Somerton School District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.45/30",
+      "204.43.0.48/29"
+    ],
+    "org_name": "Sonoran Science Academy",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.90/29",
+      "204.43.0.64/28"
+    ],
+    "org_name": "Sunnyside Unified School District",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.97/30"
+    ],
+    "org_name": "The Mountain School",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.6.5/30"
+    ],
+    "org_name": "Us Geological Survey",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "204.43.2.0/24"
+    ],
+    "org_name": "Usda Ars",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.113/30"
+    ],
+    "org_name": "Usda Ars - Maricopa",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "198.60.121.0/24",
+      "198.60.123.0/24",
+      "198.60.125.0/24",
+      "198.60.126.0/23",
+      "198.60.128.0/24"
+    ],
+    "org_name": "Yavapai College",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "23.130.48.0/24"
+    ],
+    "org_name": "Yuma Union High School",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.207.5.21/30",
+      "204.43.0.0/29"
+    ],
+    "org_name": "Continental Elementary School",
+    "asn": "62600",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "164.50.0.0/16",
+      "164.50.248.0/22"
+    ],
+    "org_name": "City of Tempe",
+    "asn": "395877",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "98.163.59.0/24",
+      "162.212.20.0/22",
+      "162.212.20.0/23",
+      "162.212.22.0/23"
+    ],
+    "org_name": "Gilbert Public Schools",
+    "asn": "400285",
+    "community": "SCN"
+  },
+  {
+    "addresses": [
+      "206.168.10.0/23",
+      "206.168.10.0/24",
+      "206.168.11.0/24"
+    ],
+    "org_name": "Higley Unified School District",
+    "asn": "400896",
+    "community": "SCN"
+  }
+]

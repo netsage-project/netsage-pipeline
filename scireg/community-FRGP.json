@@ -1,27 +1,577 @@
 [
-    {
-        "addresses": [
-            "129.19.162.0/24"
-        ],
-        "org_name": "Colorado State University",
-        "community": "FRGP",
-        "asn": "14041"
-    },
-    {
-        "addresses": [
-            "129.19.148.0/24",
-            "129.19.149.0/24"
-        ],
-        "org_name": "NEON, Inc.",
-        "community": "FRGP",
-        "asn": "14041"
-    },
-    {
-        "addresses": [
-            "129.19.92.0/23"
-        ],
-        "org_name": "The Auraria Higher Education Center",
-        "community": "FRGP",
-        "asn": "14041"
-    }
+  {
+    "addresses": [
+      "129.19.163.0/24",
+      "192.111.86.0/24"
+    ],
+    "org_name": "US Air Force (USAFA)",
+    "asn": "65",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "128.138.0.0/16",
+      "129.19.192.0/18",
+      "146.5.20.0/22",
+      "192.12.238.0/24",
+      "192.12.240.0/24",
+      "192.12.241.0/24",
+      "192.12.242.0/24",
+      "192.12.244.0/24",
+      "192.12.245.0/24",
+      "198.11.16.0/20",
+      "198.59.7.0/24",
+      "198.59.51.0/24",
+      "198.59.52.0/24",
+      "198.59.54.0/24",
+      "198.59.55.0/24",
+      "198.59.70.0/24",
+      "198.59.81.0/24",
+      "198.59.82.0/24",
+      "198.59.83.0/24",
+      "204.228.80.0/24",
+      "2001:468:501::/48",
+      "2620:18f::/32"
+    ],
+    "org_name": "University of Colorado at Boulder",
+    "asn": "104",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "128.117.0.0/16",
+      "192.43.244.0/24",
+      "192.52.106.0/24",
+      "2620:117:2000::/40",
+      "2001:468:500::/40",
+      "2620:117:20f1::/48"
+    ],
+    "org_name": "University Corporation for Atmospheric Research (UCAR)",
+    "asn": "194",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "132.163.0.0/18",
+      "132.163.100.0/22",
+      "132.163.104.0/21",
+      "132.163.112.0/20",
+      "132.163.128.0/17",
+      "132.163.67.0/24",
+      "132.163.68.0/22",
+      "132.163.72.0/21",
+      "132.163.80.0/20",
+      "132.163.98.0/23"
+    ],
+    "org_name": "National Institute of Standards and Technology (NIST)",
+    "asn": "2648",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "137.75.0.0/18",
+      "137.75.128.0/17",
+      "2610:20:8804::/46"
+    ],
+    "org_name": "National Oceanic and Atmospheric Administration (NOAA)",
+    "asn": "2648",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "140.208.160.0/20"
+    ],
+    "org_name": "NOAA Geophysical Fluid Dynamics Laboratory",
+    "asn": "2648",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "204.228.170.0/24"
+    ],
+    "org_name": "National Weather Service Western Region Headquarters",
+    "asn": "2648",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "2610:20:6b00::/40"
+    ],
+    "org_name": "U.S. Dept. of Commerce",
+    "asn": "2648",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.72.0.0/16",
+      "192.65.143.0/24",
+      "192.84.113.0/24",
+      "198.59.192.0/18"
+    ],
+    "org_name": "University of Wyoming",
+    "asn": "2902",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "140.172.0.0/16",
+      "137.75.64.0/18",
+      "137.75.72.0/22",
+      "137.75.80.0/22",
+      "192.67.97.0/24",
+      "2601:a000::/32",
+      "2601:a002::/32",
+      "2601:a005::/32",
+      "2601:a010::/32",
+      "2601:a013::/32",
+      "2610:20:8420::/47",
+      "2610:20:8800::/38",
+      "2610:20:9008::/45"
+    ],
+    "org_name": "National Oceanic and Atmospheric Administration (NOAA)",
+    "asn": "3477",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.133.29.0/24"
+    ],
+    "org_name": "Colorado River Basin forecast Center",
+    "asn": "3477",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.94.173.0/24"
+    ],
+    "org_name": "Great Lakes Environmental Research Laboratory",
+    "asn": "3477",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.0.0/18",
+      "129.19.3.0/24",
+      "129.82.0.0/16"
+    ],
+    "org_name": "Colorado State University",
+    "asn": "12145",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "198.59.2.0/24",
+      "2001:468:500::/40"
+    ],
+    "org_name": "University Corporation for Atmospheric Research (UCAR)",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.148.0/24",
+      "129.19.149.0/24"
+    ],
+    "org_name": "National Ecological Observatory Network (NEON)",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.153.0/24"
+    ],
+    "org_name": "State Higher Education Policy Center",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.165.0/24"
+    ],
+    "org_name": "Colorado State University",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "147.153.0.0/16"
+    ],
+    "org_name": "Metropolitan State University of Denver (MSUD)",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.43.217.0/24"
+    ],
+    "org_name": "ERL Space Environment Laboratory, NOAA",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "161.98.0.0/16"
+    ],
+    "org_name": "City of Boulder",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "130.253.0.0/16"
+    ],
+    "org_name": "University of Denver",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.92.0/23",
+      "198.59.2.0/24"
+    ],
+    "org_name": "Auraria Higher Education Center (AHEC)",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.43.217.0/24",
+      "2001:468:500::/48"
+    ],
+    "org_name": "National Center for Atmospheric Research",
+    "asn": "14041",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "164.47.0.0/16",
+      "164.47.3.0/24"
+    ],
+    "org_name": "Colorado Community College and Occupational Education System",
+    "asn": "14737",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "159.238.0.0/16",
+      "192.131.93.0/24",
+      "192.146.215.0/24",
+      "192.146.216.0/24",
+      "192.206.115.0/24",
+      "198.99.171.0/24",
+      "2620:31:4000::/40"
+    ],
+    "org_name": "State of Wyoming Department A&I",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "137.84.0.0/16"
+    ],
+    "org_name": "Wyoming Community College Commission",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "137.85.0.0/16",
+      "137.86.0.0/16",
+      "137.87.0.0/16",
+      "137.88.0.0/16",
+      "137.89.0.0/16",
+      "137.90.0.0/16"
+    ],
+    "org_name": "Wyoming Higher Education Computer Network",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "146.166.0.0/16"
+    ],
+    "org_name": "Wyoming Community College Commission",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.131.93.0/24",
+      "192.146.215.0/24",
+      "192.146.216.0/24"
+    ],
+    "org_name": "State of Wyoming",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.206.115.0/24"
+    ],
+    "org_name": "Wyoming Community College Commission",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "198.99.171.0/24"
+    ],
+    "org_name": "State of Wyoming",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "64.207.112.0/20"
+    ],
+    "org_name": "Wyoming Supreme Court",
+    "asn": "14977",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "138.86.0.0/16",
+      "199.117.107.0/24"
+    ],
+    "org_name": "University of Northern Colorado",
+    "asn": "15295",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "132.194.0.0/16",
+      "140.226.0.0/16",
+      "2620:123:5000::/40"
+    ],
+    "org_name": "University of Colorado Denver",
+    "asn": "16519",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.70.253.0/24",
+      "192.188.250.0/24",
+      "198.59.3.0/24",
+      "198.59.4.0/24",
+      "198.59.5.0/24",
+      "198.59.6.0/24",
+      "198.62.148.0/22",
+      "204.228.84.0/24",
+      "204.228.85.0/24",
+      "204.228.86.0/24",
+      "204.228.87.0/24"
+    ],
+    "org_name": "Colorado College",
+    "asn": "17207",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "199.96.184.0/21",
+      "199.96.184.0/22",
+      "199.96.188.0/22"
+    ],
+    "org_name": "Jeffco Public Schools",
+    "asn": "26661",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.151.0/24",
+      "204.228.96.0/19",
+      "204.228.96.0/24",
+      "204.228.97.0/24"
+    ],
+    "org_name": "Adams 12 Five Stars Schools",
+    "asn": "30136",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "199.104.104.0/24",
+      "204.145.202.0/24",
+      "204.228.176.0/24",
+      "204.228.177.0/24",
+      "204.228.178.0/24",
+      "204.228.179.0/24",
+      "204.228.180.0/24",
+      "204.228.181.0/24",
+      "204.228.183.0/24",
+      "204.228.184.0/24",
+      "204.228.185.0/24",
+      "204.228.186.0/24",
+      "204.228.187.0/24",
+      "204.228.188.0/24",
+      "204.228.189.0/24",
+      "204.228.190.0/24",
+      "204.228.191.0/24"
+    ],
+    "org_name": "National Weather Service Western Region Headquarters",
+    "asn": "30687",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "216.38.80.0/24",
+      "216.38.85.0/24",
+      "216.38.91.0/24",
+      "216.38.92.0/24",
+      "216.38.93.0/24"
+    ],
+    "org_name": "National Weather Service Southern Region Headquarters",
+    "asn": "30687",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.6.0/24"
+    ],
+    "org_name": "Platte River Power Authority",
+    "asn": "31991",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "156.108.0.0/16",
+      "165.127.0.0/16",
+      "192.70.175.0/24",
+      "192.136.70.0/24"
+    ],
+    "org_name": "State of Colorado General Government Computer",
+    "asn": "36081",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "158.142.0.0/16",
+      "129.19.162.0/24",
+      "192.55.229.0/24"
+    ],
+    "org_name": "Colorado State University",
+    "asn": "36691",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "138.67.0.0/16",
+      "192.26.83.0/24"
+    ],
+    "org_name": "Colorado School of Mines",
+    "asn": "36704",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "97.107.70.0/24",
+      "192.188.155.0/24"
+    ],
+    "org_name": "Boulder County Government",
+    "asn": "39990",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "164.92.0.0/18",
+      "164.92.0.0/19",
+      "164.92.32.0/19"
+    ],
+    "org_name": "Denver Public Schools",
+    "asn": "46930",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "164.104.0.0/16"
+    ],
+    "org_name": "Poudre School District R-1",
+    "asn": "54060",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "192.92.17.0/24"
+    ],
+    "org_name": "Larimer County Government",
+    "asn": "54669",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "204.228.68.0/22",
+      "204.228.68.0/24",
+      "204.228.69.0/24"
+    ],
+    "org_name": "ECS-Infrastructure",
+    "asn": "62671",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "216.48.192.0/18"
+    ],
+    "org_name": "Education Service Center, Region 17",
+    "asn": "393273",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.176.0/20",
+      "204.132.32.0/20",
+      "2620:11f:5000::/40"
+    ],
+    "org_name": "COLORADO MOUNTAIN COLLEGE",
+    "asn": "393869",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "170.76.154.0/24",
+      "192.198.79.0/24"
+    ],
+    "org_name": "East Central BOCES",
+    "asn": "394209",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "198.59.46.0/24",
+      "198.59.47.0/24",
+      "198.59.48.0/24"
+    ],
+    "org_name": "City of Fort Collins",
+    "asn": "394748",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "129.19.174.0/24"
+    ],
+    "org_name": "AIMS Community College",
+    "asn": "396212",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "128.198.0.0/16"
+    ],
+    "org_name": "University of Colorado, Colorado Springs",
+    "asn": "396425",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "74.112.228.0/22"
+    ],
+    "org_name": "Navajo Tech",
+    "asn": "399193",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+      "66.59.218.0/24"
+    ],
+    "org_name": "Pueblo City-County Library District",
+    "asn": "400077",
+    "community": "FRGP"
+  }
 ]
