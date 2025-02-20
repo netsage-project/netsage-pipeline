@@ -9,20 +9,26 @@
 # adjust these as needed in the code below
 #    org_name = row[1]  # Organization name
 #    asn = row[0]        # ASN
+#
+# also might need to adjust the fuzzy_match threshold
+
+# Note: for reasons I dont understand, the queary for url 'https://bgp.he.net/AS103#_prefixes' returns
+# both V4 and V6 subnets, unlike what happens in a browser. WTF?
 
 import csv
 import requests
 import json
 import time
 import re
+import sys
 from bs4 import BeautifulSoup
+from difflib import SequenceMatcher
 
 # File Paths
 INPUT_CSV = "organizations_with_asn.csv"
 OUTPUT_JSON = "subnets.json"
 BASE_URL = "https://bgp.he.net/"
-COMMUNITY = "NJEdge"  # Set static community value
-REGIONAL_ASN = 600  # special handling in get_subnets() for this ASN
+COMMUNITY = "OARnet"  # Set static community value
 
 ################################################################
 
@@ -30,22 +36,41 @@ def extract_numbers(s):
     match = re.search(r'\d+', s)  # Find the first sequence of digits
     return match.group() if match else ""
 
+def fuzzy_match(org1, org2, threshold=0.9):
+    """Return True if org1 and org2 match with a similarity above the threshold."""
+    ratio = SequenceMatcher(None, org1.lower(), org2.lower()).ratio()
+    return ratio >= threshold
 
-def get_subnets(asn, expected_org_name):
-    url = f"{BASE_URL}AS{asn}#_prefixes"
+def get_subnets(asn, expected_org_name, version=4):
+    if version == 4:
+        url = f"{BASE_URL}AS{asn}#_prefixes"
+    else:
+        url = f"{BASE_URL}AS{asn}#_prefixes{version}"
     print(f"[INFO] Fetching subnets for ASN {asn} from {url}")
 
+    # bgp.he.net seems to cache results, so add this header option
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+    }
+
+    addresses = []
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, headers=headers, timeout=10)
         if response.status_code != 200:
             print(f"[WARNING] Failed to fetch ASN {asn}, HTTP {response.status_code}")
-            return []
+            return addresses
 
-        soup = BeautifulSoup(response.text, "html.parser")
+        try:
+            soup = BeautifulSoup(response.text, "html.parser")
+        except Exception as e:
+            print(f"[ERROR] Error parsing HTML: {e}")
+            return addresses
 
         # Find all tables dynamically
         tables = soup.find_all("table")
-        addresses = []
+        #print ("HTML Table: ",tables)
 
         for table in tables:
             headers = [th.text.strip().lower() for th in table.find_all("th")]
@@ -53,12 +78,21 @@ def get_subnets(asn, expected_org_name):
             if "prefix" in headers and "description" in headers:
                 for row in table.find_all("tr")[1:]:  # Skip header row
                     columns = row.find_all("td")
-                    if len(columns) > 1:
+                    #print ("HTML Table columns: ",columns)
+                    if len(columns) >= 2:
                         subnet = columns[0].text.strip()
+                        if version == 6 and not ":" in subnet:
+                            print (f"Error: invalid IPV6 subnet {subnet}") 
+                            break
                         org_name = columns[1].text.strip()
 
-                        if org_name.lower() == expected_org_name.lower():
-                            addresses.append(subnet)
+                        if fuzzy_match(org_name, expected_org_name):
+                            if subnet not in addresses:  # Check set instead of list
+                                print (f"Org name match: adding subnet {subnet} for {org_name} (close match with {expected_org_name} ")
+                                addresses.append(subnet)
+                        #else:
+                        #    # this is 'normal' for orgs sharing ASN with regional network
+                        #    print (f"DEBUG: Org name mismatch: ASN {asn} org ({org_name}) is not similar to {expected_org_name}. Skipping this subnet")
 
         if addresses:
             print(f"[SUCCESS] Found {len(addresses)} subnets for ASN {asn}")
@@ -74,54 +108,6 @@ def get_subnets(asn, expected_org_name):
 
     return []
 
-
-# Function to get valid subnets (IPv4 & IPv6) for a given ASN
-def get_subnets_old(asn):
-    url = f"{BASE_URL}AS{asn}#_prefixes"
-    print(f"[INFO] Fetching subnets for ASN {asn} from {url}")
-
-    try:
-        response = requests.get(url, timeout=10)
-        if response.status_code != 200:
-            print(f"[WARNING] Failed to fetch ASN {asn}, HTTP {response.status_code}")
-            return []
-
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # Find all tables dynamically
-        tables = soup.find_all("table")
-#        print(f"[DEBUG] Found {len(tables)} tables on page for ASN {asn}")
-
-        addresses = []
-
-        # Find the correct table dynamically and extract subnets
-        for table in tables:
-            headers = [th.text.strip().lower() for th in table.find_all("th")]
-            if "prefix" in headers:
-#                print(f"[DEBUG] Found subnet table for ASN {asn}")
-
-                for row in table.find_all("tr")[1:]:  # Skip header row
-                    columns = row.find_all("td")
-                    if columns:
-                        subnet = columns[0].text.strip()
-                        
-                        # Validate subnet format (ignore "Loading Prefixes..." or invalid data)
-                        if "/" in subnet and not subnet.lower().startswith("loading"):
-                            addresses.append(subnet)
-
-        if addresses:
-            print(f"[SUCCESS] Found {len(addresses)} subnets for ASN {asn}")
-        else:
-            print(f"[WARNING] No valid subnets found for ASN {asn}, but page loaded successfully.")
-
-        return addresses
-
-    except requests.exceptions.Timeout:
-        print(f"[ERROR] Timeout when fetching ASN {asn}")
-    except requests.exceptions.RequestException as e:
-        print(f"[ERROR] Request error for ASN {asn}: {e}")
-
-    return []
 
 # Read CSV file to get organization names and ASNs
 print(f"\n[INFO] Reading input CSV file: {INPUT_CSV}")
@@ -152,8 +138,9 @@ results = []
 for index, org in enumerate(orgs):
     print(f"\n[PROCESSING] ({index+1}/{len(orgs)}) Fetching subnets for: {org['org_name']} (ASN: {org['asn']})")
     
-    addresses = get_subnets(org["asn"], org["org_name"])
-    #addresses = get_subnets_old(org["asn"])
+    addresses = get_subnets(org["asn"], org["org_name"], version=4)
+# not needed, for reasons I dont understand!!!
+#    addresses += get_subnets(org["asn"], org["org_name"], version=6)
     
     if addresses:
         results.append({
@@ -163,18 +150,19 @@ for index, org in enumerate(orgs):
             "community": COMMUNITY  # Static community value
         })
 
-    time.sleep(3)  # Delay to avoid being rate-limited
+    time.sleep(2)  # Delay to avoid being rate-limited
 
 # Write results to JSON file
 print(f"\n[INFO] Writing results to {OUTPUT_JSON}")
+sorted_data = sorted(results, key=lambda x: x['asn'])
+
 try:
     with open(OUTPUT_JSON, "w", encoding="utf-8") as jsonfile:
-        json.dump(results, jsonfile, indent=4)
+        json.dump(sorted_data, jsonfile, indent=4)
     print(f"[SUCCESS] JSON data saved to {OUTPUT_JSON}")
 
 except Exception as e:
     print(f"[ERROR] Failed to write output file {OUTPUT_JSON}: {e}")
 
 print(f"\n[INFO] Processing complete!")
-
 
