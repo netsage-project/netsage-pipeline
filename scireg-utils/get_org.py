@@ -2,6 +2,7 @@
 
 # looks up ORG Name from CAIDA file
 # use this to look for bad ASNs in community files
+#  input and output are JSON files
 
 import argparse
 import json
