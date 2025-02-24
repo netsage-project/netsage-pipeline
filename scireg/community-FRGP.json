@@ -12,7 +12,6 @@
     "addresses": [
       "128.138.0.0/16",
       "129.19.192.0/18",
-      "146.5.20.0/22",
       "192.12.238.0/24",
       "192.12.240.0/24",
       "192.12.241.0/24",
@@ -34,6 +33,14 @@
       "2620:18f::/32"
     ],
     "org_name": "University of Colorado at Boulder",
+    "asn": "104",
+    "community": "FRGP"
+  },
+  {
+    "addresses": [
+       "146.5.20.0/22"
+    ],
+    "org_name": "National Solar Observatory",
     "asn": "104",
     "community": "FRGP"
   },
