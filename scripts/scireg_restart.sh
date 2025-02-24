@@ -17,7 +17,8 @@ initial_size=$(calculate_size)
 
 while true; do
   #check if any new files ready to download, and update if necessary
-  ./mmdb_update.sh $WATCH_DIR
+  echo "Calling scripts/mmdb_update.sh $WATCH_DIR"
+  scripts/mmdb_update.sh $WATCH_DIR
 
   current_size=$(calculate_size)
 
