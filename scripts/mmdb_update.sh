@@ -4,8 +4,13 @@
 # NOTE: the exact same script is used by the importer docker image
 # Keep this file and the verion in docker-images/importer the same
 
-DATA_DIR="/data/cache"
+DATA_DIR="./data/cache"
 #DATA_DIR="/tmp/data/cache"  # for testing
+
+# If a command line argument is provided, override the default DATA_DIR
+if [ -n "$1" ]; then
+    DATA_DIR="$1"
+fi
 
 REPO="https://epoc-rabbitmq.tacc.utexas.edu/NetSage"
 CAIDA_FILE="CAIDA-org-lookup.csv"
@@ -16,15 +21,13 @@ MMDB_FILES=("GeoLite2-City.mmdb" "GeoLite2-ASN.mmdb" "communities.mmdb" "newScir
 #MMDB_FILES=("GeoLite2-City.mmdb" "GeoLite2-ASN.mmdb" "communities.mmdb" "scireg.mmdb") 
 
 # Ensure cache directory exists
-if mkdir -p "$DATA_DIR"; then
-    echo "Cache directory ${DATA_DIR} created"
-else
-    echo "Cache directory ${DATA_DIR} already exists"
+if [ ! -d "$DATA_DIR" ]; then
+    mkdir -p "$DATA_DIR" && echo "Cache directory ${DATA_DIR} created"
 fi
 
 echo "Downloading mmdb files..."
 for FILE in "${MMDB_FILES[@]}"; do
-    echo "Getting file "${FILE}
+    echo "Downloading file "${FILE}
     wget -N -q -P "${DATA_DIR}" "${REPO}/${FILE}" || {
             echo "Failed to download ${FILE}" >&2
     }

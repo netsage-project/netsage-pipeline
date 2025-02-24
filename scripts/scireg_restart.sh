@@ -1,6 +1,9 @@
 #!/bin/sh
 
 WATCH_DIR="/data/cache"
+# for testing
+#WATCH_DIR="../data/cache"
+
 CONTAINER_NAME="NetSage_Logstash"
 CHECK_INTERVAL=600  # seconds
 
@@ -13,7 +16,8 @@ calculate_size() {
 initial_size=$(calculate_size)
 
 while true; do
-  sleep $CHECK_INTERVAL
+  #check if any new files ready to download, and update if necessary
+  ./mmdb_update.sh $WATCH_DIR
 
   current_size=$(calculate_size)
 
@@ -22,5 +26,7 @@ while true; do
     docker restart $CONTAINER_NAME
     initial_size=$current_size
   fi
+
+  sleep $CHECK_INTERVAL
 done
 
