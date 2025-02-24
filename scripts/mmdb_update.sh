@@ -30,15 +30,15 @@ for FILE in $MMDB_FILES; do
     echo "Downloading file $FILE"
     # note: if this script is run in Alpine Linux docker container, then the version of
     #  wget does not support the -N flag, and will need to download the file every time
-    #if ! wget -N -q -P "$DATA_DIR" "$REPO/$FILE"; then
-    if ! wget -q -o "$DATA_DIR/$FILE" "$REPO/$FILE"; then
+    #if ! wget -N -q -P "$DATA_DIR" "$REPO/$FILE"; then   # use this for gnu wget
+    if ! wget -q -O "$DATA_DIR/$FILE" "$REPO/$FILE"; then # use this for BusyBox wget (alpine linux)
         echo "Failed to download $FILE" >&2
     fi
 done
 
 echo "Downloading CAIDA file $CAIDA_FILE"
 #if ! wget -N -q -P "$DATA_DIR" "$REPO/$CAIDA_FILE"; then
-if ! wget -q -o "$DATA_DIR/$CAIDA_FILE" "$REPO/$CAIDA_FILE"; then
+if ! wget -q -O "$DATA_DIR/$CAIDA_FILE" "$REPO/$CAIDA_FILE"; then
     echo "Failed to download $CAIDA_FILE" >&2
     exit 1
 fi
