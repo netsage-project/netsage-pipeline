@@ -38,7 +38,7 @@ services:
       - "5044:5044"
     volumes:
       - ./conf-logstash:/usr/share/logstash/pipeline/
-      - ./conf-globus:/usr/share/logstash/globus/
+#      - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
       - ./data/cache:/var/lib/netsage/
   ofelia: ## Scheduler Task
