@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
 # simple program to look up ASN from Org Name 
-#Looks up their ASN using whois, PeeringDB, and RIPE Stat.
+#Looks up their ASN using CAIDA, PeeringDB, and RIPE Stat.
+# note: only CAIDA method still works, but other code here for reference
+#
+# if ASN not found, the org is likely using addresses from the regional network's ASN
+#  In this case, set to DEFAULT_ASN (set below)
+
+# input file is a csv file
+#  set the delimiter in the code below, and set the row[] to the correct column
+#  eg:             org_name = row[1].strip()
 
 
 import subprocess
@@ -13,6 +21,9 @@ import sys
 import urllib.parse
 
 CAIDA_API_URL = "https://api.asrank.caida.org/v2/restful/asns"
+# ASN to use if lookup fails
+#DEFAULT_ASN = 21976  # NJEdge
+DEFAULT_ASN = 600  # OARnet
 
 def extract_number(string):
     match = re.search(r'\d+', string)
@@ -120,7 +131,7 @@ def process_csv(input_file, output_file):
         
         #reader = csv.reader(infile)
         # to change delimiter (if org names have commas)
-        reader = csv.reader(infile, delimiter=';')
+        reader = csv.reader(infile, delimiter=',')
 
         header = next(reader)  # Read the header row
         #writer = csv.writer(outfile)
@@ -134,7 +145,7 @@ def process_csv(input_file, output_file):
             if not row:  # Skip empty rows
                 continue
 
-            org_name = row[0].strip()
+            org_name = row[1].strip()
             if not org_name:
                 continue
             asn = row[1]
@@ -154,7 +165,7 @@ def process_csv(input_file, output_file):
                 print(f"✅ Found ASNs for {org_name}: {asn}")
             else:
                 # skip if no ASN for now...
-                writer.writerow([org_name, "CENIC ASN?"])
+                writer.writerow([org_name, DEFAULT_ASN])
                 print(f"❌ No ASNs found for {org_name}")
 
 def main():
