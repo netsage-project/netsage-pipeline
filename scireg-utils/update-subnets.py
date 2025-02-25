@@ -24,7 +24,7 @@ def fetch_prefixes(asn, expected_org_name):
         "Pragma": "no-cache",
         "Expires": "0"
     }
-    print(f"Fetching prefix data from {url} ({expected_org_name})")
+    print(f"   Fetching prefix data from {url} ({expected_org_name})")
     
     try:
         response = requests.get(url, headers=headers, timeout=10)
@@ -53,12 +53,12 @@ def fetch_prefixes(asn, expected_org_name):
                            #print (f"   Org name match: adding subnet {subnet} for {org_name} (close match with {expected_org_name} ")
                            addresses.append(subnet)
                     else:
-                       print (f"   WARNING: Org name '{org_name}' does not match '{expected_org_name}'")
+                       print (f"   WARNING: BGP Org name '{org_name}' does not match '{expected_org_name}'")
 
-    if addresses:
-        print(f"[SUCCESS] Found {len(addresses)} subnets for ASN {asn} ({expected_org_name})")
-    else:
+    if not addresses:
         print(f"[WARNING] No valid subnets found for ASN {asn}, or no name match ({expected_org_name}).")
+    #else:
+    #    print(f"[SUCCESS] Found {len(addresses)} subnets for ASN {asn} ({expected_org_name})")
 
     return addresses
 
