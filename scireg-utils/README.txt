@@ -43,11 +43,12 @@ For communities.mmdb generation:
 For community-XXX.json creation:
   1) get list of org_names and/or ASNs from regional networks, and/or ask chatGPT or Gemini to scrape from URL
   2) Use combination of the following to build json:
-      get_asn.py: get ASN from CAIDA API based on org name (input and output are csv files)
-      get_subnets: get list of subnets from bgp.he.net based on ASN and ORG name (input: CSV, output: JSON)
-      get_org.py: get org names from CAIDA csv file (input and output are JSON files)
-      verify_subnets.py: use bgp.he.net to verify the subnets in community-*.json are still accurate
-      update_subnets.py: check bgp.he.net for updated list of subnets (coming soon)
+      - get_asn.py: get ASN from CAIDA API based on org name (input and output are csv files)
+      - get_subnets: get list of subnets from bgp.he.net based on ASN and ORG name (input: CSV, output: JSON)
+      - get_org.py: get org names from CAIDA csv file (input and output are JSON files)
+      - verify_subnets.py: use bgp.he.net to verify the subnets in community-*.json are still accurate
+          Note: this will throw out lots of valid entries. Just use output files to look for possible issues!
+      - update_subnets.py: check bgp.he.net for updated list of subnets (coming soon)
 
 Other useful tools:
    To merge 2 Science Registry files, only keeping unique entries

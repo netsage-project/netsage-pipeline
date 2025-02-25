@@ -1,0 +1,3176 @@
+[
+  {
+    "addresses": [
+      "128.211.128.0/19"
+    ],
+    "org_name": "Purdue University",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "40.423000",
+    "longitude": "-86.923400",
+    "resource_name": "CMS Tier-2 Center @ Purdue - Compute",
+    "project_name": "CMS",
+    "scireg_id": 0,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "141.142.176.0/24"
+    ],
+    "org_name": "National Center for Supercomputing Applications (NCSA)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.109500",
+    "longitude": "-88.212300",
+    "resource_name": "NCSA - Bluewaters - Compute",
+    "project_name": "NCSA-Blue Waters",
+    "scireg_id": 1,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.221.68.0/23",
+      "140.221.96.0/23"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "41.718400",
+    "longitude": "-87.978700",
+    "resource_name": "ANL - Argonne Leadership Computing Facility (ALCF) - Compute",
+    "project_name": "ANL-Argonne Leadership Computing Facility (ALCF)",
+    "scireg_id": 2,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.221.60.0/24"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "41.718400",
+    "longitude": "-87.978700",
+    "resource_name": "ANL LCRC - Argonne Laboratory Computing Resource Center - Compute",
+    "project_name": "",
+    "scireg_id": 666,
+    "contact_email": "engage@es.net",
+    "last_updated": "9/16/2024"
+  },
+  {
+    "addresses": [
+      "131.169.193.0/24"
+    ],
+    "org_name": "Deutsches Elektronen-Synchrotron (DESY) (DESY.de)",
+    "discipline": "MPS.Physics",
+    "latitude": "53.550000",
+    "longitude": "10.000000",
+    "resource_name": "DESY - Maxell GPU nodes - Compute",
+    "project_name": "DESY-Maxwell",
+    "scireg_id": 3,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.55.0.0/22",
+      "128.55.4.0/23",
+      "128.55.7.0/24",
+      "128.55.9.0/24",
+      "128.55.0.0/20",
+      "128.55.20.0/22",
+      "128.55.24.0/21",
+      "128.55.32.0/19",
+      "128.55.64.0/18",
+      "128.55.128.0/17"
+    ],
+    "org_name": "National Energy Research Scientific Computing Center (NERSC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "37.866800",
+    "longitude": "-122.253600",
+    "resource_name": "National Energy Research Scientific Computing Center (NERSC) - Compute",
+    "project_name": "NERSC",
+    "scireg_id": 4,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "131.154.130.0/24"
+    ],
+    "org_name": "National Institute for Nuclear Physics - National Center for Frame Analysis (INFN - CNAF)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "44.483300",
+    "longitude": "11.333300",
+    "resource_name": "INFN - CNAF - HPC - Compute",
+    "project_name": "National Center for Frame Analysis",
+    "scireg_id": 5,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.15.42.0/23"
+    ],
+    "org_name": "University of Oklahoma (OU) (U of OK)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "35.181500",
+    "longitude": "-97.432800",
+    "resource_name": "U of OK - OU Supercomputing Center for Education & Research (OSCER) - Compute",
+    "project_name": "OU-OSCER",
+    "scireg_id": 6,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.182.0/23",
+      "2600:900:6:1102::/64"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "40.813000",
+    "longitude": "-96.702900",
+    "resource_name": "UNL - CMS Tier 2 Center - worker nodes - Compute",
+    "project_name": "CMS",
+    "scireg_id": 7,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.116.24.0/24"
+    ],
+    "org_name": "National Aeronautics and Space Administration (NASA)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "34.730400",
+    "longitude": "-86.580000",
+    "resource_name": "NASA - International VLBI Service - Storage",
+    "project_name": "International VLBI Service (IVS)",
+    "scireg_id": 8,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.142.30.20/32"
+    ],
+    "org_name": "University of Washington (UW) (U of Wash.)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "47.660600",
+    "longitude": "-122.290000",
+    "resource_name": "UW - Department of Atmospheric Sciences - Storage",
+    "project_name": "Dept. Atmospheric Sciences, U of Washington",
+    "scireg_id": 9,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "18.12.1.0/24"
+    ],
+    "org_name": "Massachusetts Institute of Technology (MIT)",
+    "discipline": "MPS.Physics",
+    "latitude": "42.364600",
+    "longitude": "-71.100000",
+    "resource_name": "MIT - LHC - Storage",
+    "project_name": "ATLAS",
+    "scireg_id": 10,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.0.0/16"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "Texas Advanced Computing Center (TACC)",
+    "project_name": "",
+    "scireg_id": 11,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.14.250.0/24",
+      "165.112.9.0/24"
+    ],
+    "org_name": "National Library of Medicine (NLM)",
+    "discipline": "BIO.Genomics and Bioinformatics",
+    "latitude": "39.089200",
+    "longitude": "-77.183500",
+    "resource_name": "NLM - ftp servers - Storage",
+    "project_name": "National Library of Medicine (NLM) ; SingAREN DB Mirror (SDBM)",
+    "scireg_id": 12,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "134.4.54.0/24"
+    ],
+    "org_name": "California Institute of Technology (Caltech)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "33.786600",
+    "longitude": "-118.298700",
+    "resource_name": "Caltech - IPAC -  Infrared Science Archive (IRSA) - Storage",
+    "project_name": "Infrared Science Archive (IRSA)",
+    "scireg_id": 13,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.142.32.14/32",
+      "128.142.33.0/24"
+    ],
+    "org_name": "CERN - European Organization for Nuclear Research",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "46.232400",
+    "longitude": "6.050200",
+    "resource_name": "CERN - EOS ATLAS - Storage",
+    "project_name": "ATLAS",
+    "scireg_id": 14,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.14.250.24/32"
+    ],
+    "org_name": "National Library of Medicine (NLM)",
+    "discipline": "BIO.Genomics and Bioinformatics",
+    "latitude": "39.003200",
+    "longitude": "-77.160200",
+    "resource_name": "NLM - SRA-download servers - Storage",
+    "project_name": "National Library of Medicine (NLM)",
+    "scireg_id": 15,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "131.225.188.0/24",
+      "131.225.205.80/32",
+      "131.225.206.0/24"
+    ],
+    "org_name": "Fermi National Accelerator Laboratory (Fermilab)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "41.839200",
+    "longitude": "-88.361200",
+    "resource_name": "Fermilab - cmsstor nodes - Storage",
+    "project_name": "CMS",
+    "scireg_id": 16,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "134.76.97.0/24"
+    ],
+    "org_name": "Gesellschaft f\u00c3\u00bcr wissenschaftliche Datenverarbeitung mbH G\u00c3\u00b6ttingen  (GWDG)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "51.533300",
+    "longitude": "9.933300",
+    "resource_name": "GWDG - GoeGrid storage elements - Storage",
+    "project_name": "GoeGrid",
+    "scireg_id": 17,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "195.194.108.0/24",
+      "195.194.109.0/24",
+      "195.194.109.156/30",
+      "195.194.109.160/29"
+    ],
+    "org_name": "University of Manchester (U Manchester)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "53.469700",
+    "longitude": "-2.236700",
+    "resource_name": "U of Manchester - Tier 2 center  SE nodes - Storage",
+    "project_name": "ATLAS",
+    "scireg_id": 18,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.12.15.228/30",
+      "92.12.15.240/30"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - ATLAS Grid Storage Elements - Storage",
+    "project_name": "ATLAS",
+    "scireg_id": 19,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "131.225.204.0/24",
+      "131.225.205.0/24",
+      "131.225.206.0/24",
+      "131.225.207.0/24"
+    ],
+    "org_name": "Fermi National Accelerator Laboratory (Fermilab)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "41.839200",
+    "longitude": "-88.361200",
+    "resource_name": "Fermilab - cmseos nodes - Storage",
+    "project_name": "CMS",
+    "scireg_id": 20,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.14.250.0/24"
+    ],
+    "org_name": "National Library of Medicine (NLM)",
+    "discipline": "BIO.Genomics and Bioinformatics",
+    "latitude": "39.003200",
+    "longitude": "-77.160200",
+    "resource_name": "NLM - SRA Files - Storage",
+    "project_name": "National Library of Medicine (NLM)",
+    "scireg_id": 21,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.33.115.0/24"
+    ],
+    "org_name": "National Radio Astronomy Observatory (NRAO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "38.054000",
+    "longitude": "-78.535400",
+    "resource_name": "NRAO Technology Center at UVA - storage servers - Storage",
+    "project_name": "National Radio Astronomy Observatory (NRAO)",
+    "scireg_id": 22,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "146.88.1.0/24"
+    ],
+    "org_name": "National Radio Astronomy Observatory (NRAO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "33.897400",
+    "longitude": "-107.026100",
+    "resource_name": "NRAO AOC Subversion Server at New Mexico Tech - Storage",
+    "project_name": "National Radio Astronomy Observatory (NRAO)",
+    "scireg_id": 23,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.227.221.0/24"
+    ],
+    "org_name": "University of Florida (UF) (U of Florida)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "29.651600",
+    "longitude": "-82.324800",
+    "resource_name": "UF - CMS Tier2 Center - cmsio nodes - Storage",
+    "project_name": "CMS",
+    "scireg_id": 24,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.32.44.0/24"
+    ],
+    "org_name": "California Institute of Technology (Caltech)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "38.052900",
+    "longitude": "-78.535400",
+    "resource_name": "UltraLight - Storage",
+    "project_name": "CMS",
+    "scireg_id": 25,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.72.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.703400",
+    "longitude": "-155.090400",
+    "resource_name": "UH - IFA - University of Hawaii 2.2m Telescope - Instrument",
+    "project_name": "University of Hawaii 2.2-meter telescope",
+    "scireg_id": 26,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.204.0/24",
+      "128.171.203.0/24"
+    ],
+    "org_name": "National Astronomical Observatory of Japan (NAOJ)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.702600",
+    "longitude": "-155.090400",
+    "resource_name": "NAOJ - Subaru Telescope - Instrument",
+    "project_name": "Subaru Telescope",
+    "scireg_id": 27,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.166.0/24",
+      "128.171.116.0/24"
+    ],
+    "org_name": "Harvard-Smithsonian Center for Astrophysics (CfA)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.702000",
+    "longitude": "-155.089500",
+    "resource_name": "CFA - Submillimeter Array (SMA) - Instrument",
+    "project_name": "Submillimeter Array (SMA)",
+    "scireg_id": 28,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.71.64/28",
+      "128.171.188.0/24"
+    ],
+    "org_name": "Association of Universities for Research in Astronomy (AURA)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.703500",
+    "longitude": "-155.090300",
+    "resource_name": "AURA - GEMINI - Frederick C. Gillett Gemini North Telescope - Instrument",
+    "project_name": "Gemini Observatory",
+    "scireg_id": 29,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.100.0/24",
+      "128.171.136.0/24",
+      "128.171.95.0/24",
+      "128.171.97.0/24",
+      "128.171.99.0/24",
+      "128.171.101.0/24",
+      "128.171.96.0/24",
+      "128.171.98.0/24"
+    ],
+    "org_name": "W. M. Keck Observatory (WMKO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "20.024300",
+    "longitude": "-155.665300",
+    "resource_name": "WMKO - Keck Telescopes - Instrument",
+    "project_name": "W. M. Keck Observatory (WMKO)",
+    "scireg_id": 30,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.90.0/24",
+      "128.171.92.0/24"
+    ],
+    "org_name": "East Asian Observatory (EAO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.701700",
+    "longitude": "-155.089500",
+    "resource_name": "EAO - James Clerk Maxwell Telescope (JCMT) - Instrument",
+    "project_name": "James Clerk Maxwell Telescope (JCMT)",
+    "scireg_id": 31,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.91.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.703500",
+    "longitude": "-155.090300",
+    "resource_name": "UH - IFA - UK Infrared Telescope (UKIRT) - Instrument",
+    "project_name": "UK Infrared Telescope (UKIRT)",
+    "scireg_id": 32,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.110.128/25",
+      "128.171.165.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.703500",
+    "longitude": "-155.090300",
+    "resource_name": "UH - IFA - NASA Infrared Telescope Facility (IRTF) - Instrument",
+    "project_name": "Infrared Telescope Facility (IRTF)",
+    "scireg_id": 33,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.71.144/29"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "UH - IFA - Asteroid Terrestrial-impact Last Alert System (ATLAS) - MLO - Instrument",
+    "project_name": "Asteroid Terrestrial-impact Last Alert System (ATLAS)",
+    "scireg_id": 34,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.71.160/29"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "UH - IFA - Asteroid Terrestrial-impact Last Alert System (ATLAS) - HKO - Instrument",
+    "project_name": "Asteroid Terrestrial-impact Last Alert System (ATLAS)",
+    "scireg_id": 35,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.71.152/29"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "UH - IFA - Variable Young Stellar Objects Survey (VYSOS) - Instrument",
+    "project_name": "Variable Young Stellar Objects Survey (VYSOS)",
+    "scireg_id": 36,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.189.0/24"
+    ],
+    "org_name": "National Oceanic and Atmospheric Administration (NOAA)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "NOAA - ESRL-GMD - Mauna Loa Observatory (MLO) - NOAA resources - Instrument",
+    "project_name": "Earth System Research Laboratory (ESRL) - Global Monitoring Division (GMD)",
+    "scireg_id": 37,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.190.0/24"
+    ],
+    "org_name": "National Center for Atmospheric Research (NCAR/UCAR)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "NCAR/UCAR - HAO - Mauna Loa Solar Observatory (MLSO) - Instrument",
+    "project_name": "Mauna Loa Solar Observatory (MLSO)",
+    "scireg_id": 38,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.82.0/24",
+      "128.171.83.0/24",
+      "128.171.84.0/24",
+      "128.171.80.0/24",
+      "128.171.81.0/24"
+    ],
+    "org_name": "Canada-France-Hawaii Telescope (CFHT)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "20.017500",
+    "longitude": "-155.672300",
+    "resource_name": "CFH - Canada-France-Hawaii Telescope (CFHT) - Instrument",
+    "project_name": "Canada-France-Hawaii Telescope (CFHT)",
+    "scireg_id": 39,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "146.5.224.0/19"
+    ],
+    "org_name": "National Solar Observatory (NSO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "20.707000",
+    "longitude": "-156.256000",
+    "resource_name": "NSO - Daniel K. Inouye Solar Telescope (DKIST) - Instrument",
+    "project_name": "Daniel K. Inouye Solar Telescope (DKIST) (DKIST)",
+    "scireg_id": 40,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.142.0.0/16"
+    ],
+    "org_name": "CERN - European Organization for Nuclear Research",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "46.528800",
+    "longitude": "6.598000",
+    "resource_name": "Large Hadron Collider (LHC)",
+    "project_name": "WLCG",
+    "scireg_id": 41,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.170.224.0/19"
+    ],
+    "org_name": "University of Chicago (U of C) (U of Chicago)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "41.788600",
+    "longitude": "-87.600900",
+    "resource_name": "Univ of Chicago - Tier 2 Center",
+    "project_name": "ATLAS",
+    "scireg_id": 42,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.125.176.0/21",
+      "198.125.184.0/21"
+    ],
+    "org_name": "Massachusetts Institute of Technology (MIT)",
+    "discipline": "MPS.Physics",
+    "latitude": "42.364600",
+    "longitude": "-71.103000",
+    "resource_name": "MIT- Plasma Science and Fusion Center (PSFC) - Alcator C-Mod",
+    "project_name": "Alcator C-Mod",
+    "scireg_id": 43,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "155.101.23.74/32",
+      "155.101.26.0/24",
+      "155.97.0.0/16",
+      "155.98.0.0/16"
+    ],
+    "org_name": "University of Utah (U of U) (U of Utah)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "40.785500",
+    "longitude": "-111.730000",
+    "resource_name": "Telescope Array (TARA)",
+    "project_name": "Telescope Array (TARA)",
+    "scireg_id": 44,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "143.89.47.70/32"
+    ],
+    "org_name": "Hong Kong University of Science and Technology (HKUST) (HKUST.hk)",
+    "discipline": "ENG.General",
+    "latitude": "22.283300",
+    "longitude": "114.150000",
+    "resource_name": "HKUST - Department of Electrical Engineering",
+    "project_name": "Hong Kong University of Science and Technology (HKUST)",
+    "scireg_id": 45,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.169.205/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "21.326700",
+    "longitude": "-157.810000",
+    "resource_name": "UH - Institute for Astronomy - Maunakea Weather Center",
+    "project_name": "Maunakea Weather Center",
+    "scireg_id": 46,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "61.56.4.232/32",
+      "61.56.13.0/24",
+      "61.56.15.0/24"
+    ],
+    "org_name": "Central Weather Bureau (CWB), Taiwan (CWB.tw)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "25.041800",
+    "longitude": "121.496600",
+    "resource_name": "Central Weather Bureau, Taiwan",
+    "project_name": "Central Weather Bureau (CWB), Taiwan",
+    "scireg_id": 47,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.109.172.0/24"
+    ],
+    "org_name": "Academia Sinica (A. Sinica)",
+    "discipline": "GEO.Climate",
+    "latitude": "25.047800",
+    "longitude": "121.531800",
+    "resource_name": "Academia Sinica - Research Center for Environmental Changes (RCEC)",
+    "project_name": "Research Center for Environmental Changes (RCEC), Academia Sinica",
+    "scireg_id": 48,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.142.33.10/32",
+      "128.142.32.14/32"
+    ],
+    "org_name": "CERN - European Organization for Nuclear Research",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "46.232400",
+    "longitude": "6.050200",
+    "resource_name": "CERN - p0 hosts",
+    "project_name": "CERN",
+    "scireg_id": 49,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.186.17.0/24"
+    ],
+    "org_name": "Cineca",
+    "discipline": "Multi-Science Facility",
+    "latitude": "43.147900",
+    "longitude": "12.109700",
+    "resource_name": "Cineca - Marconi",
+    "project_name": "Cineca-Macroni",
+    "scireg_id": 50,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.111.9.179/32",
+      "128.111.19.152/32"
+    ],
+    "org_name": "University of California, Santa Barbara (UCSB)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "34.432900",
+    "longitude": "-119.837100",
+    "resource_name": "UCSB - High Energy Physics",
+    "project_name": "U of California, Santa Barbara (UCSB)",
+    "scireg_id": 51,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "133.40.7.142/32"
+    ],
+    "org_name": "National Astronomical Observatory of Japan (NAOJ)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "35.690600",
+    "longitude": "139.770000",
+    "resource_name": "NAOJ - unknown",
+    "project_name": "National Astronomical Observatory of Japan (NAOJ)",
+    "scireg_id": 52,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.219.248.0/24",
+      "192.148.93.0/24",
+      "192.148.96.0/23"
+    ],
+    "org_name": "Atmospheric Radiation Measurement (ARM) user facility",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "35.972400",
+    "longitude": "-84.290400",
+    "resource_name": "Atmospheric Radiation Measurement (ARM) user facility",
+    "project_name": "Atmospheric Radiation Measurement (ARM)",
+    "scireg_id": 53,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.199.224.0/23"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "MPS.Physics",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - Accelerator Test Facility (ATF)",
+    "project_name": "Accelerator Test Facility (ATF)",
+    "scireg_id": 54,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "146.139.66.0/25"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "41.681500",
+    "longitude": "-87.970600",
+    "resource_name": "ANL - Argonne Tandem Linac Accelerator System (ATLAS)",
+    "project_name": "Argonne Tandem Linac Accelerator System (ATLAS)",
+    "scireg_id": 55,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.199.119.0/25",
+      "130.199.242.0/24",
+      "130.199.243.0/24"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "MPS.Materials",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - Center for Functional Nanomaterials (CFN)",
+    "project_name": "Center for Functional Nanomaterials (CFN)",
+    "scireg_id": 56,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "146.139.1.0/25",
+      "146.139.2.0/25",
+      "146.139.3.0/25",
+      "146.139.4.0/23",
+      "146.139.6.0/24",
+      "146.139.7.0/24",
+      "146.139.8.0/24",
+      "146.139.25.0/24",
+      "146.139.49.0/24",
+      "146.139.72.0/25"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "MPS.Materials",
+    "latitude": "41.681500",
+    "longitude": "-87.970600",
+    "resource_name": "ANL - Center for Nanoscale Materials (CNM)",
+    "project_name": "Center for Nanoscale Materials (CNM)",
+    "scireg_id": 57,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.219.192.0/23",
+      "128.219.194.0/24",
+      "128.219.196.0/24",
+      "128.219.198.0/24"
+    ],
+    "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+    "discipline": "MPS.Materials",
+    "latitude": "35.972400",
+    "longitude": "-84.290400",
+    "resource_name": "ORNL - Center for Nanophase Materials Sciences (CNMS)",
+    "project_name": "Center for Nanophase Materials Sciences (CNMS)",
+    "scireg_id": 58,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.5.166.0/24",
+      "192.73.7.0/24",
+      "192.73.62.0/24",
+      "192.150.242.0/24",
+      "198.129.104.0/22",
+      "198.129.232.0/22"
+    ],
+    "org_name": "General Atomics (GA) (Gen. Atomics)",
+    "discipline": "MPS.Physics",
+    "latitude": "32.894100",
+    "longitude": "-117.237700",
+    "resource_name": "GA - DIII-D National Fusion Facility (DIII-D)",
+    "project_name": "DIII-D National Fusion Facility",
+    "scireg_id": 59,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.3.44.0/24",
+      "128.3.88.0/24",
+      "128.3.89.0/24",
+      "128.3.90.0/23",
+      "128.3.96.0/23"
+    ],
+    "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+    "discipline": "BIO.Genomics and Bioinformatics",
+    "latitude": "37.931400",
+    "longitude": "-122.021700",
+    "resource_name": "LBL - Joint Genome Institute (JGI)",
+    "project_name": "Joint Genome Institute (JGI)",
+    "scireg_id": 60,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "134.79.101.0/26",
+      "134.79.116.0/26",
+      "134.79.165.0/24"
+    ],
+    "org_name": "SLAC National Accelerator Laboratory (SLAC)",
+    "discipline": "MPS.Physics",
+    "latitude": "37.459000",
+    "longitude": "-122.178100",
+    "resource_name": "SLAC - Linac Coherent Light Source (LCLS)",
+    "project_name": "Linac Coherent Light Source (LCLS)",
+    "scireg_id": 61,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.199.218.0/24",
+      "130.199.219.0/24",
+      "130.199.220.0/24",
+      "130.199.221.0/24",
+      "130.199.222.0/24",
+      "130.199.223.0/24"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "MPS.Physics",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - National Synchrotron Light Source II (NSLS-II)",
+    "project_name": "National Synchrotron Light Source II (NSLS-II)",
+    "scireg_id": 62,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.55.106.0/24",
+      "192.103.13.0/24",
+      "192.188.106.0/24",
+      "198.35.0.0/20",
+      "198.125.224.0/20"
+    ],
+    "org_name": "Princeton Plasma Physics Laboratory (PPPL)",
+    "discipline": "MPS.Physics",
+    "latitude": "40.350000",
+    "longitude": "-74.603000",
+    "resource_name": "PPPL - National Spherical Torus Experiment (NSTX)",
+    "project_name": "National Spherical Torus Experiment (NSTX)",
+    "scireg_id": 63,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.219.128.0/20",
+      "160.91.192.0/20",
+      "192.188.178.0/23"
+    ],
+    "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "36.021000",
+    "longitude": "-84.252700",
+    "resource_name": "ORNL - Oak Ridge Leadership Computing Facility (OLCF)",
+    "project_name": "Oak Ridge Leadership Computing Facility (OLCF)",
+    "scireg_id": 64,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.199.6.0/23",
+      "130.199.180.0/22",
+      "130.199.184.0/24",
+      "130.199.200.0/21",
+      "198.125.208.0/26"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - Relativistic Heavy Ion Collider (RHIC)",
+    "project_name": "Relativistic Heavy Ion Collider (RHIC)",
+    "scireg_id": 65,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "160.91.167.0/25",
+      "160.91.224.0/22",
+      "160.91.230.0/23",
+      "160.91.232.0/21"
+    ],
+    "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "35.972400",
+    "longitude": "-84.290400",
+    "resource_name": "ORNL - Spallation Neutron Source (SNS)",
+    "project_name": "Spallation Neutron Source (SNS)",
+    "scireg_id": 66,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "134.79.28.0/22",
+      "134.79.37.0/25",
+      "134.79.38.0/23"
+    ],
+    "org_name": "SLAC National Accelerator Laboratory (SLAC)",
+    "discipline": "MPS.Physics",
+    "latitude": "37.459000",
+    "longitude": "-122.178100",
+    "resource_name": "SLAC - Stanford Synchrotron Radiation Lightsource (SSRL)",
+    "project_name": "Stanford Synchrotron Radiation Lightsource (SSRL)",
+    "scireg_id": 67,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "160.91.144.0/22",
+      "160.91.148.0/24"
+    ],
+    "org_name": "Oak Ridge National Laboratory (ORNL) (Oak Ridge NL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "35.972400",
+    "longitude": "-84.290400",
+    "resource_name": "ORNL - High Flux Isotope Reactor (HFIR)",
+    "project_name": "High Flux Isotope Reactor (HFIR)",
+    "scireg_id": 68,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "131.243.3.0/24",
+      "131.243.180.0/22"
+    ],
+    "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "37.866800",
+    "longitude": "-122.253600",
+    "resource_name": "LBL - The Molecular Foundary (TMF)",
+    "project_name": "The Molecular Foundary (TMF)",
+    "scireg_id": 69,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.54.0.0/16"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "MPS.Physics",
+    "latitude": "41.681500",
+    "longitude": "-87.970600",
+    "resource_name": "ANL - Advanced Photon Source (APS)",
+    "project_name": "Advanced Photon Source (APS)",
+    "scireg_id": 70,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "90.147.132.10/32"
+    ],
+    "org_name": "Institute of Radio Astronomy (Istituto di Radioastronomia) (IRA) (IRA.it)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "43.147900",
+    "longitude": "12.109700",
+    "resource_name": "Istituto di Radioastronomia",
+    "project_name": "Istituto di Radioastronomia",
+    "scireg_id": 71,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "144.206.236.0/24"
+    ],
+    "org_name": "Kurchatov Institute - National Research Center (NRC) (Kurchatov.ru)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "55.752200",
+    "longitude": "37.615600",
+    "resource_name": "Kurchatov - ATLAS Tier 1 Grid nodes",
+    "project_name": "ATLAS",
+    "scireg_id": 72,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.3.220.0/24",
+      "131.243.36.0/24",
+      "131.243.53.0/24",
+      "131.243.68.0/24",
+      "131.243.71.0/24",
+      "131.243.72.0/24",
+      "131.243.73.0/24",
+      "131.243.74.0/24",
+      "131.243.75.0/24",
+      "131.243.76.0/24",
+      "131.243.77.0/24",
+      "131.243.78.0/24",
+      "131.243.79.0/24",
+      "131.243.80.0/24",
+      "131.243.81.0/24",
+      "131.243.82.0/24",
+      "131.243.83.0/24",
+      "131.243.84.0/24",
+      "131.243.85.0/24",
+      "131.243.86.0/24",
+      "131.243.87.0/24",
+      "131.243.88.0/24",
+      "131.243.89.0/24",
+      "131.243.90.0/24",
+      "131.243.91.0/24",
+      "131.243.93.0/24",
+      "131.243.94.0/24",
+      "131.243.188.0/22",
+      "131.243.196.0/22",
+      "131.243.201.0/24",
+      "131.243.202.0/23"
+    ],
+    "org_name": "Lawrence Berkeley National Laboratory (Berkeley Lab or LBL)",
+    "discipline": "MPS.Physics",
+    "latitude": "37.866800",
+    "longitude": "-122.253600",
+    "resource_name": "LBL - Advanced Light Source (ALS)",
+    "project_name": "Advanced Light Source (ALS)",
+    "scireg_id": 73,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.57.0.0/16",
+      "192.70.245.0/24"
+    ],
+    "org_name": "Thomas Jefferson National Accelerator Facility (Jefferson Lab or TJNAF) (JeffersonLab)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "37.073600",
+    "longitude": "-76.493600",
+    "resource_name": "Jefferson Lab - Continuous Electron Beam Accelerator Facility (CEBAF)",
+    "project_name": "Continuous Electron Beam Accelerator Facility (CEBAF)",
+    "scireg_id": 74,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.20.224.0/21",
+      "130.20.232.0/22"
+    ],
+    "org_name": "Environmental Molecular Sciences Laboratory (EMSL)",
+    "discipline": "BIO.General",
+    "latitude": "46.328200",
+    "longitude": "-119.322200",
+    "resource_name": "Environmental Molecular Sciences Lab (EMSL)",
+    "project_name": "Environmental Molecular Sciences Lab (EMSL)",
+    "scireg_id": 75,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.130.0/24",
+      "128.171.131.0/24"
+    ],
+    "org_name": "National Radio Astronomy Observatory (NRAO)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "34.070000",
+    "longitude": "-106.907300",
+    "resource_name": "NRAO - Very Large Baseline Array (VLBA) - Maunakea",
+    "project_name": "National Radio Astronomy Observatory (NRAO)",
+    "scireg_id": 76,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "203.181.249.186/32"
+    ],
+    "org_name": "Asia Pacific Advanced Network (APAN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "35.690000",
+    "longitude": "139.690000",
+    "resource_name": "APAN - PerfSonar - Japan - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 77,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.73.50/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.943500",
+    "longitude": "-155.852100",
+    "resource_name": "UH - PerfSonar - Mauna Lani - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 78,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "132.160.6.178/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - PerfSonar - University of Hawaii Manoa - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 79,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.46/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "47.663000",
+    "longitude": "-122.295100",
+    "resource_name": "ESnet - PerfSonar - Seattle - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 80,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "137.164.28.105/32"
+    ],
+    "org_name": "CENIC (Corporation for Education Network Initiatives in California)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "33.818800",
+    "longitude": "-118.037700",
+    "resource_name": "CENIC - PerfSonar - lax - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 81,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "137.164.28.121/32"
+    ],
+    "org_name": "CENIC (Corporation for Education Network Initiatives in California)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "33.818800",
+    "longitude": "-118.037700",
+    "resource_name": "CENIC - PerfSonar - svl - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 82,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.44.162.66/32"
+    ],
+    "org_name": "Australian Academic and Research Network (AARNet) (AARNet.au)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "-31.987500",
+    "longitude": "115.786100",
+    "resource_name": "AARNet - PerfSonar - act-actn - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 83,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.44.192.50/32"
+    ],
+    "org_name": "Australian Academic and Research Network (AARNet) (AARNet.au)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "-34.928700",
+    "longitude": "138.598600",
+    "resource_name": "AARNet - PerfSonar - sa-prka - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 84,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.44.65.166/32"
+    ],
+    "org_name": "Australian Academic and Research Network (AARNet) (AARNet.au)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "-38.101400",
+    "longitude": "144.354200",
+    "resource_name": "AARNet - PerfSonar - vic-wmlb - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 85,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "152.61.6.5/32"
+    ],
+    "org_name": "United States Geological Survey (USGS)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "43.674600",
+    "longitude": "-96.791300",
+    "resource_name": "USGS - EROS - PerfSonar - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 86,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "169.154.197.6/32"
+    ],
+    "org_name": "National Aeronautics and Space Administration (NASA)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.918600",
+    "longitude": "-76.786200",
+    "resource_name": "NASA - network testing - Goddard - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 87,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.203.115.2/32"
+    ],
+    "org_name": "Indiana University (IU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "47.614500",
+    "longitude": "-122.338400",
+    "resource_name": "IU - TRANSPAC PerfSonar host -Seattle - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 88,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.203.116.33/32"
+    ],
+    "org_name": "Indiana University (IU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.720000",
+    "longitude": "-74.004600",
+    "resource_name": "IU - NEAAR PerfSonar host - New York City - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 89,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.223.225.12/32"
+    ],
+    "org_name": "University of Oregon (UO) (U of Oregon)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "44.036400",
+    "longitude": "-123.054700",
+    "resource_name": "U of Oregon - PerfSonar - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 90,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.246.128.242/32"
+    ],
+    "org_name": "Rutherford Appleton Laboratory (RAL)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "51.750000",
+    "longitude": "-1.250000",
+    "resource_name": "RAL - PerfSonar - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 91,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "152.54.13.250/32"
+    ],
+    "org_name": "University of North Carolina - Chapel Hill (UNC)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "35.939800",
+    "longitude": "-79.018200",
+    "resource_name": "UNC - RENCI - PerfSonar - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 92,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.18/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "33.760900",
+    "longitude": "-84.387000",
+    "resource_name": "ESnet - PerfSonar - Atlanta - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 93,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.34/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.920300",
+    "longitude": "-77.212300",
+    "resource_name": "ESnet - PerfSonar - Wash DC - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 94,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.38/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.890000",
+    "longitude": "-76.930000",
+    "resource_name": "ESnet - PerfSonar - East DC - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 95,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.42/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.720000",
+    "longitude": "-74.005000",
+    "resource_name": "ESnet - PerfSonar - AOFA New York - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 96,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.54/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.720000",
+    "longitude": "-74.005000",
+    "resource_name": "ESnet - PerfSonar - New York - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 97,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.66/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "42.367300",
+    "longitude": "-71.086800",
+    "resource_name": "ESnet - PerfSonar - Boston - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 98,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.252.117/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "41.712900",
+    "longitude": "-87.960500",
+    "resource_name": "ESnet - PerfSonar - Argonne Chicago - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 99,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.252.121/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "41.895300",
+    "longitude": "-87.616100",
+    "resource_name": "ESnet - PerfSonar - Starlight Chicago - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 100,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.22/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.808600",
+    "longitude": "-122.267500",
+    "resource_name": "ESnet - PerfSonar - NERSC Oakland - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 101,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.30/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.875300",
+    "longitude": "-122.253100",
+    "resource_name": "ESnet - PerfSonar - LBL Berekley - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 102,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.38/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.580000",
+    "longitude": "-121.490000",
+    "resource_name": "ESnet - PerfSonar - Sacramento - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 103,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.82/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "31.755100",
+    "longitude": "-106.493100",
+    "resource_name": "ESnet - PerfSonar - El Paso - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 104,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.98/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "32.883600",
+    "longitude": "-117.238600",
+    "resource_name": "ESnet - PerfSonar - SDSC San Diego - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 105,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "62.40.106.139/32"
+    ],
+    "org_name": "GEANT",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "50.119700",
+    "longitude": "8.736900",
+    "resource_name": "GEANT - PerfSonar - Frankfurt - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 106,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.124.238.146/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "51.498100",
+    "longitude": "0.014600",
+    "resource_name": "ESnet - PerfSonar - London - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 107,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "145.146.0.0/24"
+    ],
+    "org_name": "SURFnet (SURFnet.nl)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "52.356100",
+    "longitude": "4.952800",
+    "resource_name": "SURFnet - Netherlight - PerfSonar - Amsterdam - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 108,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "62.40.123.97/32"
+    ],
+    "org_name": "GEANT",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "51.496400",
+    "longitude": "-0.122400",
+    "resource_name": "GEANT - PerfSonar - UK - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 109,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "136.172.12.4/32"
+    ],
+    "org_name": "Deutsches Forschungsnetz (German Research and Education Network) (DFN) (DFN.de)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "53.550000",
+    "longitude": "10.000000",
+    "resource_name": "DFN - PerfSonar - DKRZ Hamburg - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 110,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.129.254.14/32"
+    ],
+    "org_name": "Energy Sciences Network (ESnet)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.745600",
+    "longitude": "-104.979400",
+    "resource_name": "ESnet - PerfSonar - Denver - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 111,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.203.115.97/32"
+    ],
+    "org_name": "Indiana University (IU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.249900",
+    "longitude": "-86.455500",
+    "resource_name": "IU - TRANSPAC PerfSonar host - Hong Kong - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 112,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.123.2/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - PerfSonar - Science DMZ (ITC) - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 113,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.35.145.5/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "13.464000",
+    "longitude": "144.692600",
+    "resource_name": "UH - PerfSonar- Guam Open Research and Education Exchange - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 114,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.123.133/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - PerfSonar- Panoramic Survey Telescope and Rapid Response System (ITC) - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 115,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.0.6/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - PerfSonar - University of Hawaii Manoa - Delay - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 116,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.64.43/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "21.299000",
+    "longitude": "-157.816400",
+    "resource_name": "UH - PerfSonar - SEA-US - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 117,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "132.160.6.138/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "20.748800",
+    "longitude": "-156.439400",
+    "resource_name": "UH - PerfSonar - Maui Research Tech Center - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 118,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.73.54/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.943500",
+    "longitude": "-155.852000",
+    "resource_name": "UH - PerfSonar - Mauna Lani - Delay - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 119,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "132.160.98.89/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "20.705200",
+    "longitude": "-156.257600",
+    "resource_name": "UH - PerfSonar - Haleakala Summit - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 120,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.74.59/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.800500",
+    "longitude": "-155.478300",
+    "resource_name": "UH - PerfSonar - Manaukea Summit - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 121,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.213.148/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.800500",
+    "longitude": "-155.478300",
+    "resource_name": "UH - PerfSonar - University of Hawaii Hilo - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 122,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "132.160.6.210/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.703500",
+    "longitude": "-155.090300",
+    "resource_name": "UH - PerfSonar - Institure of Astronomy Hilo - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 123,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.71.150/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "19.534500",
+    "longitude": "-155.576000",
+    "resource_name": "UH - PerfSonar - Mauna Loa Observatory - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 124,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.4.133/32"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "20.017500",
+    "longitude": "-155.672300",
+    "resource_name": "UH - PerfSonar - Canada-France-Hawaii Telescope - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 125,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "148.187.129.15/32"
+    ],
+    "org_name": "Swiss National Supercomputing Center (CSCS)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "47.144900",
+    "longitude": "8.155100",
+    "resource_name": "CSCS - perfSONAR - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 126,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.12.15.6/32"
+    ],
+    "org_name": "Brookhaven National Laboratory (BNL)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.869500",
+    "longitude": "-72.886800",
+    "resource_name": "BNL - perfSONAR - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 127,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.141/32",
+      "2001:49d0:23c0:1::10/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.100900",
+    "longitude": "-94.581000",
+    "resource_name": "KanREN - perfSONAR - Bryant - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 128,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.145/32",
+      "2001:49d0:23c0:2::18/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.953000",
+    "longitude": "-95.258600",
+    "resource_name": "KanREN - perfSONAR - Univ. of Kansas - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 129,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.149/32",
+      "2001:49d0:23c0:3::26/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.190600",
+    "longitude": "-96.582900",
+    "resource_name": "KanREN - perfSONAR - Kasas State Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 130,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.153/32",
+      "2001:49d0:23c0:4::34/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.719600",
+    "longitude": "-97.293700",
+    "resource_name": "KanREN - perfSONAR - Wichita State Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 131,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.104/32",
+      "2001:49d0:23c0:1006::2/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.871000",
+    "longitude": "-99.343500",
+    "resource_name": "KanREN - perfSONAR - Fort Hays State Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 132,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.108/32",
+      "2001:49d0:23c0:1007::2/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.413200",
+    "longitude": "-96.180100",
+    "resource_name": "KanREN - perfSONAR - Emporia State Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 133,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.113/32",
+      "2001:49d0:23c0:1008::2/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.039300",
+    "longitude": "-95.208700",
+    "resource_name": "KanREN - perfSONAR - Pittsburg State Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 134,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.117/32",
+      "2001:49d0:23c0:1009::2/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.033600",
+    "longitude": "-95.701500",
+    "resource_name": "KanREN - perfSONAR - Washburn Univ. - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 135,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.49/32",
+      "2001:49d0:23c0:6::49/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.100900",
+    "longitude": "-94.581000",
+    "resource_name": "KanREN - perfSONAR - Bryant - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 136,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.57/32",
+      "2001:49d0:23c0:7::52/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.953000",
+    "longitude": "-95.258600",
+    "resource_name": "KanREN - perfSONAR - Univ. of Kansas - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 137,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.65/32",
+      "2001:49d0:23c0:8::65/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.190600",
+    "longitude": "-96.582900",
+    "resource_name": "KanREN - perfSONAR - Kasas State Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 138,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.73/32",
+      "2001:49d0:23c0:9::73/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.719600",
+    "longitude": "-97.293700",
+    "resource_name": "KanREN - perfSONAR - Wichita State Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 139,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.85/32",
+      "2001:49d0:23c0:1001::85/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.871000",
+    "longitude": "-99.343500",
+    "resource_name": "KanREN - perfSONAR - Fort Hays State Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 140,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.89/32",
+      "2001:49d0:23c0:1002::89/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "38.413200",
+    "longitude": "-96.180100",
+    "resource_name": "KanREN - perfSONAR - Emporia State Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 141,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.93/32",
+      "2001:49d0:23c0:1003::93/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.391200",
+    "longitude": "-94.703600",
+    "resource_name": "KanREN - perfSONAR - Pittsburg State Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 142,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.32.97/32",
+      "2001:49d0:23c0:1004::97/128"
+    ],
+    "org_name": "Kansas Reseach and Education Network (KanREN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.033600",
+    "longitude": "-95.701500",
+    "resource_name": "KanREN - perfSONAR - Washburn Univ. - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 143,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "156.110.41.3/28"
+    ],
+    "org_name": "OneNet",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "35.183700",
+    "longitude": "-97.437100",
+    "resource_name": "OneNet - perfSONAR - Oklahoma Univ. - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 144,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.130.32.15/32"
+    ],
+    "org_name": "Kansas State University (KSU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.197400",
+    "longitude": "-96.584700",
+    "resource_name": "KSU - perfSONAR - Beocat - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 145,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.130.32.16/32"
+    ],
+    "org_name": "Kansas State University (KSU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.197400",
+    "longitude": "-96.584700",
+    "resource_name": "KSU - perfSONAR - Nichols - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 146,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.130.10.34/32"
+    ],
+    "org_name": "Kansas State University (KSU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.197400",
+    "longitude": "-96.584700",
+    "resource_name": "KSU - perfSONAR - CIS Dept - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 147,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.66.11/32"
+    ],
+    "org_name": "Kansas State University (KSU)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.197400",
+    "longitude": "-96.584700",
+    "resource_name": "KSU - perfSONAR - Beocat FIONA - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 148,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "206.176.0.185/32"
+    ],
+    "org_name": "University of South Dakota (USD) (U S Dakota)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "42.782500",
+    "longitude": "-96.929000",
+    "resource_name": "perfSONAR - U of S Dakota - Edge Network - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 149,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "206.209.0.2/32"
+    ],
+    "org_name": "University of South Dakota (USD) (U S Dakota)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "42.782500",
+    "longitude": "-96.929000",
+    "resource_name": "perfSONAR - U of S Dakota - Science DMZ - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 150,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.236.39.113/32"
+    ],
+    "org_name": "University of South Dakota (USD) (U S Dakota)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "42.782500",
+    "longitude": "-96.929000",
+    "resource_name": "perfSONAR - U of S Dakota - Datacenter - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 151,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "137.216.132.51/32"
+    ],
+    "org_name": "South Dakota State University (SDSU) (S Dakota St)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "44.319200",
+    "longitude": "-96.783400",
+    "resource_name": "SDSU - perfSONAR - South Dakota State - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 152,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.5.165/32",
+      "2600:900:0:3:92e2:baff:fe2b:9050/128"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.821900",
+    "longitude": "-96.697600",
+    "resource_name": "UNL - perfSONAR - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 153,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.183.249/32",
+      "2600:900:6:1102:7a2b:cbff:fe68:a68c/128"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.813000",
+    "longitude": "-96.702900",
+    "resource_name": "UNL - perfSONAR - HCC - bandwidth - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 154,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.239.163/32",
+      "2600:900:6:1101:21b:21ff:fe96:a3d4/128"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "40.800000",
+    "longitude": "-96.667000",
+    "resource_name": "UNL - perfSONAR - HCC - latency - Network Testing",
+    "project_name": "PerfSONAR",
+    "scireg_id": 155,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.84.3.50/32"
+    ],
+    "org_name": "Cornell University",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "42.440600",
+    "longitude": "-76.496600",
+    "resource_name": "Cornell - DTN for Data Mobility Exhibition - Network Testing",
+    "project_name": "Data Mobility Exhibition (DME)",
+    "scireg_id": 156,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.221.96.57/32"
+    ],
+    "org_name": "Argonne National Laboratory (ANL)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "41.681500",
+    "longitude": "-87.970600",
+    "resource_name": "ANL - DTN for Data Mobility Exhibition - Network Testing",
+    "project_name": "Data Mobility Exhibition (DME)",
+    "scireg_id": 157,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.254.178/32"
+    ],
+    "org_name": "Great Plains Network (GPN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "39.097800",
+    "longitude": "-94.583700",
+    "resource_name": "GPN - perfSONAR - KC - Network Testing",
+    "project_name": "",
+    "scireg_id": 158,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.113.254.162/32"
+    ],
+    "org_name": "Great Plains Network (GPN)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "36.157400",
+    "longitude": "-95.994500",
+    "resource_name": "GPN - perfSONAR - Tulsa - Network Testing",
+    "project_name": "",
+    "scireg_id": 159,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.55.205.0/24"
+    ],
+    "org_name": "National Energy Research Scientific Computing Center (NERSC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "37.866800",
+    "longitude": "-122.253600",
+    "resource_name": "NERSC - Data Transfer Nodes - Data Transfer",
+    "project_name": "NERSC",
+    "scireg_id": 160,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "141.142.176.64/28",
+      "141.142.176.80/29"
+    ],
+    "org_name": "National Center for Supercomputing Applications (NCSA)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.109500",
+    "longitude": "-88.212300",
+    "resource_name": "NCSA - Bluewaters import/export servers - Data Transfer",
+    "project_name": "NCSA-Blue Waters",
+    "scireg_id": 161,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "130.183.36.0/24"
+    ],
+    "org_name": "Max Planck Computing and Data Facility (MPCDF) (MPCDF.de)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "48.250000",
+    "longitude": "11.650000",
+    "resource_name": "MPCDF - GridFTP nodes - Data Transfer",
+    "project_name": "Max Planck Computing and Data Facility (MPCDF)",
+    "scireg_id": 162,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.12.135.70/32"
+    ],
+    "org_name": "Lawrence Livermore National Laboratory (LLNL)",
+    "discipline": "GEO.Climate",
+    "latitude": "37.691400",
+    "longitude": "-121.701400",
+    "resource_name": "LLNL - AIMS - Data Transfer",
+    "project_name": "Lawrence Livermore National Laboratory (LLNL)",
+    "scireg_id": 163,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "156.110.41.7/32"
+    ],
+    "org_name": "OneNet",
+    "discipline": "Multi-Science Facility",
+    "latitude": "35.183700",
+    "longitude": "-97.437100",
+    "resource_name": "OneNet - OFFN - DTNs - Data Transfer",
+    "project_name": "Oklahoma Friction Free Network (OFFN)",
+    "scireg_id": 164,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.15.42.0/24"
+    ],
+    "org_name": "University of Oklahoma (OU) (U of OK)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "35.183700",
+    "longitude": "-97.437100",
+    "resource_name": "U of OK - Schooner DTNs - Data Transfer",
+    "project_name": "UO-Schooner",
+    "scireg_id": 165,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.241.1/32",
+      "2600:900:6:1302::7ac0:b0a7/128"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.800000",
+    "longitude": "-96.667000",
+    "resource_name": "UNL - HCC FIONA DTN - Data Transfer",
+    "project_name": "FIONA",
+    "scireg_id": 166,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2001:df4:2600:2::2/128",
+      "103.72.192.66/32"
+    ],
+    "org_name": "National Supercomputing Center Singapore (NSCC Sing.)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "1.298900",
+    "longitude": "103.787600",
+    "resource_name": "NSCC - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 167,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2001:388:cf04:26::2/128",
+      "138.44.15.78/32"
+    ],
+    "org_name": "Australian Academic and Research Network (AARNet) (AARNet.au)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "-33.798500",
+    "longitude": "151.144800",
+    "resource_name": "AARNet - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 168,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2001:708:10:6c05:2::2/128",
+      "193.166.254.54/32"
+    ],
+    "org_name": "Finnish University and Research Network (FUNET)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "64.231100",
+    "longitude": "27.701900",
+    "resource_name": "FUNET - DTN for Data Move Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 169,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2a05:3280:439:69::68/128",
+      "109.171.131.68/32"
+    ],
+    "org_name": "King Abdullah University of Science and Technology (KAUST)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "22.309500",
+    "longitude": "39.104600",
+    "resource_name": "KAUST - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 170,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2001:610:130::10/128",
+      "145.146.1.10/32"
+    ],
+    "org_name": "University of Amsterdam (UvA NL)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "52.355800",
+    "longitude": "4.955700",
+    "resource_name": "UvA - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 171,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "213.135.51.226/32"
+    ],
+    "org_name": "University of Warsaw (UoW PL)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "52.240300",
+    "longitude": "21.018600",
+    "resource_name": "UoW - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 172,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "74.114.96.98/32"
+    ],
+    "org_name": "StarLight",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "41.928800",
+    "longitude": "-87.631500",
+    "resource_name": "StarLight - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 173,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "210.119.23.12/32"
+    ],
+    "org_name": "Korea Institute of Science and Technology Information (KISTI) (KISTI.kr)",
+    "discipline": "CS.Network Testing and Monitoring",
+    "latitude": "37.570000",
+    "longitude": "126.980000",
+    "resource_name": "KISTI - DTN for Data Mover Challenge - Data Transfer",
+    "project_name": "Data Mover Challenge",
+    "scireg_id": 174,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.177.192/26"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.307300",
+    "longitude": "-157.811600",
+    "resource_name": "UH - IFA - Asteroid Terrestrial-impact Last Alert System (ATLAS) - Image Processing Cluster - Cluster",
+    "project_name": "Asteroid Terrestrial-impact Last Alert System (ATLAS)",
+    "scireg_id": 175,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.123.224/27",
+      "166.122.172.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - IFA - Pan-STARRS - Image Processing Pipeline - Cluster",
+    "project_name": "Pan-STARRS",
+    "scireg_id": 176,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.177.128/27"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - IFA - Pan-STARRS - Moving Object Processing System - Cluster",
+    "project_name": "Pan-STARRS",
+    "scireg_id": 177,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.45.0/27"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - IFA - Pan-STARRS - Published Science Data - Cluster",
+    "project_name": "Pan-STARRS",
+    "scireg_id": 178,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.239.128/26",
+      "2600:900:6:1101::/64"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "40.813000",
+    "longitude": "-96.702900",
+    "resource_name": "UNL - CMS Tier 2 Center - DTN and support nodes - Cluster",
+    "project_name": "CMS",
+    "scireg_id": 179,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.227.64/26"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "41.247400",
+    "longitude": "-96.017800",
+    "resource_name": "UNL - Crane HPC Cluster - Cluster",
+    "project_name": "UNL-Crane",
+    "scireg_id": 180,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.241.16/28"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.822100",
+    "longitude": "-96.698000",
+    "resource_name": "UNL - Rhino HPC Cluster - Cluster",
+    "project_name": "UNL-Rhino",
+    "scireg_id": 181,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.244.192/26",
+      "2600:900:6:1301::/64"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.800000",
+    "longitude": "-96.667000",
+    "resource_name": "UNL - HCC Resources in Lincoln, NE - Cluster",
+    "project_name": "UNL-Holland Compute Center",
+    "scireg_id": 182,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "132.160.100.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "20.821900",
+    "longitude": "-156.332500",
+    "resource_name": "UH - IFA - Pan-STARRS (Panoramic Survey Telescope and Rapid Response System) - Multiple",
+    "project_name": "Pan-STARRS",
+    "scireg_id": 183,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.110.0/25",
+      "128.171.168.0/24",
+      "128.171.79.0/24",
+      "128.171.110.0/24",
+      "128.171.146.0/24",
+      "128.171.73.32/29"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.307300",
+    "longitude": "-157.811600",
+    "resource_name": "UH - IFA - Institute for Astronomy (IfA) Manoa - Multiple",
+    "project_name": "Institute for Astronomy (IfA)",
+    "scireg_id": 184,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.177.0/27",
+      "128.171.123.128/27",
+      "128.171.123.192/27",
+      "128.171.123.160/27"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "21.298800",
+    "longitude": "-157.817100",
+    "resource_name": "UH - IFA - Institute for Astronomy (IfA) ITC - Multiple",
+    "project_name": "Institute for Astronomy (IfA)",
+    "scireg_id": 185,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.171.73.64/27"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "19.703500",
+    "longitude": "-155.090300",
+    "resource_name": "UH - IFA - Institute for Astronomy (IfA) Hilo - Multiple",
+    "project_name": "Institute for Astronomy (IfA)",
+    "scireg_id": 186,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "166.122.170.0/24",
+      "166.122.171.0/24",
+      "166.122.173.0/24"
+    ],
+    "org_name": "University of Hawaii (UH) (U of Hawaii)",
+    "discipline": "MPS.Astronomy",
+    "latitude": "20.821900",
+    "longitude": "-156.332500",
+    "resource_name": "UH - IFA - Institute for Astronomy (IfA) Maui - Multiple",
+    "project_name": "Institute for Astronomy (IfA)",
+    "scireg_id": 187,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.93.175.0/26"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "41.247400",
+    "longitude": "-96.017800",
+    "resource_name": "UNL - Anvil Cloud - Multiple",
+    "project_name": "UNL-Anvil",
+    "scireg_id": 188,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2600:900:6::/48"
+    ],
+    "org_name": "University of Nebraska-Lincoln (UNL) (UN Lincoln)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.813000",
+    "longitude": "-96.702900",
+    "resource_name": "UNL - HCC IPv6 Resources - Multiple",
+    "project_name": "UNL-Holland Compute Center",
+    "scireg_id": 189,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.62.0.0/16",
+      "128.83.0.0/16",
+      "129.116.0.0/16",
+      "146.6.0.0/16",
+      "192.207.51.0/24",
+      "192.207.52.0/23",
+      "192.207.54.0/24",
+      "198.213.192.0/18",
+      "198.214.80.0/20",
+      "206.76.64.0/18"
+    ],
+    "org_name": "University of Texas at Austin (UT Austin)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.2849",
+    "longitude": "-97.7341",
+    "resource_name": "University of Texas, Austin (UT)",
+    "project_name": "",
+    "scireg_id": 190,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.182.0.0/16",
+      "192.101.139.0/24",
+      "192.101.140.0/24"
+    ],
+    "org_name": "Pittsburgh Supercomputer Center (PSC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.4456",
+    "longitude": "-79.9490",
+    "resource_name": "Pittsburgh Supercomputer Center (PSC)",
+    "project_name": "",
+    "scireg_id": 191,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "2605:dd00:4000::/48",
+      "35.11.80.0/20"
+    ],
+    "org_name": "Facility for Rare Isotope Beams (FRIB)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "42.7249",
+    "longitude": "-84.4771",
+    "resource_name": "Facility for Rare Isotope Beams (FRIB)",
+    "project_name": "FRIB",
+    "scireg_id": 192,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "164.111.161.0/24"
+    ],
+    "org_name": "University of Alabama at Birmingham (UAB)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "33.5025",
+    "longitude": "-86.8197",
+    "resource_name": "HPC Cluster & RC Services - Compute",
+    "project_name": "",
+    "scireg_id": 193,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.26.125.0/24"
+    ],
+    "org_name": "University of Alabama at Birmingham (UAB)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "33.5025",
+    "longitude": "-86.8197",
+    "resource_name": "RC Cloud API - Data Transfer",
+    "project_name": "",
+    "scireg_id": 194,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.26.48.0/23"
+    ],
+    "org_name": "University of Alabama at Birmingham (UAB)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "33.5025",
+    "longitude": "-86.8197",
+    "resource_name": "RC VM Workloads - Multiple",
+    "project_name": "",
+    "scireg_id": 195,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "138.26.220.64/28"
+    ],
+    "org_name": "University of Alabama at Birmingham (UAB)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "33.5025",
+    "longitude": "-86.8197",
+    "resource_name": "RC SciDMZ - Multiple",
+    "project_name": "",
+    "scireg_id": 196,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.172.0.0/16"
+    ],
+    "org_name": "National Oceanic and Atmospheric Administration (NOAA)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "38.901111",
+    "longitude": "-77.050278",
+    "resource_name": "National Oceanic and Atmospheric Administration (NOAA)",
+    "project_name": "",
+    "scireg_id": 197,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "152.61.0.0/17"
+    ],
+    "org_name": "United States Geological Survey (USGS)",
+    "discipline": "GEO.Earth",
+    "latitude": "43.734268",
+    "longitude": "-96.619469",
+    "resource_name": "United States Geological Survey (USGS)",
+    "project_name": "",
+    "scireg_id": 198,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "128.117.0.0/16"
+    ],
+    "org_name": "NSF National Center for Atmospheric Research (NCAR)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "40.031080",
+    "longitude": "-105.245940",
+    "resource_name": "NSF National Center for Atmospheric Research (NCAR)",
+    "project_name": "",
+    "scireg_id": 199,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.49.208.0/24",
+      "131.225.0.0/16"
+    ],
+    "org_name": "Fermi National Accelerator Laboratory (FNAL)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "41.840641",
+    "longitude": "-88.279472",
+    "resource_name": "Fermi National Accelerator Laboratory (FNAL)",
+    "project_name": "",
+    "scireg_id": 200,
+    "contact_email": "engage@es.net",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "188.184.0.0/16",
+      "128.142.0.0/16",
+      "188.185.0.0/16"
+    ],
+    "org_name": "European Organization for Nuclear Research (CERN)",
+    "discipline": "MPS.Physics.High Energy",
+    "latitude": "46.231709",
+    "longitude": "6.072080",
+    "resource_name": "European Organization for Nuclear Research (CERN)",
+    "project_name": "",
+    "scireg_id": 201,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "192.231.243.0/24",
+      "128.182.0.0/16"
+    ],
+    "org_name": "Pittsburgh Supercomputing Center (PSC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.445518",
+    "longitude": "-79.949150",
+    "resource_name": "Pittsburgh Supercomputing Center (PSC)",
+    "project_name": "",
+    "scireg_id": 202,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "198.202.64.0/18",
+      "192.67.81.0/24",
+      "132.249.246.0/24"
+    ],
+    "org_name": "San Diego Supercomputer Center (SDSC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "32.9035128",
+    "longitude": "-117.2444005",
+    "resource_name": "San Diego Supercomputer Center (SDSC)",
+    "project_name": "",
+    "scireg_id": 203,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "141.142.0.0/16"
+    ],
+    "org_name": "National Center for Supercomputing Applications (NCSA)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "40.1148751",
+    "longitude": " -88.2248764",
+    "resource_name": "National Center for Supercomputing Applications (NCSA)",
+    "project_name": "",
+    "scireg_id": 204,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.44.0/22",
+      "129.114.59.192/27",
+      "129.114.63.96/27",
+      "129.114.64.0/19"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Frontera System",
+    "project_name": "",
+    "scireg_id": 205,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.63.32/27"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Stampede2 System",
+    "project_name": "",
+    "scireg_id": 206,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.63.128/27"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Stampede3 System",
+    "project_name": "",
+    "scireg_id": 207,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.52.0/24"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Corral Storage System",
+    "project_name": "",
+    "scireg_id": 208,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.62.0/24"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Ranch Data Archive",
+    "project_name": "",
+    "scireg_id": 209,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "129.114.60.0/24",
+      "129.114.40.0/22"
+    ],
+    "org_name": "Texas Advanced Computing Center (TACC)",
+    "discipline": "Multi-Science Facility",
+    "latitude": "30.3897376",
+    "longitude": "-97.7261257",
+    "resource_name": "TACC Lonestar System",
+    "project_name": "",
+    "scireg_id": 210,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  },
+  {
+    "addresses": [
+      "140.208.128.0/18",
+      "140.208.224.0/20",
+      "140.208.0.0/17",
+      "140.208.192.0/19"
+    ],
+    "org_name": "Geophysical Fluid Dynamics Laboratory (GFDL-Z)",
+    "discipline": "GEO.Atmospheric",
+    "latitude": "40.345470",
+    "longitude": "-74.616440",
+    "resource_name": "Geophysical Fluid Dynamics Laboratory (GFDL-Z)",
+    "project_name": "",
+    "scireg_id": 211,
+    "contact_email": "unknown",
+    "last_updated": "unknown"
+  }
+]
