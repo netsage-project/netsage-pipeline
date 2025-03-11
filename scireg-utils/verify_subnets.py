@@ -35,7 +35,7 @@ def fetch_prefixes(asn, version=4):
     """Fetch prefixes for the given ASN from bgp.he.net, supporting both IPv4 and IPv6."""
     table_id = 'table_prefixes4' if version == 4 else 'table_prefixes6'
     url = f'https://bgp.he.net/AS{asn}#_prefixes{version}'
-    print(f"Fetching prefix data from {url}...")
+    print(f"Fetching prefix data from {url}")
     response = requests.get(url)
     
     if response.status_code != 200:
