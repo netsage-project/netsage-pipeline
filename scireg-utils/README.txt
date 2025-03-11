@@ -23,7 +23,7 @@ Steps to update Science Registry:
        add_new_scireg.py -i scireg.json -t scireg.template.json -o scireg-update.json
 
      or to cleanup existing JSON if edited directly:
-       add_new_scireg.py --clean -i newScireg.json -o newestScireg.json
+       add_new_scireg.py --clean -i scireg.json -o newScireg.json
 
   3) convert to mmdb:
        scireg2mmdb -i scireg.json -o scireg.mmdb
