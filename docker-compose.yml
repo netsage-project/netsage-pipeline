@@ -23,10 +23,10 @@ services:
       - ./data:/data
       - ./data/importer_cache:/var/cache/netsage
       - ./conf-logstash:/usr/share/logstash/pipeline/
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
-      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
+#    labels:
+#      ofelia.enabled: "true"
+#      ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
+#      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
     image: tacc/netsage_pipeline:v2.1.2
     container_name: NetSage_Logstash
@@ -38,7 +38,7 @@ services:
       - "5044:5044"
     volumes:
       - ./conf-logstash:/usr/share/logstash/pipeline/
-#      - ./conf-globus:/usr/share/logstash/globus/
+      - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
       - ./data/cache:/var/lib/netsage/
   ofelia: ## Scheduler Task
