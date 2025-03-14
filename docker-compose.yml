@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   rabbit:
     image: rabbitmq:3.13.2-management
@@ -23,10 +22,6 @@ services:
       - ./data:/data
       - ./data/importer_cache:/var/cache/netsage
       - ./conf-logstash:/usr/share/logstash/pipeline/
-#    labels:
-#      ofelia.enabled: "true"
-#      ofelia.job-exec.dataUpdate.schedule: "0 0 1 * * *"
-#      ofelia.job-exec.dataUpdate.command: "/tmp/docker_init.sh"
   logstash:
     image: tacc/netsage_pipeline:v2.1.2
     container_name: NetSage_Logstash
@@ -41,16 +36,6 @@ services:
       - ./conf-globus:/usr/share/logstash/globus/
       - ./data:/data
       - ./data/cache:/var/lib/netsage/
-  ofelia: ## Scheduler Task
-    image: mcuadros/ofelia:0.3.12
-    container_name: NetSage_Ofelia
-    command: daemon --docker
-    depends_on:
-      - importer
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
   manager:
     image: tacc/netsage_manager:v2.1.2
     container_name: NetSage_Manager
