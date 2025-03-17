@@ -1,7 +1,4 @@
 services:
-  logstash:
-    volumes:
-      - ./userConfig/pipelines.yml:/usr/share/logstash/config/pipelines.yml
   importer:
     logging:
       driver: json-file

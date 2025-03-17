@@ -30,8 +30,8 @@ for FILE in $MMDB_FILES; do
     echo "Downloading file $FILE"
     # note: if this script is run in Alpine Linux docker container, then the version of
     #  wget does not support the -N flag, and will need to download the file every time
-    #if ! wget -N -q -P "$DATA_DIR" "$REPO/$FILE"; then   # use this for gnu wget
-    if ! wget -q -O "$DATA_DIR/$FILE" "$REPO/$FILE"; then # use this for BusyBox wget (alpine linux)
+    if ! wget -N -q -P "$DATA_DIR" "$REPO/$FILE"; then   # use this for gnu wget
+    #if ! wget -q -O "$DATA_DIR/$FILE" "$REPO/$FILE"; then # use this for BusyBox wget (alpine linux)
         echo "Failed to download $FILE" >&2
     fi
 done
