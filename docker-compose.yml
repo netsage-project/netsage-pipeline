@@ -23,7 +23,7 @@ services:
       - ./data/importer_cache:/var/cache/netsage
       - ./conf-logstash:/usr/share/logstash/pipeline/
   logstash:
-    image: tacc/netsage_pipeline:v2.2.0
+    image: logstash:8.17.3
     container_name: NetSage_Logstash
     env_file: .env
     depends_on:
