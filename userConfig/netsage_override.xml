@@ -1,0 +1,51 @@
+<!--
+    This is the shared config file for Netsage flow processing pipeline.
+    Configuration placed here will be shared with all the individual pipeline
+    components. Those components also have their own config; if a variable is set in
+    both places, the value in the individual config overrides the shared one.
+-->
+
+<config>
+
+    <!-- have a collection for each sensor -->
+    <collection>
+        <flow-path>/data/input_data/netflow</flow-path>
+        <sensor>$netflowSensorName</sensor>
+        <flow-type>netflow</flow-type>
+    </collection>
+
+    <collection>
+        <flow-path>/data/input_data/sflow</flow-path>
+        <sensor>$sflowSensorName</sensor>
+        <flow-type>sflow</flow-type>
+    </collection>
+
+  <!-- for culling of nfcapd files, set enable=1 and ttl to the no. of days worth of files to keep  -->
+  <worker>
+    <cull-enable>1</cull-enable>
+    <cull-ttl>3</cull-ttl>
+  </worker>
+
+  <!-- docker localhost rabbitmq connection info -->
+  <rabbit_input>
+    <host>rabbit</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_input>
+  <rabbit_output>
+    <host>rabbit</host>
+    <port>5672</port>
+    <username>guest</username>
+    <password>guest</password>
+    <ssl>0</ssl>
+    <batch_size>100</batch_size>
+    <vhost>/</vhost>
+    <durable>1</durable> <!-- Whether the rabbit queue is 'durable' (don't change this unless you have a reason) -->
+  </rabbit_output>
+
+</config>
