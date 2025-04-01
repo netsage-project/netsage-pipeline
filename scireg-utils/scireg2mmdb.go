@@ -23,6 +23,7 @@ import (
     "log"
     "net"
     "os"
+    "sort"
     "strconv"
     "strings"
     "github.com/maxmind/mmdbwriter"
@@ -38,6 +39,12 @@ type AddressBlock struct {
     Longitude    string   `json:"longitude"`
     ResourceName string   `json:"resource_name"`
     ProjectName  string   `json:"project_name"`
+}
+
+type CIDREntry struct {
+        Network *net.IPNet
+        Data    mmdbtype.DataType
+        Prefix  int
 }
 
 func main() {
@@ -71,7 +78,7 @@ func main() {
         log.Fatalf("Failed to create MMDB writer: %v", err)
     }
 
-    recordCount := 0
+    var cidrEntries []CIDREntry
 
     for _, entry := range entries {
         // Print JSON content for reference
@@ -99,6 +106,8 @@ func main() {
             jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "community": "%s"}`,
                 entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.Community)
 
+            prefix, _ := network.Mask.Size()
+
             geoData := mmdbtype.Map{
                 "city": mmdbtype.Map{
                     "names": mmdbtype.Map{
@@ -111,12 +120,24 @@ func main() {
                 },
             }
 
-            if err = writer.Insert(network, geoData); err != nil {
-                log.Printf("Error inserting record for network %s: %v\nEntry Data: %s", addr, err, entryJson)
-                continue
-            }
-            recordCount++
+            cidrEntries = append(cidrEntries, CIDREntry{
+                                Network: network,
+                                Data:    geoData,
+                                Prefix:  prefix,
+            })
         }
+    }
+
+    // Sort CIDRs by specificity (less specific first, more specific last)
+    // mmdb seems to require this to return more specific first
+    sort.Slice(cidrEntries, func(i, j int) bool {
+                return cidrEntries[i].Prefix < cidrEntries[j].Prefix
+    })
+
+    for _, cidr := range cidrEntries {
+          if err = writer.Insert(cidr.Network, cidr.Data); err != nil {
+               log.Printf("Error inserting record for network %s: %v", cidr.Network.String(), err)
+          }
     }
 
     out, err := os.Create(*outputFile)
@@ -130,6 +151,6 @@ func main() {
         log.Fatalf("Failed to write MMDB: %v", err)
     }
 
-    fmt.Printf("MMDB created successfully with %d records!\n", recordCount)
+    fmt.Printf("MMDB created successfully with %d records!\n", len(cidrEntries))
 }
 
