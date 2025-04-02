@@ -31,8 +31,6 @@
     "addresses": [
       "129.114.0.0/17",
       "2605:2800:2000::/40",
-      "192.124.226.21/30",
-      "192.124.228.97/30",
       "192.88.12.229/30",
       "192.88.12.233/30"
     ],
@@ -111,6 +109,16 @@
     "org_name": "University of Texas at Tyler (UTTYLER)",
     "community": "UT Systems",
     "asn": "276"
+  },
+  {
+    "addresses": [
+      "128.194.0.0/16",
+      "165.91.0.0/16",
+      "2606:aa00::/32"
+    ],
+    "org_name": "Texas A&M University (TAMU)",
+    "community": "UT Systems",
+    "asn": "3794"
   },
   {
     "addresses": [
