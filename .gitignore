@@ -33,6 +33,6 @@ build
 .history
 .idea
 replayData
-userConfig
+userConfig/
 docker-compose.override.yml
 node_modules

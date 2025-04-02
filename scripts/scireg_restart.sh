@@ -5,7 +5,7 @@ WATCH_DIR="/data/cache"
 #WATCH_DIR="../data/cache"
 
 CONTAINER_NAME="NetSage_Logstash"
-CHECK_INTERVAL=600  # seconds
+CHECK_INTERVAL=900 # seconds
 
 # Calculate the total size of files in the directory
 calculate_size() {
