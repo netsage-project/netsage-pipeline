@@ -1,0 +1,243 @@
+[
+    {
+        "addresses": [
+            "198.180.132.0/24",
+            "198.180.133.0/24",
+            "198.180.134.0/24",
+            "204.27.217.0/24"
+        ],
+        "org_name": "Alabama A&M University",
+        "asn": "18682",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "129.66.0.0/16",
+            "192.31.107.0/24",
+            "199.20.16.0/20",
+            "199.88.16.0/20",
+            "204.29.64.0/18",
+            "207.157.0.0/17",
+            "216.109.0.0/18",
+            "2607:f808::/32"
+        ],
+        "org_name": "Alabama Supercomputer Authority",
+        "asn": "3464",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "131.204.0.0/16"
+        ],
+        "org_name": "Auburn University",
+        "asn": "6112",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "52.119.14.0/24",
+            "52.119.15.0/24"
+        ],
+        "org_name": "HudsonAlpha Institute for Biotechnology",
+        "asn": "40735",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "130.160.0.0/17",
+            "130.160.128.0/20",
+            "130.160.144.0/20",
+            "130.160.160.0/19",
+            "130.160.192.0/19",
+            "130.160.224.0/19"
+        ],
+        "org_name": "University of Alabama",
+        "asn": "12173",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "138.26.0.0/16"
+        ],
+        "org_name": "University of Alabama at Birmingham",
+        "asn": "3452",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "146.229.0.0/16"
+        ],
+        "org_name": "University of Alabama in Huntsville",
+        "asn": "10364",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "69.85.215.0/24",
+            "69.85.216.0/24",
+            "69.85.217.0/24",
+            "192.245.221.0/24",
+            "192.245.222.0/24",
+            "192.245.223.0/24",
+            "192.245.224.0/24",
+            "199.33.130.0/24",
+            "199.33.131.0/24",
+            "199.33.132.0/24",
+            "199.33.133.0/24",
+            "199.33.134.0/24"
+        ],
+        "org_name": "University of South Alabama",
+        "asn": "398940",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "158.111.0.0/16",
+            "198.246.96.0/19"
+        ],
+        "org_name": "Centers for Disease Control and Prevention",
+        "asn": "13611",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "205.129.160.0/19",
+            "205.129.160.0/20",
+            "205.129.176.0/20"
+        ],
+        "org_name": "Clark Atlanta University",
+        "asn": "398034",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "163.246.0.0/16",
+            "170.140.0.0/16"
+        ],
+        "org_name": "Emory University",
+        "asn": "3512",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "38.110.46.0/24",
+            "128.61.0.0/19",
+            "130.207.0.0/16",
+            "143.215.0.0/16",
+            "192.76.181.0/24",
+            "2001:468:300::/48",
+            "2001:550:9005::/48",
+            "2610:148::/32"
+        ],
+        "org_name": "Georgia Institute of Technology",
+        "asn": "2637",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "131.96.0.0/16"
+        ],
+        "org_name": "Georgia State University",
+        "asn": "10631",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "192.83.232.0/24"
+        ],
+        "org_name": "Morehouse School of Medicine",
+        "asn": "29972",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "70.33.64.0/18",
+            "128.192.0.0/16",
+            "198.137.16.0/20"
+        ],
+        "org_name": "University of Georgia",
+        "asn": "36441",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "130.127.0.0/16",
+            "192.5.219.0/24",
+            "192.42.3.0/24",
+            "198.21.128.0/17",
+            "2620:103:a000::/44",
+            "2620:103:a00a::/48"
+        ],
+        "org_name": "Clemson University",
+        "asn": "12148",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "128.23.0.0/16"
+        ],
+        "org_name": "Medical University of South Carolina",
+        "asn": "13429",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "129.252.0.0/16",
+            "129.252.78.0/24"
+        ],
+        "org_name": "University of South Carolina",
+        "asn": "12005",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "161.45.0.0/16",
+            "204.152.130.0/23",
+            "204.152.130.0/24",
+            "204.152.131.0/24"
+        ],
+        "org_name": "Middle Tennessee State University",
+        "asn": "26335",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "149.149.0.0/17",
+            "149.149.128.0/17"
+        ],
+        "org_name": "Tennessee Tech University",
+        "asn": "19331",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "160.36.0.0/16",
+            "192.249.0.0/20",
+            "208.45.212.0/22",
+            "216.96.128.0/17"
+        ],
+        "org_name": "University of Tennessee",
+        "asn": "3450",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "129.59.0.0/16",
+            "192.111.108.0/24",
+            "192.111.109.0/24",
+            "192.111.110.0/24",
+            "2607:8a00::/32"
+        ],
+        "org_name": "Vanderbilt University",
+        "asn": "7212",
+        "community": "SoX"
+    },
+    {
+        "addresses": [
+            "160.129.0.0/16"
+        ],
+        "org_name": "Vanderbilt University Medical Center",
+        "asn": "393529",
+        "community": "SoX"
+    }
+]
