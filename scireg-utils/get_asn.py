@@ -145,11 +145,14 @@ def process_csv(input_file, output_file):
             if not row:  # Skip empty rows
                 continue
 
-            org_name = row[1].strip()
+            org_name = row[0].strip()
             if not org_name:
                 continue
-            asn = row[1]
-            as_number = extract_number(asn)
+            # if CSV contains any ASNs, can use this
+            #asn = row[1]
+            #as_number = extract_number(asn)
+            # otherwize just set to 0
+            as_number = 0
 
             if as_number > 0:
                print (f"input file contains ASN {asn}, no lookup needed")

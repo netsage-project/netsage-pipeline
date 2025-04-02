@@ -48,7 +48,8 @@ For community-XXX.json creation:
       - get_org.py: get org names from CAIDA csv file (input and output are JSON files)
       - verify_subnets.py: use bgp.he.net to verify the subnets in community-*.json are still accurate
           Note: this will throw out lots of valid entries. Just use output files to look for possible issues!
-      - update_subnets.py: check bgp.he.net for updated list of subnets (coming soon)
+      - update_subnets.py: check bgp.he.net for updated list of subnets (use this to generate list of possible 
+             subnets to be added/remove by hand. Too many name mis-matches to trust results) 
 
 Other useful tools:
    To merge 2 Science Registry files, only keeping unique entries
