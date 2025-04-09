@@ -1,999 +1,913 @@
 [
-  {
-    "addresses": [
-      "128.9.0.0/20",
-      "128.9.16.0/22",
-      "128.9.20.0/24",
-      "128.9.26.0/24",
-      "128.9.28.0/22",
-      "128.9.32.0/19",
-      "128.9.64.0/18",
-      "128.9.128.0/17",
-      "2606:d5c0::/32"
-    ],
-    "org_name": "University of Southern California (USC)",
-    "asn": "4",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.32.0.0/16",
-      "136.152.0.0/16",
-      "169.229.0.0/16",
-      "192.12.234.0/24",
-      "192.154.6.0/24",
-      "192.31.105.0/24",
-      "67.21.36.0/24",
-      "2607:f140::/32"
-    ],
-    "org_name": "University of California, Berkeley",
-    "asn": "25",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "131.215.0.0/16",
-      "131.215.229.0/24",
-      "131.215.230.0/24",
-      "131.215.234.0/24",
-      "131.215.239.0/24",
-      "131.215.240.0/24",
-      "131.215.242.0/23",
-      "131.215.244.0/23",
-      "134.4.0.0/16",
-      "192.12.19.0/24",
-      "192.31.43.0/24",
-      "192.41.208.0/24",
-      "2607:f520::/32"
-    ],
-    "org_name": "California Institute of Technology",
-    "asn": "31",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "132.249.0.0/16",
-      "198.202.64.0/18",
-      "192.12.207.0/24",
-      "192.67.20.0/24",
-      "2001:48d0::/32"
-    ],
-    "org_name": "San Diego Supercomputer Center (SDSC)",
-    "asn": "195",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.12.0.0/16",
-      "171.64.0.0/14",
-      "204.63.224.0/21",
-      "2607:f6d0::/32",
-      "2620:6c:40c0::/48"
-    ],
-    "org_name": "Stanford University",
-    "asn": "32",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.97.0.0/16",
-      "131.179.0.0/16",
-      "149.142.0.0/16",
-      "164.67.0.0/16",
-      "169.232.0.0/16",
-      "169.232.16.0/21",
-      "192.154.2.0/24",
-      "192.35.210.0/24",
-      "192.35.221.0/24",
-      "192.35.225.0/24",
-      "192.35.226.0/24",
-      "216.41.228.0/24",
-      "2607:f010:2e0::/48",
-      "2607:f010::/32"
-    ],
-    "org_name": "University of California, Los Angeles",
-    "asn": "52",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.111.0.0/16",
-      "169.231.0.0/16",
-      "192.150.216.0/23",
-      "192.35.222.0/24",
-      "199.120.153.0/24"
-    ],
-    "org_name": "University of California, Santa Barbara",
-    "asn": "131",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.195.0.0/16",
-      "128.200.0.0/16",
-      "160.87.0.0/16",
-      "169.234.0.0/16",
-      "192.5.19.0/24"
-    ],
-    "org_name": "University of California, Irvine",
-    "asn": "299",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.99.139.0/24"
-    ],
-    "org_name": "Antelope Valley Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.233.50.0/23",
-      "207.233.50.0/24"
-    ],
-    "org_name": "Barstow Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.156.0/24"
-    ],
-    "org_name": "Butte Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.159.0/24",
-      "198.189.160.0/24",
-      "198.189.161.0/24",
-      "198.189.246.0/24",
-      "198.189.248.0/23",
-      "198.189.5.0/24",
-      "207.62.128.0/20",
-      "207.62.144.0/21",
-      "198.189.237.0/24"
-    ],
-    "org_name": "CSU Monterey Bay",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.62.184.0/22",
-      "207.62.184.0/24",
-      "2607:f380:80f::/48"
-    ],
-    "org_name": "Cabrillo Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "137.151.0.0/16",
-      "137.151.251.0/24"
-    ],
-    "org_name": "Cal State Fullerton",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.53.0/24",
-      "198.189.56.0/23"
-    ],
-    "org_name": "California Maritime Academy",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "137.150.0.0/16"
-    ],
-    "org_name": "California State Polytechnic University, Humboldt",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "136.168.0.0/16"
-    ],
-    "org_name": "California State University Bakersfield",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "139.182.0.0/16",
-      "2607:f380:a61::/48"
-    ],
-    "org_name": "California State University San Bernardino",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "144.37.0.0/16",
-      "144.37.128.0/17"
-    ],
-    "org_name": "California State University San Marcos",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "132.241.0.0/16"
-    ],
-    "org_name": "California State University, Chico",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "155.135.0.0/16"
-    ],
-    "org_name": "California State University, Dominguez Hills",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "134.154.0.0/16",
-      "134.154.1.0/24",
-      "134.154.120.0/21",
-      "134.154.2.0/24",
-      "134.154.222.0/24",
-      "192.207.184.0/24"
-    ],
-    "org_name": "California State University, East Bay",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "134.139.0.0/16",
-      "134.139.1.0/24",
-      "134.139.2.0/24"
-    ],
-    "org_name": "California State University, Long Beach",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.182.0.0/16"
-    ],
-    "org_name": "California State University, Los Angeles",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.166.0.0/16"
-    ],
-    "org_name": "California State University, Northridge",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.150.0.0/16"
-    ],
-    "org_name": "California State University, Office of the Chancellor",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.17.0.0/16"
-    ],
-    "org_name": "California State University, Stanislaus",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.19.0/24",
-      "198.189.28.0/22",
-      "198.189.32.0/20",
-      "198.189.48.0/22"
-    ],
-    "org_name": "Chico  Unified School District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "147.144.0.0/16",
-      "147.144.0.0/17",
-      "147.144.128.0/17",
-      "198.189.16.0/24"
-    ],
-    "org_name": "City College of San Francisco",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "216.231.241.0/24"
-    ],
-    "org_name": "City of Escondido",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.99.147.0/24"
-    ],
-    "org_name": "College of the Canyons - Santa Clarita CCD",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.62.203.0/24",
-      "198.189.222.0/23"
-    ],
-    "org_name": "College of the Redwoods",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.137.151.0/24"
-    ],
-    "org_name": "College of the Siskiyous",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "206.15.235.0/24"
-    ],
-    "org_name": "Colusa County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.188.134.0/24"
-    ],
-    "org_name": "Compton Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "141.174.90.0/24"
-    ],
-    "org_name": "County of Yolo",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.175.250.0/24",
-      "199.245.155.0/24",
-      "209.129.63.0/24",
-      "209.129.64.0/24"
-    ],
-    "org_name": "Cuesta College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "204.102.0.0/24",
-      "207.233.75.0/24",
-      "207.233.76.0/24",
-      "207.233.77.0/24",
-      "207.233.78.0/24",
-      "207.233.79.0/24"
-    ],
-    "org_name": "Cypress Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "206.15.228.0/23",
-      "206.15.240.0/24",
-      "207.166.18.0/23",
-      "207.166.20.0/24",
-      "207.166.62.0/24",
-      "207.166.9.0/24"
-    ],
-    "org_name": "El Dorado County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.64.0/24"
-    ],
-    "org_name": "Feather River Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.86.78.0/24"
-    ],
-    "org_name": "Fullerton College Higher Education Center",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "206.224.224.0/19"
-    ],
-    "org_name": "Garden Grove Unified School District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "160.227.0.0/17",
-      "160.227.128.0/17",
-      "160.227.129.0/24",
-      "160.227.130.0/24",
-      "160.227.20.0/22"
-    ],
-    "org_name": "Grossmont-Cuyamaca Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.134.0/24",
-      "198.189.135.0/24",
-      "198.189.138.0/24"
-    ],
-    "org_name": "Hartnell Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.229.0/24",
-      "198.189.230.0/23",
-      "198.189.232.0/23"
-    ],
-    "org_name": "Humboldt County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.233.124.0/24"
-    ],
-    "org_name": "Imperial County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.62.142.0/24"
-    ],
-    "org_name": "Kern Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.62.62.0/24",
-      "207.62.65.0/24",
-      "207.62.67.0/24",
-      "207.62.71.0/24",
-      "198.188.15.0/24",
-      "204.102.64.0/24",
-      "204.102.67.0/24",
-      "204.102.71.0/24",
-      "204.102.73.0/24"
-    ],
-    "org_name": "LA Comunity Collge District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.128.0/24"
-    ],
-    "org_name": "Lake Tahoe Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.111.213.0/24",
-      "198.188.144.0/24",
-      "198.188.145.0/24",
-      "198.188.5.0/24",
-      "204.102.112.0/24"
-    ],
-    "org_name": "Los Angeles Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "156.3.91.0/24"
-    ],
-    "org_name": "Los Angeles County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "165.196.0.0/16"
-    ],
-    "org_name": "Los Rios Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.202.144.0/24",
-      "198.202.145.0/24"
-    ],
-    "org_name": "Mendocino College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "209.129.167.0/24"
-    ],
-    "org_name": "Merritt College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.173.0/24",
-      "198.189.174.0/24",
-      "198.189.58.0/24",
-      "198.189.60.0/24",
-      "198.189.62.0/24"
-    ],
-    "org_name": "Monterey Peninsula College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.190.45.0/24",
-      "198.189.27.0/24",
-      "205.155.73.0/24",
-      "205.155.74.0/24",
-      "205.155.75.0/24",
-      "205.155.76.0/24"
-    ],
-    "org_name": "Moss Landing Marine Laboratory",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.233.7.0/24",
-      "207.233.8.0/24"
-    ],
-    "org_name": "Mt. San Jacinto College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.62.197.0/24",
-      "207.62.198.0/24",
-      "207.62.199.0/24",
-      "209.129.252.0/22"
-    ],
-    "org_name": "Napa Valley",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "206.15.254.0/23",
-      "207.166.2.0/23",
-      "207.166.58.0/24",
-      "207.166.60.0/24"
-    ],
-    "org_name": "Nevada Union High School District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "207.233.80.0/24",
-      "207.233.81.0/24",
-      "207.233.82.0/24",
-      "209.129.57.0/24",
-      "209.129.58.0/24",
-      "209.129.59.0/24"
-    ],
-    "org_name": "North Orange County Community Col",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "204.102.84.0/24"
-    ],
-    "org_name": "Palo Verde Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.104.166.0/24",
-      "192.189.45.0/24",
-      "192.189.46.0/24",
-      "192.189.47.0/24",
-      "192.189.48.0/24",
-      "204.75.250.0/23"
-    ],
-    "org_name": "Rancho Santiago College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "209.129.7.0/24",
-      "209.129.8.0/24"
-    ],
-    "org_name": "Riverside Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "204.69.3.0/24",
-      "204.69.4.0/24",
-      "204.69.5.0/24",
-      "204.69.6.0/24"
-    ],
-    "org_name": "Riverside Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "206.15.226.0/23"
-    ],
-    "org_name": "Sacramento County Office of Education",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "163.150.244.0/23"
-    ],
-    "org_name": "San Bernardino County Superintendent of Schools",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "209.129.16.0/24",
-      "209.129.17.0/24",
-      "209.129.28.0/24"
-    ],
-    "org_name": "San Diego Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.191.0.0/16",
-      "130.191.103.0/24",
-      "130.191.49.0/24",
-      "2607:f380:a67:e1::/64",
-      "2607:f380:a68::/48"
-    ],
-    "org_name": "San Diego State University",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.212.0.0/16"
-    ],
-    "org_name": "San Francisco State University",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "205.155.154.0/24",
-      "205.155.157.0/24"
-    ],
-    "org_name": "San Jose EverGreen Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.65.0.0/16",
-      "2607:f380:828::/48"
-    ],
-    "org_name": "San Jose State University",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "209.129.55.0/24"
-    ],
-    "org_name": "Santa Barbara City College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.140.0/24",
-      "198.189.142.0/24",
-      "198.189.150.0/24",
-      "198.189.151.0/24",
-      "198.189.152.0/24",
-      "198.189.21.0/24"
-    ],
-    "org_name": "Santa Rosa  Community College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.132.0/24",
-      "198.189.70.0/24",
-      "198.189.72.0/24"
-    ],
-    "org_name": "Shasta College",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "204.17.179.0/24"
-    ],
-    "org_name": "Solano Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.157.0.0/16",
-      "130.157.0.0/19",
-      "130.157.128.0/17",
-      "130.157.32.0/19",
-      "130.157.64.0/18"
-    ],
-    "org_name": "Sonoma State University",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.174.2.0/24"
-    ],
-    "org_name": "The Exploratorium",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "209.129.88.0/23"
-    ],
-    "org_name": "UC Hastings",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "198.189.227.0/24"
-    ],
-    "org_name": "West Hills Community College District",
-    "asn": "2152",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.218.0.0/16",
-      "169.230.0.0/16",
-      "169.230.239.0/24",
-      "64.54.0.0/16",
-      "64.54.128.0/24",
-      "64.54.149.0/24",
-      "64.54.162.0/24",
-      "64.54.17.0/24",
-      "64.54.18.0/24",
-      "64.54.192.0/24",
-      "64.54.193.0/24",
-      "64.54.195.0/24",
-      "64.54.196.0/24",
-      "64.54.197.0/24",
-      "64.54.201.0/24",
-      "64.54.4.0/24",
-      "64.54.6.0/24",
-      "64.54.9.0/24"
-    ],
-    "org_name": "University of California, San Francisco",
-    "asn": "5653",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.114.0.0/16",
-      "169.233.0.0/16",
-      "192.35.220.0/24",
-      "192.35.223.0/24",
-      "2607:f5f0::/32"
-    ],
-    "org_name": "University of California, Santa Cruz",
-    "asn": "5739",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "138.23.0.0/16",
-      "138.23.104.0/22",
-      "169.235.0.0/16",
-      "169.235.80.0/20",
-      "192.31.146.0/24",
-      "2607:f290::/32"
-    ],
-    "org_name": "University of California, Riverside",
-    "asn": "6106",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.120.0.0/16",
-      "128.120.80.0/24",
-      "152.79.0.0/16",
-      "168.150.0.0/17",
-      "169.237.0.0/16",
-      "192.82.111.0/24",
-      "2607:f380:842::/48",
-      "2607:f810:330::/44",
-      "2607:f810::/32",
-      "2607:f810:f30::/44"
-    ],
-    "org_name": "University of California, Davis",
-    "asn": "6192",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "128.54.0.0/16",
-      "132.239.0.0/16",
-      "137.110.0.0/16",
-      "169.228.0.0/16",
-      "192.135.237.0/24",
-      "192.135.238.0/24",
-      "192.154.1.0/24",
-      "198.134.135.0/24",
-      "69.166.11.0/24",
-      "69.196.32.0/19",
-      "69.196.32.0/20",
-      "69.196.40.0/24",
-      "2001:48d0:c000::/34",
-      "2607:f720::/32"
-    ],
-    "org_name": "University of California, San Diego",
-    "asn": "7377",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "129.19.0.0/18",
-      "129.19.3.0/24",
-      "129.82.0.0/16"
-    ],
-    "org_name": "Naval Postgraduate School",
-    "asn": "12145",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.195.153.0/24",
-      "192.195.154.0/24",
-      "192.195.155.0/24",
-      "192.55.87.0/24",
-      "208.71.25.0/24",
-      "208.71.27.0/24"
-    ],
-    "org_name": "University of San Diego",
-    "asn": "14255",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "137.159.0.0/16",
-      "137.159.0.0/17",
-      "137.159.0.0/18",
-      "137.159.128.0/18",
-      "137.159.128.0/19",
-      "137.159.160.0/19",
-      "137.159.192.0/18",
-      "137.159.192.0/19",
-      "137.159.224.0/20",
-      "137.159.248.0/21",
-      "137.159.248.0/22",
-      "137.159.252.0/22",
-      "137.159.64.0/18"
-    ],
-    "org_name": "Pepperdine University",
-    "asn": "20343",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "169.236.0.0/16"
-    ],
-    "org_name": "University of California, Merced",
-    "asn": "22323",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "138.202.0.0/17",
-      "138.202.128.0/17",
-      "138.202.45.0/24",
-      "138.202.86.0/24"
-    ],
-    "org_name": "University of San Francisco",
-    "asn": "22700",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "162.15.0.0/17",
-      "162.15.128.0/17",
-      "162.15.20.0/24",
-      "162.15.230.0/24",
-      "162.15.231.0/24",
-      "162.15.30.0/24",
-      "162.15.33.0/24",
-      "162.15.34.0/24",
-      "162.15.35.0/24",
-      "162.15.40.0/24",
-      "162.15.5.0/24",
-      "162.15.50.0/24",
-      "162.15.57.0/24",
-      "162.15.73.0/24",
-      "162.15.74.0/24",
-      "162.15.75.0/24",
-      "162.15.80.0/24",
-      "162.15.90.0/24",
-      "162.15.95.0/24"
-    ],
-    "org_name": "California Public Utilities Commission",
-    "asn": "46341",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "192.40.158.0/24"
-    ],
-    "org_name": "California Academy of Sciences",
-    "asn": "393425",
-    "community": "CENIC"
-  },
-  {
-    "addresses": [
-      "130.86.0.0/16",
-      "69.164.101.0/24",
-      "130.150.8.0/22",
-      "130.86.6.0/23",
-      "2607:f380:8a4:1006::/63",
-      "2607:f380:8a4::/48"
-    ],
-    "org_name": "California State University, Sacramento",
-    "asn": "396465",
-    "community": "CENIC"
-  }
+    {
+        "addresses": [
+            "128.9.128.0/17",
+            "128.9.64.0/18",
+            "128.9.32.0/19",
+            "128.9.0.0/20",
+            "128.9.16.0/22",
+            "128.9.28.0/22",
+            "128.9.20.0/24",
+            "128.9.26.0/24",
+            "2606:d5c0::/32"
+        ],
+        "org_name": "University of Southern California (USC)",
+        "asn": "4",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.32.0.0/16",
+            "136.152.0.0/16",
+            "169.229.0.0/16",
+            "192.12.234.0/24",
+            "192.154.6.0/24",
+            "192.31.105.0/24",
+            "67.21.36.0/24",
+            "2607:f140::/32"
+        ],
+        "org_name": "University of California, Berkeley",
+        "asn": "25",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "131.215.0.0/16",
+            "134.4.0.0/16",
+            "192.12.19.0/24",
+            "192.31.43.0/24",
+            "192.41.208.0/24",
+            "2607:f520::/32"
+        ],
+        "org_name": "California Institute of Technology",
+        "asn": "31",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "132.249.0.0/16",
+            "198.202.64.0/18",
+            "192.12.207.0/24",
+            "192.67.20.0/24",
+            "2001:48d0::/32"
+        ],
+        "org_name": "San Diego Supercomputer Center (SDSC)",
+        "asn": "195",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "171.64.0.0/14",
+            "128.12.0.0/16",
+            "204.63.224.0/21",
+            "2607:f6d0::/32",
+            "2620:6c:40c0::/48"
+        ],
+        "org_name": "Stanford University",
+        "asn": "32",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.97.0.0/16",
+            "131.179.0.0/16",
+            "149.142.0.0/16",
+            "164.67.0.0/16",
+            "169.232.0.0/16",
+            "192.154.2.0/24",
+            "192.35.210.0/24",
+            "192.35.221.0/24",
+            "192.35.225.0/24",
+            "192.35.226.0/24",
+            "216.41.228.0/24",
+            "2607:f010::/32"
+        ],
+        "org_name": "University of California, Los Angeles",
+        "asn": "52",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.111.0.0/16",
+            "169.231.0.0/16",
+            "192.150.216.0/23",
+            "192.35.222.0/24",
+            "199.120.153.0/24"
+        ],
+        "org_name": "University of California, Santa Barbara",
+        "asn": "131",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.195.0.0/16",
+            "128.200.0.0/16",
+            "160.87.0.0/16",
+            "169.234.0.0/16",
+            "192.5.19.0/24"
+        ],
+        "org_name": "University of California, Irvine",
+        "asn": "299",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.99.139.0/24"
+        ],
+        "org_name": "Antelope Valley Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.233.50.0/23"
+        ],
+        "org_name": "Barstow Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.156.0/24"
+        ],
+        "org_name": "Butte Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.62.128.0/20",
+            "207.62.144.0/21",
+            "198.189.248.0/23",
+            "198.189.159.0/24",
+            "198.189.160.0/24",
+            "198.189.161.0/24",
+            "198.189.246.0/24",
+            "198.189.5.0/24",
+            "198.189.237.0/24"
+        ],
+        "org_name": "CSU Monterey Bay",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.62.184.0/22",
+            "2607:f380:80f::/48"
+        ],
+        "org_name": "Cabrillo Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "137.151.0.0/16"
+        ],
+        "org_name": "Cal State Fullerton",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.56.0/23",
+            "198.189.53.0/24"
+        ],
+        "org_name": "California Maritime Academy",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "137.150.0.0/16"
+        ],
+        "org_name": "California State Polytechnic University, Humboldt",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "136.168.0.0/16"
+        ],
+        "org_name": "California State University Bakersfield",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "139.182.0.0/16",
+            "2607:f380:a61::/48"
+        ],
+        "org_name": "California State University San Bernardino",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "144.37.0.0/16"
+        ],
+        "org_name": "California State University San Marcos",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "132.241.0.0/16"
+        ],
+        "org_name": "California State University, Chico",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "155.135.0.0/16"
+        ],
+        "org_name": "California State University, Dominguez Hills",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "134.154.0.0/16",
+            "192.207.184.0/24"
+        ],
+        "org_name": "California State University, East Bay",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "134.139.0.0/16"
+        ],
+        "org_name": "California State University, Long Beach",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.182.0.0/16"
+        ],
+        "org_name": "California State University, Los Angeles",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.166.0.0/16"
+        ],
+        "org_name": "California State University, Northridge",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.150.0.0/16"
+        ],
+        "org_name": "California State University, Office of the Chancellor",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.17.0.0/16"
+        ],
+        "org_name": "California State University, Stanislaus",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.32.0/20",
+            "198.189.28.0/22",
+            "198.189.48.0/22",
+            "198.189.19.0/24"
+        ],
+        "org_name": "Chico  Unified School District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "147.144.0.0/16",
+            "198.189.16.0/24"
+        ],
+        "org_name": "City College of San Francisco",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "216.231.241.0/24"
+        ],
+        "org_name": "City of Escondido",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.99.147.0/24"
+        ],
+        "org_name": "College of the Canyons - Santa Clarita CCD",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.222.0/23",
+            "207.62.203.0/24"
+        ],
+        "org_name": "College of the Redwoods",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.137.151.0/24"
+        ],
+        "org_name": "College of the Siskiyous",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "206.15.235.0/24"
+        ],
+        "org_name": "Colusa County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.188.134.0/24"
+        ],
+        "org_name": "Compton Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "141.174.90.0/24"
+        ],
+        "org_name": "County of Yolo",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.175.250.0/24",
+            "199.245.155.0/24",
+            "209.129.63.0/24",
+            "209.129.64.0/24"
+        ],
+        "org_name": "Cuesta College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "204.102.0.0/24",
+            "207.233.75.0/24",
+            "207.233.76.0/24",
+            "207.233.77.0/24",
+            "207.233.78.0/24",
+            "207.233.79.0/24"
+        ],
+        "org_name": "Cypress Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "206.15.228.0/23",
+            "207.166.18.0/23",
+            "206.15.240.0/24",
+            "207.166.20.0/24",
+            "207.166.62.0/24",
+            "207.166.9.0/24"
+        ],
+        "org_name": "El Dorado County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.64.0/24"
+        ],
+        "org_name": "Feather River Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.86.78.0/24"
+        ],
+        "org_name": "Fullerton College Higher Education Center",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "206.224.224.0/19"
+        ],
+        "org_name": "Garden Grove Unified School District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "160.227.0.0/17",
+            "160.227.128.0/17"
+        ],
+        "org_name": "Grossmont-Cuyamaca Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.134.0/24",
+            "198.189.135.0/24",
+            "198.189.138.0/24"
+        ],
+        "org_name": "Hartnell Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.230.0/23",
+            "198.189.232.0/23",
+            "198.189.229.0/24"
+        ],
+        "org_name": "Humboldt County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.233.124.0/24"
+        ],
+        "org_name": "Imperial County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.62.142.0/24"
+        ],
+        "org_name": "Kern Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.62.62.0/24",
+            "207.62.65.0/24",
+            "207.62.67.0/24",
+            "207.62.71.0/24",
+            "198.188.15.0/24",
+            "204.102.64.0/24",
+            "204.102.67.0/24",
+            "204.102.71.0/24",
+            "204.102.73.0/24"
+        ],
+        "org_name": "LA Comunity Collge District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.128.0/24"
+        ],
+        "org_name": "Lake Tahoe Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.111.213.0/24",
+            "198.188.144.0/24",
+            "198.188.145.0/24",
+            "198.188.5.0/24",
+            "204.102.112.0/24"
+        ],
+        "org_name": "Los Angeles Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "156.3.91.0/24"
+        ],
+        "org_name": "Los Angeles County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "165.196.0.0/16"
+        ],
+        "org_name": "Los Rios Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.202.144.0/24",
+            "198.202.145.0/24"
+        ],
+        "org_name": "Mendocino College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.167.0/24"
+        ],
+        "org_name": "Merritt College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.173.0/24",
+            "198.189.174.0/24",
+            "198.189.58.0/24",
+            "198.189.60.0/24",
+            "198.189.62.0/24"
+        ],
+        "org_name": "Monterey Peninsula College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.190.45.0/24",
+            "198.189.27.0/24",
+            "205.155.73.0/24",
+            "205.155.74.0/24",
+            "205.155.75.0/24",
+            "205.155.76.0/24"
+        ],
+        "org_name": "Moss Landing Marine Laboratory",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.233.7.0/24",
+            "207.233.8.0/24"
+        ],
+        "org_name": "Mt. San Jacinto College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.252.0/22",
+            "207.62.197.0/24",
+            "207.62.198.0/24",
+            "207.62.199.0/24"
+        ],
+        "org_name": "Napa Valley",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "206.15.254.0/23",
+            "207.166.2.0/23",
+            "207.166.58.0/24",
+            "207.166.60.0/24"
+        ],
+        "org_name": "Nevada Union High School District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "207.233.80.0/24",
+            "207.233.81.0/24",
+            "207.233.82.0/24",
+            "209.129.57.0/24",
+            "209.129.58.0/24",
+            "209.129.59.0/24"
+        ],
+        "org_name": "North Orange County Community Col",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "204.102.84.0/24"
+        ],
+        "org_name": "Palo Verde Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "204.75.250.0/23",
+            "192.104.166.0/24",
+            "192.189.45.0/24",
+            "192.189.46.0/24",
+            "192.189.47.0/24",
+            "192.189.48.0/24"
+        ],
+        "org_name": "Rancho Santiago College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.7.0/24",
+            "209.129.8.0/24"
+        ],
+        "org_name": "Riverside Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "204.69.3.0/24",
+            "204.69.4.0/24",
+            "204.69.5.0/24",
+            "204.69.6.0/24"
+        ],
+        "org_name": "Riverside Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "206.15.226.0/23"
+        ],
+        "org_name": "Sacramento County Office of Education",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "163.150.244.0/23"
+        ],
+        "org_name": "San Bernardino County Superintendent of Schools",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.16.0/24",
+            "209.129.17.0/24",
+            "209.129.28.0/24"
+        ],
+        "org_name": "San Diego Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.191.0.0/16",
+            "2607:f380:a68::/48",
+            "2607:f380:a67:e1::/64"
+        ],
+        "org_name": "San Diego State University",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.212.0.0/16"
+        ],
+        "org_name": "San Francisco State University",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "205.155.154.0/24",
+            "205.155.157.0/24"
+        ],
+        "org_name": "San Jose EverGreen Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.65.0.0/16",
+            "2607:f380:828::/48"
+        ],
+        "org_name": "San Jose State University",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.55.0/24"
+        ],
+        "org_name": "Santa Barbara City College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.140.0/24",
+            "198.189.142.0/24",
+            "198.189.150.0/24",
+            "198.189.151.0/24",
+            "198.189.152.0/24",
+            "198.189.21.0/24"
+        ],
+        "org_name": "Santa Rosa  Community College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.132.0/24",
+            "198.189.70.0/24",
+            "198.189.72.0/24"
+        ],
+        "org_name": "Shasta College",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "204.17.179.0/24"
+        ],
+        "org_name": "Solano Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.157.0.0/16"
+        ],
+        "org_name": "Sonoma State University",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.174.2.0/24"
+        ],
+        "org_name": "The Exploratorium",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "209.129.88.0/23"
+        ],
+        "org_name": "UC Hastings",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "198.189.227.0/24"
+        ],
+        "org_name": "West Hills Community College District",
+        "asn": "2152",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.218.0.0/16",
+            "169.230.0.0/16",
+            "64.54.0.0/16"
+        ],
+        "org_name": "University of California, San Francisco",
+        "asn": "5653",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.114.0.0/16",
+            "169.233.0.0/16",
+            "192.35.220.0/24",
+            "192.35.223.0/24",
+            "2607:f5f0::/32"
+        ],
+        "org_name": "University of California, Santa Cruz",
+        "asn": "5739",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "138.23.0.0/16",
+            "169.235.0.0/16",
+            "192.31.146.0/24",
+            "2607:f290::/32"
+        ],
+        "org_name": "University of California, Riverside",
+        "asn": "6106",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.120.0.0/16",
+            "152.79.0.0/16",
+            "169.237.0.0/16",
+            "168.150.0.0/17",
+            "192.82.111.0/24",
+            "2607:f810::/32",
+            "2607:f380:842::/48"
+        ],
+        "org_name": "University of California, Davis",
+        "asn": "6192",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "128.54.0.0/16",
+            "132.239.0.0/16",
+            "137.110.0.0/16",
+            "169.228.0.0/16",
+            "69.196.32.0/19",
+            "192.135.237.0/24",
+            "192.135.238.0/24",
+            "192.154.1.0/24",
+            "198.134.135.0/24",
+            "69.166.11.0/24",
+            "2607:f720::/32",
+            "2001:48d0:c000::/34"
+        ],
+        "org_name": "University of California, San Diego",
+        "asn": "7377",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "129.82.0.0/16",
+            "129.19.0.0/18"
+        ],
+        "org_name": "Naval Postgraduate School",
+        "asn": "12145",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.195.153.0/24",
+            "192.195.154.0/24",
+            "192.195.155.0/24",
+            "192.55.87.0/24",
+            "208.71.25.0/24",
+            "208.71.27.0/24"
+        ],
+        "org_name": "University of San Diego",
+        "asn": "14255",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "137.159.0.0/16"
+        ],
+        "org_name": "Pepperdine University",
+        "asn": "20343",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "169.236.0.0/16"
+        ],
+        "org_name": "University of California, Merced",
+        "asn": "22323",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "138.202.0.0/17",
+            "138.202.128.0/17"
+        ],
+        "org_name": "University of San Francisco",
+        "asn": "22700",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "162.15.0.0/17",
+            "162.15.128.0/17"
+        ],
+        "org_name": "California Public Utilities Commission",
+        "asn": "46341",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "192.40.158.0/24"
+        ],
+        "org_name": "California Academy of Sciences",
+        "asn": "393425",
+        "community": "CENIC"
+    },
+    {
+        "addresses": [
+            "130.86.0.0/16",
+            "130.150.8.0/22",
+            "69.164.101.0/24",
+            "2607:f380:8a4::/48"
+        ],
+        "org_name": "California State University, Sacramento",
+        "asn": "396465",
+        "community": "CENIC"
+    }
 ]
