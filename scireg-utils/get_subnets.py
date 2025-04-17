@@ -14,6 +14,9 @@
 
 # Note: for reasons I dont understand, the queary for url 'https://bgp.he.net/AS103#_prefixes' returns
 # both V4 and V6 subnets, unlike what happens in a browser. WTF?
+#
+# Note: attempted to modify this to only grab subnets where "visibility" is over a threshold, but 
+#  it did not work, as the visibility column on bgp.he.net is dynamically generated with javascript
 
 import csv
 import requests
@@ -22,6 +25,7 @@ import time
 import re
 import sys
 import argparse
+import ipaddress
 from bs4 import BeautifulSoup
 from difflib import SequenceMatcher
 
@@ -35,6 +39,34 @@ def extract_numbers(s):
 
 def fuzzy_match(org1, org2, threshold=0.7):
     return SequenceMatcher(None, org1.lower(), org2.lower()).ratio() >= threshold
+
+def remove_contained_subnets(subnet_list, org_name="(unknown org)"):
+    def parse_networks(subnets, version):
+        return sorted(
+            [ipaddress.ip_network(s, strict=False) for s in subnets if ipaddress.ip_network(s, strict=False).version == version],
+            key=lambda x: x.prefixlen
+        )
+
+    def filter_subnets(networks, org_name):
+        result = []
+        for net in networks:
+            contained = False
+            for other in networks:
+                if net != other and net.subnet_of(other):
+                    print(f"   [{org_name}] Removing {net} because it is contained in {other}")
+                    contained = True
+                    break
+            if not contained:
+                result.append(str(net))
+        return result
+
+    ipv4_networks = parse_networks(subnet_list, 4)
+    ipv6_networks = parse_networks(subnet_list, 6)
+
+    cleaned_ipv4 = filter_subnets(ipv4_networks, org_name)
+    cleaned_ipv6 = filter_subnets(ipv6_networks, org_name)
+
+    return cleaned_ipv4 + cleaned_ipv6
 
 def get_subnets(asn, expected_org_name):
     url = f"{BASE_URL}AS{asn}#_prefixes"
@@ -83,12 +115,12 @@ def get_all_org_subnets(asn):
         "Expires": "0"
     }
 
-    results = []
+    org_map = {}
     try:
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code != 200:
             print(f"[WARNING] Failed to fetch ASN {asn}, HTTP {response.status_code}")
-            return results
+            return []
 
         soup = BeautifulSoup(response.text, "html.parser")
         tables = soup.find_all("table")
@@ -96,24 +128,28 @@ def get_all_org_subnets(asn):
         for table in tables:
             headers = [th.text.strip().lower() for th in table.find_all("th")]
             if "prefix" in headers and "description" in headers:
-                org_map = {}
                 for row in table.find_all("tr")[1:]:
                     columns = row.find_all("td")
                     if len(columns) >= 2:
                         subnet = columns[0].text.strip()
                         org_name = columns[1].text.strip()
-                        if org_name not in org_map:
-                            org_map[org_name] = []
-                        if subnet not in org_map[org_name]:
-                            org_map[org_name].append(subnet)
-                
-                for org, addresses in org_map.items():
-                    results.append({"addresses": addresses, "org_name": org, "asn": asn, "community": COMMUNITY})
+                        if org_name:
+                            org_map.setdefault(org_name, []).append(subnet)
 
+        results = []
+        for org_name, addresses in org_map.items():
+            cleaned = remove_contained_subnets(addresses, org_name)
+            results.append({
+                "addresses": cleaned,
+                "org_name": org_name,
+                "asn": asn,
+                "community": COMMUNITY
+            })
         return results
+
     except requests.exceptions.RequestException as e:
         print(f"[ERROR] Request error for ASN {asn}: {e}")
-    return []
+        return []
 
 def read_csv(file_path):
     orgs = []
@@ -137,12 +173,18 @@ def process_asns(orgs):
     results = []
     for index, org in enumerate(orgs):
         print(f"\n[PROCESSING] ({index+1}/{len(orgs)}) ASN: {org['asn']}, Org: {org['org_name']}")
-        addresses = get_subnets(org["asn"], org["org_name"])
-        if addresses:
-            results.append({"addresses": addresses, "org_name": org["org_name"], "asn": org["asn"], "community": COMMUNITY})
+        subnets = get_subnets(org["asn"], org["org_name"])
+        if subnets:
+            cleaned = remove_contained_subnets(subnets, org["org_name"])
+            results.append({
+                "addresses": cleaned,
+                "org_name": org["org_name"],
+                "asn": org["asn"],
+                "community": COMMUNITY
+            })
         else:
-            print (f"  ERROR: No subnets found for org_name: {org['org_name']}, asn: {org['asn']}")
-        time.sleep(2)  # Avoid rate-limiting
+            print(f"  ERROR: No subnets found for org_name: {org['org_name']}, asn: {org['asn']}")
+        time.sleep(2)
     return results
 
 def save_results(results, output_file):
@@ -154,10 +196,10 @@ def save_results(results, output_file):
         print(f"[ERROR] Failed to write output file: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Scrape IPv4 subnets from bgp.he.net based on ASN.")
+    parser = argparse.ArgumentParser(description="Scrape subnets from bgp.he.net and remove contained ones.")
     parser.add_argument("-a", "--asn", type=str, help="Lookup a single ASN")
     parser.add_argument("-i", "--input", type=str, help="CSV file with list of ASNs")
-    parser.add_argument("-o", "--output", type=str, default=DEFAULT_OUTPUT_JSON, help="Output JSON file (default: subnets.json)")
+    parser.add_argument("-o", "--output", type=str, default=DEFAULT_OUTPUT_JSON, help="Output JSON file")
     args = parser.parse_args()
 
     results = []
@@ -171,8 +213,9 @@ def main():
         sys.exit(1)
 
     save_results(results, args.output)
-    print (f"Done (community = {COMMUNITY}) \n")
+    print(f"Done (community = {COMMUNITY})\n")
 
 if __name__ == "__main__":
     main()
+
 

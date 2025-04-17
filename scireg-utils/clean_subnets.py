@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Remove subnets that are fully contained in any other subnet in the list, handling both IPv4 and IPv6
+# input and output are JSON files in the "NetSage Communities" format
+# See: https://github.com/netsage-project/netsage-pipeline-docs/blob/main/docs/communities.md
+
 import json
 import argparse
 import ipaddress
