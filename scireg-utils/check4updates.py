@@ -11,10 +11,20 @@ from bs4 import BeautifulSoup
 from difflib import SequenceMatcher
 
 BASE_URL = "https://bgp.he.net/"
-FUZZY_MATCH = 0.9
 
-def fuzzy_match(org1, org2, threshold=FUZZY_MATCH):
-    return SequenceMatcher(None, org1.lower(), org2.lower()).ratio() >= threshold
+def fuzzy_match(org1, org2, threshold=0.90):
+    if not org1 or not org2:
+        return False
+
+    org1 = org1.lower()
+    org2 = org2.lower()
+    ratio = SequenceMatcher(None, org1, org2).ratio()
+
+    if ratio >= threshold:
+        return True
+    if org1 in org2 or org2 in org1:
+        return True
+    return False
 
 def collapse_subnet_dict(subnet_dict):
     """Collapse IPv4 and IPv6 subnets separately while keeping descriptions (first match wins)."""
@@ -36,7 +46,6 @@ def collapse_subnet_dict(subnet_dict):
         raw_nets = [net for net, _ in group]
         collapsed = ipaddress.collapse_addresses(raw_nets)
         for cnet in collapsed:
-            # use the first description found from original nets that fit
             for net, desc in group:
                 if net.subnet_of(cnet):
                     collapsed_map[str(cnet)] = desc
@@ -68,8 +77,6 @@ def collapse_list(subnets):
 
 def get_current_subnets(asn, expected_org_name):
     url = f"{BASE_URL}AS{asn}#_prefixes"
-    print(f"\n[INFO] Checking ASN {asn} for {expected_org_name}")
-
     headers = {
         "Cache-Control": "no-cache, no-store, must-revalidate",
         "Pragma": "no-cache",
@@ -77,13 +84,24 @@ def get_current_subnets(asn, expected_org_name):
     }
 
     raw_subnets = {}
+
     try:
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code != 200:
+            print(f"\n[INFO] Checking ASN {asn} (?) for {expected_org_name}")
             print(f"  [ERROR] HTTP {response.status_code} for ASN {asn}")
             return {}
 
         soup = BeautifulSoup(response.text, "html.parser")
+
+        main_org_name = "(unknown)"
+        h1 = soup.find("h1")
+        if h1:
+            parts = h1.text.strip().split(" ", 1)
+            if len(parts) == 2:
+                _, main_org_name = parts
+
+        print(f"\n[INFO] Checking ASN {asn} ({main_org_name}) for {expected_org_name}")
         tables = soup.find_all("table")
 
         for table in tables:
@@ -94,16 +112,15 @@ def get_current_subnets(asn, expected_org_name):
                     if len(columns) >= 2:
                         subnet = columns[0].text.strip()
                         description = columns[1].text.strip()
-                        name = columns[2].text.strip() if len(columns) >= 3 else ""
-
-                        if (
-                            fuzzy_match(description, expected_org_name) or
-                            fuzzy_match(name, expected_org_name)
-                        ):
+                        if ( fuzzy_match(description, expected_org_name) ): 
                             raw_subnets[subnet] = description
+                            if description != expected_org_name:
+                                print(f"  [DEBUG] Matched {expected_org_name} ≈ {description}")
 
         return collapse_subnet_dict(raw_subnets)
+
     except requests.exceptions.RequestException as e:
+        print(f"\n[INFO] Checking ASN {asn} (?) for {expected_org_name}")
         print(f"  [ERROR] Request error for ASN {asn}: {e}")
         return {}
 
@@ -143,9 +160,7 @@ def main():
                 print(f"    - {subnet}")
         time.sleep(2)
 
-    print ("\nDone.\n")
-    print ("Note: before adding missing subnets to JSON file, check bgp.he.net to make sure visability is 100")
-
 if __name__ == "__main__":
     main()
+
 
