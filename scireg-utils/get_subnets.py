@@ -189,8 +189,9 @@ def process_asns(orgs):
 
 def save_results(results, output_file):
     try:
+        sorted_results = sorted(results, key=lambda x: x['org_name'].lower())
         with open(output_file, "w", encoding="utf-8") as jsonfile:
-            json.dump(results, jsonfile, indent=4)
+            json.dump(sorted_results, jsonfile, indent=4)
         print(f"[SUCCESS] Data saved to {output_file}")
     except Exception as e:
         print(f"[ERROR] Failed to write output file: {e}")
