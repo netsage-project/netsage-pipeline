@@ -8,11 +8,7 @@
             "198.213.192.0/18",
             "206.76.64.0/18",
             "198.214.80.0/20",
-            "198.214.250.0/23",
-            "192.12.10.16/30",
-            "192.12.10.4/30",
-            "192.88.12.16/30",
-            "192.88.12.4/30"
+            "198.214.250.0/23"
         ],
         "org_name": "University of Texas at Austin (UT Austin)",
         "community": "UT Systems",
@@ -20,8 +16,8 @@
     },
     {
         "addresses": [
-            "192.12.10.76/30",
-            "192.88.12.80/30"
+            "192.12.10.77/30",
+            "192.88.12.81/30"
         ],
         "org_name": "MD Anderson Cancer Center (MDACC)",
         "community": "UT Systems",
@@ -36,28 +32,27 @@
         ],
         "org_name": "Texas Advanced Computing Center (TACC)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "32093"
     },
     {
         "addresses": [
             "129.108.0.0/16",
-            "192.12.10.60/30",
-            "192.12.10.72/30",
-            "192.124.228.52/30",
-            "192.88.12.20/30",
-            "192.88.12.28/30",
-            "192.88.12.36/30",
-            "2602:fb3b::/40"
+            "192.12.10.61/30",
+            "192.12.10.73/30",
+            "192.124.228.53/30",
+            "192.88.12.21/30",
+            "192.88.12.29/30",
+            "192.88.12.37/30"
         ],
         "org_name": "University of Texas at El Paso (UTEP)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "16461"
     },
     {
         "addresses": [
-            "192.12.10.160/30",
-            "192.124.228.60/30",
-            "192.88.12.84/30"
+             "192.12.10.161/30",
+             "192.124.228.61/30",
+             "192.88.12.85/30"
         ],
         "org_name": "UT Health Science Center Houston (UTHSCH)",
         "community": "UT Systems",
@@ -72,7 +67,7 @@
         ],
         "org_name": "UT Health Science Center San Antonio (UTHSCSA)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "26971"
     },
     {
         "addresses": [
@@ -86,7 +81,7 @@
         ],
         "org_name": "University of Texas Medical Branch, Galveston (UTMB)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "14373"
     },
     {
         "addresses": [
@@ -98,7 +93,7 @@
         ],
         "org_name": "University of Texas at San Antonio (UTSA)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "27594"
     },
     {
         "addresses": [
@@ -108,7 +103,7 @@
         ],
         "org_name": "University of Texas at Tyler (UTTYLER)",
         "community": "UT Systems",
-        "asn": "276"
+        "asn": "6922"
     },
     {
         "addresses": [
@@ -122,9 +117,9 @@
     },
     {
         "addresses": [
-            "206.77.110.0/24",
-            "192.124.226.28/30",
-            "192.124.232.104/30"
+            "192.124.226.29/30",
+            "192.124.232.105/30",
+            "206.77.110.0/24"
         ],
         "org_name": "University of Texas/Texas A&M Investment Management Company (UTIMCO)",
         "community": "UT Systems",
@@ -137,7 +132,7 @@
             "206.76.136.0/24",
             "206.76.137.0/24",
             "206.76.138.0/24",
-            "192.124.226.176/29"
+            "192.124.226.177/29"
         ],
         "org_name": "McDonald Observatory (UTMDO)",
         "community": "UT Systems",
@@ -147,9 +142,9 @@
         "addresses": [
             "204.158.160.0/19",
             "204.158.144.0/20",
-            "192.124.225.168/30",
-            "192.124.227.20/30",
-            "192.124.227.28/30"
+            "192.124.225.169/30",
+            "192.124.227.21/30",
+            "192.124.227.29/30"
         ],
         "org_name": "University of Texas Permian Basin (UTPB)",
         "community": "UT Systems",
@@ -288,22 +283,7 @@
         "addresses": [
             "129.113.0.0/16",
             "67.207.0.0/19",
-            "192.150.93.0/24",
-            "198.22.91.0/24",
             "207.64.148.0/24",
-            "192.12.10.40/30",
-            "192.124.225.116/30",
-            "192.124.226.120/30",
-            "192.124.226.124/30",
-            "192.124.228.12/30",
-            "192.124.228.16/30",
-            "192.124.232.48/30",
-            "192.124.232.56/30",
-            "192.124.232.64/30",
-            "192.88.12.136/30",
-            "192.88.12.244/30",
-            "192.88.12.248/30",
-            "192.88.12.252/30",
             "2605:2800:c300::/48"
         ],
         "org_name": "University of Texas Rio Grande Valley (UTRGV)",
