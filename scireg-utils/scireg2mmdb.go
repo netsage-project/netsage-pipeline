@@ -17,140 +17,169 @@
 package main
 
 import (
-    "encoding/json"
-    "flag"
-    "fmt"
-    "log"
-    "net"
-    "os"
-    "sort"
-    "strconv"
-    "strings"
-    "github.com/maxmind/mmdbwriter"
-    "github.com/maxmind/mmdbwriter/mmdbtype"
+	"bufio"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"log"
+	"net"
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+
+	"github.com/maxmind/mmdbwriter"
+	"github.com/maxmind/mmdbwriter/mmdbtype"
 )
 
-type AddressBlock struct {
-    Addresses    []string `json:"addresses"`
-    OrgName      string   `json:"org_name"`
-    Discipline   string   `json:"discipline"`
-    Community    string   `json:"community"`
-    Latitude     string   `json:"latitude"`
-    Longitude    string   `json:"longitude"`
-    ResourceName string   `json:"resource_name"`
-    ProjectName  string   `json:"project_name"`
+type Entry struct {
+	Addresses     []string `json:"addresses"`
+	OrgName       string   `json:"org_name"`
+	Discipline    string   `json:"discipline"`
+	ResourceName  string   `json:"resource_name"`
+	ProjectName   string   `json:"project_name"`
+	SciregID      int      `json:"scireg_id"`
+	ContactEmail  string   `json:"contact_email"`
+	LastUpdated   string   `json:"last_updated"`
+	Latitude      string   `json:"latitude"`
+	Longitude     string   `json:"longitude"`
+	Community     string   `json:"community"`
 }
 
 type CIDREntry struct {
-        Network *net.IPNet
-        Data    mmdbtype.DataType
-        Prefix  int
+	Network *net.IPNet
+	Entry   Entry
+	Lat     float64
+	Long    float64
+	Prefix  int
 }
 
 func main() {
-    inputFile := flag.String("i", "", "Input JSON file")
-    outputFile := flag.String("o", "", "Output MMDB file")
-    flag.Parse()
+	inputFile := flag.String("i", "", "Input JSON file")
+	outputFile := flag.String("o", "", "Output MMDB file")
+	flag.Parse()
 
-    if *inputFile == "" || *outputFile == "" {
-        flag.Usage()
-        os.Exit(1)
-    }
+	if *inputFile == "" || *outputFile == "" {
+		flag.Usage()
+		os.Exit(1)
+	}
 
-    file, err := os.Open(*inputFile)
-    if err != nil {
-        log.Fatalf("Failed to open input file: %v", err)
-    }
-    defer file.Close()
+	file, err := os.Open(*inputFile)
+	if err != nil {
+		log.Fatalf("Failed to open input file: %v", err)
+	}
+	defer file.Close()
 
-    var entries []AddressBlock
-    decoder := json.NewDecoder(file)
-    if err := decoder.Decode(&entries); err != nil {
-        log.Fatalf("Failed to decode JSON: %v", err)
-    }
+	decoder := json.NewDecoder(bufio.NewReader(file))
+	var entries []Entry
+	if err := decoder.Decode(&entries); err != nil {
+		log.Fatal(err)
+	}
 
-    writer, err := mmdbwriter.New(mmdbwriter.Options{
-        DatabaseType: "GeoLite2-City",
-        Description: map[string]string{"en": "Fake GeoIP2-City db for Science Registry"},
-        RecordSize:   24,
-    })
-    if err != nil {
-        log.Fatalf("Failed to create MMDB writer: %v", err)
-    }
+	var cidrEntries []CIDREntry
+	for _, entry := range entries {
+		lat := parseFloat(entry.Latitude)
+		long := parseFloat(entry.Longitude)
 
-    var cidrEntries []CIDREntry
+		for _, addr := range entry.Addresses {
+			_, ipnet, err := net.ParseCIDR(addr)
+			if err != nil {
+				log.Fatalf("Invalid CIDR: %s", addr)
+			}
+			prefix, _ := ipnet.Mask.Size()
+			cidrEntries = append(cidrEntries, CIDREntry{
+				Network: ipnet,
+				Entry:   entry,
+				Lat:     lat,
+				Long:    long,
+				Prefix:  prefix,
+			})
+		}
+	}
 
-    for _, entry := range entries {
-        // Print JSON content for reference
-        entryJson, _ := json.Marshal(entry)
+	// Sort from broadest to most specific prefix (lowest prefix number first)
+	sort.Slice(cidrEntries, func(i, j int) bool {
+		return cidrEntries[i].Prefix < cidrEntries[j].Prefix
+	})
 
-        lat, err := strconv.ParseFloat(strings.TrimSpace(entry.Latitude), 64)
-        if err != nil {
-            // log.Printf("No Latitude for entry: %s, setting to 0. ", entryJson)
-            lat = 0.0
-        }
+	writer, err := mmdbwriter.New(mmdbwriter.Options{DatabaseType: "City", RecordSize: 24})
+	if err != nil {
+		log.Fatal(err)
+	}
 
-        long, err := strconv.ParseFloat(strings.TrimSpace(entry.Longitude), 64)
-        if err != nil {
-            // log.Printf("No Longitude for entry: %s, setting to 0. ", entryJson)
-            long = 0.0
-        }
+	// Map from IP string to set of communities
+	merged := make(map[string]map[string]bool)
 
-        for _, addr := range entry.Addresses {
-            _, network, err := net.ParseCIDR(addr)
-            if err != nil {
-                log.Printf("Invalid CIDR %s for entry: %s, skipping. Error: %v", addr, entryJson, err)
-                continue
-            }
+	for _, outer := range cidrEntries {
+		community := outer.Entry.Community
+		for _, inner := range cidrEntries {
+			if outer.Network.Contains(inner.Network.IP) {
+				key := inner.Network.String()
+				if _, exists := merged[key]; !exists {
+					merged[key] = make(map[string]bool)
+				}
+				merged[key][community] = true
+			}
+		}
+	}
 
-            jsonString := fmt.Sprintf(`{"discipline": "%s", "org_name": "%s", "resource": "%s", "project": "%s", "community": "%s"}`,
-                entry.Discipline, entry.OrgName, entry.ResourceName, entry.ProjectName, entry.Community)
+	for _, cidr := range cidrEntries {
+		key := cidr.Network.String()
+		communities := merged[key]
+		var list []string
+		for c := range communities {
+			list = append(list, c)
+		}
+		sort.Strings(list)
 
-            prefix, _ := network.Mask.Size()
+		dataMap := map[string]interface{}{
+			"discipline": cidr.Entry.Discipline,
+			"org_name": cidr.Entry.OrgName,
+			"resource": cidr.Entry.ResourceName,
+			"project": cidr.Entry.ProjectName,
+			"community": list,
+		}
+		jsonBytes, _ := json.Marshal(dataMap)
 
-            geoData := mmdbtype.Map{
-                "city": mmdbtype.Map{
-                    "names": mmdbtype.Map{
-                        "en": mmdbtype.String(jsonString),
-                    },
-                },
-                "location": mmdbtype.Map{
-                    "latitude":  mmdbtype.Float64(lat),
-                    "longitude": mmdbtype.Float64(long),
-                },
-            }
+		geoData := mmdbtype.Map{
+			"city": mmdbtype.Map{
+				"names": mmdbtype.Map{
+					"en": mmdbtype.String(jsonBytes),
+				},
+			},
+			"location": mmdbtype.Map{
+				"latitude":  mmdbtype.Float64(cidr.Lat),
+				"longitude": mmdbtype.Float64(cidr.Long),
+			},
+		}
 
-            cidrEntries = append(cidrEntries, CIDREntry{
-                                Network: network,
-                                Data:    geoData,
-                                Prefix:  prefix,
-            })
-        }
-    }
+		err := writer.InsertFunc(cidr.Network, func(oldData mmdbtype.DataType) (mmdbtype.DataType, error) {
+			return geoData, nil
+		})
+		if err != nil {
+			log.Fatalf("Failed to insert %s: %v", cidr.Network.String(), err)
+		}
+	}
 
-    // Sort CIDRs by specificity (less specific first, more specific last)
-    // mmdb seems to require this to return more specific first
-    sort.Slice(cidrEntries, func(i, j int) bool {
-                return cidrEntries[i].Prefix < cidrEntries[j].Prefix
-    })
+	f, err := os.Create(*outputFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
 
-    for _, cidr := range cidrEntries {
-          if err = writer.Insert(cidr.Network, cidr.Data); err != nil {
-               log.Printf("Error inserting record for network %s: %v", cidr.Network.String(), err)
-          }
-    }
+	if _, err := writer.WriteTo(f); err != nil {
+		log.Fatal(err)
+	}
 
-    out, err := os.Create(*outputFile)
-    if err != nil {
-        log.Fatalf("Failed to create output file: %v", err)
-    }
-    defer out.Close()
-
-    _, err = writer.WriteTo(out)
-    if err != nil {
-        log.Fatalf("Failed to write MMDB: %v", err)
-    }
-
-    fmt.Printf("MMDB created successfully with %d records!\n", len(cidrEntries))
+	fmt.Printf("MMDB file written to %s ", *outputFile)
 }
+
+func parseFloat(s string) float64 {
+	f, err := strconv.ParseFloat(strings.TrimSpace(s), 64)
+	if err != nil {
+		return 0.0
+	}
+	return f
+}
+
 
