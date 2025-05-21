@@ -171,7 +171,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("MMDB file written to %s ", *outputFile)
+	fmt.Printf("MMDB file written to %s \n", *outputFile)
 }
 
 func parseFloat(s string) float64 {
