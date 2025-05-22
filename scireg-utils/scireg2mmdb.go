@@ -97,7 +97,8 @@ func main() {
 		}
 	}
 
-	// Sort from broadest to most specific prefix (lowest prefix number first)
+      // Sort CIDRs by specificity (less specific first, more specific last)
+      // mmdb seems to require this to return more specific first
 	sort.Slice(cidrEntries, func(i, j int) bool {
 		return cidrEntries[i].Prefix < cidrEntries[j].Prefix
 	})
@@ -171,7 +172,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("MMDB file written to %s \n", *outputFile)
+        fmt.Printf("MMDB file %s created successfully with %d records!\n", *outputFile, len(cidrEntries))
 }
 
 func parseFloat(s string) float64 {
