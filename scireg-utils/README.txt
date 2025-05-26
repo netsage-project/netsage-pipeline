@@ -39,7 +39,8 @@ Steps to update Science Registry:
      NEW: cp *.mmdb to git repo: https://github.com/netsage-project/Science-Registry
      For example:
           git clone --branch gh-pages https://github.com/netsage-project/Science-Registry.git
-          cp *.mmdb /home/tierney/src/Science-Registry
+          cp scireg.mmdb communities.mmdb /home/tierney/src/Science-Registry
+          cp scireg.json communities.json /home/tierney/src/Science-Registry
           git commit -m "Updated mmdb files"
           git push origin gh-pages
 
