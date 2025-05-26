@@ -18,6 +18,9 @@ Steps to update Science Registry:
   1) download current JSON file and template file: 
        wget https://epoc-rabbitmq.tacc.utexas.edu/NetSage/scireg.json
        wget https://epoc-rabbitmq.tacc.utexas.edu/NetSage/scireg.template.json
+       ** new location **:
+          wget https://netsage-project.github.io/Science-Registry/scireg.mmdb
+          wget https://netsage-project.github.io/Science-Registry/communities.mmdb
 
   2) add new entries to template using your favorite editor, then do:
        add_new_scireg.py -i scireg.json -t scireg.template.json -o scireg-update.json
@@ -32,15 +35,25 @@ Steps to update Science Registry:
       mmdblookup --file scireg.mmdb --ip 140.221.68.1
 
   4) copy updated files to repo
+     OLD: cp *.mmdb to /var/www/html/NetSage on host epoc-rabbitmq
+     NEW: cp *.mmdb to git repo: https://github.com/netsage-project/Science-Registry
+     For example:
+          git clone --branch gh-pages https://github.com/netsage-project/Science-Registry.git
+          cp *.mmdb /home/tierney/src/Science-Registry
+          git commit -m "Updated mmdb files"
+          git push origin gh-pages
 
 For communities.mmdb generation:
   1) combine JSON for each community into a single file:
      jq -s '[.[][]]' community-*.json > combined.json
 
   2) build mmdb:
-      scireg2mmdb -i combined.json -o communities.mmdb
+      mv combined.json communities.json
+      scireg2mmdb -i communities.json -o communities.mmdb
 
-For community-XXX.json creation:
+#################################
+
+For community-XXX.json creation, see: https://github.com/netsage-project/netsage-pipeline-docs/blob/main/docs/communities.md
   1) get list of org_names and/or ASNs from regional networks, and/or ask chatGPT or Gemini to scrape from URL
   2) Use combination of the following to build json:
       - get_asn.py: get ASN from CAIDA API based on org name (input and output are csv files)
