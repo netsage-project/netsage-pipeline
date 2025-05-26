@@ -25,7 +25,7 @@ if [ ! -d "$DATA_DIR" ]; then
     mkdir -p "$DATA_DIR" && echo "Cache directory ${DATA_DIR} created"
 fi
 
-echo "Downloading mmdb files..."
+echo "Downloading mmdb files from $REPO..."
 for FILE in $MAXMIND_MMDB_FILES; do
     echo "Downloading file $FILE"
     # note: if this script is run in Alpine Linux docker container, then the version of
@@ -36,6 +36,7 @@ for FILE in $MAXMIND_MMDB_FILES; do
     fi
 done
 
+echo "Downloading mmdb files from $GITREPO..."
 for FILE in $SCIREG_MMDB_FILES; do
     echo "Downloading file $FILE"
     if ! wget -N -q -P "$DATA_DIR" "$GITREPO/$FILE"; then 
@@ -43,7 +44,7 @@ for FILE in $SCIREG_MMDB_FILES; do
     fi
 done
 
-echo "Downloading CAIDA file $CAIDA_FILE"
+echo "Downloading CAIDA csv file $CAIDA_FILE from $REPO"
 #if ! wget -N -q -P "$DATA_DIR" "$REPO/$CAIDA_FILE"; then
 if ! wget -q -O "$DATA_DIR/$CAIDA_FILE" "$REPO/$CAIDA_FILE"; then
     echo "Failed to download $CAIDA_FILE" >&2
