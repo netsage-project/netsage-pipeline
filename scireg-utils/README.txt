@@ -29,12 +29,16 @@ Steps to update Science Registry:
        add_new_scireg.py --clean -i scireg.json -o newScireg.json
 
   3) convert to mmdb:
+       mv newScireg.json scireg.json
        scireg2mmdb -i scireg.json -o scireg.mmdb
 
   4) test using mmdblookup tool:
       mmdblookup --file scireg.mmdb --ip 140.221.68.1
 
-  4) copy updated files to repo
+  4) copy updated files to download repo
+     run this script: scripts/scireg-update.sh
+
+     which does the following:
      OLD: cp *.mmdb to /var/www/html/NetSage on host epoc-rabbitmq
      NEW: cp *.mmdb to git repo: https://github.com/netsage-project/Science-Registry
      For example:
