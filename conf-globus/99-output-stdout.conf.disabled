@@ -1,6 +1,0 @@
-##### COPY ANY CHANGES TO YOUR EXISTING VERSION AFTER AN UPGRADE   #####
-
-# To write events to the screen
-output {
-       stdout { codec => rubydebug { metadata => true } }
-}
