@@ -13,7 +13,7 @@ if [ -n "$1" ]; then
     DATA_DIR="$1"
 fi
 
-REPO="https://epoc-rabbitmq.tacc.utexas.edu/NetSage"
+REPO="https://downloads.netsage.io"
 GITREPO="https://netsage-project.github.io/Science-Registry/"
 CAIDA_FILE="CAIDA-org-lookup.csv"
 
