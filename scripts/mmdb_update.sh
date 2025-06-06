@@ -4,6 +4,7 @@
 #
 # NOTE: a similar script is currently used by the importer docker image
 # The importer should be updated to remove that script
+set -x
 
 DATA_DIR="./data/cache"
 #DATA_DIR="/tmp/data/cache"  # for testing
@@ -13,42 +14,39 @@ if [ -n "$1" ]; then
     DATA_DIR="$1"
 fi
 
-REPO="https://epoc-rabbitmq.tacc.utexas.edu/NetSage"
-GITREPO="https://netsage-project.github.io/Science-Registry/"
+REPO="https://downloads.netsage.io"
 CAIDA_FILE="CAIDA-org-lookup.csv"
 
-MAXMIND_MMDB_FILES="GeoLite2-City.mmdb GeoLite2-ASN.mmdb"
-SCIREG_MMDB_FILES="communities.mmdb scireg.mmdb"
+# List of known MMDB files (as a whitespace separated string)
+#MMDB_FILES="GeoLite2-City.mmdb GeoLite2-ASN.mmdb communities.mmdb newScireg.mmdb newScireg-testing.mmdb scireg.mmdb"
+MMDB_FILES="GeoLite2-City.mmdb GeoLite2-ASN.mmdb communities.mmdb scireg.mmdb"
 
 # Ensure cache directory exists; only echo if it does not exist
 if [ ! -d "$DATA_DIR" ]; then
     mkdir -p "$DATA_DIR" && echo "Cache directory ${DATA_DIR} created"
 fi
 
-echo "Downloading mmdb files from $REPO..."
-for FILE in $MAXMIND_MMDB_FILES; do
+echo "Downloading mmdb files..."
+for FILE in $MMDB_FILES; do
     echo "Downloading file $FILE"
-    # note: if this script is run in Alpine Linux docker container, then the version of
-    #  wget does not support the -N flag, and will need to download the file every time
-    if ! wget -N -q -P "$DATA_DIR" "$REPO/$FILE"; then   # use this for gnu wget
-    #if ! wget -q -O "$DATA_DIR/$FILE" "$REPO/$FILE"; then # use this for BusyBox wget (alpine linux)
+    TMPFILE=$(mktemp)
+
+    if wget -q -O "$TMPFILE" "$REPO/$FILE"; then
+        mv "$TMPFILE" "$DATA_DIR/$FILE"
+    else
         echo "Failed to download $FILE" >&2
+        rm -f "$TMPFILE"
     fi
 done
 
-echo "Downloading mmdb files from $GITREPO..."
-for FILE in $SCIREG_MMDB_FILES; do
-    echo "Downloading file $FILE"
-    if ! wget -N -q -P "$DATA_DIR" "$GITREPO/$FILE"; then 
-        echo "Failed to download $FILE" >&2
-    fi
-done
+echo "Downloading CAIDA file $CAIDA_FILE"
+TMPFILE=$(mktemp)
 
-echo "Downloading CAIDA csv file $CAIDA_FILE from $REPO"
-#if ! wget -N -q -P "$DATA_DIR" "$REPO/$CAIDA_FILE"; then
-if ! wget -q -O "$DATA_DIR/$CAIDA_FILE" "$REPO/$CAIDA_FILE"; then
+if wget -q -O "$TMPFILE" "$REPO/$CAIDA_FILE"; then
+    mv "$TMPFILE" "$DATA_DIR/$CAIDA_FILE"
+else
     echo "Failed to download $CAIDA_FILE" >&2
+    rm -f "$TMPFILE"
     exit 1
 fi
-
 
