@@ -4,7 +4,8 @@
 #
 # NOTE: a similar script is currently used by the importer docker image
 # The importer should be updated to remove that script
-set -x
+
+#set -x
 
 DATA_DIR="./data/cache"
 #DATA_DIR="/tmp/data/cache"  # for testing
@@ -18,7 +19,6 @@ REPO="https://downloads.netsage.io"
 CAIDA_FILE="CAIDA-org-lookup.csv"
 
 # List of known MMDB files (as a whitespace separated string)
-#MMDB_FILES="GeoLite2-City.mmdb GeoLite2-ASN.mmdb communities.mmdb newScireg.mmdb newScireg-testing.mmdb scireg.mmdb"
 MMDB_FILES="GeoLite2-City.mmdb GeoLite2-ASN.mmdb communities.mmdb scireg.mmdb"
 
 # Ensure cache directory exists; only echo if it does not exist
