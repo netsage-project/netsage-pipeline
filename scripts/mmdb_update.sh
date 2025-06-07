@@ -50,3 +50,6 @@ else
     exit 1
 fi
 
+chmod +r $DATA_DIR/*
+echo "Done downloading files to $DATA_DIR"
+
