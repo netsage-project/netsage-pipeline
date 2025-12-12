@@ -33,17 +33,17 @@ import (
 )
 
 type Entry struct {
-	Addresses     []string `json:"addresses"`
-	OrgName       string   `json:"org_name"`
-	Discipline    string   `json:"discipline"`
-	ResourceName  string   `json:"resource_name"`
-	ProjectName   string   `json:"project_name"`
-	SciregID      int      `json:"scireg_id"`
-	ContactEmail  string   `json:"contact_email"`
-	LastUpdated   string   `json:"last_updated"`
-	Latitude      string   `json:"latitude"`
-	Longitude     string   `json:"longitude"`
-	Community     string   `json:"community"`
+	Addresses    []string `json:"addresses"`
+	OrgName      string   `json:"org_name"`
+	Discipline   string   `json:"discipline"`
+	ResourceName string   `json:"resource_name"`
+	ProjectName  string   `json:"project_name"`
+	SciregID     int      `json:"scireg_id"`
+	ContactEmail string   `json:"contact_email"`
+	LastUpdated  string   `json:"last_updated"`
+	Latitude     string   `json:"latitude"`
+	Longitude    string   `json:"longitude"`
+	Community    string   `json:"community"`
 }
 
 type CIDREntry struct {
@@ -97,8 +97,90 @@ func main() {
 		}
 	}
 
-      // Sort CIDRs by specificity (less specific first, more specific last)
-      // mmdb seems to require this to return more specific first
+	// For any subnet smaller than /24 (prefix > 24), create an additional MMDB
+	// entry:
+	//   - IPv4: x.y.z.1/32 where x.y.z.* is the /24 containing the subnet
+	//   - IPv6: <same /64 high bits>::1/128 for the /64 containing the subnet
+	var extraEntries []CIDREntry
+	for _, ce := range cidrEntries {
+		ip := ce.Network.IP
+		if ip == nil {
+			continue
+		}
+
+		isV4 := ip.To4() != nil
+		var hostIP net.IP
+		var hostPrefix int
+
+		if isV4 {
+			// Only add a .1 entry for IPv4 prefixes > /24
+			if ce.Prefix <= 24 {
+				continue
+			}
+			ip4 := ip.To4()
+			if ip4 == nil {
+				continue
+			}
+
+                        // only generate the .1/32 entry if subnet starts with an IP > 1
+                        if ip4[3] <= 1 {
+                                continue
+                        }
+			// Parent /24 is ip4[0].ip4[1].ip4[2].0, but we want the .1 in that /24
+			hostIP = net.IPv4(ip4[0], ip4[1], ip4[2], 1)
+			hostPrefix = 32
+		} else {
+			// For IPv6, apply the same "smaller than /24" rule on prefix length:
+			// any IPv6 prefix > /24 gets an extra ::1 in the containing /64.
+			if ce.Prefix <= 24 || ce.Prefix >= 128 {
+				continue
+			}
+			ip16 := ip.To16()
+			if ip16 == nil {
+				continue
+			}
+			host := make(net.IP, net.IPv6len)
+			copy(host, ip16)
+			// Keep upper 64 bits, zero the lower 63 bits, set the last bit to 1:
+			// -> <same /64>::1
+			for i := 8; i < 15; i++ {
+				host[i] = 0
+			}
+			host[15] = 1
+			hostIP = host
+			hostPrefix = 128
+		}
+
+		hostCIDR := fmt.Sprintf("%s/%d", hostIP.String(), hostPrefix)
+		_, hostNet, err := net.ParseCIDR(hostCIDR)
+		if err != nil {
+			log.Printf("Warning: could not parse host CIDR %s derived from %s: %v",
+				hostCIDR, ce.Network.String(), err)
+			continue
+		}
+
+		// Status message so you can see what is being created
+		if isV4 {
+			fmt.Printf("  Adding .1 host entry %s for subnet %s to match Globus logs \n",
+				hostCIDR, ce.Network.String())
+		} else {
+			fmt.Printf("  Adding ::1 host entry %s for subnet %s to match Globus logs \n",
+				hostCIDR, ce.Network.String())
+		}
+
+		extraEntries = append(extraEntries, CIDREntry{
+			Network: hostNet,
+			Entry:   ce.Entry,
+			Lat:     ce.Lat,
+			Long:    ce.Long,
+			Prefix:  hostPrefix,
+		})
+	}
+
+	// Append the extra .1 / ::1 host entries
+	cidrEntries = append(cidrEntries, extraEntries...)
+
+	// Sort CIDRs by specificity (less specific first, more specific last)
 	sort.Slice(cidrEntries, func(i, j int) bool {
 		return cidrEntries[i].Prefix < cidrEntries[j].Prefix
 	})
@@ -108,7 +190,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Map from IP string to set of communities
+	// Map from CIDR string to set of communities (merged communities for contained ranges)
 	merged := make(map[string]map[string]bool)
 
 	for _, outer := range cidrEntries {
@@ -135,10 +217,10 @@ func main() {
 
 		dataMap := map[string]interface{}{
 			"discipline": cidr.Entry.Discipline,
-			"org_name": cidr.Entry.OrgName,
-			"resource": cidr.Entry.ResourceName,
-			"project": cidr.Entry.ProjectName,
-			"community": list,
+			"org_name":   cidr.Entry.OrgName,
+			"resource":   cidr.Entry.ResourceName,
+			"project":    cidr.Entry.ProjectName,
+			"community":  list,
 		}
 		jsonBytes, _ := json.Marshal(dataMap)
 
@@ -172,7 +254,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-        fmt.Printf("MMDB file %s created successfully with %d records!\n", *outputFile, len(cidrEntries))
+	fmt.Printf("MMDB file %s created successfully with %d records (including .1/::1 host entries)!\n",
+		*outputFile, len(cidrEntries))
 }
 
 func parseFloat(s string) float64 {
@@ -182,5 +265,4 @@ func parseFloat(s string) float64 {
 	}
 	return f
 }
-
 

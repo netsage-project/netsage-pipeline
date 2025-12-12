@@ -36,7 +36,7 @@ Steps to update Science Registry:
       mmdblookup --file scireg.mmdb --ip 140.221.68.1
 
   4) copy updated files to download repo
-     run this script: scripts/scireg-update.sh
+     run this script: ~/scripts/scireg-update.sh
 
      which does the following:
      OLD: cp *.mmdb to /var/www/html/NetSage on host epoc-rabbitmq
