@@ -2,11 +2,15 @@
 """
 Build a community-*.json file from RIPEstat data and whois data.
 
+This is useful for countries where most large universites use the same ASN.
+
 Example:
     build_community_file.py --asn 7575 --community AARnet
+    build_community_file.py --asn 2907 --community SINET
 
-Note that this program works great for some ASN (eg: AARnet), but does not work
-for more European ASNs, as they used the (now-defunct) IRR instead of whois for org_names.
+Note that this program works great for some ASN (eg: AARnet and SINET), but does not work
+for most European ASNs, as they used the (now-defunct) IRR instead of whois for org_names.
+Many other countries use a different AS for each universities (including the USA).
 
 For now, the best way to generate community files for the EU NRENS is to upload PDFs
 of web page captures from bgp.he.net
