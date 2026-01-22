@@ -52,7 +52,7 @@ Decide where to run the Docker Pipeline and get it set up. Adjust iptables to al
 Clone the netsage-pipeline project from github:
 
 ```bash
-git clone [https://github.com/netsage-project/netsage-pipeline.git](https://github.com/netsage-project/netsage-pipeline.git)
+git clone https://github.com/netsage-project/netsage-pipeline.git
 ```
 
 ---
