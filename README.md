@@ -21,6 +21,8 @@ The Docker containers included in the installation are:
 
 The code and configs for the importer and logstash pipeline can be viewed in the [netsage-project/netsage-pipeline](https://github.com/netsage-project/netsage-pipeline) github repo. See [netsage-project/docker-nfdump-collector](https://github.com/netsage-project/docker-nfdump-collector) for code related to the collectors.
 
+An advanced Docker configuration guide is available for installations with more than one netflow/sflow sensor: [Advanced Configuration Guide](https://github.com/netsage-project/netsage-pipeline/blob/master/docker-advanced.md)
+
 ---
 
 ## 1. Set up Data Sources
