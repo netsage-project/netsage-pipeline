@@ -43,26 +43,38 @@ from pathlib import Path
 # RIPEstat backend
 # ---------------------------------------------------------------------------
 
-def fetch_ripestat(asn: str) -> list[str]:
-    """Return list of all CIDR prefixes (v4 and v6) announced by *asn*."""
-    url = f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn}"
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "check_communities/1.0"})
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            data = json.load(resp)
-    except urllib.error.HTTPError as exc:
-        print(f"  [WARN] RIPEstat HTTP {exc.code} for AS{asn}", file=sys.stderr)
-        return []
-    except Exception as exc:
-        print(f"  [WARN] RIPEstat error for AS{asn}: {exc}", file=sys.stderr)
-        return []
+def fetch_ripestat(asn: str, retries: int = 3, timeout: int = 40) -> list[str]:
+    """Return list of all CIDR prefixes (v4 and v6) announced by *asn*.
 
-    prefixes = []
-    for p in data.get("data", {}).get("prefixes", []):
-        cidr = p.get("prefix", "")
-        if cidr:
-            prefixes.append(cidr)
-    return prefixes
+    Retries up to *retries* times on timeout/transient errors, with a short
+    backoff between attempts.
+    """
+    url = f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn}"
+    last_err = None
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "check_communities/1.0"})
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.load(resp)
+            prefixes = []
+            for p in data.get("data", {}).get("prefixes", []):
+                cidr = p.get("prefix", "")
+                if cidr:
+                    prefixes.append(cidr)
+            return prefixes
+        except urllib.error.HTTPError as exc:
+            last_err = f"HTTP {exc.code}"
+            # HTTP errors (e.g. 404) won't be fixed by retrying
+            break
+        except Exception as exc:
+            last_err = str(exc)
+            if attempt < retries:
+                print(f"  [retry {attempt}/{retries - 1}] AS{asn}: {last_err}", file=sys.stderr)
+                time.sleep(2 * attempt)
+            continue
+
+    print(f"  [WARN] RIPEstat error for AS{asn}: {last_err}", file=sys.stderr)
+    return []
 
 
 # ---------------------------------------------------------------------------
@@ -160,17 +172,23 @@ def enrich(records: list[dict], delay: float) -> dict:
         announced = asn_to_prefixes.get(asn, [])
         announced_nets = [n for n in (parse_net(p) for p in announced) if n is not None]
 
-        # --- Flag stale existing IPv4 entries -----------------------------
+        # --- Flag and remove stale existing IPv4 entries -------------------
         # An existing IPv4 prefix is "stale" if RIPEstat returned at least
         # one prefix for this ASN, but this prefix isn't covered by (or
-        # equal to) any announced prefix.
+        # equal to) any announced prefix. These are removed.
+        removed_stale = False
         if announced_nets:
+            kept_addrs = []
             for addr in existing_addrs:
                 net = parse_net(addr)
-                if net is None or net.version != 4:
-                    continue
-                if not is_covered(addr, announced_nets):
+                if net is not None and net.version == 4 and not is_covered(addr, announced_nets):
                     stale_v4.append((record["org_name"], asn, addr))
+                    removed_stale = True
+                    continue
+                kept_addrs.append(addr)
+            existing_addrs = kept_addrs
+            existing_nets = [n for n in (parse_net(a) for a in existing_addrs) if n is not None]
+            existing_set = set(existing_addrs)
 
         # --- Add new prefixes (v4 + v6), broadest-first -------------------
         new_prefixes = []
@@ -194,11 +212,12 @@ def enrich(records: list[dict], delay: float) -> dict:
             if cand_net is not None:
                 existing_nets.append(cand_net)
 
-        if new_prefixes:
+        if new_prefixes or removed_stale:
             combined = existing_addrs + new_prefixes
             record["addresses"] = reorder_addresses(combined)
             added_count += len(new_prefixes)
-            changed_orgs.append(record["org_name"])
+            if record["org_name"] not in changed_orgs:
+                changed_orgs.append(record["org_name"])
         elif existing_addrs:
             reordered = reorder_addresses(existing_addrs)
             if reordered != existing_addrs:
@@ -210,6 +229,9 @@ def enrich(records: list[dict], delay: float) -> dict:
         if not asn_to_prefixes.get(asn)
     ]
 
+    missing_asn_set = {asn for asn, _ in missing_named}
+    kept_records = [r for r in records if r["asn"] not in missing_asn_set]
+
     return {
         "asns_queried": total,
         "prefixes_added": added_count,
@@ -218,6 +240,7 @@ def enrich(records: list[dict], delay: float) -> dict:
         "skipped_covered": skipped_covered,
         "stale_v4": stale_v4,
         "missing_asns": missing_named,
+        "records": kept_records,
     }
 
 
@@ -270,11 +293,11 @@ def main() -> None:
             print(f"    • {org}: {prefix} ⊂ {covering}")
 
     if summary["stale_v4"]:
-        print(f"\n  ⚠️  WARNING: existing IPv4 prefixes NOT announced by their ASN ({len(summary['stale_v4'])}):")
+        print(f"\n  ⚠️  WARNING: existing IPv4 prefixes NOT announced by their ASN — removing ({len(summary['stale_v4'])}):")
         for org, asn, prefix in summary["stale_v4"]:
             print(f"    • {org} (AS{asn}): {prefix}")
 
-    print(f"\n  ASNs with NO announced prefixes ({len(summary['missing_asns'])}):")
+    print(f"\n  ASNs with NO announced prefixes — removing entries ({len(summary['missing_asns'])}):")
     for asn, name in summary["missing_asns"]:
         print(f"    AS{asn:<10} {name}")
 
@@ -284,7 +307,7 @@ def main() -> None:
 
     tmp_path = output_path.with_suffix(".tmp")
     with tmp_path.open("w") as fh:
-        json.dump(records, fh, indent=2)
+        json.dump(summary["records"], fh, indent=2)
         fh.write("\n")
     tmp_path.replace(output_path)
     print(f"\nWrote {output_path}")
